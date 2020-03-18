@@ -1,15 +1,32 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV,
-  entry: ['babel-polyfill', './app/index.js'],
+  entry: ['babel-polyfill', './src/index.js'],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '/dist/',
     filename: 'bundle.js',
+    library: 'connectus-ui-lib',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
   },
+  externals: [
+    {
+      react: {
+        amd: 'react',
+        commonjs: 'react',
+        commonjs2: 'react',
+        root: 'React',
+      },
+    },
+    'react-dom',
+    'antd',
+    '@ant-design/icons',
+    'prop-types',
+    'react-router-dom',
+  ],
   devtool: 'inline-source-map',
   devServer: {
     port: 3000,
@@ -71,10 +88,15 @@ module.exports = {
     minimizer: [new UglifyJsPlugin()],
   },
   resolve: {
-    modules: ['node_modules', path.resolve(`${__dirname}/app`)],
+    modules: ['node_modules', path.resolve(`${__dirname}/src`)],
     alias: {
-      app: path.resolve(`${__dirname}/app`),
+      src: path.resolve(`${__dirname}/src`),
+      react: path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+      antd: path.resolve(__dirname, './node_modules/antd'),
+      '@ant-design/icons': path.resolve(__dirname, './node_modules/@ant-design/icons'),
+      'prop-types': path.resolve(__dirname, './node_modules/prop-types'),
+      'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom'),
     },
   },
-  plugins: [new CleanWebpackPlugin()],
 };
