@@ -41,6 +41,7 @@ const SideMenu = ({
   const [openKeys, setOpenKeys] = useState([]);
 console.log();
 console.log();
+console.log();npm;
 
   useEffect(() => {
     setOpenKeys([]);

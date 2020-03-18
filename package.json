@@ -72,7 +72,7 @@
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "pretty-quick --staged",
-      "eslint . --fix",
+      "eslint . --fix --max-warnings=0" ,
       "git add"
     ]
   },
