@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^4.0.2",
-    "antd": "^4.0.2",
     "@babel/core": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.7",
     "@babel/preset-react": "^7.8.3",
+    "antd": "^4.0.2",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
