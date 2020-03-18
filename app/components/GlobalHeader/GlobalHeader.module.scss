@@ -1,0 +1,49 @@
+@import 'styles/variables';
+
+.GlobalHeader {
+  height: $header-height;
+  left: $sidebar-width;
+  padding: 0;
+  position: fixed;
+  display: flex;
+  right: 0;
+  z-index: 2000;
+
+  &.collapsed {
+    left: $sidebar-collapsed-width;
+  }
+  &.mobile {
+    left: 0;
+  }
+
+  :global(.ant-row) {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+}
+
+.LogoContainer {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0 0 24px;
+
+  img {
+    border-radius: 5px;
+  }
+}
+
+.MenuIcon {
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+}
+
+.RightMenu {
+  margin-left: auto;
+}

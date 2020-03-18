@@ -1,0 +1,37 @@
+@import 'styles/variables';
+
+.Sider {
+  height: 100vh;
+  left: 0;
+  position: fixed;
+
+  &.Mobile {
+    position: relative;
+  }
+
+  &.collapsed {
+    .Logo {
+      width: 32px;
+    }
+  }
+
+  .TopArea {
+    height: $header-height;
+  }
+
+  .LogoContainer {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Logo {
+    width: 200px;
+    border-radius: 5px;
+  }
+
+  .MenuIcon {
+    margin-right: 10px!important;
+  }
+}

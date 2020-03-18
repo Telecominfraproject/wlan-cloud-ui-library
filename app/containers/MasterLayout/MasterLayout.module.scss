@@ -1,0 +1,22 @@
+@import 'styles/variables';
+
+.MainLayout {
+  height: 100vh;
+  margin-left: $sidebar-width;
+  overflow: auto;
+
+  &.collapsed {
+    margin-left: $sidebar-collapsed-width;
+  }
+  &.mobile {
+    margin-left: 0;
+  }
+}
+
+.Content {
+  margin-top: $header-height;
+}
+
+.Footer {
+  text-align: center;
+}
