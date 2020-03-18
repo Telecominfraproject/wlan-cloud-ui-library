@@ -9,7 +9,7 @@
   },
   "scripts": {
     "format": "prettier --write \"src/**/*.js\"",
-    "eslint-fix": "eslint --fix \"src/**/*.js\"",
+    "eslint-fix": "eslint --fix \"src/**/*.js\" --max-warnings=0",
     "build": "webpack --mode production",
     "prepublishOnly": "npm run build"
   },
@@ -68,7 +68,6 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
   },
-  "precommit": "NODE_ENV=production lint-staged",
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "pretty-quick --staged",
