@@ -5,7 +5,7 @@ import { Layout, Menu, Drawer } from 'antd';
 import {
   DashboardOutlined,
   ProfileOutlined,
-AreaChartOutlined,
+  AreaChartOutlined,
   MobileOutlined,
   ApiOutlined,
   NotificationOutlined,
@@ -39,7 +39,7 @@ const SideMenu = ({
   onLogout,
 }) => {
   const [openKeys, setOpenKeys] = useState([]);
-
+console.log();
   useEffect(() => {
     setOpenKeys([]);
   }, [collapsed]);
