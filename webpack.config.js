@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
-    filename: 'bundle.js',
+    filename: 'index.js',
     library: 'connectus-ui-lib',
     libraryTarget: 'umd',
     umdNamedDefine: true,
