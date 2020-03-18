@@ -39,8 +39,6 @@ const SideMenu = ({
   onLogout,
 }) => {
   const [openKeys, setOpenKeys] = useState([]);
-console.log();
-console.log();npm;
 
   useEffect(() => {
     setOpenKeys([]);
