@@ -69,9 +69,9 @@
     "webpack-dev-server": "^3.10.3"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx}": [
+    "*.js": [
       "pretty-quick --staged",
-      "eslint . --fix --max-warnings=0" ,
+      "eslint . --fix --max-warnings=0",
       "git add"
     ]
   },
