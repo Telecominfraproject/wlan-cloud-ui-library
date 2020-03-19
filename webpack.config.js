@@ -1,9 +1,8 @@
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV,
-  entry: ['babel-polyfill', './src/index.js'],
+  entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
@@ -83,9 +82,6 @@ module.exports = {
         ],
       },
     ],
-  },
-  optimization: {
-    minimizer: [new UglifyJsPlugin()],
   },
   resolve: {
     modules: ['node_modules', path.resolve(`${__dirname}/src`)],
