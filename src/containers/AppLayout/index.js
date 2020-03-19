@@ -5,11 +5,11 @@ import { Layout } from 'antd';
 import GlobalHeader from 'components/GlobalHeader';
 import SideMenu from 'components/SideMenu';
 
-import styles from './MasterLayout.module.scss';
+import styles from './AppLayout.module.scss';
 
 const { Content, Footer } = Layout;
 
-const MasterLayout = ({ children, logo, logoMobile, locationState, onLogout }) => {
+const AppLayout = ({ children, logo, logoMobile, locationState, onLogout }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [screenSize, setScreenSize] = useState('lg');
@@ -92,7 +92,7 @@ const MasterLayout = ({ children, logo, logoMobile, locationState, onLogout }) =
   );
 };
 
-MasterLayout.propTypes = {
+AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
   logo: PropTypes.string.isRequired,
   logoMobile: PropTypes.string.isRequired,
@@ -100,4 +100,4 @@ MasterLayout.propTypes = {
   locationState: PropTypes.instanceOf(Object).isRequired,
 };
 
-export default MasterLayout;
+export default AppLayout;
