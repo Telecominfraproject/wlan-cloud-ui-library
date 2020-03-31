@@ -9,9 +9,7 @@ import {
   MobileOutlined,
   ApiOutlined,
   NotificationOutlined,
-  CheckCircleOutlined,
   SettingOutlined,
-  TeamOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
 
@@ -44,7 +42,7 @@ const SideMenu = ({
     setOpenKeys([]);
   }, [collapsed]);
 
-  const enocMenuItems = [
+  const defaultMenuItems = [
     {
       key: 'dashboard',
       icon: <DashboardOutlined className={styles.MenuIcon} />,
@@ -88,29 +86,12 @@ const SideMenu = ({
       onClick: onMenuItemClick,
     },
     {
-      key: 'recommendations',
-      icon: <CheckCircleOutlined className={styles.MenuIcon} />,
-      path: '/recommendations',
-      text: 'Recommendations',
-      onClick: onMenuItemClick,
-    },
-    {
       key: 'settings',
       icon: <SettingOutlined className={styles.MenuIcon} />,
       path: '/settings',
       text: 'Settings',
       onClick: onMenuItemClick,
     },
-    {
-      key: ACCOUNTS,
-      icon: <TeamOutlined className={styles.MenuIcon} />,
-      text: 'Customers',
-      path: '/accounts/customers',
-      onClick: onMenuItemClick,
-    },
-  ];
-
-  const commonMenuItems = [
     {
       key: 'logout',
       icon: <LogoutOutlined className={styles.MenuIcon} />,
@@ -205,7 +186,7 @@ const SideMenu = ({
   };
 
   const menuConfig = {
-    items: [...enocMenuItems, ...commonMenuItems],
+    items: defaultMenuItems,
   };
 
   const menu = getMenu(menuConfig);
@@ -222,7 +203,7 @@ const SideMenu = ({
     >
       <div className={styles.TopArea}>
         <Link className={styles.LogoContainer} to="/">
-          <img className={styles.Logo} alt="ConnectUs" src={collapsed ? logoMobile : logo} />
+          <img className={styles.Logo} alt="logo" src={collapsed ? logoMobile : logo} />
         </Link>
       </div>
       <Menu

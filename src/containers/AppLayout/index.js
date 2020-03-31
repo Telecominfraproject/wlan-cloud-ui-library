@@ -9,7 +9,7 @@ import styles from './AppLayout.module.scss';
 
 const { Content, Footer } = Layout;
 
-const AppLayout = ({ children, logo, logoMobile, locationState, onLogout }) => {
+const AppLayout = ({ children, company, logo, logoMobile, locationState, onLogout }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [screenSize, setScreenSize] = useState('lg');
@@ -85,7 +85,7 @@ const AppLayout = ({ children, logo, logoMobile, locationState, onLogout }) => {
         />
         <Content className={styles.Content}>{children}</Content>
         <Footer className={styles.Footer}>
-          Copyright © {currentYear} ConnectUs Inc. All Rights Reserved.
+          Copyright © {currentYear} {company} Inc. All Rights Reserved.
         </Footer>
       </Layout>
     </Layout>
@@ -94,6 +94,7 @@ const AppLayout = ({ children, logo, logoMobile, locationState, onLogout }) => {
 
 AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
+  company: PropTypes.string.isRequired,
   logo: PropTypes.string.isRequired,
   logoMobile: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
