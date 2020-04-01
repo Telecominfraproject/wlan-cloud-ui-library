@@ -11,7 +11,9 @@
     "format": "prettier --write \"src/**/*.js\"",
     "eslint-fix": "eslint --fix \"src/**/*.js\" --max-warnings=0",
     "build": "webpack --mode production",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "watch:js": "npm run build -- -w",
+    "watch": "npm run build && npm run watch:js"
   },
   "repository": {
     "type": "git",
@@ -71,7 +73,7 @@
   "lint-staged": {
     "*.js": [
       "pretty-quick --staged",
-      "eslint . --fix --max-warnings=0",
+      "eslint --fix .",
       "git add"
     ]
   },
