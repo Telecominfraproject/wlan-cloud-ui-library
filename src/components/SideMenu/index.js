@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Layout, Menu, Drawer } from 'antd';
@@ -13,6 +13,7 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 
+import ThemeContext from 'contexts/ThemeContext';
 import styles from './Sider.module.scss';
 
 const { Sider } = Layout;
@@ -30,12 +31,11 @@ const SideMenu = ({
   locationState,
   collapsed,
   isMobile,
-  logo,
-  logoMobile,
   onMenuButtonClick,
   onMenuItemClick,
   onLogout,
 }) => {
+  const theme = useContext(ThemeContext);
   const [openKeys, setOpenKeys] = useState([]);
 
   useEffect(() => {
@@ -203,7 +203,11 @@ const SideMenu = ({
     >
       <div className={styles.TopArea}>
         <Link className={styles.LogoContainer} to="/">
-          <img className={styles.Logo} alt="logo" src={collapsed ? logoMobile : logo} />
+          <img
+            className={styles.Logo}
+            alt={theme.company}
+            src={collapsed ? theme.logoMobile : theme.logo}
+          />
         </Link>
       </div>
       <Menu
@@ -242,8 +246,6 @@ SideMenu.propTypes = {
   locationState: PropTypes.instanceOf(Object).isRequired,
   collapsed: PropTypes.bool.isRequired,
   isMobile: PropTypes.bool.isRequired,
-  logo: PropTypes.string.isRequired,
-  logoMobile: PropTypes.string.isRequired,
   onMenuButtonClick: PropTypes.func.isRequired,
   onMenuItemClick: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,

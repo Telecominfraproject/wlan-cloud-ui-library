@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Layout, Popover, Row } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined } from '@ant-design/icons';
 
+import ThemeContext from 'contexts/ThemeContext';
 import styles from './GlobalHeader.module.scss';
 
 const { Header } = Layout;
 
-const GlobalHeader = ({ collapsed, onMenuButtonClick, isMobile, logoMobile }) => {
+const GlobalHeader = ({ collapsed, onMenuButtonClick, isMobile }) => {
+  const theme = useContext(ThemeContext);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
   const hidePopover = () => {
@@ -52,7 +54,7 @@ const GlobalHeader = ({ collapsed, onMenuButtonClick, isMobile, logoMobile }) =>
     >
       {isMobile && [
         <Link className={styles.LogoContainer} to="/" key="mobileLogo">
-          <img src={logoMobile} alt="logo" width="32" />
+          <img src={theme.logoMobile} alt={theme.company} width="32" />
         </Link>,
       ]}
       {collapsed ? (
@@ -81,7 +83,6 @@ GlobalHeader.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   onMenuButtonClick: PropTypes.func.isRequired,
   isMobile: PropTypes.bool.isRequired,
-  logoMobile: PropTypes.string.isRequired
 };
 
 export default GlobalHeader;
