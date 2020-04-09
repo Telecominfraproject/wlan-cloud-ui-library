@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Form, Input, Button } from 'antd';
 
 import ThemeContext from 'contexts/ThemeContext';
@@ -11,15 +12,19 @@ const layout = {
   wrapperCol: { span: 15 },
 };
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const theme = useContext(ThemeContext);
+
+  const handleSubmit = values => {
+    onLogin(values.email, values.password);
+  };
 
   return (
     <div className={styles.Container}>
       <img className={styles.Logo} alt={theme.company} src={theme.logo} />
       <Card className={styles.Card}>
         <h1>Log In</h1>
-        <Form {...layout} name="login">
+        <Form {...layout} name="login" onFinish={handleSubmit}>
           <Item
             label="E-mail"
             name="email"
@@ -52,6 +57,10 @@ const Login = () => {
       </Card>
     </div>
   );
+};
+
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired,
 };
 
 export default Login;

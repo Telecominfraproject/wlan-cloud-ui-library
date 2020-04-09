@@ -1,6 +1,6 @@
-# ConnectUs UI Component Library for React
+# TIP UI Library for React
 
 ## Install
 
-* `npm install connectus-ui-lib --save` or
-* `yarn add connectus-ui-lib`
+- `npm install wlan-cloud-ui-library --save` or
+- `yarn add wlan-cloud-ui-library`

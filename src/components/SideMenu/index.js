@@ -95,7 +95,7 @@ const SideMenu = ({
     {
       key: 'logout',
       icon: <LogoutOutlined className={styles.MenuIcon} />,
-      path: '/signout',
+      path: '#',
       text: 'Sign Out',
       onClick: onLogout,
     },

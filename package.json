@@ -1,8 +1,8 @@
 {
-  "name": "cu-ui",
+  "name": "wlan-cloud-ui-library",
   "version": "0.1.2",
   "author": "ConnectUs",
-  "description": "ConnectUs UI Component Library",
+  "description": "React UI Library",
   "engines": {
     "npm": ">=5",
     "node": ">=8"
@@ -14,10 +14,6 @@
     "prepublishOnly": "npm run build",
     "watch:js": "npm run build -- -w",
     "watch": "npm run build && npm run watch:js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/connectustechnologies/connectus-wlan-ui-workspace"
   },
   "license": "MIT",
   "main": "dist/index.js",
