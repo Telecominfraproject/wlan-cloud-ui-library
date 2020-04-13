@@ -2,10 +2,10 @@ name: NPM CI - TIP WLAN Cloud UI Library
 
 on:
   push:
-    #branches: [ master ]
+    branches: [ master ]
     #ignore the workflow for now - until it is debugged locally
-    branches-ignore:
-      - '**'
+    #branches-ignore:
+     # - '**'
 jobs:
   build:
     runs-on: ubuntu-latest
