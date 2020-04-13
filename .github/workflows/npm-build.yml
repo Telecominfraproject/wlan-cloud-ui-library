@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-          registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
+          registry-url: 'https://registry.npmjs.org'
       - name: Cache node modules
         uses: actions/cache@v1
         env:
@@ -31,6 +31,11 @@ jobs:
         run: npm install
       - name: Build module
         run: npm run build
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
+          scope: '@tip-wlan'
       - name: Publish npm module into tip-wlan-cloud-npm-repo
         run: npm publish
         env:
