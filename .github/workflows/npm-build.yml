@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+          registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
       - name: Cache node modules
         uses: actions/cache@v1
         env:
@@ -26,18 +27,12 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Prepare repository
-        run: |
-          sudo npm i npmrc -g 
-          npmrc -c tip-wlan
-          npm config set @tip-wlan:registry https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/
-          echo "@tip-wlan:registry=https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/" >> ~/.npmrc
-          echo "//tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/:_authToken=${{ secrets.NPM_REPO_AUTH_TOKEN }}" >> ~/.npmrc
-          #npm login --scope=tip-wlan --user=build-pipeline --email=build-pipeline@example.com --password=${{ secrets.NPM_REPO_PASSWORD }} --registry=https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/
       - name: Install packages
         run: npm install
       - name: Build module
         run: npm run build
       - name: Publish npm module into tip-wlan-cloud-npm-repo
-        run: npm publish --registry https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_REPO_AUTH_TOKEN }}
 
