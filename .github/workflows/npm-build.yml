@@ -1,13 +1,42 @@
-name: NPM CI - TIP WLAN Cloud UI Library
+name: NPM Publish
 
 on:
   push:
-    branches: [ master ]
-    #ignore the workflow for now - until it is debugged locally
-    #branches-ignore:
-     # - '**'
+    branches: [master]
+
+  # Run tests for any PRs.
+  pull_request:
+
 jobs:
-  build:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install packages
+        run: npm install
+      - name: Run tests
+        run: npm test
+  push:
+    # Ensure test job passes before pushing.
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -34,10 +63,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-          registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/' 
+          registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
           scope: '@tip-wlan'
       - name: Publish npm module into tip-wlan-cloud-npm-repo
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_REPO_AUTH_TOKEN }}
-

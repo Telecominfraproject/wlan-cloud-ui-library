@@ -24,7 +24,7 @@ const Login = ({ onLogin }) => {
       <img className={styles.Logo} alt={theme.company} src={theme.logo} />
       <Card className={styles.Card}>
         <h1>Log In</h1>
-        <Form {...layout} name="login" onFinish={handleSubmit}>
+        <Form {...layout} name="login" data-testid="login" onFinish={handleSubmit}>
           <Item
             label="E-mail"
             name="email"
@@ -32,6 +32,10 @@ const Login = ({ onLogin }) => {
               {
                 required: true,
                 message: 'Please input your e-mail',
+              },
+              {
+                type: 'email',
+                message: 'The input is not a valid e-mail',
               },
             ]}
           >
@@ -48,9 +52,9 @@ const Login = ({ onLogin }) => {
               },
             ]}
           >
-            <Input.Password visibilityToggle={false} />
+            <Input.Password visibilityToggle />
           </Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" data-testid="loginButton">
             Log In
           </Button>
         </Form>
