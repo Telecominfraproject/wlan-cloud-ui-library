@@ -2,7 +2,12 @@ name: NPM Publish
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
 
   # Run tests for any PRs.
   pull_request:
@@ -37,7 +42,9 @@ jobs:
   push:
     # Ensure test job passes before pushing.
     needs: test
+
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
 
     steps:
       - uses: actions/checkout@v2
