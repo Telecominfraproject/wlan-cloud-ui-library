@@ -19,13 +19,7 @@ import styles from './Sider.module.scss';
 const { Sider } = Layout;
 const { SubMenu, Item } = Menu;
 
-const ACCOUNTS = 'accounts';
-const NETWORK = 'network';
-const CONFIGURATION = 'configuration';
-const INSIGHTS = 'insights';
-const SYSTEM = 'system';
-const HISTORY = 'history';
-const rootSubmenuKeys = [ACCOUNTS, NETWORK, CONFIGURATION, INSIGHTS, SYSTEM, HISTORY];
+const rootSubmenuKeys = [];
 
 const SideMenu = ({
   locationState,
@@ -46,7 +40,7 @@ const SideMenu = ({
     {
       key: 'dashboard',
       icon: <DashboardOutlined className={styles.MenuIcon} />,
-      path: '/',
+      path: '/dashboard',
       text: 'Dashboard',
       onClick: onMenuItemClick,
     },
@@ -60,7 +54,7 @@ const SideMenu = ({
     {
       key: 'reports',
       icon: <AreaChartOutlined className={styles.MenuIcon} />,
-      path: '/analytics/qoe',
+      path: '/analytics',
       text: 'Insights',
       onClick: onMenuItemClick,
     },
@@ -81,7 +75,7 @@ const SideMenu = ({
     {
       key: 'alarms',
       icon: <NotificationOutlined className={styles.MenuIcon} />,
-      path: '/network/alarms',
+      path: '/alarms',
       text: 'Alarms',
       onClick: onMenuItemClick,
     },
@@ -103,7 +97,6 @@ const SideMenu = ({
 
   const onOpenChange = keys => {
     const latestOpenKey = keys.find(key => !openKeys.includes(key));
-
     if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       setOpenKeys(keys);
     } else {

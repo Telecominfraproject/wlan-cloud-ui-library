@@ -1,4 +1,5 @@
 export { default as AppLayout } from 'containers/AppLayout';
+export { default as ClientDevices } from 'containers/ClientDevices';
 export { default as Dashboard } from 'containers/Dashboard';
 export { default as Login } from 'containers/Login';
 
