@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 
 import ThemeContext from 'contexts/ThemeContext';
-import styles from './Sider.module.scss';
+import styles from './index.module.scss';
 
 const { Sider } = Layout;
 const { SubMenu, Item } = Menu;

@@ -5,7 +5,7 @@ import { Layout, Popover, Row } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, SettingOutlined } from '@ant-design/icons';
 
 import ThemeContext from 'contexts/ThemeContext';
-import styles from './GlobalHeader.module.scss';
+import styles from './index.module.scss';
 
 const { Header } = Layout;
 

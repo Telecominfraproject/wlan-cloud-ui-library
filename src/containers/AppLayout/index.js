@@ -6,7 +6,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import GlobalHeader from 'components/GlobalHeader';
 import SideMenu from 'components/SideMenu';
 
-import styles from './AppLayout.module.scss';
+import styles from './index.module.scss';
 
 const { Content, Footer } = Layout;
 
