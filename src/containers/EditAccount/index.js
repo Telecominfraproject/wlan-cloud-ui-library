@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 import React from 'react';
 import { Card, Form, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
@@ -7,7 +8,7 @@ const { Item } = Form;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 7 },
+  wrapperCol: { span: 10 },
 };
 
 const EditAccount = ({ email, onSubmit }) => {
@@ -35,20 +36,30 @@ const EditAccount = ({ email, onSubmit }) => {
               },
             ]}
           >
-            <Input.Password className={styles.Field} visibilityToggle />
+            <Input.Password className={styles.Field} />
           </Item>
 
           <Item
             label="Confirm Password"
             name="confirmedPassword"
+            dependencies={['newPassword']}
             rules={[
               {
                 required: true,
                 message: 'Please confirm your password',
               },
+              ({ getFieldValue }) => ({
+                validator(_rule, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject('The two passwords do not match');
+                },
+              }),
             ]}
+            hasFeedback
           >
-            <Input.Password className={styles.Field} visibilityToggle />
+            <Input.Password className={styles.Field} />
           </Item>
           <Button className={styles.Save} type="primary" htmlType="submit" data-testid="saveButton">
             SAVE CHANGES
@@ -61,6 +72,7 @@ const EditAccount = ({ email, onSubmit }) => {
 
 EditAccount.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  email: PropTypes.string.isRequired,
 };
 
 export default EditAccount;
