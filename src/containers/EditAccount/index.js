@@ -4,23 +4,23 @@ import styles from './index.module.scss';
 
 const { Item } = Form;
 
-// const EditAccount = ({ onSave }) => {
-//   const handleSubmit = values => {
-//     onSave(values.newPassword, values.confirmedPassword);
-//   };
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 7 },
+};
 
 const EditAccount = () => {
   return (
     <div className={styles.Container}>
       <Card className={styles.Card}>
         <h1>Edit Account</h1>
-        <Form name="login" data-testid="login">
-          <Item label="Email">
-            <span className="email">support@example.com</span>
-          </Item>
 
+        <Form {...layout} name="editAccount" data-testid="editAccount">
+          <Form.Item label="E-mail">
+            <span className={styles.Email}>support@email.com</span>
+          </Form.Item>
           <Item
-            label="Password"
+            label="New Password"
             name="newPassword"
             rules={[
               {
@@ -29,11 +29,11 @@ const EditAccount = () => {
               },
             ]}
           >
-            <Input.Password visibilityToggle />
+            <Input.Password className={styles.Field} visibilityToggle />
           </Item>
 
           <Item
-            label="Password"
+            label="Confirm Password"
             name="confirmedPassword"
             rules={[
               {
@@ -42,11 +42,10 @@ const EditAccount = () => {
               },
             ]}
           >
-            <Input.Password visibilityToggle />
+            <Input.Password className={styles.Field} visibilityToggle />
           </Item>
-
-          <Button type="primary" htmlType="submit" data-testid="loginButton">
-            Save Changes
+          <Button className={styles.Save} type="primary" htmlType="submit" data-testid="saveButton">
+            SAVE CHANGES
           </Button>
         </Form>
       </Card>

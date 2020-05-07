@@ -28,7 +28,7 @@ const Login = ({ onLogin }) => {
           <Item
             label="E-mail"
             name="email"
-            rulesz={[
+            rules={[
               {
                 required: true,
                 message: 'Please input your e-mail',
