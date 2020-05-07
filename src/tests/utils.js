@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
 
 import ThemeProvider from 'contexts/ThemeProvider';
@@ -10,6 +11,10 @@ const AllTheProviders = ({ children }) => {
       {children}
     </ThemeProvider>
   );
+};
+
+AllTheProviders.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });
