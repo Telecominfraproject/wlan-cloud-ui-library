@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Form, Input, Button } from 'antd';
+import PropTypes from 'prop-types';
 import styles from './index.module.scss';
 
 const { Item } = Form;
@@ -9,9 +10,9 @@ const layout = {
   wrapperCol: { span: 7 },
 };
 
-const EditAccount = ({ onSubmit, email }) => {
-  const handleSubmit = values => {
-    onSubmit(values.newPassword, values.confirmedPassword);
+const EditAccount = ({ email, onSubmit }) => {
+  const handleSubmit = ({ newPassword, confirmedPassword }) => {
+    onSubmit(newPassword, confirmedPassword);
   };
 
   return (
@@ -56,6 +57,10 @@ const EditAccount = ({ onSubmit, email }) => {
       </Card>
     </div>
   );
+};
+
+EditAccount.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default EditAccount;
