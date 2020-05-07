@@ -9,16 +9,21 @@ const layout = {
   wrapperCol: { span: 7 },
 };
 
-const EditAccount = () => {
+const EditAccount = ({ onSubmit, email }) => {
+  const handleSubmit = values => {
+    onSubmit(values.newPassword, values.confirmedPassword);
+  };
+
   return (
     <div className={styles.Container}>
       <Card className={styles.Card}>
         <h1>Edit Account</h1>
 
-        <Form {...layout} name="editAccount" data-testid="editAccount">
-          <Form.Item label="E-mail">
-            <span className={styles.Email}>support@email.com</span>
-          </Form.Item>
+        <Form {...layout} name="editAccount" data-testid="editAccount" onFinish={handleSubmit}>
+          <Item label="E-mail">
+            <span className={styles.Email}>{email}</span>
+          </Item>
+
           <Item
             label="New Password"
             name="newPassword"
