@@ -36,6 +36,7 @@ const DeviceTable = props => {
     });
     setFilteredData(filterData);
   }, [props.SelectedLocations]);
+
   return (
     <Table
       columns={columns}

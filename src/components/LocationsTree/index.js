@@ -30,7 +30,7 @@ const LocationsTree = props => {
 };
 
 LocationsTree.propTypes = {
-  onSelect: PropTypes.func.isRequired,
+  onCheck: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   treeData: PropTypes.array.isRequired,
 };
