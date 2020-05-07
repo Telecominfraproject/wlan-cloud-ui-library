@@ -1,0 +1,60 @@
+.clientDevices {
+  height: 100%;
+}
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 27px;
+  .navBtnWrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #141414 0% 0% no-repeat padding-box;
+    border-radius: 25px;
+  }
+  .navBtn {
+    a {
+      padding: 8px 25px;
+      border-radius: 50px;
+      color: #fff;
+      display: inline-block;
+      border-radius: 25px;
+      font: Bold 14px/16px Roboto;
+      &::selection {
+        background-color: transparent;
+        color: unset;
+      }
+    }
+    .activeBtn {
+      background: #35a649 0% 0% no-repeat padding-box;
+    }
+  }
+}
+.reloadIcon {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 18px;
+  span {
+    border: 1px solid #403d3d;
+    padding: 6px;
+    border-radius: 3px;
+    background-color: rgb(20, 20, 20);
+  }
+}
+.mainWrapper {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  .mainContent {
+    width: calc(100% - 280px);
+    table {
+      thead {
+        th {
+          padding: 16px;
+          background-color: #1f1d1d;
+        }
+      }
+    }
+  }
+}
