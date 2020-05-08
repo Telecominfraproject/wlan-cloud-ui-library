@@ -21,8 +21,8 @@ const EditAccount = ({ email, onSubmit }) => {
         <h1>Edit Account</h1>
 
         <Form {...layout} name="editAccount" data-testid="editAccount" onFinish={handleSubmit}>
-          <Item label="E-mail">
-            <span className={styles.Email}>{email}</span>
+          <Item className={styles.Email} label="E-mail">
+            {email}
           </Item>
           <Item
             label="New Password"
