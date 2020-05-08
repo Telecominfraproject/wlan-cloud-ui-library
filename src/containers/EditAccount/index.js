@@ -1,4 +1,3 @@
-/* eslint-disable prefer-promise-reject-errors */
 import React from 'react';
 import { Card, Form, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
@@ -8,7 +7,7 @@ const { Item } = Form;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  wrapperCol: { span: 9 },
 };
 
 const EditAccount = ({ email, onSubmit }) => {
@@ -25,7 +24,6 @@ const EditAccount = ({ email, onSubmit }) => {
           <Item label="E-mail">
             <span className={styles.Email}>{email}</span>
           </Item>
-
           <Item
             label="New Password"
             name="newPassword"
@@ -53,7 +51,7 @@ const EditAccount = ({ email, onSubmit }) => {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject('The two passwords do not match');
+                  return Promise.reject(new Error('The two passwords do not match'));
                 },
               }),
             ]}
