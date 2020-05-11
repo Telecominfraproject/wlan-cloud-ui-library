@@ -11,8 +11,8 @@ const layout = {
 };
 
 const EditAccount = ({ email, onSubmit }) => {
-  const handleSubmit = ({ newPassword, confirmedPassword }) => {
-    onSubmit(newPassword, confirmedPassword);
+  const handleSubmit = ({ newPassword }) => {
+    onSubmit(newPassword);
   };
 
   return (
