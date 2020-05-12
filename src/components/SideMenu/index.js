@@ -11,6 +11,7 @@ import {
   NotificationOutlined,
   SettingOutlined,
   LogoutOutlined,
+  DesktopOutlined,
 } from '@ant-design/icons';
 
 import ThemeContext from 'contexts/ThemeContext';
@@ -84,6 +85,13 @@ const SideMenu = ({
       icon: <SettingOutlined className={styles.MenuIcon} />,
       path: '/settings',
       text: 'Settings',
+      onClick: onMenuItemClick,
+    },
+    {
+      key: 'accounts',
+      icon: <DesktopOutlined className={styles.MenuIcon} />,
+      path: '/accounts',
+      text: 'Accounts',
       onClick: onMenuItemClick,
     },
     {
