@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
-import { tableData } from 'utilities/constants';
 
 const columns = [
   {
@@ -24,29 +23,12 @@ const columns = [
   { title: 'STATUS', dataIndex: 'status', key: '8' },
 ];
 
-const DeviceTable = props => {
-  const [filteredData, setFilteredData] = useState([]);
-
-  useEffect(() => {
-    const filterData = [];
-    props.SelectedLocations.map((location, index) => {
-      tableData.forEach((data, index) => {
-        location == data.locationId ? filterData.push(data) : '';
-      });
-    });
-    setFilteredData(filterData);
-  }, [props.SelectedLocations]);
-
-  return (
-    <Table
-      columns={columns}
-      dataSource={props.SelectedLocations.length > 0 ? filteredData : tableData}
-    />
-  );
+const DeviceTable = ({ tableData }) => {
+  return <Table columns={columns} dataSource={tableData} scroll={{ x: 2000 }} />;
 };
 
 DeviceTable.propTypes = {
-  SelectedLocations: PropTypes.array.isRequired,
+  tableData: PropTypes.instanceOf(Array).isRequired,
 };
 
 export default DeviceTable;

@@ -2,6 +2,14 @@
   width: 260px;
   background-color: #1f1d1d;
   padding-top: 15px;
+  height: 100%;
+  @media only screen and (max-width: 660px) {
+    width: 190px;
+  }
+  @media only screen and (max-width: 480px) {
+    width: 160px;
+    height: auto;
+  }
   .searchBar {
     margin: 0px 15px 28px;
     input {
