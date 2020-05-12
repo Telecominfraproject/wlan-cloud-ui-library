@@ -1,6 +1,8 @@
 import React from 'react';
 import { Table, Button } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
+import PropTypes from 'prop-types';
+
 import styles from './index.module.scss';
 
 const columns = [
@@ -30,35 +32,34 @@ const columns = [
   },
 ];
 
-const dataSource = [
-  {
-    key: '1',
-    email: 'support@example.com',
-    role: 'Admin',
-  },
-  {
-    key: '2',
-    email: 'support@example.com',
-    role: 'User',
-  },
-  {
-    key: '3',
-    email: 'support@example.com',
-    role: 'User',
-  },
-  {
-    key: '4',
-    email: 'support@example.com',
-    role: 'User',
-  },
-  {
-    key: '5',
-    email: 'support@example.com',
-    role: 'User',
-  },
-];
-
-const Accounts = () => {
+const Accounts = ({ data }) => {
+  const dataSource = [
+    {
+      key: '1',
+      email: 'support@example.com',
+      role: 'Admin',
+    },
+    {
+      key: '2',
+      email: 'support@example.com',
+      role: 'User',
+    },
+    {
+      key: '3',
+      email: 'support@example.com',
+      role: 'User',
+    },
+    {
+      key: '4',
+      email: 'support@example.com',
+      role: 'User',
+    },
+    {
+      key: '5',
+      email: 'support@example.com',
+      role: 'User',
+    },
+  ];
   return (
     <div className={styles.Container}>
       <div className={styles.View}>
@@ -71,6 +72,10 @@ const Accounts = () => {
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );
+};
+
+Accounts.propTypes = {
+  data: PropTypes.isRequired,
 };
 
 export default Accounts;
