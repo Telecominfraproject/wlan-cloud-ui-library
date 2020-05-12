@@ -7,7 +7,7 @@
   position: fixed;
   display: flex;
   right: 0;
-  z-index: 2000;
+  z-index: 1;
 
   &.collapsed {
     left: $sidebar-collapsed-width;
