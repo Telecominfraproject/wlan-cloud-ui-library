@@ -33,7 +33,7 @@ const columns = [
 ];
 
 const Accounts = ({ data }) => {
-  const dataSource = data.map(user => ({ key: user.id, email: user.email, role: user.role }));
+  const dataSource = data.map(user => ({ key: user.id, email: user.username, role: user.role }));
 
   return (
     <div className={styles.Container}>
