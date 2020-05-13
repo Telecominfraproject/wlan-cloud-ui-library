@@ -1,12 +1,8 @@
 @import 'styles/variables';
 
 .MainLayout {
-  height: 100vh;
   margin-left: $sidebar-width;
   overflow: auto;
-  @media only screen and (max-width: 480px) {
-    height: auto;
-  }
   &.collapsed {
     margin-left: $sidebar-collapsed-width;
   }
@@ -21,4 +17,8 @@
 
 .Footer {
   text-align: center;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
 }

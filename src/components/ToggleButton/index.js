@@ -5,13 +5,33 @@ import styles from './index.module.scss';
 const ToggleButton = ({ onToggle, activeTab }) => {
   return (
     <div className={styles.navBtnWrapper}>
-      <div className={styles.navBtn} onClick={onToggle}>
-        <a id="ap" className={activeTab === 'ap' ? styles.activeBtn : ''}>
+      <div
+        className={styles.navBtn}
+        role="button"
+        tabIndex={0}
+        onKeyPress={() => {}}
+        onClick={onToggle}
+      >
+        <a
+          href="/network/access-points"
+          id="ap"
+          className={activeTab === 'ap' ? styles.activeBtn : ''}
+        >
           Access Points
         </a>
       </div>
-      <div className={styles.navBtn} onClick={onToggle}>
-        <a id="cd" className={activeTab === 'cd' ? styles.activeBtn : ''}>
+      <div
+        className={styles.navBtn}
+        role="button"
+        tabIndex={0}
+        onKeyPress={() => {}}
+        onClick={onToggle}
+      >
+        <a
+          href="/network/client-devices"
+          id="cd"
+          className={activeTab === 'cd' ? styles.activeBtn : ''}
+        >
           Client Devices
         </a>
       </div>
