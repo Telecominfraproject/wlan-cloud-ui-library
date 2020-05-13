@@ -1,0 +1,31 @@
+.Modal {
+  position: relative;
+  margin-top: 5%;
+  text-align: center;
+  justify-content: space-between;
+}
+
+.Field {
+  background: #141414;
+  border: 1px solid #434343;
+  border-radius: 5px;
+  justify-content: center;
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+}
+.Buttons {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.Button {
+  max-width: 139px;
+  width: 100%;
+  margin: 20px;
+}
