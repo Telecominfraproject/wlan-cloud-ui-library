@@ -33,33 +33,8 @@ const columns = [
 ];
 
 const Accounts = ({ data }) => {
-  const dataSource = [
-    {
-      key: '1',
-      email: 'support@example.com',
-      role: 'Admin',
-    },
-    {
-      key: '2',
-      email: 'support@example.com',
-      role: 'User',
-    },
-    {
-      key: '3',
-      email: 'support@example.com',
-      role: 'User',
-    },
-    {
-      key: '4',
-      email: 'support@example.com',
-      role: 'User',
-    },
-    {
-      key: '5',
-      email: 'support@example.com',
-      role: 'User',
-    },
-  ];
+  const dataSource = data.map(user => ({ key: user.id, email: user.email, role: user.role }));
+
   return (
     <div className={styles.Container}>
       <div className={styles.View}>
