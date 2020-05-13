@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DeviceTable from 'components/DeviceTable';
 import LocationsTree from 'components/LocationsTree';
+import ToggleButton from 'components/ToggleButton';
 import ReloadButton from 'components/ReloadButton';
 import styles from './index.module.scss';
 
@@ -13,9 +14,14 @@ const ClientDevices = ({
   onSelect,
   onCheck,
 }) => {
+  const [activeTab, setActiveTab] = useState('cd');
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
+  const onToggle = e => {
+    setActiveTab(e.target.id);
+  };
+
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -27,16 +33,7 @@ const ClientDevices = ({
         />
         <div className={styles.mainContent}>
           <div className={styles.headerContent}>
-            <div className={styles.navBtnWrapper}>
-              <div className={styles.navBtn}>
-                <a href="/network/client-devices">Access Points</a>
-              </div>
-              <div className={styles.navBtn}>
-                <a href="/network/client-devices" className={styles.activeBtn}>
-                  Client Devices
-                </a>
-              </div>
-            </div>
+            <ToggleButton onToggle={onToggle} activeTab={activeTab} />
             <ReloadButton onReload={onReload} />
           </div>
           <DeviceTable tableColumns={tableColumns} tableData={tableData} />

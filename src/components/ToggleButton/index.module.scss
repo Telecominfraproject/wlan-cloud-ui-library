@@ -1,0 +1,32 @@
+.navBtnWrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #141414 0% 0% no-repeat padding-box;
+  border-radius: 25px;
+  margin-right: 15px;
+  @media only screen and (max-width: 575px) {
+    flex-wrap: wrap;
+    background-color: transparent;
+  }
+}
+.navBtn {
+  a {
+    padding: 8px 25px;
+    border-radius: 50px;
+    color: #fff;
+    display: inline-block;
+    border-radius: 25px;
+    font: Bold 14px/16px Roboto;
+    @media only screen and (max-width: 660px) {
+      padding: 8px 16px;
+    }
+    &::selection {
+      background-color: transparent;
+      color: unset;
+    }
+  }
+  .activeBtn {
+    background: #35a649 0% 0% no-repeat padding-box;
+  }
+}
