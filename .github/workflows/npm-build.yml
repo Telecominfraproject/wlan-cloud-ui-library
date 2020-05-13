@@ -37,8 +37,11 @@ jobs:
             ${{ runner.os }}-
       - name: Install packages
         run: npm install
+      - name: ESLint check
+        run: npm run eslint
       - name: Run tests
         run: npm test
+
   push:
     # Ensure test job passes before pushing.
     needs: test

@@ -30,7 +30,7 @@ const GlobalHeader = ({ collapsed, onMenuButtonClick, isMobile }) => {
       </Row>
       <Row>
         <Link onClick={hidePopover} to="/account/edit">
-          Edit Profile
+          Edit Account
         </Link>
       </Row>
       <Row>

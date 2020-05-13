@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "ConnectUs",
   "description": "React UI Library",
   "engines": {
@@ -10,6 +10,7 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.js\"",
     "eslint-fix": "eslint --fix \"src/**/*.js\" --max-warnings=0",
+    "eslint": "eslint \"src/**/*.js\" --max-warnings=0",
     "build": "webpack --mode production",
     "prepublishOnly": "npm run build",
     "watch:js": "npm run build -- -w",
@@ -72,11 +73,10 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
   },
-  "precommit": "NODE_ENV=production lint-staged",
   "lint-staged": {
-    "*.{js,jsx}": [
+    "*.js": [
       "pretty-quick --staged",
-      "eslint . --fix \"src/**/*.js\" --max-warnings=0",
+      "eslint --fix .",
       "git add"
     ]
   },
