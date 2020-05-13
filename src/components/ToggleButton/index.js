@@ -13,7 +13,7 @@ const ToggleButton = ({ onToggle, activeTab }) => {
         onClick={onToggle}
       >
         <a
-          href="/network/access-points"
+          href="/network/client-devices"
           id="ap"
           className={activeTab === 'ap' ? styles.activeBtn : ''}
         >

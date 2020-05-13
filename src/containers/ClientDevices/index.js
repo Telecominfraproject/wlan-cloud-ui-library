@@ -13,13 +13,11 @@ const ClientDevices = ({
   checkedLocations,
   onSelect,
   onCheck,
+  onToggle,
+  activeTab,
 }) => {
-  const [activeTab, setActiveTab] = useState('cd');
   const onReload = () => {
     // console.log('Reload Button Clicked');
-  };
-  const onToggle = e => {
-    setActiveTab(e.target.id);
   };
 
   return (
@@ -50,6 +48,8 @@ ClientDevices.propTypes = {
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
 };
 
 export default ClientDevices;
