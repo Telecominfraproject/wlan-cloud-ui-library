@@ -5,11 +5,15 @@ import styles from './index.module.scss';
 
 const ReloadButton = ({ onReload }) => {
   return (
-    <div className={styles.reloadBtn}>
-      <span className={styles.reloadIcon} onClick={onReload}>
-        <ReloadOutlined />
-      </span>
-    </div>
+    <span
+      role="button"
+      tabIndex={0}
+      className={styles.reloadIcon}
+      onKeyPress={() => {}}
+      onClick={onReload}
+    >
+      <ReloadOutlined />
+    </span>
   );
 };
 

@@ -5,17 +5,13 @@ import { SearchOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 
 const LocationsTree = ({ locations, checkedLocations, onSelect, onCheck }) => {
-  const handleSearch = e => {
-    console.log(e.target.value);
+  const handleSearch = () => {
+    // console.log(e.target.value);
   };
   return (
     <div className={styles.sideTree}>
       <div className={styles.searchBar}>
-        <Input
-          placeholder="Search Locations"
-          onChange={e => handleSearch(e)}
-          prefix={<SearchOutlined />}
-        />
+        <Input placeholder="Search Locations" onChange={handleSearch} prefix={<SearchOutlined />} />
       </div>
       <Tree
         checkable
