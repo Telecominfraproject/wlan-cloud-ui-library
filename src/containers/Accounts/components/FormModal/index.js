@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Select } from 'antd';
 
-import GlobalModal from '../../../../components/GlobalModal';
+import Modal from '../../../../components/Modal';
 import styles from './index.module.scss';
 
 const FormModal = ({ onCancel, onSuccess, title, buttonText, buttonKey, buttonType }) => {
@@ -78,7 +78,7 @@ const FormModal = ({ onCancel, onSuccess, title, buttonText, buttonKey, buttonTy
   );
 
   return (
-    <GlobalModal
+    <Modal
       onCancel={onCancel}
       onSuccess={onSuccess}
       title={title}

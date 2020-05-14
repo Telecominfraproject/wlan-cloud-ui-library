@@ -4,7 +4,7 @@ import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import styles from './index.module.scss';
-import GlobalModal from '../../components/GlobalModal';
+import Modal from '../../components/Modal';
 import FormModal from './components/FormModal';
 
 const Accounts = ({ data }) => {
@@ -87,7 +87,7 @@ const Accounts = ({ data }) => {
         </Button>
       </div>
 
-      <GlobalModal
+      <Modal
         onCancel={hideDeleteModal}
         onSuccess={deleteModal}
         title="Are you sure?"
@@ -108,7 +108,6 @@ const Accounts = ({ data }) => {
         buttonType="primary"
         buttonKey="Save"
       />
-
       <FormModal
         onCancel={hideAddModal}
         onSuccess={addModal}

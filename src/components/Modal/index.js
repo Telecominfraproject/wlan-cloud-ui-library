@@ -1,20 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'antd';
+import { Modal as AntdModal, Button } from 'antd';
 
 import styles from './index.module.scss';
 
-const GlobalModal = ({
-  onCancel,
-  onSuccess,
-  title,
-  buttonKey,
-  buttonText,
-  buttonType,
-  content,
-}) => {
+const Modal = ({ onCancel, onSuccess, title, buttonKey, buttonText, buttonType, content }) => {
   return (
-    <Modal
+    <AntdModal
       className={styles.Modal}
       visible={onSuccess}
       title={title}
@@ -31,11 +23,11 @@ const GlobalModal = ({
       ]}
     >
       {content}
-    </Modal>
+    </AntdModal>
   );
 };
 
-GlobalModal.propTypes = {
+Modal.propTypes = {
   onCancel: PropTypes.isRequired,
   onSuccess: PropTypes.func.isRequired,
   buttonKey: PropTypes.string.isRequired,
@@ -45,4 +37,4 @@ GlobalModal.propTypes = {
   buttonType: PropTypes.string.isRequired,
 };
 
-export default GlobalModal;
+export default Modal;
