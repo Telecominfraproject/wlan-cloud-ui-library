@@ -8,8 +8,8 @@ const AddModal = ({ hideAddModal, showAddModal }) => {
   const { Item } = Form;
 
   const layout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 14 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
   return (
     <div className={styles.Container}>
@@ -30,8 +30,8 @@ const AddModal = ({ hideAddModal, showAddModal }) => {
           </div>,
         ]}
       >
-        <Form {...layout} name="login" data-testid="login">
-          <div className={styles.Form}>
+        <div className={styles.Form}>
+          <Form {...layout} name="login" data-testid="login">
             <Item
               label="E-mail"
               name="email"
@@ -61,8 +61,8 @@ const AddModal = ({ hideAddModal, showAddModal }) => {
             >
               <Input.Password visibilityToggle className={styles.Field} />
             </Item>
-          </div>
-        </Form>
+          </Form>
+        </div>
       </Modal>
     </div>
   );

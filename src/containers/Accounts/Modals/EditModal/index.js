@@ -8,8 +8,8 @@ const EditModal = ({ hideEditModal, showEditModal }) => {
   const { Item } = Form;
 
   const layout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 14 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
   return (
     <div className={styles.Container}>
@@ -30,8 +30,8 @@ const EditModal = ({ hideEditModal, showEditModal }) => {
           </div>,
         ]}
       >
-        <Form {...layout} name="login" data-testid="login">
-          <div className={styles.Form}>
+        <div className={styles.Form}>
+          <Form {...layout} name="login" data-testid="login">
             <Item label="E-mail">support@example.com</Item>
             <Item label="Role">Admin</Item>
 
@@ -70,8 +70,8 @@ const EditModal = ({ hideEditModal, showEditModal }) => {
             >
               <Input.Password className={styles.Field} />
             </Item>
-          </div>
-        </Form>
+          </Form>
+        </div>
       </Modal>
     </div>
   );
