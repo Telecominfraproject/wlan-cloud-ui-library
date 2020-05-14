@@ -21,10 +21,19 @@ const EditModal = ({ hideEditModal, showEditModal }) => {
         onOk={hideEditModal}
         footer={[
           <div className={styles.Buttons}>
-            <Button className={styles.Button} key="back" onClick={hideEditModal}>
+            <Button className={styles.Button} key="cancel" onClick={hideEditModal}>
               CANCEL
             </Button>
-            <Button className={styles.Button} key="submit" type="primary" onClick={hideEditModal}>
+            <Button
+              className={styles.Button}
+              key="save"
+              type="primary"
+              onClick={() => {
+                Form.validateFields().then(() => {
+                  Form.resetFields();
+                });
+              }}
+            >
               SAVE
             </Button>
           </div>,

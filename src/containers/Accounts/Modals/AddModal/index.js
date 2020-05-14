@@ -19,13 +19,21 @@ const AddModal = ({ hideAddModal, showAddModal }) => {
         visible={showAddModal}
         title="Add Account"
         onCancel={hideAddModal}
-        onOk={hideAddModal}
         footer={[
           <div className={styles.Buttons}>
-            <Button className={styles.Button} key="back" onClick={hideAddModal}>
+            <Button className={styles.Button} key="cancel" onClick={hideAddModal}>
               CANCEL
             </Button>
-            <Button className={styles.Button} key="submit" type="primary" onClick={hideAddModal}>
+            <Button
+              className={styles.Button}
+              key="save"
+              type="primary"
+              onClick={() => {
+                Form.validateFields().then(() => {
+                  Form.resetFields();
+                });
+              }}
+            >
               SAVE
             </Button>
           </div>,
