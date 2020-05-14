@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { Table, Button, Modal } from 'antd';
+import { Table, Button } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import styles from './index.module.scss';
-import AddModal from './Modals/AddModal/index';
-import EditModal from './Modals/EditModal/index';
-import DeleteModal from './Modals/DeleteModal/index';
+import GlobalModal from '../../components/GlobalModal';
+import FormModal from './components/FormModal';
 
 const Accounts = ({ data }) => {
-  const [addModal, setAddModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [addModal, setAddModal] = useState(false);
 
-  const hideAddModal = () => {
-    setAddModal(false);
+  const hideDeleteModal = () => {
+    setDeleteModal(false);
   };
+
   const hideEditModal = () => {
     setEditModal(false);
   };
-  const hideDeleteModal = () => {
-    setDeleteModal(false);
+
+  const hideAddModal = () => {
+    setAddModal(false);
   };
 
   const columns = [
@@ -77,20 +78,45 @@ const Accounts = ({ data }) => {
       role: 'User',
     },
   ];
-
   return (
     <div className={styles.Container}>
       <div className={styles.View}>
         <h1>Accounts</h1>
-        <Button id={styles.addAccount} type="primary" onClick={() => setAddModal(true)}>
+        <Button className={styles.addAccount} type="primary" onClick={() => setAddModal(true)}>
           ADD ACCOUNT
         </Button>
       </div>
 
-      <AddModal hideAddModal={hideAddModal} showAddModal={addModal} />
-      <EditModal hideEditModal={hideEditModal} showEditModal={editModal} />
-      <DeleteModal hideDeleteModal={hideDeleteModal} showDeleteModal={deleteModal} />
+      <GlobalModal
+        onCancel={hideDeleteModal}
+        onSuccess={deleteModal}
+        title="Are you sure?"
+        buttonText="DELETE"
+        buttonKey="delete"
+        buttonType="danger"
+        content={
+          <p>
+            Are you sure you want to delete the account: <strong> support@example.com</strong>
+          </p>
+        }
+      />
+      <FormModal
+        onCancel={hideEditModal}
+        onSuccess={editModal}
+        title="Edit Account"
+        buttonText="SAVE"
+        buttonType="primary"
+        buttonKey="Save"
+      />
 
+      <FormModal
+        onCancel={hideAddModal}
+        onSuccess={addModal}
+        title="Add Account"
+        buttonText="SAVE"
+        buttonType="primary"
+        buttonKey="Save"
+      />
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );
