@@ -5,7 +5,7 @@ import { Form, Input, Select } from 'antd';
 import Modal from '../../../../components/Modal';
 import styles from './index.module.scss';
 
-const FormModal = ({ onCancel, onSuccess, title, buttonText, buttonKey, buttonType }) => {
+const FormModal = ({ onCancel, onSuccess, visible, title }) => {
   const { Item } = Form;
   const { Option } = Select;
 
@@ -77,28 +77,31 @@ const FormModal = ({ onCancel, onSuccess, title, buttonText, buttonKey, buttonTy
     </Form>
   );
 
+  Modal.defaultProps = {
+    buttonType: 'primary',
+    buttonText: 'Save',
+  };
+
   return (
     <Modal
       onCancel={onCancel}
+      visible={visible}
       onSuccess={onSuccess}
       title={title}
-      buttonText={buttonText}
-      buttonKey={buttonKey}
-      buttonType={buttonType}
       content={content}
     />
   );
 };
 
+FormModal.defaultProps = {
+  title: '',
+};
+
 FormModal.propTypes = {
-  onCancel: PropTypes.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  visible: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
-  validateForm: PropTypes.func.isRequired,
-  buttonKey: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-  buttonText: PropTypes.string.isRequired,
-  buttonType: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 export default FormModal;

@@ -24,6 +24,18 @@ const Accounts = ({ data }) => {
     setAddModal(false);
   };
 
+  const deleteUser = () => {
+    console.log('User Deleted');
+  };
+
+  const addUser = () => {
+    console.log('User Added');
+  };
+
+  const editUser = () => {
+    console.log('User Edited');
+  };
+
   const columns = [
     {
       title: 'E-MAIL',
@@ -80,7 +92,7 @@ const Accounts = ({ data }) => {
   ];
   return (
     <div className={styles.Container}>
-      <div className={styles.View}>
+      <div className={styles.TopSection}>
         <h1>Accounts</h1>
         <Button className={styles.addAccount} type="primary" onClick={() => setAddModal(true)}>
           ADD ACCOUNT
@@ -89,10 +101,10 @@ const Accounts = ({ data }) => {
 
       <Modal
         onCancel={hideDeleteModal}
-        onSuccess={deleteModal}
+        onSuccess={deleteUser}
+        visible={deleteModal}
         title="Are you sure?"
         buttonText="DELETE"
-        buttonKey="delete"
         buttonType="danger"
         content={
           <p>
@@ -102,27 +114,27 @@ const Accounts = ({ data }) => {
       />
       <FormModal
         onCancel={hideEditModal}
-        onSuccess={editModal}
+        visible={editModal}
+        onSuccess={editUser}
         title="Edit Account"
-        buttonText="SAVE"
-        buttonType="primary"
-        buttonKey="Save"
       />
       <FormModal
         onCancel={hideAddModal}
-        onSuccess={addModal}
+        visible={addModal}
+        onSuccess={addUser}
         title="Add Account"
-        buttonText="SAVE"
-        buttonType="primary"
-        buttonKey="Save"
       />
       <Table dataSource={dataSource} columns={columns} />
     </div>
   );
 };
 
+Accounts.defaultProps = {
+  data: [],
+};
+
 Accounts.propTypes = {
-  data: PropTypes.isRequired,
+  data: PropTypes.instanceOf(Array),
 };
 
 export default Accounts;
