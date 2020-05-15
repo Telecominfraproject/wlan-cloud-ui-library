@@ -1,0 +1,61 @@
+@import 'styles/variables';
+
+.Navbar {
+  height: $header-height;
+  left: 0;
+  padding: 0;
+  position: fixed;
+  display: flex;
+  right: 0;
+  z-index: 1;
+
+  :global(.ant-row) {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+
+  :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item) {
+    height: 100%;
+    background: none;
+
+    &:global(.ant-menu-item-selected) {
+      border-bottom: 2px solid #35a649;
+      font-weight: bold;
+    }
+
+    a {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+:global(.ant-menu-item.ant-menu-item-only-child .anticon) {
+  margin-right: 20px;
+}
+
+.LogoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 24px;
+
+  img {
+    border-radius: 5px;
+  }
+}
+
+.MenuIcon {
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+}
+
+.RightMenu {
+  margin-left: auto;
+}

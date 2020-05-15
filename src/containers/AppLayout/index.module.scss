@@ -1,14 +1,7 @@
 @import 'styles/variables';
 
 .MainLayout {
-  margin-left: $sidebar-width;
   overflow: auto;
-  &.collapsed {
-    margin-left: $sidebar-collapsed-width;
-  }
-  &.mobile {
-    margin-left: 0;
-  }
 }
 
 .Content {
