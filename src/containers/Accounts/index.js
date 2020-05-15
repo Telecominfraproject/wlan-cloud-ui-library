@@ -7,33 +7,23 @@ import styles from './index.module.scss';
 import Modal from '../../components/Modal';
 import FormModal from './components/FormModal';
 
-const Accounts = ({ data }) => {
+const Accounts = ({ data, onCreateUser, onEditUser }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
 
-  const hideDeleteModal = () => {
+  const deleteUser = () => {
     setDeleteModal(false);
   };
 
-  const hideEditModal = () => {
-    setEditModal(false);
-  };
-
-  const hideAddModal = () => {
+  const addUser = ({ email, role, password }) => {
+    onCreateUser(email, password, role);
     setAddModal(false);
   };
 
-  const deleteUser = () => {
-    console.log('User Deleted');
-  };
-
-  const addUser = () => {
-    console.log('User Added');
-  };
-
-  const editUser = () => {
-    console.log('User Edited');
+  const editUser = ({ email, role, password }) => {
+    onEditUser(email, password, role);
+    setEditModal(false);
   };
 
   const columns = [
@@ -76,20 +66,9 @@ const Accounts = ({ data }) => {
       ),
     },
   ];
-  // const dataSource = data.map(user => ({ key: user.id, email: user.username, role: user.role }));
 
-  const dataSource = [
-    {
-      key: 1,
-      email: 'support@example.com',
-      role: 'Admin',
-    },
-    {
-      key: 2,
-      email: 'support@example.com',
-      role: 'User',
-    },
-  ];
+  const dataSource = data.map(user => ({ id: user.id, email: user.username, role: user.role }));
+
   return (
     <div className={styles.Container}>
       <div className={styles.TopSection}>
@@ -100,7 +79,7 @@ const Accounts = ({ data }) => {
       </div>
 
       <Modal
-        onCancel={hideDeleteModal}
+        onCancel={() => setDeleteModal(false)}
         onSuccess={deleteUser}
         visible={deleteModal}
         title="Are you sure?"
@@ -113,15 +92,15 @@ const Accounts = ({ data }) => {
         }
       />
       <FormModal
-        onCancel={hideEditModal}
+        onCancel={() => setEditModal(false)}
         visible={editModal}
-        onSuccess={editUser}
+        onSubmit={editUser}
         title="Edit Account"
       />
       <FormModal
-        onCancel={hideAddModal}
+        onCancel={() => setAddModal(false)}
         visible={addModal}
-        onSuccess={addUser}
+        onSubmit={addUser}
         title="Add Account"
       />
       <Table dataSource={dataSource} columns={columns} />
@@ -135,6 +114,8 @@ Accounts.defaultProps = {
 
 Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
+  onCreateUser: PropTypes.func.isRequired,
+  onEditUser: PropTypes.func.isRequired,
 };
 
 export default Accounts;

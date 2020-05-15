@@ -5,16 +5,17 @@ import { Form, Input, Select } from 'antd';
 import Modal from '../../../../components/Modal';
 import styles from './index.module.scss';
 
-const FormModal = ({ onCancel, onSuccess, visible, title }) => {
+const FormModal = ({ onCancel, onSubmit, visible, title }) => {
   const { Item } = Form;
   const { Option } = Select;
+  const [form] = Form.useForm();
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
   const content = (
-    <Form {...layout} name="test" data-testid="test">
+    <Form {...layout} name="test" data-testid="test" form={form}>
       <Item
         label="E-mail"
         name="email"
@@ -86,7 +87,12 @@ const FormModal = ({ onCancel, onSuccess, visible, title }) => {
     <Modal
       onCancel={onCancel}
       visible={visible}
-      onSuccess={onSuccess}
+      onSuccess={() => {
+        form.validateFields().then(values => {
+          form.resetFields();
+          onSubmit(values);
+        });
+      }}
       title={title}
       content={content}
     />
@@ -99,8 +105,8 @@ FormModal.defaultProps = {
 
 FormModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
-  visible: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
 };
 

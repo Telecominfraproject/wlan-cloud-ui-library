@@ -29,8 +29,8 @@ const Modal = ({ onCancel, onSuccess, visible, title, buttonText, buttonType, co
 
 Modal.propTypes = {
   onCancel: PropTypes.func.isRequired,
-  onSuccess: PropTypes.isRequired,
-  visible: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
   buttonText: PropTypes.string.isRequired,
