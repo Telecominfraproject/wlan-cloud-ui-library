@@ -12,11 +12,7 @@ const ToggleButton = ({ onToggle, activeTab }) => {
         onKeyPress={() => {}}
         onClick={onToggle}
       >
-        <a
-          href="/network/client-devices"
-          id="ap"
-          className={activeTab === 'ap' ? styles.activeBtn : ''}
-        >
+        <a href="#" id="ap" className={activeTab === 'ap' ? styles.activeBtn : ''}>
           Access Points
         </a>
       </div>
@@ -27,11 +23,7 @@ const ToggleButton = ({ onToggle, activeTab }) => {
         onKeyPress={() => {}}
         onClick={onToggle}
       >
-        <a
-          href="/network/client-devices"
-          id="cd"
-          className={activeTab === 'cd' ? styles.activeBtn : ''}
-        >
+        <a href="#" id="cd" className={activeTab === 'cd' ? styles.activeBtn : ''}>
           Client Devices
         </a>
       </div>
