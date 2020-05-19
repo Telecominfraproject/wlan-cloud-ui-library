@@ -63,7 +63,7 @@
   .mainContent {
     width: calc(100% - 280px);
     margin-left: auto;
-    height: 100vh;
+    padding-bottom: 120px;
     @media only screen and (max-width: 660px) {
       width: calc(100% - 210px);
     }
