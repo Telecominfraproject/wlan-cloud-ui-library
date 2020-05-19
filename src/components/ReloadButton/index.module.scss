@@ -1,0 +1,11 @@
+.reloadIcon {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 18px;
+  span {
+    border: 1px solid #403d3d;
+    padding: 6px;
+    border-radius: 3px;
+    background-color: rgb(20, 20, 20);
+  }
+}

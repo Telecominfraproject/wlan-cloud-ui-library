@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "ConnectUs",
   "description": "React UI Library",
   "engines": {
@@ -21,7 +21,7 @@
   "main": "dist/index.js",
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
-    "antd": "^4.0.0",
+    "antd": "^4.2.2",
     "prop-types": "^15.7.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
@@ -73,6 +73,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
   },
+  "precommit": "NODE_ENV=production lint-staged",
   "lint-staged": {
     "*.js": [
       "pretty-quick --staged",

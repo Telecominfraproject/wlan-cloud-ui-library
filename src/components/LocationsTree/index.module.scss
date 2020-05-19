@@ -1,0 +1,20 @@
+.sideTree {
+  width: 260px;
+  background-color: #1f1d1d;
+  padding-top: 15px;
+  height: 100%;
+  position: fixed;
+  @media only screen and (max-width: 660px) {
+    width: 190px;
+  }
+  @media only screen and (max-width: 480px) {
+    width: 160px;
+  }
+  .searchBar {
+    margin: 0px 15px 28px;
+    input {
+      font: Regular 12px/14px Roboto;
+      color: #434343;
+    }
+  }
+}

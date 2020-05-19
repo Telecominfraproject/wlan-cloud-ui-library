@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 
 import ThemeContext from 'contexts/ThemeContext';
-import GlobalHeader from 'components/GlobalHeader';
-import SideMenu from 'components/SideMenu';
+import Navbar from 'components/Navbar';
 
 import styles from './index.module.scss';
 
 const { Content, Footer } = Layout;
 
-const AppLayout = ({ children, locationState, onLogout }) => {
+const AppLayout = ({ children, menuItems, mobileMenuItems, locationState, onLogout }) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -63,30 +62,25 @@ const AppLayout = ({ children, locationState, onLogout }) => {
   }, [screenSize]);
 
   return (
-    <Layout>
-      <SideMenu
+    <Layout
+      className={`${styles.MainLayout} ${isCollapsed ? styles.collapsed : ''} ${
+        isMobile ? styles.mobile : ''
+      }`}
+    >
+      <Navbar
+        menuItems={menuItems}
+        mobileMenuItems={mobileMenuItems}
         locationState={locationState}
         collapsed={isCollapsed}
         isMobile={isMobile}
-        onMenuButtonClick={handleMenuToggle}
-        onMenuItemClick={handleMenuItemClick}
         onLogout={handleLogout}
+        onMenuToggle={handleMenuToggle}
+        onMenuItemClick={handleMenuItemClick}
       />
-      <Layout
-        className={`${styles.MainLayout} ${isCollapsed ? styles.collapsed : ''} ${
-          isMobile ? styles.mobile : ''
-        }`}
-      >
-        <GlobalHeader
-          collapsed={isCollapsed}
-          isMobile={isMobile}
-          onMenuButtonClick={handleMenuToggle}
-        />
-        <Content className={styles.Content}>{children}</Content>
-        <Footer className={styles.Footer}>
-          Copyright © {currentYear} {theme.company} Inc. All Rights Reserved.
-        </Footer>
-      </Layout>
+      <Content className={styles.Content}>{children}</Content>
+      <Footer className={styles.Footer}>
+        Copyright © {currentYear} {theme.company} Inc. All Rights Reserved.
+      </Footer>
     </Layout>
   );
 };
@@ -95,6 +89,13 @@ AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
   onLogout: PropTypes.func.isRequired,
   locationState: PropTypes.instanceOf(Object).isRequired,
+  menuItems: PropTypes.instanceOf(Array),
+  mobileMenuItems: PropTypes.instanceOf(Array),
+};
+
+AppLayout.defaultProps = {
+  menuItems: [],
+  mobileMenuItems: null,
 };
 
 export default AppLayout;
