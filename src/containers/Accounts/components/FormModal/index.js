@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Select } from 'antd';
 
-import Modal from '../../../../components/Modal';
+import Modal from 'components/Modal';
 import styles from './index.module.scss';
 
 const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) => {
   const { Item } = Form;
   const { Option } = Select;
   const [form] = Form.useForm();
-  form.resetFields();
+
+  useEffect(() => {
+    form.setFieldsValue({ email: userEmail, role: userRole });
+  }, [visible]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -32,11 +35,11 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
           },
         ]}
       >
-        <Input defaultValue={userEmail} key={userEmail} className={styles.Field} />
+        <Input className={styles.Field} />
       </Item>
 
       <Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
-        <Select defaultValue={userRole} key={userRole} placeholder="Select role">
+        <Select placeholder="Select role">
           <Option value="SuperUser">SuperUser</Option>
           <Option value="CustomerIT">CustomerIT</Option>
         </Select>
@@ -80,11 +83,6 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
     </Form>
   );
 
-  Modal.defaultProps = {
-    buttonType: 'primary',
-    buttonText: 'Save',
-  };
-
   return (
     <Modal
       onCancel={onCancel}
@@ -101,12 +99,6 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
   );
 };
 
-FormModal.defaultProps = {
-  title: '',
-  userEmail: '',
-  userRole: '',
-};
-
 FormModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
@@ -114,6 +106,12 @@ FormModal.propTypes = {
   title: PropTypes.string,
   userEmail: PropTypes.string,
   userRole: PropTypes.string,
+};
+
+FormModal.defaultProps = {
+  title: '',
+  userEmail: '',
+  userRole: '',
 };
 
 export default FormModal;

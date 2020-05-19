@@ -3,8 +3,8 @@ import { Table, Button } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
+import Modal from 'components/Modal';
 import styles from './index.module.scss';
-import Modal from '../../components/Modal';
 import FormModal from './components/FormModal';
 
 const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
@@ -18,6 +18,16 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
     customerId: '',
     lastModifiedTimestamp: 0,
   });
+
+  const setUserValues = row => {
+    setActiveUser({
+      id: row.id,
+      email: row.email,
+      role: row.role,
+      customerId: row.customerId,
+      lastModifiedTimestamp: row.lastModifiedTimestamp,
+    });
+  };
 
   const deleteUser = () => {
     const { id } = activeUser;
@@ -66,7 +76,10 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
-          onClick={() => setEditModal(true)}
+          onClick={() => {
+            setEditModal(true);
+            setUserValues();
+          }}
         />
       ),
     },
@@ -79,7 +92,10 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
-          onClick={() => setDeleteModal(true)}
+          onClick={() => {
+            setDeleteModal(true);
+            setUserValues();
+          }}
         />
       ),
     },
@@ -125,14 +141,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
         columns={columns}
         onRow={row => {
           return {
-            onClick: () =>
-              setActiveUser({
-                id: row.id,
-                email: row.email,
-                role: row.role,
-                customerId: row.customerId,
-                lastModifiedTimestamp: row.lastModifiedTimestamp,
-              }),
+            onClick: () => setUserValues(row),
           };
         }}
       />
@@ -140,15 +149,15 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
   );
 };
 
-Accounts.defaultProps = {
-  data: [],
-};
-
 Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
   onCreateUser: PropTypes.func.isRequired,
   onEditUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
+};
+
+Accounts.defaultProps = {
+  data: [],
 };
 
 export default Accounts;

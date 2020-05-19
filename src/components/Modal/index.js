@@ -27,18 +27,20 @@ const Modal = ({ onCancel, onSuccess, visible, title, buttonText, buttonType, co
   );
 };
 
-Modal.defaultProps = {
-  content: '',
-};
-
 Modal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
-  content: PropTypes.string,
-  buttonText: PropTypes.string.isRequired,
-  buttonType: PropTypes.string.isRequired,
+  content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  buttonText: PropTypes.string,
+  buttonType: PropTypes.string,
+};
+
+Modal.defaultProps = {
+  content: null,
+  buttonType: 'primary',
+  buttonText: 'Save',
 };
 
 export default Modal;
