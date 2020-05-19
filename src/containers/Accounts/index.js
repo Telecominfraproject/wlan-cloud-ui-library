@@ -19,13 +19,13 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
     lastModifiedTimestamp: 0,
   });
 
-  const setUserValues = row => {
+  const setUserValues = ({ id, email, role, customerId, lastModifiedTimestamp }) => {
     setActiveUser({
-      id: row.id,
-      email: row.email,
-      role: row.role,
-      customerId: row.customerId,
-      lastModifiedTimestamp: row.lastModifiedTimestamp,
+      id,
+      email,
+      role,
+      customerId,
+      lastModifiedTimestamp,
     });
   };
 
@@ -46,12 +46,12 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
     setEditModal(false);
   };
 
-  const dataSource = data.map(user => ({
-    id: user.id,
-    email: user.username,
-    role: user.role,
-    customerId: user.customerId,
-    lastModifiedTimestamp: user.lastModifiedTimestamp,
+  const dataSource = data.map(({ id, username, role, customerId, lastModifiedTimestamp }) => ({
+    id,
+    email: username,
+    role,
+    customerId,
+    lastModifiedTimestamp,
   }));
 
   const columns = [
@@ -71,14 +71,14 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       title: '',
       dataIndex: 'edit',
       key: 'edit',
-      render: () => (
+      render: (_, record) => (
         <Button
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
             setEditModal(true);
-            setUserValues();
+            setUserValues(record);
           }}
         />
       ),
@@ -87,14 +87,14 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       title: '',
       dataIndex: 'delete',
       key: 'delete',
-      render: () => (
+      render: (_, record) => (
         <Button
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
           onClick={() => {
             setDeleteModal(true);
-            setUserValues();
+            setUserValues(record);
           }}
         />
       ),
@@ -136,15 +136,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
         onSubmit={addUser}
         title="Add Account"
       />
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        onRow={row => {
-          return {
-            onClick: () => setUserValues(row),
-          };
-        }}
-      />
+      <Table dataSource={dataSource} columns={columns} />
     </div>
   );
 };

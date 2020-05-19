@@ -5,9 +5,10 @@ import { Form, Input, Select } from 'antd';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 
+const { Item } = Form;
+const { Option } = Select;
+
 const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) => {
-  const { Item } = Form;
-  const { Option } = Select;
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -111,7 +112,7 @@ FormModal.propTypes = {
 FormModal.defaultProps = {
   title: '',
   userEmail: '',
-  userRole: '',
+  userRole: 'CustomerIT',
 };
 
 export default FormModal;
