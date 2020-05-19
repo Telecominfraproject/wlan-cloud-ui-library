@@ -31,13 +31,14 @@ Modal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   buttonText: PropTypes.string,
   buttonType: PropTypes.string,
 };
 
 Modal.defaultProps = {
+  title: null,
   content: null,
   buttonType: 'primary',
   buttonText: 'Save',
