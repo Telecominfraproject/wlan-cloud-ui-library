@@ -5,15 +5,17 @@ import { Form, Input, Select } from 'antd';
 import Modal from '../../../../components/Modal';
 import styles from './index.module.scss';
 
-const FormModal = ({ onCancel, onSubmit, visible, title }) => {
+const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) => {
   const { Item } = Form;
   const { Option } = Select;
   const [form] = Form.useForm();
+  form.resetFields();
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
+
   const content = (
     <Form {...layout} name="test" data-testid="test" form={form}>
       <Item
@@ -30,11 +32,11 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
           },
         ]}
       >
-        <Input className={styles.Field} />
+        <Input defaultValue={userEmail} key={userEmail} className={styles.Field} />
       </Item>
 
       <Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
-        <Select placeholder="Select role">
+        <Select defaultValue={userRole} key={userRole} placeholder="Select role">
           <Option value="SuperUser">SuperUser</Option>
           <Option value="CustomerIT">CustomerIT</Option>
         </Select>
@@ -101,6 +103,8 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
 
 FormModal.defaultProps = {
   title: '',
+  userEmail: '',
+  userRole: '',
 };
 
 FormModal.propTypes = {
@@ -108,6 +112,8 @@ FormModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
+  userEmail: PropTypes.string,
+  userRole: PropTypes.string,
 };
 
 export default FormModal;

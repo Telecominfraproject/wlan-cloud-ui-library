@@ -7,12 +7,21 @@ import styles from './index.module.scss';
 import Modal from '../../components/Modal';
 import FormModal from './components/FormModal';
 
-const Accounts = ({ data, onCreateUser, onEditUser }) => {
+const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
+  const [activeUser, setActiveUser] = useState({
+    id: 0,
+    email: '',
+    role: '',
+    customerId: '',
+    lastModifiedTimestamp: 0,
+  });
 
   const deleteUser = () => {
+    const { id } = activeUser;
+    onDeleteUser(id);
     setDeleteModal(false);
   };
 
@@ -22,9 +31,18 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
   };
 
   const editUser = ({ email, role, password }) => {
-    onEditUser(email, password, role);
+    const { id, lastModifiedTimestamp } = activeUser;
+    onEditUser(id, email, password, role, lastModifiedTimestamp);
     setEditModal(false);
   };
+
+  const dataSource = data.map(user => ({
+    id: user.id,
+    email: user.username,
+    role: user.role,
+    customerId: user.customerId,
+    lastModifiedTimestamp: user.lastModifiedTimestamp,
+  }));
 
   const columns = [
     {
@@ -67,8 +85,6 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
     },
   ];
 
-  const dataSource = data.map(user => ({ id: user.id, email: user.username, role: user.role }));
-
   return (
     <div className={styles.Container}>
       <div className={styles.TopSection}>
@@ -77,7 +93,6 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
           ADD ACCOUNT
         </Button>
       </div>
-
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteUser}
@@ -87,7 +102,7 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the account: <strong> support@example.com</strong>
+            Are you sure you want to delete the account: <strong> {activeUser.email}</strong>
           </p>
         }
       />
@@ -96,6 +111,8 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
         visible={editModal}
         onSubmit={editUser}
         title="Edit Account"
+        userRole={activeUser.role}
+        userEmail={activeUser.email}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
@@ -103,7 +120,22 @@ const Accounts = ({ data, onCreateUser, onEditUser }) => {
         onSubmit={addUser}
         title="Add Account"
       />
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        onRow={row => {
+          return {
+            onClick: () =>
+              setActiveUser({
+                id: row.id,
+                email: row.email,
+                role: row.role,
+                customerId: row.customerId,
+                lastModifiedTimestamp: row.lastModifiedTimestamp,
+              }),
+          };
+        }}
+      />
     </div>
   );
 };
@@ -116,6 +148,7 @@ Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
   onCreateUser: PropTypes.func.isRequired,
   onEditUser: PropTypes.func.isRequired,
+  onDeleteUser: PropTypes.func.isRequired,
 };
 
 export default Accounts;
