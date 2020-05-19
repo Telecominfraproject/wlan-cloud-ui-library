@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
 import styles from './index.module.scss';
 
 const ToggleButton = ({ onToggle, activeTab }) => {
@@ -12,9 +14,13 @@ const ToggleButton = ({ onToggle, activeTab }) => {
         onKeyPress={() => {}}
         onClick={onToggle}
       >
-        <a href="#" id="ap" className={activeTab === 'ap' ? styles.activeBtn : ''}>
+        <Link
+          to="/network/access-points"
+          id="ap"
+          className={activeTab === 'ap' ? styles.activeBtn : ''}
+        >
           Access Points
-        </a>
+        </Link>
       </div>
       <div
         className={styles.navBtn}
@@ -23,9 +29,13 @@ const ToggleButton = ({ onToggle, activeTab }) => {
         onKeyPress={() => {}}
         onClick={onToggle}
       >
-        <a href="#" id="cd" className={activeTab === 'cd' ? styles.activeBtn : ''}>
+        <Link
+          to="/network/client-devices"
+          id="cd"
+          className={activeTab === 'cd' ? styles.activeBtn : ''}
+        >
           Client Devices
-        </a>
+        </Link>
       </div>
     </div>
   );
