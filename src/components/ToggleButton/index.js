@@ -27,7 +27,11 @@ const ToggleButton = ({ activeTab }) => {
 };
 
 ToggleButton.propTypes = {
-  activeTab: PropTypes.string.isRequired,
+  activeTab: PropTypes.string,
+};
+
+ToggleButton.defaultProps = {
+  activeTab: '/network/access-points',
 };
 
 export default ToggleButton;
