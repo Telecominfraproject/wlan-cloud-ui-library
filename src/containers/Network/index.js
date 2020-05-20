@@ -1,25 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DeviceTable from 'components/DeviceTable';
 import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
 import ReloadButton from 'components/ReloadButton';
 import styles from './index.module.scss';
 
-const ClientDevices = ({
-  tableColumns,
+const Network = ({
   locations,
-  tableData,
   checkedLocations,
   onSelect,
   onCheck,
   onToggle,
   activeTab,
+  children,
 }) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
-
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -34,17 +31,16 @@ const ClientDevices = ({
             <ToggleButton onToggle={onToggle} activeTab={activeTab} />
             <ReloadButton onReload={onReload} />
           </div>
-          <DeviceTable tableColumns={tableColumns} tableData={tableData} />
+          {children}
         </div>
       </div>
     </div>
   );
 };
 
-ClientDevices.propTypes = {
-  tableColumns: PropTypes.instanceOf(Array).isRequired,
+Network.propTypes = {
+  children: PropTypes.node.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
-  tableData: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
@@ -52,4 +48,4 @@ ClientDevices.propTypes = {
   activeTab: PropTypes.string.isRequired,
 };
 
-export default ClientDevices;
+export default Network;

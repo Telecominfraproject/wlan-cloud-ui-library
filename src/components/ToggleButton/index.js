@@ -4,36 +4,16 @@ import { Link } from 'react-router-dom';
 
 import styles from './index.module.scss';
 
-const ToggleButton = ({ onToggle, activeTab }) => {
+const ToggleButton = ({ activeTab }) => {
   return (
     <div className={styles.navBtnWrapper}>
-      <div
-        className={styles.navBtn}
-        role="button"
-        tabIndex={0}
-        onKeyPress={() => {}}
-        onClick={onToggle}
-      >
-        <Link
-          to="/network/access-points"
-          id="ap"
-          className={activeTab === 'ap' ? styles.activeBtn : ''}
-        >
+      <div className={styles.navBtn} role="button" tabIndex={0} onKeyPress={() => {}}>
+        <Link to="/network/access-points" className={activeTab === 'ap' ? styles.activeBtn : ''}>
           Access Points
         </Link>
       </div>
-      <div
-        className={styles.navBtn}
-        role="button"
-        tabIndex={0}
-        onKeyPress={() => {}}
-        onClick={onToggle}
-      >
-        <Link
-          to="/network/client-devices"
-          id="cd"
-          className={activeTab === 'cd' ? styles.activeBtn : ''}
-        >
+      <div className={styles.navBtn} role="button" tabIndex={0} onKeyPress={() => {}}>
+        <Link to="/network/client-devices" className={activeTab === 'cd' ? styles.activeBtn : ''}>
           Client Devices
         </Link>
       </div>
@@ -42,7 +22,6 @@ const ToggleButton = ({ onToggle, activeTab }) => {
 };
 
 ToggleButton.propTypes = {
-  onToggle: PropTypes.func.isRequired,
   activeTab: PropTypes.string.isRequired,
 };
 
