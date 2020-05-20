@@ -14,7 +14,7 @@ const Modal = ({ onCancel, onSuccess, visible, title, buttonText, buttonType, co
       footer={[
         <div className={styles.Buttons}>
           <Button className={styles.Button} onClick={onCancel}>
-            CANCEL
+            Cancel
           </Button>
           <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
             {buttonText}

@@ -71,6 +71,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       title: '',
       dataIndex: 'edit',
       key: 'edit',
+      width: 64,
       render: (_, record) => (
         <Button
           className={styles.InfoButton}
@@ -87,6 +88,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       title: '',
       dataIndex: 'delete',
       key: 'delete',
+      width: 64,
       render: (_, record) => (
         <Button
           className={styles.InfoButton}
@@ -106,7 +108,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       <div className={styles.TopSection}>
         <h1>Accounts</h1>
         <Button className={styles.addAccount} type="primary" onClick={() => setAddModal(true)}>
-          ADD ACCOUNT
+          Add Account
         </Button>
       </div>
       <Modal
@@ -114,7 +116,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
         onSuccess={deleteUser}
         visible={deleteModal}
         title="Are you sure?"
-        buttonText="DELETE"
+        buttonText="Delete"
         buttonType="danger"
         content={
           <p>
