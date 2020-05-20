@@ -7,12 +7,18 @@ const ToggleButton = ({ activeTab }) => {
   return (
     <div className={styles.navBtnWrapper}>
       <div className={styles.navBtn} role="button" tabIndex={0} onKeyPress={() => {}}>
-        <Link to="/network/access-points" className={activeTab === 'ap' ? styles.activeBtn : ''}>
+        <Link
+          to="/network/access-points"
+          className={activeTab === '/network/access-points' ? styles.activeBtn : ''}
+        >
           Access Points
         </Link>
       </div>
       <div className={styles.navBtn} role="button" tabIndex={0} onKeyPress={() => {}}>
-        <Link to="/network/client-devices" className={activeTab === 'cd' ? styles.activeBtn : ''}>
+        <Link
+          to="/network/client-devices"
+          className={activeTab === '/network/client-devices' ? styles.activeBtn : ''}
+        >
           Client Devices
         </Link>
       </div>

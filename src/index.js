@@ -7,5 +7,4 @@ export { default as EditAccount } from 'containers/EditAccount';
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
-export { default as ClientDevicesTable } from 'components/ClientDevicesTable';
-export { default as AccessPointsTable } from 'components/AccessPointsTable';
+export { default as DevicesTable } from 'components/DevicesTable';
