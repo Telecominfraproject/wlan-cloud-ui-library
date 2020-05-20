@@ -5,15 +5,7 @@ import ToggleButton from 'components/ToggleButton';
 import ReloadButton from 'components/ReloadButton';
 import styles from './index.module.scss';
 
-const Network = ({
-  locations,
-  checkedLocations,
-  onSelect,
-  onCheck,
-  onToggle,
-  activeTab,
-  children,
-}) => {
+const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, children }) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
@@ -28,7 +20,7 @@ const Network = ({
         />
         <div className={styles.mainContent}>
           <div className={styles.headerContent}>
-            <ToggleButton onToggle={onToggle} activeTab={activeTab} />
+            <ToggleButton activeTab={activeTab} />
             <ReloadButton onReload={onReload} />
           </div>
           {children}
@@ -39,13 +31,12 @@ const Network = ({
 };
 
 Network.propTypes = {
-  children: PropTypes.node.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
-  onToggle: PropTypes.func.isRequired,
   activeTab: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default Network;
