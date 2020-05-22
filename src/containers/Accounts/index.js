@@ -74,6 +74,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       width: 64,
       render: (_, record) => (
         <Button
+          title="edit"
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -143,7 +144,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
         onSubmit={addUser}
         title="Add Account"
       />
-      <Table dataSource={dataSource} columns={columns} />
+      <Table data-testid="table" dataSource={dataSource} columns={columns} />
     </div>
   );
 };
