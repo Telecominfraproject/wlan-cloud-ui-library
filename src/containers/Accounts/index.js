@@ -107,7 +107,12 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
     <div className={styles.Container}>
       <div className={styles.TopSection}>
         <h1>Accounts</h1>
-        <Button className={styles.addAccount} type="primary" onClick={() => setAddModal(true)}>
+        <Button
+          data-testid="addaccount"
+          className={styles.addAccount}
+          type="primary"
+          onClick={() => setAddModal(true)}
+        >
           Add Account
         </Button>
       </div>

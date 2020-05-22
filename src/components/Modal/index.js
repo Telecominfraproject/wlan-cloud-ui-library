@@ -4,7 +4,16 @@ import { Modal as AntdModal, Button } from 'antd';
 
 import styles from './index.module.scss';
 
-const Modal = ({ onCancel, onSuccess, visible, title, buttonText, buttonType, content }) => {
+const Modal = ({
+  onCancel,
+  onSuccess,
+  visible,
+  title,
+  buttonText,
+  buttonType,
+  content,
+  ...restProps
+}) => {
   return (
     <AntdModal
       className={styles.Modal}
@@ -13,14 +22,20 @@ const Modal = ({ onCancel, onSuccess, visible, title, buttonText, buttonType, co
       onCancel={onCancel}
       footer={[
         <div className={styles.Buttons}>
-          <Button className={styles.Button} onClick={onCancel}>
+          <Button data-testid="modalcancel" className={styles.Button} onClick={onCancel}>
             Cancel
           </Button>
-          <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
+          <Button
+            data-testid="modalsubmit"
+            className={styles.Button}
+            type={buttonType}
+            onClick={onSuccess}
+          >
             {buttonText}
           </Button>
         </div>,
       ]}
+      {...restProps}
     >
       {content}
     </AntdModal>

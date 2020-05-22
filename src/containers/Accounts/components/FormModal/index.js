@@ -12,6 +12,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
   const [form] = Form.useForm();
 
   useEffect(() => {
+    form.resetFields();
     form.setFieldsValue({ email: userEmail, role: userRole });
   }, [visible]);
 
@@ -21,7 +22,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
   };
 
   const content = (
-    <Form {...layout} name="test" data-testid="test" form={form}>
+    <Form {...layout} name="test" data-testid="formmodal" form={form}>
       <Item
         label="E-mail"
         name="email"
@@ -89,10 +90,13 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
       onCancel={onCancel}
       visible={visible}
       onSuccess={() => {
-        form.validateFields().then(values => {
-          form.resetFields();
-          onSubmit(values);
-        });
+        form
+          .validateFields()
+          .then(values => {
+            form.resetFields();
+            onSubmit(values);
+          })
+          .catch(() => {});
       }}
       title={title}
       content={content}
