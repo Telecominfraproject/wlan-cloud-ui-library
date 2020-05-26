@@ -22,7 +22,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
   };
 
   const content = (
-    <Form {...layout} name="test" data-testid="formmodal" form={form}>
+    <Form {...layout} title="formmodal" form={form}>
       <Item
         label="E-mail"
         name="email"
@@ -85,19 +85,21 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
     </Form>
   );
 
+  const handleOnSuccess = () => {
+    form
+      .validateFields()
+      .then(values => {
+        form.resetFields();
+        onSubmit(values);
+      })
+      .catch(() => {});
+  };
+
   return (
     <Modal
       onCancel={onCancel}
       visible={visible}
-      onSuccess={() => {
-        form
-          .validateFields()
-          .then(values => {
-            form.resetFields();
-            onSubmit(values);
-          })
-          .catch(() => {});
-      }}
+      onSuccess={handleOnSuccess}
       title={title}
       content={content}
     />

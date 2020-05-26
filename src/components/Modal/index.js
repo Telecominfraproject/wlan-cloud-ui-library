@@ -22,11 +22,11 @@ const Modal = ({
       onCancel={onCancel}
       footer={[
         <div className={styles.Buttons}>
-          <Button data-testid="modalcancel" className={styles.Button} onClick={onCancel}>
+          <Button title="modalcancel" className={styles.Button} onClick={onCancel}>
             Cancel
           </Button>
           <Button
-            data-testid="modalsubmit"
+            title="modalsubmit"
             className={styles.Button}
             type={buttonType}
             onClick={onSuccess}

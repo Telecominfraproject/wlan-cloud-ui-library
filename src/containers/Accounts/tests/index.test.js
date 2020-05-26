@@ -34,55 +34,51 @@ const mockProps = {
 describe('<Accounts />', () => {
   afterEach(cleanup);
 
-  it('user data table is visible on load', async () => {
-    const { getByTestId } = render(<Accounts {...mockProps} />);
-
-    expect(getByTestId('table')).toBeVisible();
-  });
-
-  it('FormModal should not be visible on load', async () => {
-    const { queryByTestId } = render(<Accounts {...mockProps} />);
-
-    expect(queryByTestId('formmodal')).toBeNull();
-  });
-
-  it('Modal should not be visible on load', async () => {
-    const { queryByTestId } = render(<Accounts {...mockProps} />);
-
-    expect(queryByTestId('modalsubmit')).toBeNull();
-  });
-
-  it('add account button click should show FormModal', async () => {
-    const { getByTestId } = render(<Accounts {...mockProps} />);
-    fireEvent.click(getByTestId('addaccount'));
-
-    expect(getByTestId('formmodal')).toBeVisible();
-  });
-
   it('delete account button click should show modal', async () => {
-    const { getByTestId, getByRole } = render(<Accounts {...mockProps} />);
+    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /delete/i }));
 
-    expect(getByTestId('modalsubmit')).toBeVisible();
+    expect(getByText('Are you sure you want to delete the account:')).toBeVisible();
   });
 
   it('edit account button click should show FormModal', async () => {
-    const { getByTestId, getByRole } = render(<Accounts {...mockProps} />);
+    const { getByRole, getByTitle } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /edit/i }));
 
-    expect(getByTestId('formmodal')).toBeVisible();
+    expect(getByTitle('formmodal')).toBeVisible();
+  });
+
+  it('add account button click should show FormModal', async () => {
+    const { getByRole, getByTitle } = render(<Accounts {...mockProps} />);
+
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+
+    expect(getByTitle('formmodal')).toBeVisible();
+  });
+
+  it('onDeleteUser should be called when modal is submitted', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(<Accounts {...mockProps} onDeleteUser={submitSpy} />);
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+    expect(getByRole('button', { name: /modalsubmit/i })).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('onEditUser should not be called when form is invalid', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByText, getByRole } = render(
+    const { getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onEditUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /edit/i }));
-    expect(getByTestId('formmodal')).toBeVisible();
+    expect(getByTitle('formmodal')).toBeVisible();
 
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('Please input your password')).toBeVisible();
@@ -93,16 +89,16 @@ describe('<Accounts />', () => {
 
   it('onEditUser should be called when all fields are submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByRole } = render(
+    const { getByLabelText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onEditUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /edit/i }));
-    expect(getByTestId('formmodal')).toBeVisible();
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -110,23 +106,26 @@ describe('<Accounts />', () => {
   });
 
   it('cancel account button click should hide FormModal', async () => {
-    const { getByTestId } = render(<Accounts {...mockProps} />);
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
-    fireEvent.click(getByTestId('modalcancel'));
+    const { getByRole, getByTitle } = render(<Accounts {...mockProps} />);
+
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /modalcancel/i }));
 
     await waitFor(() => {
-      expect(getByTestId('formmodal')).not.toBeVisible();
+      expect(getByTitle('formmodal')).not.toBeVisible();
     });
   });
 
   it('onCreateUser should not be called when form is invalid', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByText } = render(<Accounts {...mockProps} onCreateUser={submitSpy} />);
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    const { getByText, getByRole, getByTitle } = render(
+      <Accounts {...mockProps} onCreateUser={submitSpy} />
+    );
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('Please input your e-mail')).toBeVisible();
@@ -138,15 +137,15 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should not be called when email is empty', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('Please input your e-mail')).toBeVisible();
@@ -156,15 +155,16 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should not be called when email is invalid', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email' } });
+    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('The input is not a valid e-mail')).toBeVisible();
@@ -174,15 +174,15 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should not be called when new password is empty', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('Please input your password')).toBeVisible();
@@ -193,14 +193,14 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should not be called when both password fields are empty', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('Please input your password')).toBeVisible();
@@ -211,16 +211,16 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should not be called when passwords do not match', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password1' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(getByText('The two passwords do not match')).toBeVisible();
@@ -230,16 +230,16 @@ describe('<Accounts />', () => {
 
   it('onCreateUser should be called when all fields are submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText } = render(
+    const { getByLabelText, getByRole, getByTitle } = render(
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('addaccount'));
-    expect(getByTestId('formmodal')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /addaccount/i }));
+    expect(getByTitle('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
-    fireEvent.click(getByTestId('modalsubmit'));
+    fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
