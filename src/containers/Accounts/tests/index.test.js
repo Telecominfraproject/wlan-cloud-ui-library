@@ -111,7 +111,7 @@ describe('<Accounts />', () => {
     });
   });
 
-  it('cancel account button click should hide FormModal', async () => {
+  it('cancel button click should hide Add Account modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
@@ -120,6 +120,30 @@ describe('<Accounts />', () => {
 
     await waitFor(() => {
       expect(getByText('Add Account', { selector: 'div' })).not.toBeVisible();
+    });
+  });
+
+  it('cancel button click should hide Edit Account Modal', async () => {
+    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
+
+    fireEvent.click(getByRole('button', { name: /edit/i }));
+    expect(getByText('Edit Account')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(getByText('Edit Account')).not.toBeVisible();
+    });
+  });
+
+  it('cancel button click should hide Delete Account Modal', async () => {
+    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
+
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+    expect(getByText('Are you sure?')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(getByText('Are you sure?')).not.toBeVisible();
     });
   });
 
