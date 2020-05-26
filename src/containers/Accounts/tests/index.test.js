@@ -31,6 +31,12 @@ const mockProps = {
   ],
 };
 
+const MISSING_EMAIL = 'Please input your e-mail';
+const INVALID_EMAIL = 'The input is not a valid e-mail';
+const INVALID_PASSWORD = 'Please input your password';
+const INVALID_CONFIRMED_PASSWORD = 'Please input your password';
+const INVALID_PASSWORDS = 'The two passwords do not match';
+
 describe('<Accounts />', () => {
   afterEach(cleanup);
 
@@ -83,8 +89,8 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('Please input your password')).toBeVisible();
-      expect(getByText('Please confirm your password')).toBeVisible();
+      expect(getByText(INVALID_PASSWORD)).toBeVisible();
+      expect(getByText(INVALID_CONFIRMED_PASSWORD)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -130,9 +136,9 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('Please input your e-mail')).toBeVisible();
-      expect(getByText('Please input your password')).toBeVisible();
-      expect(getByText('Please confirm your password')).toBeVisible();
+      expect(getByText(MISSING_EMAIL)).toBeVisible();
+      expect(getByText(INVALID_PASSWORD)).toBeVisible();
+      expect(getByText(INVALID_CONFIRMED_PASSWORD)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -150,7 +156,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('Please input your e-mail')).toBeVisible();
+      expect(getByText(MISSING_EMAIL)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -169,7 +175,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('The input is not a valid e-mail')).toBeVisible();
+      expect(getByText(INVALID_EMAIL)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -187,8 +193,8 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('Please input your password')).toBeVisible();
-      expect(getByText('The two passwords do not match')).toBeVisible();
+      expect(getByText(INVALID_PASSWORD)).toBeVisible();
+      expect(getByText(INVALID_PASSWORDS)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -205,8 +211,8 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('Please input your password')).toBeVisible();
-      expect(getByText('Please confirm your password')).toBeVisible();
+      expect(getByText(INVALID_PASSWORD)).toBeVisible();
+      expect(getByText(INVALID_CONFIRMED_PASSWORD)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
@@ -225,7 +231,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /modalsubmit/i }));
 
     await waitFor(() => {
-      expect(getByText('The two passwords do not match')).toBeVisible();
+      expect(getByText(INVALID_PASSWORDS)).toBeVisible();
       expect(submitSpy).not.toHaveBeenCalled();
     });
   });
