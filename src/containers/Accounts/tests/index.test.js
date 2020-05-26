@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
 
 import { render } from 'tests/utils';
 import Accounts from '..';
@@ -38,7 +38,9 @@ describe('<Accounts />', () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /delete/i }));
 
-    expect(getByText('Are you sure you want to delete the account:')).toBeVisible();
+    const paragraph = getByText('Are you sure you want to delete the account:');
+    expect(paragraph).toBeVisible();
+    expect(within(paragraph).getByText(mockProps.data[0].email)).toBeVisible();
   });
 
   it('edit account button click should show FormModal', async () => {
