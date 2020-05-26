@@ -22,15 +22,10 @@ const Modal = ({
       onCancel={onCancel}
       footer={[
         <div className={styles.Buttons}>
-          <Button title="modalcancel" className={styles.Button} onClick={onCancel}>
+          <Button className={styles.Button} onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            title="modalsubmit"
-            className={styles.Button}
-            type={buttonType}
-            onClick={onSuccess}
-          >
+          <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
             {buttonText}
           </Button>
         </div>,

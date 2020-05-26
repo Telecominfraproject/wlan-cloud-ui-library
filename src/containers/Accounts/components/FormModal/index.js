@@ -22,7 +22,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
   };
 
   const content = (
-    <Form {...layout} title="formmodal" form={form}>
+    <Form {...layout} form={form}>
       <Item
         label="E-mail"
         name="email"
