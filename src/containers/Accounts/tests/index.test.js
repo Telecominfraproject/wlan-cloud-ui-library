@@ -60,8 +60,8 @@ describe('<Accounts />', () => {
   });
 
   it('delete account button click should show modal', async () => {
-    const { getByTestId } = render(<Accounts {...mockProps} />);
-    fireEvent.click(getByTestId('deleteaccount'));
+    const { getByTestId, getByRole } = render(<Accounts {...mockProps} />);
+    fireEvent.click(getByRole('button', { name: /delete/i }));
 
     expect(getByTestId('modalsubmit')).toBeVisible();
   });
@@ -93,10 +93,10 @@ describe('<Accounts />', () => {
 
   it('onEditUser should be called when all fields are submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByTestId, getByLabelText } = render(
+    const { getByTestId, getByLabelText, getByRole } = render(
       <Accounts {...mockProps} onEditUser={submitSpy} />
     );
-    fireEvent.click(getByTestId('editaccount'));
+    fireEvent.click(getByRole('button', { name: /edit/i }));
     expect(getByTestId('formmodal')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });

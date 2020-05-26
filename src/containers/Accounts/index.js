@@ -92,6 +92,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
       width: 64,
       render: (_, record) => (
         <Button
+          title="delete"
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
