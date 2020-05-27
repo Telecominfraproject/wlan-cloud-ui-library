@@ -14,6 +14,7 @@ const LocationsTree = ({ locations, checkedLocations, onSelect, onCheck }) => {
         <Input placeholder="Search Locations" onChange={handleSearch} prefix={<SearchOutlined />} />
       </div>
       <Tree
+        data-testid="locationTree"
         checkable
         checkedKeys={checkedLocations}
         showIcon

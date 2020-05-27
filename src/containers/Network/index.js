@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Spin } from 'antd';
 import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
 import ReloadButton from 'components/ReloadButton';
 import styles from './index.module.scss';
 
-const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, children }) => {
+const Network = ({
+  loading,
+  locations,
+  checkedLocations,
+  onSelect,
+  onCheck,
+  activeTab,
+  children,
+}) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
@@ -23,20 +32,21 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
             <ToggleButton activeTab={activeTab} />
             <ReloadButton onReload={onReload} />
           </div>
-          {children}
+          {loading ? <Spin size="large" className={styles.spinner} /> : children}
         </div>
       </div>
     </div>
   );
 };
 
-Network.propTypes = {
-  locations: PropTypes.instanceOf(Array).isRequired,
-  checkedLocations: PropTypes.instanceOf(Array).isRequired,
-  onSelect: PropTypes.func.isRequired,
-  onCheck: PropTypes.func.isRequired,
-  activeTab: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
+// Network.propTypes = {
+//   loading: PropTypes.bool.isRequired,
+//   locations: PropTypes.instanceOf(Array).isRequired,
+//   checkedLocations: PropTypes.instanceOf(Array).isRequired,
+//   onSelect: PropTypes.func.isRequired,
+//   onCheck: PropTypes.func.isRequired,
+//   activeTab: PropTypes.string.isRequired,
+//   children: PropTypes.node.isRequired,
+// };
 
 export default Network;

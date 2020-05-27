@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import { Table } from 'antd';
 
 const NetworkTable = ({ tableColumns, tableData }) => {
-  return <Table columns={tableColumns} dataSource={tableData} scroll={{ x: 2000 }} />;
+  return (
+    <Table
+      data-testid="networkTable"
+      columns={tableColumns}
+      dataSource={tableData}
+      scroll={{ x: 2000 }}
+    />
+  );
 };
 
 NetworkTable.propTypes = {

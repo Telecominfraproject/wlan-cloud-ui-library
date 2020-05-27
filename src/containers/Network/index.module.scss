@@ -1,6 +1,12 @@
 .clientDevices {
   height: 100%;
 }
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
 .headerContent {
   display: flex;
   justify-content: space-between;
