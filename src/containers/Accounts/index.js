@@ -7,7 +7,7 @@ import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
 
-const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
+const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, isLastPage }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -139,20 +139,29 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser }) => {
         onSubmit={addUser}
         title="Add Account"
       />
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={data} columns={columns} pagination={false} />
+      {!isLastPage && (
+        <div className={styles.LoadMore}>
+          <Button onClick={onLoadMore}>Load More</Button>
+        </div>
+      )}
     </div>
   );
 };
 
 Accounts.propTypes = {
-  data: PropTypes.instanceOf(Array),
   onCreateUser: PropTypes.func.isRequired,
   onEditUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
+  data: PropTypes.instanceOf(Array),
+  onLoadMore: PropTypes.func,
+  isLastPage: PropTypes.bool,
 };
 
 Accounts.defaultProps = {
   data: [],
+  onLoadMore: () => {},
+  isLastPage: true,
 };
 
 export default Accounts;
