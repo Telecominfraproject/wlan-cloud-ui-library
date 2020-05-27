@@ -1,0 +1,45 @@
+.Container {
+  max-width: 1314px;
+  margin: auto;
+  padding: 5px;
+}
+
+.TopSection {
+  display: flex;
+  margin-top: 25px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.Buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+@mixin buttonStyle {
+  border: 1px solid #434343;
+  border-radius: 5px;
+  width: 128px;
+}
+
+.backButton {
+  border: none;
+}
+
+.deleteButton {
+  @include buttonStyle();
+  margin-right: 25px;
+}
+
+.saveButton {
+  @include buttonStyle();
+  background: #141414;
+}
+
+.Field {
+  background: #141414;
+  border: 1px solid #434343;
+  border-radius: 5px;
+  margin-left: 30px;
+}
