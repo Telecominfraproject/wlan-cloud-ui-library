@@ -1,31 +1,37 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Table, Button } from 'antd';
-import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
+import { DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import ReloadButton from 'components/ReloadButton';
+import HeaderButton from 'components/HeaderButton';
+import ContainerDiv from 'components/ContainerDiv';
+import HeaderDiv from 'components/HeaderDiv';
+
 import styles from './index.module.scss';
 
 const Profile = ({ data, onReload }) => {
-  const history = useHistory();
-
   const columns = [
     {
       title: 'NAME',
       dataIndex: 'name',
       key: 'name',
       width: 250,
+      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.name}</Link>,
     },
     {
       title: 'TYPE',
       dataIndex: 'profileType',
       key: 'type',
       width: 250,
+      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.profileType}</Link>,
     },
     {
       title: 'ACCESS POINTS',
       dataIndex: '__typename',
       key: 'access',
       width: 700,
+      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.__typename}</Link>,
     },
     {
       title: '',
@@ -44,52 +50,28 @@ const Profile = ({ data, onReload }) => {
     },
   ];
 
-  const routePage = ({ name }) => {
-    history.push('/profiledetails', { name });
-  };
-
   return (
-    <div className={styles.Container}>
-      <div className={styles.TopSection}>
+    <ContainerDiv>
+      <HeaderDiv>
         <h1>Profiles</h1>
         <div className={styles.Buttons}>
-          <Button
-            className={styles.addAccount}
-            type="primary"
-            onClick={() => console.log('clicked')}
-          >
-            Add Profile
-          </Button>
-          <Button
-            className={styles.reloadButton}
-            type="primary"
-            onClick={() => onReload()}
-            icon={<ReloadOutlined />}
-          />
+          <HeaderButton title="Add Account" onClick={() => {}} />
+          <ReloadButton onReload={onReload} />
         </div>
-      </div>
-      <Table
-        dataSource={data}
-        columns={columns}
-        onRow={row => {
-          return {
-            onClick: () => {
-              routePage(row);
-            },
-          };
-        }}
-      />
-    </div>
+      </HeaderDiv>
+      <Table dataSource={data} columns={columns} />
+    </ContainerDiv>
   );
 };
 
 Profile.propTypes = {
   data: PropTypes.instanceOf(Array),
-  onReload: PropTypes.func.isRequired,
+  onReload: PropTypes.func,
 };
 
 Profile.defaultProps = {
   data: [],
+  onReload: () => {},
 };
 
 export default Profile;

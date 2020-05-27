@@ -1,37 +1,15 @@
-.Container {
-  max-width: 1314px;
-  margin: auto;
-  padding: 5px;
-}
-
-.TopSection {
-  display: flex;
-  margin-top: 25px;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
 .Buttons {
   display: flex;
+  margin-top: 25px;
   justify-content: flex-end;
   margin-bottom: 20px;
-}
-
-.addAccount {
-  border: 1px solid #434343;
-  border-radius: 5px;
-  width: 126px;
-  margin-right: 20px;
-  background: #141414;
-}
-
-.reloadButton {
-  border-radius: 5px;
-  border: 1px solid #434343;
-  background: #141414;
 }
 
 .InfoButton {
   background-color: transparent;
   border: none;
+}
+
+a {
+  color: #fff;
 }

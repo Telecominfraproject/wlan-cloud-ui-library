@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
+import HeaderButton from 'components/HeaderButton';
+import ContainerDiv from 'components/ContainerDiv';
+import HeaderDiv from 'components/HeaderDiv';
 
 import styles from './index.module.scss';
 
-const ProfileDetails = name => {
-  const history = useHistory();
-
-  const profileName = name.location.state.name;
-
+const ProfileDetails = ({ name }) => {
   const layout = {
     labelCol: { span: 2 },
     wrapperCol: { span: 8 },
@@ -18,45 +17,38 @@ const ProfileDetails = name => {
   const [form] = Form.useForm();
   const { Item } = Form;
 
-  useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue({ name: profileName });
-  }, []);
-
   return (
-    <div className={styles.Container}>
-      <div className={styles.TopSection}>
-        <Button
-          className={styles.backButton}
-          type="ghost"
-          onClick={() => history.push('/profiles')}
-        >
-          BACK
-        </Button>
+    <ContainerDiv>
+      <HeaderDiv>
+        <Link to="/profiles">
+          <Button className={styles.backButton} type="button">
+            Back
+          </Button>
+        </Link>
         <div>
-          <Button className={styles.deleteButton} type="danger">
-            Delete
-          </Button>
-          <Button className={styles.saveButton} type="primary">
-            Save
-          </Button>
+          <HeaderButton title="Delete" buttonType="danger" onClick={() => {}} />
+          <HeaderButton title="Save" onClick={() => {}} />
         </div>
-      </div>
+      </HeaderDiv>
       <Form {...layout} form={form}>
         <Item
           name="name"
           label="Profile Name"
           rules={[{ required: true, message: 'Please input your new profile name' }]}
         >
-          <Input className={styles.Field} />
+          <Input className={styles.Field} defaultValue={name} />
         </Item>
       </Form>
-    </div>
+    </ContainerDiv>
   );
 };
 
 ProfileDetails.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
+};
+
+ProfileDetails.defaultProps = {
+  name: null,
 };
 
 export default ProfileDetails;
