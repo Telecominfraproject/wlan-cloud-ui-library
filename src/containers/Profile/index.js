@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Button } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
+import { Table } from 'antd';
+import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-import ReloadButton from 'components/ReloadButton';
-import HeaderButton from 'components/HeaderButton';
-import ContainerDiv from 'components/ContainerDiv';
-import HeaderDiv from 'components/HeaderDiv';
+import Button from 'components/Button';
+import Container from 'components/Container';
+import Header from 'components/Header';
 
 import styles from './index.module.scss';
 
@@ -38,29 +37,21 @@ const Profile = ({ data, onReload }) => {
       dataIndex: 'delete',
       key: 'delete',
       width: 80,
-      render: (_, record) => (
-        <Button
-          title="edit"
-          className={styles.InfoButton}
-          type="primary"
-          icon={<DeleteFilled />}
-          onClick={() => console.log(record)}
-        />
-      ),
+      render: (_, record) => <Button icon={<DeleteFilled />} onClick={() => console.log(record)} />,
     },
   ];
 
   return (
-    <ContainerDiv>
-      <HeaderDiv>
+    <Container>
+      <Header>
         <h1>Profiles</h1>
         <div className={styles.Buttons}>
-          <HeaderButton title="Add Account" onClick={() => {}} />
-          <ReloadButton onReload={onReload} />
+          <Button title="Add Account" onClick={() => {}} />
+          <Button icon={<ReloadOutlined />} onClick={onReload} />
         </div>
-      </HeaderDiv>
+      </Header>
       <Table dataSource={data} columns={columns} />
-    </ContainerDiv>
+    </Container>
   );
 };
 

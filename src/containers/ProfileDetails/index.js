@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Form, Input } from 'antd';
+import { Form, Input } from 'antd';
 import PropTypes from 'prop-types';
-import HeaderButton from 'components/HeaderButton';
-import ContainerDiv from 'components/ContainerDiv';
-import HeaderDiv from 'components/HeaderDiv';
+import Button from 'components/Button';
+import Container from 'components/Container';
+import Header from 'components/Header';
 
 import styles from './index.module.scss';
 
@@ -18,18 +18,16 @@ const ProfileDetails = ({ name }) => {
   const { Item } = Form;
 
   return (
-    <ContainerDiv>
-      <HeaderDiv>
+    <Container>
+      <Header>
         <Link to="/profiles">
-          <Button className={styles.backButton} type="button">
-            Back
-          </Button>
+          <Button className={styles.backButton} title="BACK" onClick={() => {}} />
         </Link>
         <div>
-          <HeaderButton title="Delete" buttonType="danger" onClick={() => {}} />
-          <HeaderButton title="Save" onClick={() => {}} />
+          <Button title="Delete" buttonType="danger" onClick={() => {}} />
+          <Button title="Save" onClick={() => {}} />
         </div>
-      </HeaderDiv>
+      </Header>
       <Form {...layout} form={form}>
         <Item
           name="name"
@@ -39,7 +37,7 @@ const ProfileDetails = ({ name }) => {
           <Input className={styles.Field} defaultValue={name} />
         </Item>
       </Form>
-    </ContainerDiv>
+    </Container>
   );
 };
 
