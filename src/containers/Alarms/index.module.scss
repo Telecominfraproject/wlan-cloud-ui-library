@@ -1,0 +1,23 @@
+.Card {
+  max-width: 1303px;
+  width: 100%;
+  height: 100%;
+  background-color: #141414 !important;
+}
+
+.InfoIcon {
+  background-color: transparent;
+  border: none;
+  size: 30;
+}
+
+.Title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
