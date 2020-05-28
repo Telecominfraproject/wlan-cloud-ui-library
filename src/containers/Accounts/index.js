@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Table, Button } from 'antd';
+import { Table } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
+import Container from 'components/Container';
+import Header from 'components/Header';
+import Button from 'components/Button';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
@@ -100,18 +103,13 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
   ];
 
   return (
-    <div className={styles.Container}>
-      <div className={styles.TopSection}>
+    <Container>
+      <Header>
         <h1>Accounts</h1>
-        <Button
-          title="addaccount"
-          className={styles.addAccount}
-          type="primary"
-          onClick={() => setAddModal(true)}
-        >
+        <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
           Add Account
         </Button>
-      </div>
+      </Header>
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteUser}
@@ -145,7 +143,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
           <Button onClick={onLoadMore}>Load More</Button>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 
