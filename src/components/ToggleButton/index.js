@@ -16,7 +16,6 @@ const ToggleButton = ({ activeTab }) => {
           Access Points
         </Link>
       </div>
-      {/* <div>{{name}}</div> */}
       <div className={styles.navBtn} role="button" tabIndex={0} onKeyPress={() => {}}>
         <Link
           role="button"
