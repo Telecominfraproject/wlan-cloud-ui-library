@@ -1,0 +1,28 @@
+.Container {
+  max-width: 868px;
+  margin: auto;
+  padding: 5px;
+}
+
+.TopSection {
+  display: flex;
+  margin-top: 25px;
+  justify-content: space-between;
+}
+
+.addAccount {
+  background: #141414;
+  border: 1px solid #434343;
+  border-radius: 5px;
+}
+
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
