@@ -273,4 +273,25 @@ describe('<Accounts />', () => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('if isLastPage is true Load More button should not be visible', async () => {
+    const { queryByRole } = render(<Accounts {...mockProps} />);
+    expect(queryByRole('button', { name: 'Load More' })).toBeNull();
+  });
+
+  it('if isLastPage is false Load More button should be visible', async () => {
+    const { getByRole } = render(<Accounts {...mockProps} isLastPage={false} />);
+    expect(getByRole('button', { name: 'Load More' })).toBeVisible();
+  });
+
+  it('onLoadMore should be called when ', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(
+      <Accounts {...mockProps} isLastPage={false} onLoadMore={submitSpy} />
+    );
+
+    fireEvent.click(getByRole('button', { name: 'Load More' }));
+
+    expect(submitSpy).toHaveBeenCalledTimes(1);
+  });
 });
