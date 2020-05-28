@@ -21,7 +21,7 @@ const ProfileDetails = ({ name }) => {
     <Container>
       <Header>
         <Link to="/profiles">
-          <Button className={styles.backButton} title="BACK" onClick={() => {}} />
+          <Button className={styles.backButton} title="BACK" />
         </Link>
         <div>
           <Button title="Delete" buttonType="danger" onClick={() => {}} />
