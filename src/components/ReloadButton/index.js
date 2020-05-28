@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 
-const ReloadButton = ({ onReload, str }) => {
+const ReloadButton = ({ onReload }) => {
   return (
     <div>
       <span
@@ -16,7 +16,6 @@ const ReloadButton = ({ onReload, str }) => {
       >
         <ReloadOutlined />
       </span>
-      {str}
     </div>
   );
 };

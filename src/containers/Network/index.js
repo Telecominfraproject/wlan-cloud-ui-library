@@ -39,14 +39,14 @@ const Network = ({
   );
 };
 
-// Network.propTypes = {
-//   loading: PropTypes.bool.isRequired,
-//   locations: PropTypes.instanceOf(Array).isRequired,
-//   checkedLocations: PropTypes.instanceOf(Array).isRequired,
-//   onSelect: PropTypes.func.isRequired,
-//   onCheck: PropTypes.func.isRequired,
-//   activeTab: PropTypes.string.isRequired,
-//   children: PropTypes.node.isRequired,
-// };
+Network.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  locations: PropTypes.instanceOf(Array).isRequired,
+  checkedLocations: PropTypes.instanceOf(Array).isRequired,
+  onSelect: PropTypes.func.isRequired,
+  onCheck: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 export default Network;

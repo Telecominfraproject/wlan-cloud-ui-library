@@ -88,5 +88,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "dependencies": {
+    "history": "^4.10.1"
   }
 }
