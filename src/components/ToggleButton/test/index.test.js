@@ -19,12 +19,8 @@ describe('<ToggleButton />', () => {
         <ToggleButton activeTab={clientDevices} />
       </Router>
     );
-    expect(getByRole('button', { name: /client devices/i })).toHaveClass(styles.activeBtn, {
-      exact: true,
-    });
-    expect(getByRole('button', { name: /access points/i })).not.toHaveClass(styles.activeBtn, {
-      exact: true,
-    });
+    expect(getByRole('button', { name: /client devices/i })).toHaveClass(styles.activeBtn);
+    expect(getByRole('button', { name: /access points/i })).not.toHaveClass(styles.activeBtn);
   });
 
   it('finds css className for accessPoints', () => {
@@ -33,12 +29,8 @@ describe('<ToggleButton />', () => {
         <ToggleButton activeTab={accessPoints} />
       </Router>
     );
-    expect(getByRole('button', { name: /client devices/i })).not.toHaveClass(styles.activeBtn, {
-      exact: true,
-    });
-    expect(getByRole('button', { name: /access points/i })).toHaveClass(styles.activeBtn, {
-      exact: true,
-    });
+    expect(getByRole('button', { name: /client devices/i })).not.toHaveClass(styles.activeBtn);
+    expect(getByRole('button', { name: /access points/i })).toHaveClass(styles.activeBtn);
   });
 
   it('URL changes to /network/access-points on clicking Access Points Link', () => {
