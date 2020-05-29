@@ -50,6 +50,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                 avatar={
                   <Avatar
                     style={{ backgroundColor: getBackgroundColor(item.severity) }}
+                    className={styles.InfoIcon}
                     icon={<ExclamationOutlined />}
                   />
                 }
@@ -62,7 +63,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                 description={[
                   <div>
                     <p>{item.details.message}</p>
-                    <Avatar className={styles.InfoIcon} icon={<WifiOutlined />} size={50} />
+                    <Avatar className={styles.WifiIcon} icon={<WifiOutlined />} size={50} />
                   </div>,
                 ]}
               />
