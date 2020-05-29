@@ -14,44 +14,52 @@ describe('<ToggleButton />', () => {
   const accessPoints = '/network/access-points';
 
   it('finds css className for clientDevices', () => {
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <Router>
         <ToggleButton activeTab={clientDevices} />
       </Router>
     );
-    expect(getByTestId('clientDevices')).toHaveClass(styles.activeBtn, { exact: true });
-    expect(getByTestId('accessPoints')).toHaveClass('', { exact: true });
+    expect(getByRole('button', { name: /client devices/i })).toHaveClass(styles.activeBtn, {
+      exact: true,
+    });
+    expect(getByRole('button', { name: /access points/i })).not.toHaveClass(styles.activeBtn, {
+      exact: true,
+    });
   });
 
   it('finds css className for accessPoints', () => {
-    const { getByTestId } = render(
+    const { getByRole } = render(
       <Router>
         <ToggleButton activeTab={accessPoints} />
       </Router>
     );
-    expect(getByTestId('clientDevices')).toHaveClass('', { exact: true });
-    expect(getByTestId('accessPoints')).toHaveClass(styles.activeBtn, { exact: true });
+    expect(getByRole('button', { name: /client devices/i })).not.toHaveClass(styles.activeBtn, {
+      exact: true,
+    });
+    expect(getByRole('button', { name: /access points/i })).toHaveClass(styles.activeBtn, {
+      exact: true,
+    });
   });
 
   it('URL changes to /network/access-points on clicking Access Points Link', () => {
     const history = createMemoryHistory();
-    const { getByText } = render(
+    const { getByRole } = render(
       <Router history={history}>
         <ToggleButton activeTab={clientDevices} />
       </Router>
     );
-    fireEvent.click(getByText(/access points/i));
+    fireEvent.click(getByRole('button', { name: /access points/i }));
     expect(window.location.pathname).toEqual('/network/access-points');
   });
 
   it('URL changes to /network/client-devices on clicking Client Devices Link', () => {
     const history = createMemoryHistory();
-    const { getByText } = render(
+    const { getByRole } = render(
       <Router history={history}>
         <ToggleButton activeTab={clientDevices} />
       </Router>
     );
-    fireEvent.click(getByText(/client devices/i));
+    fireEvent.click(getByRole('button', { name: /client devices/i }));
     expect(window.location.pathname).toEqual('/network/client-devices');
   });
 });

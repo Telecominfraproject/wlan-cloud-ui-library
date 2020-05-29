@@ -25,7 +25,8 @@
     "prop-types": "^15.7.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
-    "react-router-dom": "^5.1.0"
+    "react-router-dom": "^5.1.0",
+    "history": "^4.10.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.0.2",
@@ -43,8 +44,6 @@
     "babel-plugin-import": "^1.13.0",
     "babel-plugin-root-import": "^6.4.1",
     "css-loader": "^3.4.2",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -88,8 +87,5 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "dependencies": {
-    "history": "^4.10.1"
   }
 }

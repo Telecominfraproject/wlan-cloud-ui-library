@@ -9,24 +9,22 @@
     flex-wrap: wrap;
     background-color: transparent;
   }
-  .navBtn {
-    a {
-      padding: 8px 25px;
-      border-radius: 50px;
-      color: #fff;
-      display: inline-block;
-      border-radius: 25px;
-      font: Bold 14px/16px Roboto;
-      @media only screen and (max-width: 660px) {
-        padding: 8px 16px;
-      }
-      &::selection {
-        background-color: transparent;
-        color: unset;
-      }
+  a {
+    padding: 8px 25px;
+    border-radius: 50px;
+    color: #fff;
+    display: inline-block;
+    border-radius: 25px;
+    font: Bold 14px/16px Roboto;
+    @media only screen and (max-width: 660px) {
+      padding: 8px 16px;
     }
-    .activeBtn {
-      background: #35a649 0% 0% no-repeat padding-box;
+    &::selection {
+      background-color: transparent;
+      color: unset;
     }
+  }
+  .activeBtn {
+    background: #35a649 0% 0% no-repeat padding-box;
   }
 }
