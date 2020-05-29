@@ -107,10 +107,10 @@ describe('<LocationTree />', () => {
       />
     );
     const root = getByTestId('locationTree');
-    const locationName = root.querySelector(
+    const location = root.querySelector(
       '.ant-tree-treenode:nth-child(1) .ant-tree-node-content-wrapper'
     );
-    fireEvent.click(locationName);
+    fireEvent.click(location);
     expect(onSelectSpy).toHaveBeenCalled();
   });
 });
