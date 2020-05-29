@@ -24,8 +24,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
   };
 
   const convertDate = time => {
-    const value = Number(time);
-    const date = new Date(value);
+    const date = new Date(parseInt(time, 10));
     const returnedDate = date.toLocaleString();
     return returnedDate;
   };
@@ -41,7 +40,6 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
           gutter: 16,
           column: 1,
         }}
-        pagination={false}
         dataSource={data}
         renderItem={item => (
           <Item>
@@ -54,18 +52,18 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                     icon={<ExclamationOutlined />}
                   />
                 }
-                title={[
+                title={
                   <div className={styles.Title}>
-                    <p>{item.alarmCode}</p>
+                    <div>{item.alarmCode}</div>
                     {convertDate(item.createdTimestamp)}
-                  </div>,
-                ]}
-                description={[
+                  </div>
+                }
+                description={
                   <div>
-                    <p>{item.details.message}</p>
-                    <Avatar className={styles.WifiIcon} icon={<WifiOutlined />} size={50} />
-                  </div>,
-                ]}
+                    <div>{item.details.message}</div>
+                    <WifiOutlined className={styles.WifiIcon} />
+                  </div>
+                }
               />
             </Card>
           </Item>
