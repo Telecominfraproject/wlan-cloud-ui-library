@@ -138,11 +138,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         title="Add Account"
       />
       <Table dataSource={data} columns={columns} pagination={false} />
-      {!isLastPage && (
-        <div className={styles.LoadMore}>
-          <Button onClick={onLoadMore}>Load More</Button>
-        </div>
-      )}
+      {!isLastPage && <Link to={`/profiles/${record.id}`}>{record.name}</Link>}
     </Container>
   );
 };
