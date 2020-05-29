@@ -25,8 +25,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
 
   const convertDate = time => {
     const date = new Date(parseInt(time, 10));
-    const returnedDate = date.toLocaleString();
-    return returnedDate;
+    return date.toLocaleString();
   };
 
   return (
@@ -43,7 +42,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
         dataSource={data}
         renderItem={item => (
           <Item>
-            <Card className={styles.Card}>
+            <Card>
               <Meta
                 avatar={
                   <Avatar
