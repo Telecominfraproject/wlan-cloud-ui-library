@@ -9,7 +9,7 @@ import Header from 'components/Header';
 
 import styles from './index.module.scss';
 
-const Profile = ({ data, onReload }) => {
+const Profile = ({ data, onReload, onLoadMore, isLastPage }) => {
   const columns = [
     {
       title: 'NAME',
@@ -46,11 +46,16 @@ const Profile = ({ data, onReload }) => {
       <Header>
         <h1>Profiles</h1>
         <div className={styles.Buttons}>
-          <Button title="Add Account" onClick={() => {}} />
+          <Button onClick={() => {}}>Add Account</Button>
           <Button icon={<ReloadOutlined />} onClick={onReload} />
         </div>
       </Header>
-      <Table dataSource={data} columns={columns} />
+      <Table dataSource={data} columns={columns} pagination={false} />
+      {!isLastPage && (
+        <div className={styles.LoadMore}>
+          <Button onClick={onLoadMore}>Load More</Button>
+        </div>
+      )}
     </Container>
   );
 };
@@ -58,11 +63,15 @@ const Profile = ({ data, onReload }) => {
 Profile.propTypes = {
   data: PropTypes.instanceOf(Array),
   onReload: PropTypes.func,
+  onLoadMore: PropTypes.func,
+  isLastPage: PropTypes.bool,
 };
 
 Profile.defaultProps = {
   data: [],
   onReload: () => {},
+  onLoadMore: () => {},
+  isLastPage: true,
 };
 
 export default Profile;

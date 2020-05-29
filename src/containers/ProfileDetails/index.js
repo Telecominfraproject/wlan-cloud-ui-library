@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Input } from 'antd';
+import { Form, Input, Card } from 'antd';
 import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import Container from 'components/Container';
@@ -11,7 +11,7 @@ import styles from './index.module.scss';
 const ProfileDetails = ({ name }) => {
   const layout = {
     labelCol: { span: 2 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
 
   const [form] = Form.useForm();
@@ -21,22 +21,26 @@ const ProfileDetails = ({ name }) => {
     <Container>
       <Header>
         <Link to="/profiles">
-          <Button className={styles.backButton} title="BACK" />
+          <Button className={styles.backButton}> BACK </Button>
         </Link>
         <div>
-          <Button title="Delete" buttonType="danger" onClick={() => {}} />
-          <Button title="Save" onClick={() => {}} />
+          <Button type="danger" onClick={() => {}}>
+            Delete
+          </Button>
+          <Button onClick={() => {}}>Save</Button>
         </div>
       </Header>
-      <Form {...layout} form={form}>
-        <Item
-          name="name"
-          label="Profile Name"
-          rules={[{ required: true, message: 'Please input your new profile name' }]}
-        >
-          <Input className={styles.Field} defaultValue={name} />
-        </Item>
-      </Form>
+      <Card className={styles.Card}>
+        <Form {...layout} form={form}>
+          <Item
+            name="name"
+            label="Profile Name"
+            rules={[{ required: true, message: 'Please input your new profile name' }]}
+          >
+            <Input className={styles.Field} defaultValue={name} />
+          </Item>
+        </Form>
+      </Card>
     </Container>
   );
 };
