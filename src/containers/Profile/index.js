@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from 'antd';
 import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
@@ -6,10 +6,25 @@ import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
+import Modal from 'components/Modal';
 
 import styles from './index.module.scss';
 
-const Profile = ({ data, onReload, onLoadMore, isLastPage }) => {
+const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) => {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [activeProfile, setActiveProfile] = useState({
+    id: 0,
+    name: '',
+    profileType: '',
+    __typename: '',
+  });
+
+  const deleteProfile = () => {
+    const { id } = activeProfile;
+    onDeleteProfile(id);
+    setDeleteModal(false);
+  };
+
   const columns = [
     {
       title: 'NAME',
@@ -37,12 +52,38 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage }) => {
       dataIndex: 'delete',
       key: 'delete',
       width: 80,
-      render: (_, record) => <Button icon={<DeleteFilled />} onClick={() => console.log(record)} />,
+      render: (_, record) => (
+        <Button
+          icon={<DeleteFilled />}
+          onClick={() => {
+            setDeleteModal(true);
+            setActiveProfile({
+              id: record.id,
+              name: record.name,
+              profileType: record.profileType,
+              __typename: record.__typename,
+            });
+          }}
+        />
+      ),
     },
   ];
 
   return (
     <Container>
+      <Modal
+        onCancel={() => setDeleteModal(false)}
+        onSuccess={deleteProfile}
+        visible={deleteModal}
+        title="Are you sure?"
+        buttonText="Delete"
+        buttonType="danger"
+        content={
+          <p>
+            Are you sure you want to delete the account: <strong> {activeProfile.name}</strong>
+          </p>
+        }
+      />
       <Header>
         <h1>Profiles</h1>
         <div className={styles.Buttons}>
@@ -62,6 +103,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage }) => {
 
 Profile.propTypes = {
   data: PropTypes.instanceOf(Array),
+  onDeleteProfile: PropTypes.func.isRequired,
   onReload: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,

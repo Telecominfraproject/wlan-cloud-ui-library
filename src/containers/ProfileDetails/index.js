@@ -9,12 +9,12 @@ import Modal from 'components/Modal';
 
 import styles from './index.module.scss';
 
-const ProfileDetails = ({ name, onDeleteUser }) => {
+const ProfileDetails = ({ name, onDeleteProfile }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   const deleteProfile = () => {
-    onDeleteUser();
+    onDeleteProfile();
     setDeleteModal(false);
     setTimeout(() => {
       setRedirect(true);
@@ -73,7 +73,7 @@ const ProfileDetails = ({ name, onDeleteUser }) => {
 
 ProfileDetails.propTypes = {
   name: PropTypes.string,
-  onDeleteUser: PropTypes.func.isRequired,
+  onDeleteProfile: PropTypes.func.isRequired,
 };
 
 ProfileDetails.defaultProps = {
