@@ -8,6 +8,6 @@
   border-radius: 5px;
 }
 
-.Card {
-  margin-top: 25px;
+:global(.ant-card) {
+  margin-top: 10px;
 }
