@@ -23,8 +23,6 @@ const SSIDForm = () => {
   const [vlan, setVlan] = useState(false);
   const [mode, setMode] = useState('');
 
-  console.log(mode);
-
   return (
     <>
       <Form {...layout} form={form}>
