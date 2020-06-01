@@ -6,10 +6,10 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
-
+import SSIDForm from './components/SSID';
 import styles from './index.module.scss';
 
-const ProfileDetails = ({ name, onDeleteProfile }) => {
+const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
@@ -22,8 +22,8 @@ const ProfileDetails = ({ name, onDeleteProfile }) => {
   };
 
   const layout = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 12 },
+    labelCol: { span: 3 },
+    wrapperCol: { span: 10 },
   };
 
   const [form] = Form.useForm();
@@ -56,7 +56,8 @@ const ProfileDetails = ({ name, onDeleteProfile }) => {
           <Button onClick={() => {}}>Save</Button>
         </div>
       </Header>
-      <Card className={styles.Card}>
+
+      <Card className={styles.Card} title={`Edit ${name}`}>
         <Form {...layout} form={form}>
           <Item
             name="name"
@@ -67,17 +68,21 @@ const ProfileDetails = ({ name, onDeleteProfile }) => {
           </Item>
         </Form>
       </Card>
+      {profileType === 'ssid' && <SSIDForm />}
     </Container>
   );
 };
 
 ProfileDetails.propTypes = {
   name: PropTypes.string,
+  profileType: PropTypes.string,
+
   onDeleteProfile: PropTypes.func.isRequired,
 };
 
 ProfileDetails.defaultProps = {
   name: null,
+  profileType: null,
 };
 
 export default ProfileDetails;
