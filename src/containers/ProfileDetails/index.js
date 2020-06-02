@@ -7,6 +7,8 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import SSIDForm from './components/SSID';
+import AccessPointForm from './components/AccessPoint';
+
 import styles from './index.module.scss';
 
 const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
@@ -19,7 +21,7 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
 
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 10 },
+    wrapperCol: { span: 12 },
   };
 
   const [form] = Form.useForm();
@@ -62,7 +64,8 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
             <Input className={styles.Field} defaultValue={name} />
           </Item>
         </Card>
-        {profileType === 'ssid' && <SSIDForm />}
+        {/* {profileType === 'ssid' && <SSIDForm />} */}
+        <AccessPointForm />
       </Form>
     </Container>
   );

@@ -3,16 +3,20 @@
   border: 1px solid #434343;
   border-radius: 5px;
   margin-right: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .Field:last-child {
   background: #141414;
   border: 1px solid #434343;
   border-radius: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 :global(.ant-checkbox) {
-  margin-right: 5px;
+  margin-left: 10px;
 }
 
 :global(.ant-radio) {
@@ -26,10 +30,5 @@
 
 .NotApplicable {
   margin-left: 10px;
-  font-style: italic;
-}
-
-p {
-  text-align: center;
   font-style: italic;
 }
