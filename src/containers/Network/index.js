@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -8,15 +7,7 @@ import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
 import styles from './index.module.scss';
 
-const Network = ({
-  loading,
-  locations,
-  checkedLocations,
-  onSelect,
-  onCheck,
-  activeTab,
-  children,
-}) => {
+const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, children }) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
@@ -34,7 +25,7 @@ const Network = ({
             <ToggleButton activeTab={activeTab} />
             <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
           </div>
-          {loading ? <Spin size="large" className={styles.spinner} /> : children}
+          {children}
         </div>
       </div>
     </div>
@@ -42,7 +33,6 @@ const Network = ({
 };
 
 Network.propTypes = {
-  loading: PropTypes.bool.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
