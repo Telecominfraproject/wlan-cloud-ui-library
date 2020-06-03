@@ -1,28 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { ReloadOutlined } from '@ant-design/icons';
 
-import DeviceTable from 'components/DeviceTable';
+import Button from 'components/Button';
 import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
-import ReloadButton from 'components/ReloadButton';
 import styles from './index.module.scss';
 
-const ClientDevices = ({
-  tableColumns,
-  locations,
-  tableData,
-  checkedLocations,
-  onSelect,
-  onCheck,
-}) => {
-  const [activeTab, setActiveTab] = useState('cd');
+const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, children }) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
-  const onToggle = e => {
-    setActiveTab(e.target.id);
-  };
-
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -34,23 +22,23 @@ const ClientDevices = ({
         />
         <div className={styles.mainContent}>
           <div className={styles.headerContent}>
-            <ToggleButton onToggle={onToggle} activeTab={activeTab} />
-            <ReloadButton onReload={onReload} />
+            <ToggleButton activeTab={activeTab} />
+            <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
           </div>
-          <DeviceTable tableColumns={tableColumns} tableData={tableData} />
+          {children}
         </div>
       </div>
     </div>
   );
 };
 
-ClientDevices.propTypes = {
-  tableColumns: PropTypes.instanceOf(Array).isRequired,
+Network.propTypes = {
   locations: PropTypes.instanceOf(Array).isRequired,
-  tableData: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
-export default ClientDevices;
+export default Network;
