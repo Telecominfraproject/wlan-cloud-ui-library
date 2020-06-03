@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { ReloadOutlined, ExclamationOutlined, WifiOutlined } from '@ant-design/icons';
 import { List, Card, Avatar } from 'antd';
 import PropTypes from 'prop-types';
@@ -63,7 +64,10 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                 description={[
                   <div>
                     <p>{item.details.message}</p>
-                    <Avatar className={styles.WifiIcon} icon={<WifiOutlined />} size={50} />
+                    <Link to={`/network/access-points/${item.equipment.id}`}>
+                      <Avatar className={styles.WifiIcon} icon={<WifiOutlined />} size={50} />
+                      {item.equipment.name}
+                    </Link>
                   </div>,
                 ]}
               />
