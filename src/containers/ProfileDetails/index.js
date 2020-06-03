@@ -9,6 +9,8 @@ import Modal from 'components/Modal';
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
 
+import CaptivePortalForm from './components/CaptivePortal';
+
 import styles from './index.module.scss';
 
 const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
@@ -65,7 +67,8 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
           </Item>
         </Card>
         {/* {profileType === 'ssid' && <SSIDForm />} */}
-        <AccessPointForm />
+        {/* <AccessPointForm /> */}
+        <CaptivePortalForm />
       </Form>
     </Container>
   );

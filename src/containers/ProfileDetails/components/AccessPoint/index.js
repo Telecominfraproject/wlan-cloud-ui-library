@@ -71,19 +71,23 @@ const AccessPointForm = () => {
         }
       />
       <Card title="LAN and Services ">
-        <Item name="name" label="Management VLAN">
+        <Item label="Management VLAN">
           <Checkbox onChange={() => setVlan(!vlan)} defaultChecked>
             Use Default Management VLAN
           </Checkbox>
           {!vlan && (
-            <Input
-              className={styles.Field}
-              placeholder="2-4095"
-              type="number"
-              min={2}
-              max={4095}
+            <Item
+              name="vlan"
               rules={[{ required: true, message: 'VLAN expected between 2 - 4095' }]}
-            />
+            >
+              <Input
+                className={styles.Field}
+                placeholder="2-4095"
+                type="number"
+                min={2}
+                max={4095}
+              />
+            </Item>
           )}
         </Item>
 
@@ -92,14 +96,12 @@ const AccessPointForm = () => {
             Use Default Servers
           </Checkbox>
           {!ntp && (
-            <Input
-              className={styles.Field}
-              placeholder="Enter NTP server"
-              rules={[{ required: true, message: 'Please enter your NTP server' }]}
-            />
+            <Item name="ntp" rules={[{ required: true, message: 'Please enter your NTP server' }]}>
+              <Input className={styles.Field} placeholder="Enter NTP server" />
+            </Item>
           )}
         </Item>
-        <Item name="led" label="LED Status">
+        <Item label="LED Status">
           <Checkbox onChange={() => setLed(!led)} defaultChecked>
             Show LED indicators on APs
           </Checkbox>
@@ -116,24 +118,29 @@ const AccessPointForm = () => {
           </Radio.Group>
           {rtls && (
             <>
-              <Input
-                className={styles.Field}
-                placeholder="IP Address"
+              <Item
+                name="ipAddress"
                 rules={[
                   {
                     required: true,
                     message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                   },
                 ]}
-              />
-              <Input
-                className={styles.Field}
-                placeholder="Enter NTP server"
-                type="number"
-                min={1}
-                max={65535}
+              >
+                <Input className={styles.Field} placeholder="IP Address" />
+              </Item>
+              <Item
+                name="port"
                 rules={[{ required: true, message: 'Port expected between 1 - 65535' }]}
-              />
+              >
+                <Input
+                  className={styles.Field}
+                  placeholder="Port"
+                  type="number"
+                  min={1}
+                  max={65535}
+                />
+              </Item>
             </>
           )}
         </Item>
@@ -168,16 +175,26 @@ const AccessPointForm = () => {
                   rules={[{ required: true, message: 'Port expected between 1 - 65535' }]}
                 />
               </div>
-              <Select className={styles.Field}>
-                <Option value="debug">Debug (DEBUG)</Option>
-                <Option value="info">Info. (INFO)</Option>
-                <Option value="notice">Notice (NOTICE)</Option>
-                <Option value="warning">Warning (WARNING)</Option>
-                <Option value="error">Error (ERR)</Option>
-                <Option value="critical">Critical (CRIT)</Option>
-                <Option value="Alert">Alert (ALERT)</Option>
-                <Option value="emergency">Emergency (EMERG)</Option>
-              </Select>
+              <Item
+                name="syslogMode"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your default syslog mode',
+                  },
+                ]}
+              >
+                <Select className={styles.Field} placeholder="Select syslog mode">
+                  <Option value="debug">Debug (DEBUG)</Option>
+                  <Option value="info">Info. (INFO)</Option>
+                  <Option value="notice">Notice (NOTICE)</Option>
+                  <Option value="warning">Warning (WARNING)</Option>
+                  <Option value="error">Error (ERR)</Option>
+                  <Option value="critical">Critical (CRIT)</Option>
+                  <Option value="Alert">Alert (ALERT)</Option>
+                  <Option value="emergency">Emergency (EMERG)</Option>
+                </Select>
+              </Item>
             </>
           )}
         </Item>

@@ -18,10 +18,11 @@ const SSIDForm = () => {
       <Card title="SSID">
         <Item
           label="SSID Name"
+          name="ssid"
           rules={[{ required: true, message: 'Please input your new SSID name' }]}
         >
           <div className={styles.InlineDiv}>
-            <Input className={styles.Field} name="ssidName" />
+            <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
             <Radio.Group defaultValue="show">
               <Radio value="hide">Hide SSID </Radio>
               <Radio value="show">Show SSID</Radio>
@@ -30,6 +31,7 @@ const SSIDForm = () => {
         </Item>
         <Item
           label="Bandwidth Limits"
+          name="bandwidth"
           rules={[
             { required: true, message: 'Bandwidth Limit can be a number between 0 and 100.' },
           ]}
@@ -37,6 +39,7 @@ const SSIDForm = () => {
           <div className={styles.InlineDiv}>
             <Input
               className={styles.Field}
+              placeholder="0-100"
               type="number"
               min={0}
               max={100}
@@ -50,6 +53,7 @@ const SSIDForm = () => {
             />
             <Input
               className={styles.Field}
+              placeholder="0-100"
               type="number"
               min={2}
               max={4095}
@@ -139,16 +143,39 @@ const SSIDForm = () => {
             </Radio>
           </Radio.Group>
           {captivePortal && (
-            <Select className={styles.Field} placeholder="Select Captive Portal Profile">
-              <Option value="default">Default</Option>
-            </Select>
+            <Item
+              name="captive"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your default captive ID',
+                },
+              ]}
+            >
+              <Select className={styles.Field} placeholder="Select Captive Portal Profile">
+                <Option value="default">Default</Option>
+              </Select>
+            </Item>
           )}
         </Item>
       </Card>
 
       <Card title="Security and Encryption">
-        <Item label="Mode">
-          <Select className={styles.Field} onChange={value => setMode(value)}>
+        <Item
+          label="Mode"
+          name="mode"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your security and encryption mode',
+            },
+          ]}
+        >
+          <Select
+            className={styles.Field}
+            onChange={value => setMode(value)}
+            placeholder="Select Security and Encryption Mode"
+          >
             <Option value="open">Open (No ecryption)</Option>
             <Option value="wpaPersonal">WPA Personal</Option>
             <Option value="mixedPersonal">WPA & WPA2 Personal (mixed mode)</Option>
@@ -162,6 +189,7 @@ const SSIDForm = () => {
         {(mode === 'mixedEnterprise' || mode === 'wpa2Enterprise') && (
           <Item
             label="RADIUS Service"
+            name="radius"
             rules={[
               {
                 required: true,
@@ -178,6 +206,7 @@ const SSIDForm = () => {
         {(mode === 'wpa' || mode === 'mixedPersonal' || mode === 'wpa2Personal') && (
           <Item
             label="Security Key"
+            name="key"
             rules={[
               {
                 required: true,
@@ -185,18 +214,21 @@ const SSIDForm = () => {
               },
             ]}
           >
-            <Input.Password visibilityToggle className={styles.Field} />
+            <Input.Password
+              visibilityToggle
+              className={styles.Field}
+              placeholder="8-63 characters"
+            />
           </Item>
         )}
 
         {mode === 'wep' && (
           <>
-            <p>
-              When using WEP, high performance features like 11n and 11ac will not work with this
-              SSID.
-            </p>
+            When using WEP, high performance features like 11n and 11ac will not work with this
+            SSID.
             <Item
               label="WEP Key"
+              name="wepKey"
               rules={[
                 {
                   required: true,
@@ -205,10 +237,19 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Input className={styles.Field} />
+              <Input className={styles.Field} placeholder="Enter WEP key" />
             </Item>
-            <Item label="Default Key ID ">
-              <Select className={styles.Field}>
+            <Item
+              label="Default Key ID "
+              name="keyID"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select your default key ID',
+                },
+              ]}
+            >
+              <Select className={styles.Field} placeholder="Select default key ID">
                 <Option value={1}>1</Option>
                 <Option value={2}>2</Option>
                 <Option value={3}>3</Option>
@@ -227,14 +268,18 @@ const SSIDForm = () => {
             </Radio>
           </Radio.Group>
           {vlan && (
-            <Input
-              className={styles.Field}
-              placeholder="2-4095"
-              type="number"
+            <Item
+              name="vlan"
               rules={[{ required: true, message: 'VLAN expected between 2 - 4095' }]}
-              min={2}
-              max={4095}
-            />
+            >
+              <Input
+                className={styles.Field}
+                placeholder="2-4095"
+                type="number"
+                min={2}
+                max={4095}
+              />
+            </Item>
           )}
         </Item>
       </Card>
