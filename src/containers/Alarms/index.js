@@ -25,10 +25,8 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
   };
 
   const convertDate = time => {
-    const value = Number(time);
-    const date = new Date(value);
-    const returnedDate = date.toLocaleString();
-    return returnedDate;
+    const date = new Date(parseInt(time, 10));
+    return date.toLocaleString();
   };
 
   return (
@@ -42,11 +40,10 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
           gutter: 16,
           column: 1,
         }}
-        pagination={false}
         dataSource={data}
         renderItem={item => (
           <Item>
-            <Card className={styles.Card}>
+            <Card>
               <Meta
                 avatar={
                   <Avatar
@@ -55,21 +52,21 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                     icon={<ExclamationOutlined />}
                   />
                 }
-                title={[
+                title={
                   <div className={styles.Title}>
-                    <p>{item.alarmCode}</p>
+                    <div>{item.alarmCode}</div>
                     {convertDate(item.createdTimestamp)}
-                  </div>,
-                ]}
-                description={[
+                  </div>
+                }
+                description={
                   <div>
-                    <p>{item.details.message}</p>
+                    <div>{item.details.message}</div>
                     <Link to={`/network/access-points/${item.equipment.id}`}>
-                      <Avatar className={styles.WifiIcon} icon={<WifiOutlined />} size={50} />
+                      <WifiOutlined className={styles.WifiIcon} />
                       {item.equipment.name}
                     </Link>
-                  </div>,
-                ]}
+                  </div>
+                }
               />
             </Card>
           </Item>
