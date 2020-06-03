@@ -5,6 +5,12 @@
   text-align: center;
   flex-direction: column;
   padding: 5px;
+
+  h1 {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
 }
 
 .Card {
@@ -26,10 +32,4 @@
 
 .Save {
   margin-top: 30px;
-}
-
-h1 {
-  color: #fff;
-  font-size: 22px;
-  margin-bottom: 30px;
 }
