@@ -8,7 +8,6 @@ import ToggleButton from 'components/ToggleButton';
 import styles from './index.module.scss';
 
 const Network = ({
-  loading,
   locations,
   checkedLocations,
   onSelect,
