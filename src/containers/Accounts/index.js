@@ -137,7 +137,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         onSubmit={addUser}
         title="Add Account"
       />
-      <Table dataSource={data} columns={columns} pagination={false} />
+      <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
         <div className={styles.LoadMore}>
           <Button onClick={onLoadMore}>Load More</Button>

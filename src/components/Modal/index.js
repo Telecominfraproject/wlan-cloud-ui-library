@@ -20,16 +20,18 @@ const Modal = ({
       visible={visible}
       title={title}
       onCancel={onCancel}
-      footer={[
-        <div className={styles.Buttons}>
-          <Button className={styles.Button} onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
-            {buttonText}
-          </Button>
-        </div>,
-      ]}
+      footer={
+        <>
+          <div className={styles.Buttons}>
+            <Button className={styles.Button} onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
+              {buttonText}
+            </Button>
+          </div>
+        </>
+      }
       {...restProps}
     >
       {content}
