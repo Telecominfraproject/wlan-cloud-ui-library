@@ -1,0 +1,24 @@
+:global(.ant-list .ant-card) {
+  background: #141414;
+}
+
+.InfoIcon {
+  color: black;
+}
+
+.WifiIcon {
+  background-color: transparent;
+  border: none;
+  margin-right: 5px;
+}
+
+.Title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

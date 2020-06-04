@@ -9,14 +9,14 @@ const ToggleButton = ({ activeTab }) => {
       <Link
         role="button"
         to="/network/access-points"
-        className={activeTab === '/network/access-points' ? styles.activeBtn : ''}
+        className={activeTab.startsWith('/network/access-points') ? styles.activeBtn : ''}
       >
         Access Points
       </Link>
       <Link
         role="button"
         to="/network/client-devices"
-        className={activeTab === '/network/client-devices' ? styles.activeBtn : ''}
+        className={activeTab.startsWith('/network/client-devices') ? styles.activeBtn : ''}
       >
         Client Devices
       </Link>
