@@ -183,7 +183,6 @@ const LocationsTree = ({
         visible={editModal}
         onSubmit={editLocation}
         title="Edit Account"
-        locationName="Floor zero"
         singleLocationData={singleLocationData}
       />
     </div>
