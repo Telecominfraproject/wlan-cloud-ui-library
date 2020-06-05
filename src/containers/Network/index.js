@@ -20,6 +20,8 @@ const Network = ({
   onDeleteLocation,
   onGetSelectedLocation,
   singleLocationData,
+  isBulkEditAps,
+  // onBulkEditAccessPoints,
 }) => {
   const onReload = () => {
     // console.log('Reload Button Clicked');
@@ -38,12 +40,15 @@ const Network = ({
           onDeleteLocation={onDeleteLocation}
           onGetSelectedLocation={onGetSelectedLocation}
           singleLocationData={singleLocationData}
+          // onBulkEditAccessPoints={onBulkEditAccessPoints}
         />
         <div className={styles.mainContent}>
-          <div className={styles.headerContent}>
-            <ToggleButton activeTab={activeTab} />
-            <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
-          </div>
+          {!isBulkEditAps && (
+            <div className={styles.headerContent}>
+              <ToggleButton activeTab={activeTab} />
+              <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
+            </div>
+          )}
           {children}
         </div>
       </div>
@@ -62,7 +67,9 @@ Network.propTypes = {
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
+  isBulkEditAps: PropTypes.bool.isRequired,
   onGetSelectedLocation: PropTypes.func.isRequired,
+  // onBulkEditAccessPoints: PropTypes.func.isRequired,
   singleLocationData: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,

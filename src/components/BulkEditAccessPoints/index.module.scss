@@ -1,0 +1,32 @@
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.backButton {
+  margin: 15px;
+}
+.innerContainer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  background: #141414 0% 0% no-repeat padding-box;
+  padding: 15px;
+  @media screen and (max-width: 575px) {
+    flex-direction: column;
+  }
+}
+.innerText {
+  font-family: Roboto;
+  font-size: 18px;
+  height: auto;
+  font: Regular 20px/24px Roboto;
+  color: #ffffff;
+  @media screen and (max-width: 575px) {
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+}
+.tabBar {
+  background-color: '#131313';
+}

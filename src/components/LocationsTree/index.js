@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { Popover, Tree, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
@@ -20,6 +19,7 @@ const LocationsTree = ({
   onDeleteLocation,
   onGetSelectedLocation,
   singleLocationData,
+  // onBulkEditAccessPoints,
 }) => {
   const [popOverVisible, setpopOverVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -31,6 +31,7 @@ const LocationsTree = ({
   };
 
   const addLocation = ({ location }) => {
+    console.log('adding loc', location, singleLocationData);
     if (singleLocationData) {
       const { id, locationType } = singleLocationData;
       if (locationType === 'COUNTRY') {
@@ -94,7 +95,6 @@ const LocationsTree = ({
       >
         Add Location
       </Link>
-
       <Link
         key={1}
         role="button"
@@ -110,7 +110,7 @@ const LocationsTree = ({
       <Link
         key={2}
         role="button"
-        to="/network"
+        to="/network/access-points/bulk-edit"
         onKeyPress={() => {}}
         onClick={() => {
           setpopOverVisible(false);
@@ -199,6 +199,7 @@ LocationsTree.propTypes = {
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
   onGetSelectedLocation: PropTypes.func,
+  // onBulkEditAccessPoints: PropTypes.func,
   singleLocationData: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -214,6 +215,7 @@ LocationsTree.defaultProps = {
   onEditLocation: () => {},
   onDeleteLocation: () => {},
   onGetSelectedLocation: () => {},
+  // onBulkEditAccessPoints: () => {},
   singleLocationData: {},
 };
 
