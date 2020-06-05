@@ -13,6 +13,13 @@ const SSIDForm = () => {
   const [vlan, setVlan] = useState(false);
   const [mode, setMode] = useState('');
 
+  const hexadecimalRegex = e => {
+    const re = /[0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <>
       <Card title="SSID">
@@ -55,8 +62,8 @@ const SSIDForm = () => {
               className={styles.Field}
               placeholder="0-100"
               type="number"
-              min={2}
-              max={4095}
+              min={0}
+              max={100}
               addonBefore="Up Mbps"
               rules={[{ required: true, message: 'Bandwidth expected between 0 - 100' }]}
               addonAfter={
@@ -64,6 +71,7 @@ const SSIDForm = () => {
                   <InfoCircleOutlined />
                 </Tooltip>
               }
+              hasFeedback
             />
           </div>
         </Item>
@@ -72,7 +80,7 @@ const SSIDForm = () => {
           <Checkbox.Group>
             <Checkbox value="2.4Ghz">2.4 GHz</Checkbox>
 
-            <Checkbox value="5Ghz">5.0 GHz</Checkbox>
+            <Checkbox value="5Ghz">5 GHz</Checkbox>
           </Checkbox.Group>
         </Item>
       </Card>
@@ -129,7 +137,7 @@ const SSIDForm = () => {
               <Radio value="noAccess">No Local Access</Radio>
             </Radio.Group>
           ) : (
-            <span className={styles.NotApplicable}>Not Applicable</span>
+            <span className={styles.Disclaimer}>Not Applicable</span>
           )}
         </Item>
 
@@ -198,7 +206,7 @@ const SSIDForm = () => {
             ]}
           >
             <Tooltip title="Add new RADIUS service">
-              <Button icon={<PlusOutlined />} on />
+              <Button icon={<PlusOutlined />} />
             </Tooltip>
           </Item>
         )}
@@ -211,13 +219,16 @@ const SSIDForm = () => {
               {
                 required: true,
                 message: 'Please input your security key',
+                min: 8,
               },
             ]}
+            hasFeedback
           >
             <Input.Password
               visibilityToggle
               className={styles.Field}
               placeholder="8-63 characters"
+              maxLength={63}
             />
           </Item>
         )}
@@ -232,12 +243,19 @@ const SSIDForm = () => {
               rules={[
                 {
                   required: true,
+                  len: 10,
                   message:
                     'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key',
                 },
               ]}
+              hasFeedback
             >
-              <Input className={styles.Field} placeholder="Enter WEP key" />
+              <Input
+                className={styles.Field}
+                placeholder="Enter WEP key"
+                onKeyPress={e => hexadecimalRegex(e)}
+                maxLength={26}
+              />
             </Item>
             <Item
               label="Default Key ID "

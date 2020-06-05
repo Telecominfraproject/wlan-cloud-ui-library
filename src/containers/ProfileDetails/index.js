@@ -8,6 +8,7 @@ import Header from 'components/Header';
 import Modal from 'components/Modal';
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
+import RadiusForm from './components/Radius';
 
 import CaptivePortalForm from './components/CaptivePortal';
 
@@ -22,7 +23,7 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
   };
 
   const layout = {
-    labelCol: { span: 3 },
+    labelCol: { span: 4 },
     wrapperCol: { span: 12 },
   };
 
@@ -63,12 +64,13 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
             label="Profile Name"
             rules={[{ required: true, message: 'Please input your new profile name' }]}
           >
-            <Input className={styles.Field} defaultValue={name} />
+            <Input className={styles.Field} defaultValue={name} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {/* {profileType === 'ssid' && <SSIDForm />} */}
+        {profileType === 'ssid' && <SSIDForm />}
         {/* <AccessPointForm /> */}
-        <CaptivePortalForm />
+        {/* <CaptivePortalForm /> */}
+        {/* <RadiusForm /> */}
       </Form>
     </Container>
   );

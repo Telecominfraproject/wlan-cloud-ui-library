@@ -25,15 +25,25 @@
   margin-top: 10px;
   background: #141414;
 }
+:global(.ant-list) {
+  padding: 20px;
+}
 
 .InlineDiv {
   display: flex;
   justify-content: space-around;
 }
 
-.NotApplicable {
+.InlineEndDiv {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Disclaimer {
   margin-left: 10px;
+  margin-right: 5px;
   font-style: italic;
+  font-size: 10px;
 }
 
 .Image {
@@ -49,4 +59,8 @@
 code {
   background-color: #35a649;
   color: black;
+}
+
+.infoCard {
+  margin-right: 10px;
 }
