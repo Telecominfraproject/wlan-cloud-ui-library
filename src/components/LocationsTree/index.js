@@ -19,7 +19,7 @@ const LocationsTree = ({
   onDeleteLocation,
   onGetSelectedLocation,
   singleLocationData,
-  // onBulkEditAccessPoints,
+  onBulkEditAccessPoints,
 }) => {
   const [popOverVisible, setpopOverVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -31,7 +31,6 @@ const LocationsTree = ({
   };
 
   const addLocation = ({ location }) => {
-    console.log('adding loc', location, singleLocationData);
     if (singleLocationData) {
       const { id, locationType } = singleLocationData;
       if (locationType === 'COUNTRY') {
@@ -113,6 +112,7 @@ const LocationsTree = ({
         to="/network/access-points/bulk-edit"
         onKeyPress={() => {}}
         onClick={() => {
+          onBulkEditAccessPoints();
           setpopOverVisible(false);
         }}
       >
@@ -199,7 +199,7 @@ LocationsTree.propTypes = {
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
   onGetSelectedLocation: PropTypes.func,
-  // onBulkEditAccessPoints: PropTypes.func,
+  onBulkEditAccessPoints: PropTypes.func,
   singleLocationData: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -215,7 +215,7 @@ LocationsTree.defaultProps = {
   onEditLocation: () => {},
   onDeleteLocation: () => {},
   onGetSelectedLocation: () => {},
-  // onBulkEditAccessPoints: () => {},
+  onBulkEditAccessPoints: () => {},
   singleLocationData: {},
 };
 

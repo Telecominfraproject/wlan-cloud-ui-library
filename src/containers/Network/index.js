@@ -1,7 +1,7 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
-
 import Button from 'components/Button';
 import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
@@ -20,9 +20,9 @@ const Network = ({
   onDeleteLocation,
   onGetSelectedLocation,
   singleLocationData,
-  isBulkEditAps,
-  // onBulkEditAccessPoints,
 }) => {
+  const location = useLocation();
+
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
@@ -40,14 +40,16 @@ const Network = ({
           onDeleteLocation={onDeleteLocation}
           onGetSelectedLocation={onGetSelectedLocation}
           singleLocationData={singleLocationData}
-          // onBulkEditAccessPoints={onBulkEditAccessPoints}
         />
         <div className={styles.mainContent}>
-          {!isBulkEditAps && (
+          {location.pathname === '/network/access-points' ||
+          location.pathname === '/network/client-devices' ? (
             <div className={styles.headerContent}>
               <ToggleButton activeTab={activeTab} />
               <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
             </div>
+          ) : (
+            ''
           )}
           {children}
         </div>
@@ -67,9 +69,7 @@ Network.propTypes = {
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
-  isBulkEditAps: PropTypes.bool.isRequired,
   onGetSelectedLocation: PropTypes.func.isRequired,
-  // onBulkEditAccessPoints: PropTypes.func.isRequired,
   singleLocationData: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,

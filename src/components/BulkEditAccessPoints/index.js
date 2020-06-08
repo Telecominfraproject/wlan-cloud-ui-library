@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Tabs } from 'antd';
+import { Tabs } from 'antd';
+import { useHistory } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
+import BulkEditAPTable from './components/tables';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
@@ -12,16 +14,19 @@ const tabBarStyle = {
   paddingLeft: 15,
 };
 
-const BulkEditAccessPoints = ({ tableColumns, tableData, onBackBtnClick }) => {
-  const callback = key => {
+const BulkEditAccessPoints = ({ tableColumns, tableData }) => {
+  const history = useHistory();
+  const callback = () => {
     // console.log(key);
   };
-  console.log('in bulk edit');
+  const handleBackClick = () => {
+    history.push('/network/access-points');
+  };
   return (
     <div>
       <Button
         title="back"
-        onClick={onBackBtnClick}
+        onClick={handleBackClick}
         className={styles.backButton}
         icon={<LeftOutlined />}
       >
@@ -34,28 +39,13 @@ const BulkEditAccessPoints = ({ tableColumns, tableData, onBackBtnClick }) => {
         </div>
         <Tabs tabBarStyle={tabBarStyle} defaultActiveKey="1" onChange={callback}>
           <TabPane tab="Channel" key="1">
-            <Table
-              columns={tableColumns}
-              dataSource={tableData}
-              scroll={{ x: 2000 }}
-              pagination={false}
-            />
+            <BulkEditAPTable tableColumns={tableColumns} tableData={tableData} />
           </TabPane>
           <TabPane tab="Cell Size" key="2">
-            <Table
-              columns={tableColumns}
-              dataSource={tableData}
-              scroll={{ x: 2000 }}
-              pagination={false}
-            />
+            <BulkEditAPTable tableColumns={tableColumns} tableData={tableData} />
           </TabPane>
           <TabPane tab="Steering Thresholds" key="3">
-            <Table
-              columns={tableColumns}
-              dataSource={tableData}
-              scroll={{ x: 2000 }}
-              pagination={false}
-            />
+            <BulkEditAPTable tableColumns={tableColumns} tableData={tableData} />
           </TabPane>
         </Tabs>
       </div>
@@ -66,7 +56,6 @@ const BulkEditAccessPoints = ({ tableColumns, tableData, onBackBtnClick }) => {
 BulkEditAccessPoints.propTypes = {
   tableColumns: PropTypes.instanceOf(Array).isRequired,
   tableData: PropTypes.instanceOf(Array),
-  onBackBtnClick: PropTypes.func.isRequired,
 };
 
 BulkEditAccessPoints.defaultProps = {
