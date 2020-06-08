@@ -59,11 +59,33 @@ const RadiusForm = () => {
         <Item
           name="probe"
           label="RADIUS Probe Interval"
-          rules={[{ required: true, message: 'Please input the probe interval' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Please input Radius Probe Interval',
+            },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (
+                  !value ||
+                  getFieldValue('probe') === 0 ||
+                  (getFieldValue('probe') >= 60 && getFieldValue('probe') <= 100)
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Radius Probe Interval expected between 60 and 100 or 0')
+                );
+              },
+            }),
+          ]}
         >
           <Input
             className={styles.Field}
             placeholder="0 or 60 - 100"
+            type="number"
+            min={0}
+            max={100}
             addonBefore={
               <Tooltip title="Probe range interval is 60 - 100 (0 means disabled)">
                 <InfoCircleOutlined />

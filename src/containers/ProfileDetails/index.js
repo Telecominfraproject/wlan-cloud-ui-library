@@ -67,10 +67,10 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
             <Input className={styles.Field} defaultValue={name} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {profileType === 'ssid' && <SSIDForm />}
+        {/* {profileType === 'ssid' && <SSIDForm />} */}
         {/* <AccessPointForm /> */}
         {/* <CaptivePortalForm /> */}
-        {/* <RadiusForm /> */}
+        <RadiusForm />
       </Form>
     </Container>
   );

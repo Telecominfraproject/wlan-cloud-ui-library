@@ -4,19 +4,22 @@ import { Card, Form, Input } from 'antd';
 import Modal from 'components/Modal';
 import styles from '../../../index.module.scss';
 
-const ManagementSubnetModal = ({ onCancel, visible, title, region }) => {
+const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) => {
   const { Item } = Form;
   const [form] = Form.useForm();
+  form.resetFields();
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
 
+  const ip = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+
   const addServerContent = (
     <Form {...layout} form={form}>
       <Item name="region" label="Region Name">
-        <Input className={styles.Field} defaultValue={region} disabled />
+        <Input className={styles.Field} defaultValue={region} disabled={disabled} />
       </Item>
       <Item
         name="subnet"
@@ -36,9 +39,11 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region }) => {
         rules={[
           {
             required: true,
+            pattern: ip,
             message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
           },
         ]}
+        hasFeedback
       >
         <Input className={styles.Field} placeholder="Enter Subnet IP" />
       </Item>
@@ -51,7 +56,20 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region }) => {
             message:
               'Please include only numbers in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]',
           },
+          ({ getFieldValue }) => ({
+            validator(_rule, value) {
+              if (!value || getFieldValue('cidr') <= 32 || ip.test(getFieldValue('cidr'))) {
+                return Promise.resolve();
+              }
+              return Promise.reject(
+                new Error(
+                  'Please include only numbers in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]'
+                )
+              );
+            },
+          }),
         ]}
+        hasFeedback
       >
         <Input className={styles.Field} placeholder="Enter Subnet Mask" />
       </Item>
@@ -67,9 +85,11 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region }) => {
           rules={[
             {
               required: true,
+              pattern: ip,
               message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
             },
           ]}
+          hasFeedback
         >
           <Input className={styles.Field} placeholder="Enter IP address" />
         </Item>
@@ -93,11 +113,13 @@ ManagementSubnetModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
   region: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 ManagementSubnetModal.defaultProps = {
   title: '',
   region: '',
+  disabled: false,
 };
 
 export default ManagementSubnetModal;

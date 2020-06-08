@@ -36,44 +36,76 @@ const SSIDForm = () => {
             </Radio.Group>
           </div>
         </Item>
+
         <Item
-          label="Bandwidth Limits"
-          name="bandwidth"
+          label="Downstream Bandwidth"
+          name="downstream"
           rules={[
-            { required: true, message: 'Bandwidth Limit can be a number between 0 and 100.' },
+            {
+              required: true,
+              message: 'Downstream bandwidth limit can be a number between 0 and 100.',
+            },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (!value || getFieldValue('Downstream') <= 100) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Downstream bandwidth limit can be a number between 0 and 100.')
+                );
+              },
+            }),
           ]}
         >
-          <div className={styles.InlineDiv}>
-            <Input
-              className={styles.Field}
-              placeholder="0-100"
-              type="number"
-              min={0}
-              max={100}
-              addonBefore="Down Mbps"
-              rules={[{ required: true, message: 'Bandwidth expected between 0 - 100' }]}
-              addonAfter={
-                <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
-                  <InfoCircleOutlined />
-                </Tooltip>
-              }
-            />
-            <Input
-              className={styles.Field}
-              placeholder="0-100"
-              type="number"
-              min={0}
-              max={100}
-              addonBefore="Up Mbps"
-              rules={[{ required: true, message: 'Bandwidth expected between 0 - 100' }]}
-              addonAfter={
-                <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
-                  <InfoCircleOutlined />
-                </Tooltip>
-              }
-              hasFeedback
-            />
-          </div>
+          <Input
+            hasFeedback
+            className={styles.Field}
+            placeholder="0-100"
+            type="number"
+            min={0}
+            max={100}
+            addonBefore="Down Mbps"
+            addonAfter={
+              <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
+                <InfoCircleOutlined />
+              </Tooltip>
+            }
+          />
+        </Item>
+        <Item
+          label="Upstream Bandwidth"
+          name="upstream"
+          rules={[
+            {
+              required: true,
+              message: 'Upstream bandwidth limit can be a number between 0 and 100.',
+            },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (!value || getFieldValue('upstream') <= 100) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Upstream bandwidth limit can be a number between 0 and 100.')
+                );
+              },
+            }),
+          ]}
+        >
+          <Input
+            hasFeedback
+            className={styles.Field}
+            placeholder="0-100"
+            type="number"
+            min={0}
+            max={100}
+            addonBefore="Up Mbps"
+            addonAfter={
+              <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
+                <InfoCircleOutlined />
+              </Tooltip>
+            }
+          />
         </Item>
 
         <Item name="checkbox-group" label="Use On">
@@ -160,7 +192,7 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Select className={styles.Field} placeholder="Select Captive Portal Profile">
+              <Select className={styles.Field} defaultValue="default">
                 <Option value="default">Default</Option>
               </Select>
             </Item>
@@ -220,6 +252,7 @@ const SSIDForm = () => {
                 required: true,
                 message: 'Please input your security key',
                 min: 8,
+                max: 63,
               },
             ]}
             hasFeedback
@@ -235,18 +268,36 @@ const SSIDForm = () => {
 
         {mode === 'wep' && (
           <>
-            When using WEP, high performance features like 11n and 11ac will not work with this
-            SSID.
+            <span className={styles.Disclaimer}>
+              When using WEP, high performance features like 11n and 11ac will not work with this
+              SSID.
+            </span>
+
             <Item
               label="WEP Key"
               name="wepKey"
               rules={[
                 {
                   required: true,
-                  len: 10,
                   message:
                     'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key',
                 },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (
+                      !value ||
+                      getFieldValue('wepKey').length === 10 ||
+                      getFieldValue('wepKey').length === 26
+                    ) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key'
+                      )
+                    );
+                  },
+                }),
               ]}
               hasFeedback
             >
@@ -288,7 +339,21 @@ const SSIDForm = () => {
           {vlan && (
             <Item
               name="vlan"
-              rules={[{ required: true, message: 'VLAN expected between 2 - 4095' }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vlan expected between 2 and 4095',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Vlan expected between 2 and 4095'));
+                  },
+                }),
+              ]}
+              hasFeedback
             >
               <Input
                 className={styles.Field}
@@ -296,6 +361,7 @@ const SSIDForm = () => {
                 type="number"
                 min={2}
                 max={4095}
+                maxLength={4}
               />
             </Item>
           )}

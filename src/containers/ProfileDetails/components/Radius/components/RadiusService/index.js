@@ -10,6 +10,7 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
   const [serverCard, setServerCard] = useState(false);
   const { Item } = Form;
   const [form] = Form.useForm();
+  form.resetFields();
 
   const layout = {
     labelCol: { span: 8 },
@@ -24,13 +25,28 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
         rules={[
           {
             required: true,
+            pattern: /^\S+$/g,
             message: 'Please enter a name of length 1 - 32 characters, no spaces.',
           },
+          ({ getFieldValue }) => ({
+            validator(_rule, value) {
+              if (!value || getFieldValue('service').length <= 32) {
+                return Promise.resolve();
+              }
+              return Promise.reject(
+                new Error(
+                  'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key'
+                )
+              );
+            },
+          }),
         ]}
       >
-        <Input className={styles.Field} disabled={disabled} value={service} />
-        {!serverCard && <Button onClick={() => setServerCard(true)}> Add RADIUS Server</Button>}
+        <Input className={styles.Field} disabled={disabled} defaultValue={service} />
       </Item>
+
+      {!serverCard && <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>}
+
       {serverCard && (
         <Card
           title="Server Properties"
@@ -42,8 +58,11 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
             rules={[
               {
                 required: true,
+                pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
               },
             ]}
+            hasFeedback
           >
             <Input className={styles.Field} placeholder="Enter IP address" />
           </Item>
@@ -53,10 +72,26 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
             rules={[
               {
                 required: true,
+                message: 'Port expected between 1 - 65535',
               },
+              ({ getFieldValue }) => ({
+                validator(_rule, value) {
+                  if (!value || getFieldValue('port') < 65535) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Port expected between 1 - 65535'));
+                },
+              }),
             ]}
+            hasFeedback
           >
-            <Input className={styles.Field} defaultValue={1812} placeholder="Enter Port" />
+            <Input
+              className={styles.Field}
+              placeholder="Enter Port"
+              type="number"
+              min={1}
+              max={65535}
+            />
           </Item>
           <Item
             name="secret"
@@ -64,6 +99,7 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
             rules={[
               {
                 required: true,
+                message: 'Please enter a shared secret.',
               },
             ]}
           >

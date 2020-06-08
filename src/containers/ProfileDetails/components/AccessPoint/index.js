@@ -49,6 +49,7 @@ const AccessPointForm = () => {
       render: <Button icon={<DeleteFilled />} />,
     },
   ];
+
   return (
     <>
       <Modal
@@ -58,7 +59,7 @@ const AccessPointForm = () => {
         width={1200}
         content={
           <div>
-            <Card>
+            <Card title="Create Profile Name">
               <Item
                 label="Profile Name"
                 rules={[{ required: true, message: 'Please input your new profile name' }]}
@@ -78,7 +79,21 @@ const AccessPointForm = () => {
           {!vlan && (
             <Item
               name="vlan"
-              rules={[{ required: true, message: 'VLAN expected between 2 - 4095' }]}
+              rules={[
+                {
+                  required: true,
+                  message: 'Vlan expected between 2 and 4095',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Vlan expected between 2 and 4095'));
+                  },
+                }),
+              ]}
+              hasFeedback
             >
               <Input
                 className={styles.Field}
@@ -123,15 +138,31 @@ const AccessPointForm = () => {
                 rules={[
                   {
                     required: true,
+                    pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
                     message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                   },
                 ]}
+                hasFeedback
               >
                 <Input className={styles.Field} placeholder="IP Address" />
               </Item>
               <Item
                 name="port"
-                rules={[{ required: true, message: 'Port expected between 1 - 65535' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Port expected between 1 - 65535',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_rule, value) {
+                      if (!value || getFieldValue('port') < 65535) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Port expected between 1 - 65535'));
+                    },
+                  }),
+                ]}
+                hasFeedback
               >
                 <Input
                   className={styles.Field}
@@ -155,36 +186,54 @@ const AccessPointForm = () => {
           </Radio.Group>
           {syslog && (
             <>
-              <div className={styles.InlineDiv}>
-                <Input
-                  className={styles.Field}
-                  placeholder="IP Address"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+              <Item
+                name="syslogIP"
+                rules={[
+                  {
+                    required: true,
+                    pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                    message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input className={styles.Field} placeholder="IP Address" />
+              </Item>
+              <Item
+                name="syslogPort"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Port expected between 1 - 65535',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_rule, value) {
+                      if (!value || getFieldValue('syslogPort') < 65535) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Port expected between 1 - 65535'));
                     },
-                  ]}
-                />
+                  }),
+                ]}
+                hasFeedback
+              >
                 <Input
                   className={styles.Field}
                   placeholder="Enter NTP server"
                   type="number"
                   min={1}
                   max={65535}
-                  rules={[{ required: true, message: 'Port expected between 1 - 65535' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Port expected between 1 - 65535',
+                    },
+                  ]}
+                  hasFeedback
                 />
-              </div>
-              <Item
-                name="syslogMode"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your default syslog mode',
-                  },
-                ]}
-              >
-                <Select className={styles.Field} placeholder="Select syslog mode">
+              </Item>
+              <Item name="mode">
+                <Select className={styles.Field} defaultValue="debug">
                   <Option value="debug">Debug (DEBUG)</Option>
                   <Option value="info">Info. (INFO)</Option>
                   <Option value="notice">Notice (NOTICE)</Option>

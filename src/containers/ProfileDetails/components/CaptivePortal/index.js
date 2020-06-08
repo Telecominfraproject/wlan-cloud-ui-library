@@ -55,7 +55,20 @@ const CaptivePortalForm = () => {
           name="timeout"
           label="Session Timeout "
           rules={[
-            { required: true, message: ' Session Timeout can be a number between 1 and 1440' },
+            {
+              required: true,
+              message: 'Session timeout can be a number between 1 and 1440',
+            },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (!value || getFieldValue('timeout') <= 1440) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Session timeout can be a number between 1 and 1440')
+                );
+              },
+            }),
           ]}
         >
           <Input
@@ -76,7 +89,11 @@ const CaptivePortalForm = () => {
           name="url"
           label="Redirect URL"
           rules={[
-            { required: true, message: 'Please enter URL in the format http://... or https://...' },
+            {
+              required: true,
+              type: 'url',
+              message: 'Please enter URL in the format http://... or https://...',
+            },
           ]}
         >
           <Input className={styles.Field} placeholder="http://... or https://..." />
@@ -135,6 +152,7 @@ const CaptivePortalForm = () => {
             rules={[
               {
                 required: true,
+                type: 'url',
                 message: 'Please enter URL in the format http://... or https://...',
               },
             ]}
