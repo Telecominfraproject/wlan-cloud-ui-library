@@ -18,8 +18,13 @@ const Network = ({
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
-  onGetSelectedLocation,
   selectedLocation,
+  deleteModal,
+  editModal,
+  addModal,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
 }) => {
   const location = useLocation();
 
@@ -38,8 +43,13 @@ const Network = ({
           onAddLocation={onAddLocation}
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
-          onGetSelectedLocation={onGetSelectedLocation}
           selectedLocation={selectedLocation}
+          deleteModal={deleteModal}
+          editModal={editModal}
+          addModal={addModal}
+          setAddModal={setAddModal}
+          setEditModal={setEditModal}
+          setDeleteModal={setDeleteModal}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -69,7 +79,12 @@ Network.propTypes = {
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
-  onGetSelectedLocation: PropTypes.func.isRequired,
+  deleteModal: PropTypes.bool.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  addModal: PropTypes.bool.isRequired,
+  setAddModal: PropTypes.func.isRequired,
+  setEditModal: PropTypes.func.isRequired,
+  setDeleteModal: PropTypes.func.isRequired,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,

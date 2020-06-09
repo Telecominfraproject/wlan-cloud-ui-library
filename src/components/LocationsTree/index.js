@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { Popover, Tree, Button } from 'antd';
+import { Tree } from 'antd';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
@@ -16,15 +15,14 @@ const LocationsTree = ({
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
-  onGetSelectedLocation,
   selectedLocation,
+  deleteModal,
+  editModal,
+  addModal,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
 }) => {
-  const history = useHistory();
-  const [popOverVisible, setpopOverVisible] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [addModal, setAddModal] = useState(false);
-
   const addLocation = ({ location }) => {
     if (selectedLocation) {
       const { id, locationType } = selectedLocation;
@@ -38,7 +36,6 @@ const LocationsTree = ({
       setAddModal(false);
     }
   };
-
   const editLocation = ({ name, locationType }) => {
     if (selectedLocation) {
       const { id, parentId, lastModifiedTimestamp } = selectedLocation;
@@ -46,120 +43,23 @@ const LocationsTree = ({
       setEditModal(false);
     }
   };
-
   const deleteLocation = () => {
     const { id } = locationPath[locationPath.length - 1];
     onDeleteLocation(id);
     setDeleteModal(false);
   };
 
-  const bulkEditAps = () => {
-    history.push('/network/access-points/bulk-edit');
-  };
-
-  const handleVisibleChange = visible => {
-    setpopOverVisible(visible);
-  };
-
-  const handleAddModal = () => {
-    const { id } = locationPath[locationPath.length - 1];
-    onGetSelectedLocation(id);
-    setAddModal(true);
-  };
-
-  const handleEditModal = () => {
-    const { id } = locationPath[locationPath.length - 1];
-    onGetSelectedLocation(id);
-    setEditModal(true);
-  };
-
-  const handleDeleteModal = () => {
-    const { id } = locationPath[locationPath.length - 1];
-    onGetSelectedLocation(id);
-    setDeleteModal(true);
-  };
-
-  const content = (
-    <ul className={styles.popOver}>
-      {selectedLocation && selectedLocation.locationType !== 'FLOOR' && (
-        <li>
-          <Button
-            key={0}
-            role="button"
-            onKeyPress={() => {}}
-            onClick={() => {
-              setpopOverVisible(false);
-              handleAddModal();
-            }}
-          >
-            Add Location
-          </Button>
-        </li>
-      )}
-      <li>
-        <Button
-          key={1}
-          role="button"
-          onKeyPress={() => {}}
-          onClick={() => {
-            setpopOverVisible(false);
-            handleEditModal();
-          }}
-        >
-          Edit Location
-        </Button>
-      </li>
-      <li>
-        <Button
-          key={2}
-          role="button"
-          onKeyPress={() => {}}
-          onClick={() => {
-            bulkEditAps();
-            setpopOverVisible(false);
-          }}
-        >
-          Bulk Edit APs
-        </Button>
-      </li>
-      <li>
-        <Button
-          key={3}
-          role="button"
-          to="/network"
-          onKeyPress={() => {}}
-          onClick={() => {
-            setpopOverVisible(false);
-            handleDeleteModal();
-          }}
-        >
-          Delete Location
-        </Button>
-      </li>
-    </ul>
-  );
-
   return (
     <div className={styles.sideTree}>
-      <Popover
-        data-testid="popOver"
-        visible={popOverVisible}
-        onVisibleChange={handleVisibleChange}
-        content={content}
-        trigger="click"
-        placement="rightTop"
-      >
-        <Tree
-          data-testid="locationTree"
-          checkable
-          checkedKeys={checkedLocations}
-          showIcon
-          onSelect={onSelect}
-          onCheck={onCheck}
-          treeData={locations}
-        />
-      </Popover>
-
+      <Tree
+        data-testid="locationTree"
+        checkable
+        checkedKeys={checkedLocations}
+        showIcon
+        onSelect={onSelect}
+        onCheck={onCheck}
+        treeData={locations}
+      />
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteLocation}
@@ -202,8 +102,13 @@ LocationsTree.propTypes = {
   locationPath: PropTypes.instanceOf(Array),
   onAddLocation: PropTypes.func,
   onEditLocation: PropTypes.func,
+  deleteModal: PropTypes.bool.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  addModal: PropTypes.bool.isRequired,
+  setAddModal: PropTypes.func.isRequired,
+  setEditModal: PropTypes.func.isRequired,
+  setDeleteModal: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func,
-  onGetSelectedLocation: PropTypes.func,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -218,7 +123,6 @@ LocationsTree.defaultProps = {
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},
-  onGetSelectedLocation: () => {},
   selectedLocation: {},
 };
 
