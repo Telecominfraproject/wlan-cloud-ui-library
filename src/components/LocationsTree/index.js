@@ -36,6 +36,7 @@ const LocationsTree = ({
       setAddModal(false);
     }
   };
+
   const editLocation = ({ name, locationType }) => {
     if (selectedLocation) {
       const { id, parentId, lastModifiedTimestamp } = selectedLocation;
