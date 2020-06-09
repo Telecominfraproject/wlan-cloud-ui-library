@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, Tree, Input } from 'antd';
-import { Link } from 'react-router-dom';
-import { SearchOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
+import { Popover, Tree, Button } from 'antd';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
@@ -18,21 +17,17 @@ const LocationsTree = ({
   onEditLocation,
   onDeleteLocation,
   onGetSelectedLocation,
-  singleLocationData,
-  onBulkEditAccessPoints,
+  selectedLocation,
 }) => {
+  const history = useHistory();
   const [popOverVisible, setpopOverVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
 
-  const handleSearch = () => {
-    // console.log(e.target.value);
-  };
-
   const addLocation = ({ location }) => {
-    if (singleLocationData) {
-      const { id, locationType } = singleLocationData;
+    if (selectedLocation) {
+      const { id, locationType } = selectedLocation;
       if (locationType === 'COUNTRY') {
         onAddLocation(location, id, 'SITE');
       } else if (locationType === 'SITE') {
@@ -45,8 +40,8 @@ const LocationsTree = ({
   };
 
   const editLocation = ({ name, locationType }) => {
-    if (singleLocationData) {
-      const { id, parentId, lastModifiedTimestamp } = singleLocationData;
+    if (selectedLocation) {
+      const { id, parentId, lastModifiedTimestamp } = selectedLocation;
       onEditLocation(id, parentId, name, locationType, lastModifiedTimestamp);
       setEditModal(false);
     }
@@ -56,6 +51,10 @@ const LocationsTree = ({
     const { id } = locationPath[locationPath.length - 1];
     onDeleteLocation(id);
     setDeleteModal(false);
+  };
+
+  const bulkEditAps = () => {
+    history.push('/network/access-points/bulk-edit');
   };
 
   const handleVisibleChange = visible => {
@@ -82,63 +81,68 @@ const LocationsTree = ({
 
   const content = (
     <ul className={styles.popOver}>
-      <Link
-        key={0}
-        role="button"
-        to="/network"
-        onKeyPress={() => {}}
-        onClick={() => {
-          setpopOverVisible(false);
-          handleAddModal();
-        }}
-      >
-        Add Location
-      </Link>
-      <Link
-        key={1}
-        role="button"
-        to="/network"
-        onKeyPress={() => {}}
-        onClick={() => {
-          setpopOverVisible(false);
-          handleEditModal();
-        }}
-      >
-        Edit Location
-      </Link>
-      <Link
-        key={2}
-        role="button"
-        to="/network/access-points/bulk-edit"
-        onKeyPress={() => {}}
-        onClick={() => {
-          onBulkEditAccessPoints();
-          setpopOverVisible(false);
-        }}
-      >
-        Bulk Edit APs
-      </Link>
-      <Link
-        key={3}
-        role="button"
-        to="/network"
-        onKeyPress={() => {}}
-        onClick={() => {
-          setpopOverVisible(false);
-          handleDeleteModal();
-        }}
-      >
-        Delete Location
-      </Link>
+      {selectedLocation && selectedLocation.locationType !== 'FLOOR' && (
+        <li>
+          <Button
+            key={0}
+            role="button"
+            onKeyPress={() => {}}
+            onClick={() => {
+              setpopOverVisible(false);
+              handleAddModal();
+            }}
+          >
+            Add Location
+          </Button>
+        </li>
+      )}
+      <li>
+        <Button
+          key={1}
+          role="button"
+          onKeyPress={() => {}}
+          onClick={() => {
+            setpopOverVisible(false);
+            handleEditModal();
+          }}
+        >
+          Edit Location
+        </Button>
+      </li>
+      <li>
+        <Button
+          key={2}
+          role="button"
+          onKeyPress={() => {}}
+          onClick={() => {
+            bulkEditAps();
+            setpopOverVisible(false);
+          }}
+        >
+          Bulk Edit APs
+        </Button>
+      </li>
+      <li>
+        <Button
+          key={3}
+          role="button"
+          to="/network"
+          onKeyPress={() => {}}
+          onClick={() => {
+            setpopOverVisible(false);
+            handleDeleteModal();
+          }}
+        >
+          Delete Location
+        </Button>
+      </li>
     </ul>
   );
 
   return (
     <div className={styles.sideTree}>
-      <div className={styles.searchBar}>
-        <Input placeholder="Search Locations" onChange={handleSearch} prefix={<SearchOutlined />} />
-      </div>
       <Popover
+        data-testid="popOver"
         visible={popOverVisible}
         onVisibleChange={handleVisibleChange}
         content={content}
@@ -155,6 +159,7 @@ const LocationsTree = ({
           treeData={locations}
         />
       </Popover>
+
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteLocation}
@@ -165,7 +170,7 @@ const LocationsTree = ({
         content={
           <p>
             Are you sure you want to delete the Location:{' '}
-            <strong> {singleLocationData && singleLocationData.name}</strong>
+            <strong> {selectedLocation && selectedLocation.name}</strong>
           </p>
         }
       />
@@ -174,7 +179,7 @@ const LocationsTree = ({
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addLocation}
-        title="Add Account"
+        title="Add Location"
       />
 
       <EditFormModal
@@ -182,8 +187,8 @@ const LocationsTree = ({
         onCancel={() => setEditModal(false)}
         visible={editModal}
         onSubmit={editLocation}
-        title="Edit Account"
-        singleLocationData={singleLocationData}
+        title="Edit Location"
+        selectedLocation={selectedLocation}
       />
     </div>
   );
@@ -199,8 +204,7 @@ LocationsTree.propTypes = {
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
   onGetSelectedLocation: PropTypes.func,
-  onBulkEditAccessPoints: PropTypes.func,
-  singleLocationData: PropTypes.shape({
+  selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
     locationType: PropTypes.string,
@@ -215,8 +219,7 @@ LocationsTree.defaultProps = {
   onEditLocation: () => {},
   onDeleteLocation: () => {},
   onGetSelectedLocation: () => {},
-  onBulkEditAccessPoints: () => {},
-  singleLocationData: {},
+  selectedLocation: {},
 };
 
 export default LocationsTree;

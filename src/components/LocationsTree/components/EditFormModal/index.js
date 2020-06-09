@@ -1,21 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input } from 'antd';
+import { Form, Input, Select } from 'antd';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
+const { Option } = Select;
 
-const FormModal = ({ onCancel, onSubmit, visible, title, singleLocationData }) => {
+const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation }) => {
   const [form] = Form.useForm();
+  const [selectedLocationType, setLocationType] = useState('');
 
   useEffect(() => {
     form.resetFields();
-    if (singleLocationData) {
-      const { name, locationType } = singleLocationData;
+    if (selectedLocation) {
+      const { name, locationType } = selectedLocation;
       form.setFieldsValue({ name, locationType });
+      setLocationType(locationType);
     }
-  }, [visible, singleLocationData]);
+  }, [visible, selectedLocation]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -31,45 +34,17 @@ const FormModal = ({ onCancel, onSubmit, visible, title, singleLocationData }) =
             required: true,
             message: 'Please enter location name',
           },
-          {
-            type: 'string',
-            message: 'The input is not valid locaiton name',
-          },
         ]}
       >
         <Input className={styles.Field} />
       </Item>
-      <Item
-        label="Location Type:"
-        name="locationType"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter location type',
-          },
-          {
-            type: 'string',
-            message: 'The input is not valid locaiton type',
-          },
-        ]}
-      >
-        <Input className={styles.Field} />
-      </Item>
-      <Item
-        label="Country Code:"
-        name="countryCode"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter country code',
-          },
-          {
-            type: 'string',
-            message: 'The input is not valid country code',
-          },
-        ]}
-      >
-        <Input className={styles.Field} />
+      <Item label="Location Type:" name="locationType">
+        <Select defaultValue={selectedLocationType}>
+          <Option value="COUNTRY">COUNTRY</Option>
+          <Option value="SITE">SITE</Option>
+          <Option value="BUILDING">BUILDING</Option>
+          <Option value="FLOOR">FLOOR</Option>
+        </Select>
       </Item>
     </Form>
   );
@@ -95,12 +70,12 @@ const FormModal = ({ onCancel, onSubmit, visible, title, singleLocationData }) =
   );
 };
 
-FormModal.propTypes = {
+EditFormModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
-  singleLocationData: PropTypes.shape({
+  selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
     locationType: PropTypes.string,
@@ -109,9 +84,9 @@ FormModal.propTypes = {
   }),
 };
 
-FormModal.defaultProps = {
+EditFormModal.defaultProps = {
   title: '',
-  singleLocationData: {},
+  selectedLocation: {},
 };
 
-export default FormModal;
+export default EditFormModal;

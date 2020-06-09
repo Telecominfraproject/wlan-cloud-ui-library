@@ -4,7 +4,7 @@ import { Tabs } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
-import BulkEditAPTable from './components/tables';
+import BulkEditAPTable from './components/BulkEditAPTables';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;

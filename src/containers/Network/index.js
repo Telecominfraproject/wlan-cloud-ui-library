@@ -19,7 +19,7 @@ const Network = ({
   onEditLocation,
   onDeleteLocation,
   onGetSelectedLocation,
-  singleLocationData,
+  selectedLocation,
 }) => {
   const location = useLocation();
 
@@ -39,7 +39,7 @@ const Network = ({
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
           onGetSelectedLocation={onGetSelectedLocation}
-          singleLocationData={singleLocationData}
+          selectedLocation={selectedLocation}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -70,7 +70,7 @@ Network.propTypes = {
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
   onGetSelectedLocation: PropTypes.func.isRequired,
-  singleLocationData: PropTypes.shape({
+  selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
     locationType: PropTypes.string,
@@ -81,7 +81,7 @@ Network.propTypes = {
 
 Network.defaultProps = {
   locationPath: [],
-  singleLocationData: {},
+  selectedLocation: {},
 };
 
 export default Network;

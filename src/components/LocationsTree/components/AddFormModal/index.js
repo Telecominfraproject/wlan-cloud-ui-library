@@ -6,7 +6,7 @@ import styles from './index.module.scss';
 
 const { Item } = Form;
 
-const FormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
+const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -37,10 +37,6 @@ const FormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
             required: true,
             message: 'Please enter location name',
           },
-          {
-            type: 'string',
-            message: 'The input is not valid locaiton name',
-          },
         ]}
       >
         <Input className={styles.Field} />
@@ -68,7 +64,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
     />
   );
 };
-FormModal.propTypes = {
+AddFormModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -76,9 +72,9 @@ FormModal.propTypes = {
   locationPath: PropTypes.instanceOf(Array),
 };
 
-FormModal.defaultProps = {
+AddFormModal.defaultProps = {
   title: '',
   locationPath: [],
 };
 
-export default FormModal;
+export default AddFormModal;
