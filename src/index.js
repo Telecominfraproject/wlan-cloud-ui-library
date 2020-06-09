@@ -5,6 +5,8 @@ export { default as Login } from 'containers/Login';
 export { default as EditAccount } from 'containers/EditAccount';
 export { default as Profile } from 'containers/Profile';
 export { default as ProfileDetails } from 'containers/ProfileDetails';
+export { default as AddProfile } from 'containers/AddProfile';
+
 export { default as Accounts } from 'containers/Accounts';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';

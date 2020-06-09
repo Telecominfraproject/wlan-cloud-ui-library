@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Form, Input, Card } from 'antd';
 import PropTypes from 'prop-types';
 import Button from 'components/Button';
@@ -14,8 +14,10 @@ import CaptivePortalForm from './components/CaptivePortal';
 
 import styles from './index.module.scss';
 
-const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
+const ProfileDetails = ({ name, profileType, onDeleteProfile, onUpdateProfile }) => {
   const [deleteModal, setDeleteModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const deleteProfile = () => {
     onDeleteProfile();
@@ -30,8 +32,20 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
   const [form] = Form.useForm();
   const { Item } = Form;
 
+  const handleOnSave = () => {
+    form
+      .validateFields()
+      .then(values => {
+        form.resetFields();
+        console.log(values);
+      })
+      .catch(() => {});
+  };
+
   return (
     <Container>
+      {redirect && <Redirect to="/profiles" />}
+
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteProfile}
@@ -45,15 +59,23 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
           </p>
         }
       />
+      <Modal
+        onCancel={() => setConfirmModal(false)}
+        onSuccess={() => setRedirect(true)}
+        visible={confirmModal}
+        buttonText="Back"
+        title="Leave Form?"
+        content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
+      />
       <Header>
-        <Link to="/profiles">
-          <Button className={styles.backButton}> BACK </Button>
-        </Link>
+        <Button className={styles.backButton} onClick={() => setConfirmModal(true)}>
+          BACK
+        </Button>
         <div>
           <Button type="danger" onClick={() => setDeleteModal(true)}>
             Delete
           </Button>
-          <Button onClick={() => {}}>Save</Button>
+          <Button onClick={handleOnSave}>Save</Button>
         </div>
       </Header>
 
@@ -67,10 +89,10 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
             <Input className={styles.Field} defaultValue={name} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {/* {profileType === 'ssid' && <SSIDForm />} */}
-        {/* <AccessPointForm /> */}
-        {/* <CaptivePortalForm /> */}
-        <RadiusForm />
+        {profileType === 'ssid' && <SSIDForm />}
+        {profileType === 'accessPoint' && <AccessPointForm />}
+        {profileType === 'captivePortal' && <CaptivePortalForm />}
+        {profileType === 'radius' && <RadiusForm />}
       </Form>
     </Container>
   );
@@ -79,8 +101,8 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile }) => {
 ProfileDetails.propTypes = {
   name: PropTypes.string,
   profileType: PropTypes.string,
-
   onDeleteProfile: PropTypes.func.isRequired,
+  onUpdateProfile: PropTypes.func.isRequired,
 };
 
 ProfileDetails.defaultProps = {
