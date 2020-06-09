@@ -74,6 +74,7 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
+          scope: '@tip-wlan'
       - name: Publish npm module into tip-wlan-cloud-npm-repo
         run: npm publish
         env:
