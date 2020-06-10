@@ -68,6 +68,5 @@ PopoverMenuContent.propTypes = {
 PopoverMenuContent.defaultProps = {
   locationData: {},
 };
-// PopoverMenuContent.defaultProps = {};
 
 export default PopoverMenuContent;

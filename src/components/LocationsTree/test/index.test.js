@@ -1,10 +1,24 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
 import LocationTree from '..';
+
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
 
 const treeData = [
   {
@@ -76,12 +90,25 @@ const treeData = [
   },
 ];
 const checkedLocations = [2, 3, 4, 5, 6, 7];
+const locationPath = [{ id: 1 }];
+const selectedLocation = { id: 7, locationType: 'BUILDING', lastModifiedTimestamp: 1591804177219 };
 
 const mockProps = {
   locations: treeData,
   checkedLocations,
+  locationPath: [],
+  selectedLocation: {},
   onSelect: () => {},
   onCheck: () => {},
+  deleteModal: false,
+  editModal: false,
+  addModal: false,
+  onAddLocation: () => {},
+  onEditLocation: () => {},
+  onDeleteLocation: () => {},
+  setAddModal: () => {},
+  setEditModal: () => {},
+  setDeleteModal: () => {},
 };
 
 describe('<LocationTree />', () => {
@@ -117,5 +144,152 @@ describe('<LocationTree />', () => {
     );
     fireEvent.click(location);
     expect(onSelectSpy).toHaveBeenCalled();
+  });
+
+  it('should call setDeleteModal if Cancel button is clicked', () => {
+    const history = createMemoryHistory();
+    const setDeleteModalSpy = jest.fn();
+
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} deleteModal setDeleteModal={setDeleteModalSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    expect(setDeleteModalSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onDeleteLocation if Delete button is clicked', async () => {
+    const history = createMemoryHistory();
+    const onDeleteLocationSpy = jest.fn();
+
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          deleteModal
+          locationPath={locationPath}
+          onDeleteLocation={onDeleteLocationSpy}
+        />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+    await waitFor(() => {
+      expect(onDeleteLocationSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should call setAddModal if Cancel button is clicked', () => {
+    const history = createMemoryHistory();
+    const setAddModalSpy = jest.fn();
+
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} addModal setAddModal={setAddModalSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    expect(setAddModalSpy).toHaveBeenCalled();
+  });
+
+  it('should not call onAddLocation on submit, if form input is invalid', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={selectedLocation}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(getByText('Please enter location name')).toBeVisible();
+      expect(onAddLocationSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should call onAddLocation on submit, if form input is valid', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={selectedLocation}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onAddLocationSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should call setEditModal if Cancel button is clicked', () => {
+    const history = createMemoryHistory();
+    const setEditModalSpy = jest.fn();
+
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} editModal setEditModal={setEditModalSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    expect(setEditModalSpy).toHaveBeenCalled();
+  });
+
+  it('should not call onEditLocation on submit, if form input is invalid', async () => {
+    const history = createMemoryHistory();
+    const onEditLocationSpy = jest.fn();
+
+    const { getByText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          editModal
+          selectedLocation={selectedLocation}
+          onEditLocation={onEditLocationSpy}
+        />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(getByText('Please enter location name')).toBeVisible();
+      expect(onEditLocationSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should call onEditLocation on submit, if form input is valid', async () => {
+    const history = createMemoryHistory();
+    const onEditLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          editModal
+          selectedLocation={selectedLocation}
+          onEditLocation={onEditLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onEditLocationSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });

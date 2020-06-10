@@ -19,13 +19,13 @@ describe('<PopoverMenuContent />', () => {
     const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /add location/i }));
     const addModal = screen.getByText('Add Location');
-    expect(addModal).toBeTruthy();
+    expect(addModal).toBeVisible();
   });
 
   it('should open Edit Location Form Modal when Edit Location is clicked', () => {
     const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /edit location/i }));
     const editModal = screen.getByText('Edit Location');
-    expect(editModal).toBeTruthy();
+    expect(editModal).toBeVisible();
   });
 });
