@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Breadcrumb } from 'antd';
+
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 
@@ -18,16 +19,20 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
+
+  const breadCrumbs = locationPath.map(location => (
+    <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
+  ));
+
   const content = (
     <Form {...layout} form={form}>
       <div className={styles.breadCrumbWrap}>
-        <Breadcrumb separator=">">
-          {locationPath &&
-            locationPath.map(location => {
-              return <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>;
-            })}
-          <Breadcrumb.Item>New Location</Breadcrumb.Item>
-        </Breadcrumb>
+        {locationPath.length > 0 && (
+          <Breadcrumb separator=">">
+            {breadCrumbs}
+            <Breadcrumb.Item key={0}>New Location</Breadcrumb.Item>
+          </Breadcrumb>
+        )}
       </div>
       <Item
         label="New Location Name"
@@ -39,7 +44,7 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
           },
         ]}
       >
-        <Input className={styles.Field} />
+        <Input className={styles.field} />
       </Item>
     </Form>
   );
@@ -64,6 +69,7 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
     />
   );
 };
+
 AddFormModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,

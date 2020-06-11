@@ -9,45 +9,69 @@ import EditFormModal from './components/EditFormModal';
 const LocationsTree = ({
   locations,
   checkedLocations,
+  selectedLocation,
   onSelect,
   onCheck,
-  locationPath,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
-  selectedLocation,
-  deleteModal,
-  editModal,
   addModal,
+  editModal,
+  deleteModal,
   setAddModal,
   setEditModal,
   setDeleteModal,
 }) => {
-  const addLocation = ({ location }) => {
-    if (selectedLocation) {
-      const { id, locationType } = selectedLocation;
-      if (locationType === 'COUNTRY') {
-        onAddLocation(location, id, 'SITE');
-      } else if (locationType === 'SITE') {
-        onAddLocation(location, id, 'BUILDING');
-      } else if (locationType === 'BUILDING') {
-        onAddLocation(location, id, 'FLOOR');
+  const getLocationPath = () => {
+    const locationsPath = [];
+
+    const treeRecurse = (parentNodeId, node) => {
+      if (node.id === parentNodeId) {
+        locationsPath.unshift({ id: node.id, parentId: node.parentId, name: node.name });
+        return node;
       }
-      setAddModal(false);
+      if (node.children) {
+        let parent;
+        node.children.some(i => {
+          parent = treeRecurse(parentNodeId, i);
+          return parent;
+        });
+        if (parent) {
+          locationsPath.unshift({ id: node.id, parentId: node.parentId, name: node.name });
+        }
+        return parent;
+      }
+
+      return null;
+    };
+
+    if (selectedLocation) {
+      locationsPath.unshift({ ...selectedLocation });
+      treeRecurse(selectedLocation.parentId, locations[0]);
+    }
+
+    return locationsPath;
+  };
+
+  const addLocation = ({ location }) => {
+    const { id, locationType } = selectedLocation;
+    if (locationType === 'COUNTRY') {
+      onAddLocation(location, id, 'SITE');
+    } else if (locationType === 'SITE') {
+      onAddLocation(location, id, 'BUILDING');
+    } else if (locationType === 'BUILDING') {
+      onAddLocation(location, id, 'FLOOR');
     }
   };
 
-  const editLocation = ({ name, locationType }) => {
-    if (selectedLocation) {
-      const { id, parentId, lastModifiedTimestamp } = selectedLocation;
-      onEditLocation(id, parentId, name, locationType, lastModifiedTimestamp);
-      setEditModal(false);
-    }
+  const editLocation = ({ name }) => {
+    const { id, parentId, locationType, lastModifiedTimestamp } = selectedLocation;
+    onEditLocation(id, parentId, name, locationType, lastModifiedTimestamp);
   };
+
   const deleteLocation = () => {
-    const { id } = locationPath[locationPath.length - 1];
+    const { id } = selectedLocation;
     onDeleteLocation(id);
-    setDeleteModal(false);
   };
 
   return (
@@ -61,6 +85,20 @@ const LocationsTree = ({
         onCheck={onCheck}
         treeData={locations}
       />
+      <AddFormModal
+        locationPath={getLocationPath()}
+        visible={addModal}
+        onSubmit={addLocation}
+        onCancel={() => setAddModal(false)}
+        title="Add Location"
+      />
+      <EditFormModal
+        visible={editModal}
+        onSubmit={editLocation}
+        onCancel={() => setEditModal(false)}
+        title="Edit Location"
+        selectedLocation={selectedLocation}
+      />
       <Modal
         onCancel={() => setDeleteModal(false)}
         onSuccess={deleteLocation}
@@ -71,25 +109,9 @@ const LocationsTree = ({
         content={
           <p>
             Are you sure you want to delete the Location:{' '}
-            <strong> {selectedLocation && selectedLocation.name}</strong>
+            <i>{selectedLocation && selectedLocation.name}</i> and ALL its sub locations?
           </p>
         }
-      />
-      <AddFormModal
-        locationPath={locationPath}
-        onCancel={() => setAddModal(false)}
-        visible={addModal}
-        onSubmit={addLocation}
-        title="Add Location"
-      />
-
-      <EditFormModal
-        locationPath={locationPath}
-        onCancel={() => setEditModal(false)}
-        visible={editModal}
-        onSubmit={editLocation}
-        title="Edit Location"
-        selectedLocation={selectedLocation}
       />
     </div>
   );
@@ -100,16 +122,15 @@ LocationsTree.propTypes = {
   onSelect: PropTypes.func.isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
-  locationPath: PropTypes.instanceOf(Array),
   onAddLocation: PropTypes.func,
   onEditLocation: PropTypes.func,
-  deleteModal: PropTypes.bool.isRequired,
-  editModal: PropTypes.bool.isRequired,
+  onDeleteLocation: PropTypes.func,
   addModal: PropTypes.bool.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  deleteModal: PropTypes.bool.isRequired,
   setAddModal: PropTypes.func.isRequired,
   setEditModal: PropTypes.func.isRequired,
   setDeleteModal: PropTypes.func.isRequired,
-  onDeleteLocation: PropTypes.func,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -120,11 +141,10 @@ LocationsTree.propTypes = {
 };
 
 LocationsTree.defaultProps = {
-  locationPath: [],
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},
-  selectedLocation: {},
+  selectedLocation: null,
 };
 
 export default LocationsTree;

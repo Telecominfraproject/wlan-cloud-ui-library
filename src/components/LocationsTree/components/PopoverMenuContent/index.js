@@ -3,70 +3,52 @@ import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import styles from './index.module.scss';
 
-const PopoverMenuContent = ({ locationData, setAddModal, setEditModal, setDeleteModal }) => {
+const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDeleteModal }) => {
   return (
-    <ul className={styles.popOver}>
-      {locationData && locationData.locationType !== 'FLOOR' && (
-        <li>
+    <div className={styles.popOver}>
+      {locationType !== 'FLOOR' && (
+        <Button
+          onClick={() => {
+            setAddModal(true);
+          }}
+        >
+          Add Location
+        </Button>
+      )}
+      {locationType !== 'NETWORK' && (
+        <>
           <Button
-            key={0}
-            role="button"
-            onKeyPress={() => {}}
             onClick={() => {
-              setAddModal(true);
+              setEditModal(true);
             }}
           >
-            Add Location
+            Edit Location
           </Button>
-        </li>
+          <Button>Bulk Edit APs</Button>
+          <Button
+            onClick={() => {
+              setDeleteModal(true);
+            }}
+          >
+            Delete Location
+          </Button>
+        </>
       )}
-      <li>
-        <Button
-          key={1}
-          role="button"
-          onKeyPress={() => {}}
-          onClick={() => {
-            setEditModal(true);
-          }}
-        >
-          Edit Location
-        </Button>
-      </li>
-      <li>
-        <Button key={2} role="button" onKeyPress={() => {}} onClick={() => {}}>
-          Bulk Edit APs
-        </Button>
-      </li>
-      <li>
-        <Button
-          key={3}
-          role="button"
-          onKeyPress={() => {}}
-          onClick={() => {
-            setDeleteModal(true);
-          }}
-        >
-          Delete Location
-        </Button>
-      </li>
-    </ul>
+    </div>
   );
 };
 PopoverMenuContent.propTypes = {
-  setEditModal: PropTypes.func.isRequired,
-  setAddModal: PropTypes.func.isRequired,
-  setDeleteModal: PropTypes.func.isRequired,
-  locationData: PropTypes.shape({
-    id: PropTypes.number,
-    lastModifiedTimestamp: PropTypes.string,
-    locationType: PropTypes.string,
-    name: PropTypes.string,
-    parentId: PropTypes.number,
-  }),
+  setEditModal: PropTypes.func,
+  setAddModal: PropTypes.func,
+  setDeleteModal: PropTypes.func,
+  locationType: PropTypes.string,
 };
 
 PopoverMenuContent.defaultProps = {
-  locationData: {},
+  locationType: null,
+  setEditModal: () => {},
+  setAddModal: () => {},
+  setDeleteModal: () => {},
 };
 
 export default PopoverMenuContent;

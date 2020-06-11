@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -91,7 +92,12 @@ const treeData = [
 ];
 const checkedLocations = [2, 3, 4, 5, 6, 7];
 const locationPath = [{ id: 1 }];
-const selectedLocation = { id: 7, locationType: 'BUILDING', lastModifiedTimestamp: 1591804177219 };
+const selectedLocation = {
+  id: 7,
+  parentId: 2,
+  locationType: 'BUILDING',
+  lastModifiedTimestamp: 1591804177219,
+};
 
 const mockProps = {
   locations: treeData,
@@ -213,7 +219,7 @@ describe('<LocationTree />', () => {
     });
   });
 
-  it('should call onAddLocation on submit, if form input is valid', async () => {
+  it('should call onAddLocation on submit, if form input is valid type BUILDING', async () => {
     const history = createMemoryHistory();
     const onAddLocationSpy = jest.fn();
 
@@ -234,6 +240,75 @@ describe('<LocationTree />', () => {
     await waitFor(() => {
       expect(onAddLocationSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should call onAddLocation on submit, if form input is valid type SITE', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={{ ...selectedLocation, locationType: 'SITE' }}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Building 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onAddLocationSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should call onAddLocation on submit, if form input is valid type COUNTRY', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={{ ...selectedLocation, locationType: 'COUNTRY' }}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Building 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onAddLocationSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('Add Location Modal should show correct location path', async () => {
+    const history = createMemoryHistory();
+
+    render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          selectedLocation={{
+            id: 8,
+            key: 8,
+            name: 'Ottawa',
+            parentId: 0,
+            title: 'Ottawa',
+            value: '8',
+          }}
+          addModal
+        />
+      </Router>
+    );
+
+    expect(screen.getByText('Ottawa')).toBeVisible();
   });
 
   it('should call setEditModal if Cancel button is clicked', () => {

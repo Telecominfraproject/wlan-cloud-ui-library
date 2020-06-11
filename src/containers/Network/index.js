@@ -14,7 +14,6 @@ const Network = ({
   onCheck,
   activeTab,
   children,
-  locationPath,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
@@ -31,6 +30,7 @@ const Network = ({
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
+
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -39,7 +39,6 @@ const Network = ({
           onSelect={onSelect}
           onCheck={onCheck}
           checkedLocations={checkedLocations}
-          locationPath={locationPath}
           onAddLocation={onAddLocation}
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
@@ -69,13 +68,12 @@ const Network = ({
 };
 
 Network.propTypes = {
+  children: PropTypes.node.isRequired,
+  activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
-  activeTab: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  locationPath: PropTypes.instanceOf(Array),
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
@@ -95,8 +93,7 @@ Network.propTypes = {
 };
 
 Network.defaultProps = {
-  locationPath: [],
-  selectedLocation: {},
+  selectedLocation: null,
 };
 
 export default Network;

@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select } from 'antd';
+import { Form, Input } from 'antd';
+
 import Modal from 'components/Modal';
-import styles from './index.module.scss';
+import styles from 'styles/index.scss';
 
 const { Item } = Form;
-const { Option } = Select;
 
 const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation }) => {
   const [form] = Form.useForm();
-  const [selectedLocationType, setLocationType] = useState('');
 
   useEffect(() => {
     form.resetFields();
     if (selectedLocation) {
-      const { name, locationType } = selectedLocation;
-      form.setFieldsValue({ name, locationType });
-      setLocationType(locationType);
+      const { name } = selectedLocation;
+      form.setFieldsValue({ name });
     }
   }, [visible, selectedLocation]);
 
@@ -24,10 +22,11 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
+
   const content = (
     <Form {...layout} form={form}>
       <Item
-        label="Location Name:"
+        label="Location Name"
         name="name"
         rules={[
           {
@@ -36,16 +35,9 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
           },
         ]}
       >
-        <Input className={styles.Field} />
+        <Input className={styles.field} />
       </Item>
-      <Item label="Location Type:" name="locationType">
-        <Select defaultValue={selectedLocationType}>
-          <Option value="COUNTRY">COUNTRY</Option>
-          <Option value="SITE">SITE</Option>
-          <Option value="BUILDING">BUILDING</Option>
-          <Option value="FLOOR">FLOOR</Option>
-        </Select>
-      </Item>
+      <Item label="Location Type">{selectedLocation && selectedLocation.locationType}</Item>
     </Form>
   );
 
@@ -71,9 +63,9 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
 };
 
 EditFormModal.propTypes = {
-  onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
   title: PropTypes.string,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
