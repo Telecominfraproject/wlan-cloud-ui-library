@@ -1,7 +1,7 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
-
 import Button from 'components/Button';
 import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
@@ -11,6 +11,7 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
+  const location = useLocation();
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -21,10 +22,15 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
           checkedLocations={checkedLocations}
         />
         <div className={styles.mainContent}>
-          <div className={styles.headerContent}>
-            <ToggleButton activeTab={activeTab} />
-            <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
-          </div>
+          {location.pathname === '/network/access-points' ||
+          location.pathname === '/network/client-devices' ? (
+            <div className={styles.headerContent}>
+              <ToggleButton activeTab={activeTab} />
+              <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
+            </div>
+          ) : (
+            <></>
+          )}
           {children}
         </div>
       </div>

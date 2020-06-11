@@ -1,0 +1,20 @@
+.topBtns {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px;
+  margin: 26px 0px;
+}
+
+.Row {
+  cursor: pointer;
+}
+.info_wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+@media screen and (max-width: 1024px) {
+  .info_wrapper {
+    flex-direction: column;
+  }
+}
