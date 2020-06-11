@@ -86,7 +86,7 @@ const CaptivePortalForm = () => {
           />
         </Item>
         <Item
-          name="url"
+          name="redirectURL"
           label="Redirect URL"
           rules={[
             {
@@ -98,7 +98,7 @@ const CaptivePortalForm = () => {
         >
           <Input className={styles.Field} placeholder="http://... or https://..." />
         </Item>
-        <Item label="Splash Page">
+        <Item label="Splash Page" name="splashPage">
           <Radio.Group defaultValue="hosted">
             <Radio value="hosted" onChange={() => setSplash(false)}>
               Access Point Hosted
@@ -113,6 +113,7 @@ const CaptivePortalForm = () => {
         <Card title="RADIUS">
           <Item
             label="Authentication"
+            name="radiusAuthentication"
             rules={[
               {
                 required: true,
@@ -128,6 +129,7 @@ const CaptivePortalForm = () => {
           </Item>
           <Item
             label="Service"
+            name="radiusService"
             rules={[
               {
                 required: true,
@@ -222,7 +224,7 @@ const CaptivePortalForm = () => {
             <Input className={styles.Field} placeholder="Browser title" />
           </Item>
           <Item
-            name="page"
+            name="pageTitle"
             label="Page Title"
             rules={[
               {
@@ -233,7 +235,7 @@ const CaptivePortalForm = () => {
           >
             <Input className={styles.Field} placeholder="Page title" />
           </Item>
-          <Item name="page" label="Body Content">
+          <Item label="Body Content">
             <div className={styles.InlineDiv}>
               <Button
                 onClick={() => setContentText('user')}

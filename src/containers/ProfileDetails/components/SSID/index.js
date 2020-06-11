@@ -30,82 +30,84 @@ const SSIDForm = () => {
         >
           <div className={styles.InlineDiv}>
             <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
-            <Radio.Group defaultValue="show">
+            <Radio.Group>
               <Radio value="hide">Hide SSID </Radio>
               <Radio value="show">Show SSID</Radio>
             </Radio.Group>
           </div>
         </Item>
 
-        <Item
-          label="Downstream Bandwidth"
-          name="downstream"
-          rules={[
-            {
-              required: true,
-              message: 'Downstream bandwidth limit can be a number between 0 and 100.',
-            },
-            ({ getFieldValue }) => ({
-              validator(_rule, value) {
-                if (!value || getFieldValue('Downstream') <= 100) {
-                  return Promise.resolve();
+        <Item label="Bandwidth">
+          <div className={styles.InlineDiv}>
+            <Item
+              name="downstream"
+              rules={[
+                {
+                  required: true,
+                  message: 'Downstream bandwidth limit can be a number between 0 and 100.',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (!value || getFieldValue('downstream') <= 100) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error('Downstream bandwidth limit can be a number between 0 and 100.')
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input
+                hasFeedback
+                className={styles.Field}
+                placeholder="0-100"
+                type="number"
+                min={0}
+                max={100}
+                addonBefore="Down Mbps"
+                addonAfter={
+                  <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 }
-                return Promise.reject(
-                  new Error('Downstream bandwidth limit can be a number between 0 and 100.')
-                );
-              },
-            }),
-          ]}
-        >
-          <Input
-            hasFeedback
-            className={styles.Field}
-            placeholder="0-100"
-            type="number"
-            min={0}
-            max={100}
-            addonBefore="Down Mbps"
-            addonAfter={
-              <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
-          />
-        </Item>
-        <Item
-          label="Upstream Bandwidth"
-          name="upstream"
-          rules={[
-            {
-              required: true,
-              message: 'Upstream bandwidth limit can be a number between 0 and 100.',
-            },
-            ({ getFieldValue }) => ({
-              validator(_rule, value) {
-                if (!value || getFieldValue('upstream') <= 100) {
-                  return Promise.resolve();
+              />
+            </Item>
+            <Item
+              name="upstream"
+              rules={[
+                {
+                  required: true,
+                  message: 'Upstream bandwidth limit can be a number between 0 and 100.',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (!value || getFieldValue('upstream') <= 100) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error('Upstream bandwidth limit can be a number between 0 and 100.')
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input
+                hasFeedback
+                className={styles.Field}
+                placeholder="0-100"
+                type="number"
+                min={0}
+                max={100}
+                addonBefore="Up Mbps"
+                addonAfter={
+                  <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 }
-                return Promise.reject(
-                  new Error('Upstream bandwidth limit can be a number between 0 and 100.')
-                );
-              },
-            }),
-          ]}
-        >
-          <Input
-            hasFeedback
-            className={styles.Field}
-            placeholder="0-100"
-            type="number"
-            min={0}
-            max={100}
-            addonBefore="Up Mbps"
-            addonAfter={
-              <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
-          />
+              />
+            </Item>
+          </div>
         </Item>
 
         <Item name="checkbox-group" label="Use On">
@@ -143,7 +145,7 @@ const SSIDForm = () => {
             </span>
           }
         >
-          <Radio.Group defaultValue="bridge">
+          <Radio.Group>
             <Radio value="bridge" onChange={() => setBridge(true)}>
               Bridge
             </Radio>
@@ -164,7 +166,7 @@ const SSIDForm = () => {
           }
         >
           {bridge ? (
-            <Radio.Group defaultValue="access">
+            <Radio.Group>
               <Radio value="access">Allow Local Access</Radio>
               <Radio value="noAccess">No Local Access</Radio>
             </Radio.Group>
@@ -173,8 +175,8 @@ const SSIDForm = () => {
           )}
         </Item>
 
-        <Item label="Captive Portal">
-          <Radio.Group defaultValue="notPortal">
+        <Item label="Captive Portal" name="captive">
+          <Radio.Group>
             <Radio value="notPortal" onChange={() => setCaptivePortal(false)}>
               Do Not Use
             </Radio>
@@ -184,7 +186,7 @@ const SSIDForm = () => {
           </Radio.Group>
           {captivePortal && (
             <Item
-              name="captive"
+              name="captiveID"
               rules={[
                 {
                   required: true,
@@ -192,7 +194,7 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Select className={styles.Field} defaultValue="default">
+              <Select className={styles.Field} placeholder="Select Captive Portal">
                 <Option value="default">Default</Option>
               </Select>
             </Item>
@@ -327,8 +329,8 @@ const SSIDForm = () => {
             </Item>
           </>
         )}
-        <Item label="VLAN">
-          <Radio.Group defaultValue="defaultVLAN">
+        <Item label="VLAN" name="vlan">
+          <Radio.Group>
             <Radio value="customVLAN" onChange={() => setVlan(true)}>
               Use Custom VLAN
             </Radio>
@@ -336,9 +338,10 @@ const SSIDForm = () => {
               Use Default VLAN
             </Radio>
           </Radio.Group>
+
           {vlan && (
             <Item
-              name="vlan"
+              name="vlanValue"
               rules={[
                 {
                   required: true,
@@ -346,7 +349,10 @@ const SSIDForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
+                    if (
+                      !value ||
+                      (getFieldValue('vlan') <= 4095 && getFieldValue('vlanValue') > 1)
+                    ) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('Vlan expected between 2 and 4095'));
@@ -370,10 +376,10 @@ const SSIDForm = () => {
 
       {mode !== 'wpaPersonal' && mode !== 'wep' && (
         <Card title="Roaming">
-          <Item label="Advanced Settings">
+          <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
               <span>2.4GHz</span>
-              <span>5.0Ghz</span>
+              <span>5Ghz</span>
             </div>
           </Item>
 
@@ -389,8 +395,9 @@ const SSIDForm = () => {
                   Transition (802.11r)
                 </span>
               }
+              name="802.11r"
             >
-              <Select className={styles.Field} defaultValue="auto">
+              <Select className={styles.Field}>
                 <Option value="auto">Auto</Option>
                 <Option value="enabled">Enabled</Option>
                 <Option value="disabled">Disabled</Option>
@@ -399,8 +406,8 @@ const SSIDForm = () => {
           )}
 
           {(mode === 'wpa2Personal' || mode === 'wpa2Enterprise') && (
-            <Item label="802.11w">
-              <Select className={styles.Field} defaultValue="auto">
+            <Item label="802.11w" name="802.11w">
+              <Select className={styles.Field}>
                 <Option value="auto">Auto</Option>
                 <Option value="enabled">Enabled</Option>
                 <Option value="disabled">Disabled</Option>
@@ -410,30 +417,38 @@ const SSIDForm = () => {
 
           <Item label="802.11k ">
             <div className={styles.InlineDiv}>
-              <Select className={styles.Field} defaultValue="auto">
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
-              <Select className={styles.Field} defaultValue="auto">
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
+              <Item name="802.11k2dot4GHz">
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item name="802.11k5GHz">
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
             </div>
           </Item>
           <Item label="802.11v ">
             <div className={styles.InlineDiv}>
-              <Select className={styles.Field} defaultValue="auto">
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
-              <Select className={styles.Field} defaultValue="auto">
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
+              <Item name="802.11v2dot4GHz">
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item name="802.11v5GHz">
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
             </div>
           </Item>
         </Card>

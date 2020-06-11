@@ -42,6 +42,9 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile, onUpdateProfile })
       .catch(() => {});
   };
 
+  form.setFieldsValue({
+    name,
+  });
   return (
     <Container>
       {redirect && <Redirect to="/profiles" />}
@@ -86,13 +89,14 @@ const ProfileDetails = ({ name, profileType, onDeleteProfile, onUpdateProfile })
             label="Profile Name"
             rules={[{ required: true, message: 'Please input your new profile name' }]}
           >
-            <Input className={styles.Field} defaultValue={name} placeholder="Enter profile name" />
+            <Input className={styles.Field} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {profileType === 'ssid' && <SSIDForm />}
+        {/* {profileType === 'ssid' && <SSIDForm />} */}
         {profileType === 'accessPoint' && <AccessPointForm />}
         {profileType === 'captivePortal' && <CaptivePortalForm />}
         {profileType === 'radius' && <RadiusForm />}
+        <CaptivePortalForm />
       </Form>
     </Container>
   );

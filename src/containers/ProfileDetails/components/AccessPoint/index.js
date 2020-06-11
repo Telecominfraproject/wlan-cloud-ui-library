@@ -72,13 +72,13 @@ const AccessPointForm = () => {
         }
       />
       <Card title="LAN and Services ">
-        <Item label="Management VLAN">
+        <Item label="Management VLAN" name="managementVlan">
           <Checkbox onChange={() => setVlan(!vlan)} defaultChecked>
             Use Default Management VLAN
           </Checkbox>
           {!vlan && (
             <Item
-              name="vlan"
+              name="vlanValue"
               rules={[
                 {
                   required: true,
@@ -106,24 +106,27 @@ const AccessPointForm = () => {
           )}
         </Item>
 
-        <Item label="NTP">
+        <Item label="NTP" name="ntp">
           <Checkbox onChange={() => setNTP(!ntp)} defaultChecked>
             Use Default Servers
           </Checkbox>
           {!ntp && (
-            <Item name="ntp" rules={[{ required: true, message: 'Please enter your NTP server' }]}>
+            <Item
+              name="ntpServer"
+              rules={[{ required: true, message: 'Please enter your NTP server' }]}
+            >
               <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
           )}
         </Item>
-        <Item label="LED Status">
+        <Item label="LED Status" name="ledStatus">
           <Checkbox onChange={() => setLed(!led)} defaultChecked>
             Show LED indicators on APs
           </Checkbox>
         </Item>
 
-        <Item label="RTLS">
-          <Radio.Group defaultValue="disabledRTLS">
+        <Item label="RTLS" name="rtls">
+          <Radio.Group>
             <Radio value="disabledRTLS" onChange={() => setRtls(false)}>
               Disabled
             </Radio>
@@ -134,7 +137,7 @@ const AccessPointForm = () => {
           {rtls && (
             <>
               <Item
-                name="ipAddress"
+                name="RTLSipAddress"
                 rules={[
                   {
                     required: true,
@@ -147,7 +150,7 @@ const AccessPointForm = () => {
                 <Input className={styles.Field} placeholder="IP Address" />
               </Item>
               <Item
-                name="port"
+                name="RTLSport"
                 rules={[
                   {
                     required: true,
@@ -175,8 +178,8 @@ const AccessPointForm = () => {
             </>
           )}
         </Item>
-        <Item label="Syslog">
-          <Radio.Group defaultValue="disabledSyslog">
+        <Item label="Syslog" name="syslog">
+          <Radio.Group>
             <Radio value="disabledSyslog" onChange={() => setSyslog(false)}>
               Disabled
             </Radio>
@@ -186,54 +189,64 @@ const AccessPointForm = () => {
           </Radio.Group>
           {syslog && (
             <>
-              <Item
-                name="syslogIP"
-                rules={[
-                  {
-                    required: true,
-                    pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
-                    message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input className={styles.Field} placeholder="IP Address" />
-              </Item>
-              <Item
-                name="syslogPort"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Port expected between 1 - 65535',
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('syslogPort') < 65535) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('Port expected between 1 - 65535'));
+              <div className={styles.InlineDiv}>
+                <Item
+                  name="SyslogIP"
+                  rules={[
+                    {
+                      required: true,
+                      pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                      message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
-                  }),
-                ]}
-                hasFeedback
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter NTP server"
-                  type="number"
-                  min={1}
-                  max={65535}
+                  ]}
+                  hasFeedback
+                >
+                  <Input className={styles.Field} placeholder="IP Address" />
+                </Item>
+                <Item
+                  name="SyslogPort"
                   rules={[
                     {
                       required: true,
                       message: 'Port expected between 1 - 65535',
                     },
+                    ({ getFieldValue }) => ({
+                      validator(_rule, value) {
+                        if (!value || getFieldValue('syslogPort') < 65535) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Port expected between 1 - 65535'));
+                      },
+                    }),
                   ]}
                   hasFeedback
-                />
-              </Item>
-              <Item name="mode">
-                <Select className={styles.Field} defaultValue="debug">
+                >
+                  <Input
+                    className={styles.Field}
+                    placeholder="Enter NTP server"
+                    type="number"
+                    min={1}
+                    max={65535}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Port expected between 1 - 65535',
+                      },
+                    ]}
+                    hasFeedback
+                  />
+                </Item>
+              </div>
+              <Item
+                name="mode"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select the Syslog mode',
+                  },
+                ]}
+              >
+                <Select className={styles.Field} placeholder="Select Syslog Mode">
                   <Option value="debug">Debug (DEBUG)</Option>
                   <Option value="info">Info. (INFO)</Option>
                   <Option value="notice">Notice (NOTICE)</Option>
@@ -247,14 +260,14 @@ const AccessPointForm = () => {
             </>
           )}
         </Item>
-        <Item label="Synthetic Client">
-          <Radio.Group defaultValue="disabledClient">
+        <Item label="Synthetic Client" name="syntheticClient">
+          <Radio.Group>
             <Radio value="disabledClient">Disabled</Radio>
             <Radio value="enabledClient">Enabled</Radio>
           </Radio.Group>
         </Item>
-        <Item label="Equipment Discovery">
-          <Radio.Group defaultValue="disabledEq">
+        <Item label="Equipment Discovery" name="equipmentDiscovery">
+          <Radio.Group>
             <Radio value="disabledEq">Disabled</Radio>
             <Radio value="enabledEq">Enabled</Radio>
           </Radio.Group>
