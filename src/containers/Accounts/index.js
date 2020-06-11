@@ -119,7 +119,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the account: <strong> {activeUser.email}</strong>
+            Are you sure you want to delete the account: <i>{activeUser.email}</i>
           </p>
         }
       />
