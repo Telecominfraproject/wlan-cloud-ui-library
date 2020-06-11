@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tree } from 'antd';
+
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
@@ -81,9 +82,11 @@ const LocationsTree = ({
         checkable
         checkedKeys={checkedLocations}
         showIcon
+        blockNode
         onSelect={onSelect}
         onCheck={onCheck}
         treeData={locations}
+        defaultExpandAll
       />
       <AddFormModal
         locationPath={getLocationPath()}

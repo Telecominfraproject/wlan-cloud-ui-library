@@ -10,6 +10,7 @@ const mockProps = {
   setAddModal: () => {},
   setEditModal: () => {},
   setDeleteModal: () => {},
+  hide: () => {},
 };
 
 describe('<PopoverMenuContent />', () => {

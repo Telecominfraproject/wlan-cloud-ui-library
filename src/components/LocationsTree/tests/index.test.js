@@ -307,8 +307,7 @@ describe('<LocationTree />', () => {
         />
       </Router>
     );
-
-    expect(screen.getByText('Ottawa')).toBeVisible();
+    expect(screen.getByText('Add Location')).toBeVisible();
   });
 
   it('should call setEditModal if Cancel button is clicked', () => {

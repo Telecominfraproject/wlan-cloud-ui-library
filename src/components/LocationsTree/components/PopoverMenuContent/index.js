@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import styles from './index.module.scss';
 
-const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDeleteModal }) => {
+const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDeleteModal, hide }) => {
   return (
     <div className={styles.popOver}>
       {locationType !== 'FLOOR' && (
         <Button
           onClick={() => {
+            hide();
             setAddModal(true);
           }}
         >
@@ -19,6 +20,7 @@ const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDelete
         <>
           <Button
             onClick={() => {
+              hide();
               setEditModal(true);
             }}
           >
@@ -27,6 +29,7 @@ const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDelete
           <Button>Bulk Edit APs</Button>
           <Button
             onClick={() => {
+              hide();
               setDeleteModal(true);
             }}
           >
@@ -38,6 +41,7 @@ const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDelete
   );
 };
 PopoverMenuContent.propTypes = {
+  hide: PropTypes.func.isRequired,
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
