@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import { WifiOutlined } from '@ant-design/icons';
+import Button from 'components/Button';
+
 import General from './components/General';
 import Firmware from './components/Firmware';
 import Location from './components/Location';
@@ -12,6 +15,7 @@ import styles from './index.module.scss';
 
 const AccessPointDetails = ({ data }) => {
   const [tab, setTab] = useState('general');
+  const [redirect, setRedirect] = useState(false);
 
   const tabList = [
     {
@@ -38,6 +42,10 @@ const AccessPointDetails = ({ data }) => {
 
   return (
     <>
+      {redirect && <Redirect to="/network/access-points" />}
+      <Button className={styles.backButton} onClick={() => setRedirect(true)}>
+        BACK
+      </Button>
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
