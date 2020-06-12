@@ -6,9 +6,9 @@ import styles from './index.module.scss';
 const DeviceDetailCard = ({ macAddress, name, radioType, leaseStartTimestamp, signal }) => {
   return (
     <>
-      <div className={styles.main_head_wrap}>
-        <div className={styles.left_wrap}>
-          <div className={styles.svg_wrap}>
+      <div className={styles.mainHeadWrap}>
+        <div className={styles.leftWrap}>
+          <div className={styles.svgWrap}>
             <PrinterOutlined
               style={{
                 fontSize: '40px',
@@ -16,18 +16,18 @@ const DeviceDetailCard = ({ macAddress, name, radioType, leaseStartTimestamp, si
               }}
             />
           </div>
-          <div className={styles.left_wrap_content}>
+          <div className={styles.leftWrapContent}>
             <p>{name}</p>
             <p>Nokia</p>
             <p>{macAddress}</p>
           </div>
         </div>
 
-        <div className={styles.middle_wrap_content}>
+        <div className={styles.middleWrapContent}>
           <p>{radioType}</p>
           <p>is5GHzU</p>
         </div>
-        <div className={styles.right_wrap_content}>
+        <div className={styles.rightWrapContent}>
           <p>
             {' '}
             Connected for 16 minutes
@@ -55,19 +55,19 @@ const DeviceDetailCard = ({ macAddress, name, radioType, leaseStartTimestamp, si
 };
 
 DeviceDetailCard.propTypes = {
-  macAddress: PropTypes.number,
+  macAddress: PropTypes.string,
   name: PropTypes.string,
-  radioType: PropTypes.number,
+  radioType: PropTypes.string,
   leaseStartTimestamp: PropTypes.number,
-  signal: PropTypes.number,
+  signal: PropTypes.string,
 };
 
 DeviceDetailCard.defaultProps = {
-  macAddress: 0,
+  macAddress: '',
   name: '',
   radioType: '',
   leaseStartTimestamp: 0,
-  signal: 0,
+  signal: '',
 };
 
 export default DeviceDetailCard;

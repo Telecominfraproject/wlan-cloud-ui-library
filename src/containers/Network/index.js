@@ -7,11 +7,29 @@ import LocationsTree from 'components/LocationsTree';
 import ToggleButton from 'components/ToggleButton';
 import styles from './index.module.scss';
 
-const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, children }) => {
+const Network = ({
+  locations,
+  checkedLocations,
+  onSelect,
+  onCheck,
+  activeTab,
+  children,
+  onAddLocation,
+  onEditLocation,
+  onDeleteLocation,
+  selectedLocation,
+  deleteModal,
+  editModal,
+  addModal,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
+}) => {
+  const location = useLocation();
+
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
-  const location = useLocation();
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -20,6 +38,16 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
           onSelect={onSelect}
           onCheck={onCheck}
           checkedLocations={checkedLocations}
+          onAddLocation={onAddLocation}
+          onEditLocation={onEditLocation}
+          onDeleteLocation={onDeleteLocation}
+          selectedLocation={selectedLocation}
+          deleteModal={deleteModal}
+          editModal={editModal}
+          addModal={addModal}
+          setAddModal={setAddModal}
+          setEditModal={setEditModal}
+          setDeleteModal={setDeleteModal}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -29,7 +57,7 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
               <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
             </div>
           ) : (
-            <></>
+            ''
           )}
           {children}
         </div>
@@ -39,12 +67,32 @@ const Network = ({ locations, checkedLocations, onSelect, onCheck, activeTab, ch
 };
 
 Network.propTypes = {
+  children: PropTypes.node.isRequired,
+  activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
-  activeTab: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
+  onAddLocation: PropTypes.func.isRequired,
+  onEditLocation: PropTypes.func.isRequired,
+  onDeleteLocation: PropTypes.func.isRequired,
+  deleteModal: PropTypes.bool.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  addModal: PropTypes.bool.isRequired,
+  setAddModal: PropTypes.func.isRequired,
+  setEditModal: PropTypes.func.isRequired,
+  setDeleteModal: PropTypes.func.isRequired,
+  selectedLocation: PropTypes.shape({
+    id: PropTypes.number,
+    lastModifiedTimestamp: PropTypes.string,
+    locationType: PropTypes.string,
+    name: PropTypes.string,
+    parentId: PropTypes.number,
+  }),
+};
+
+Network.defaultProps = {
+  selectedLocation: null,
 };
 
 export default Network;

@@ -10,4 +10,14 @@
   @media only screen and (max-width: 480px) {
     width: 160px;
   }
+
+  :global(.ant-tree-title) {
+    flex: auto;
+    display: block;
+
+    span {
+      flex: auto;
+      display: block;
+    }
+  }
 }

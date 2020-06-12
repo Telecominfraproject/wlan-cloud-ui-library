@@ -8,13 +8,13 @@
 .Row {
   cursor: pointer;
 }
-.info_wrapper {
+.infoWrapper {
   display: flex;
   justify-content: space-between;
   margin: 20px 0;
 }
 @media screen and (max-width: 1024px) {
-  .info_wrapper {
+  .infoWrapper {
     flex-direction: column;
   }
 }
