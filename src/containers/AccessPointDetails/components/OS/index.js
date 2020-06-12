@@ -2,9 +2,24 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Alert, Progress, Tooltip } from 'antd';
 import { InfoCircleOutlined, PoweroffOutlined, LineChartOutlined } from '@ant-design/icons';
+import Highcharts from 'highcharts/highstock';
+import {
+  HighchartsStockChart,
+  Chart,
+  withHighcharts,
+  XAxis,
+  YAxis,
+  Title,
+  Legend,
+  AreaSplineSeries,
+  SplineSeries,
+  Navigator,
+  RangeSelector,
+} from 'react-jsx-highstock';
+
 import styles from '../index.module.scss';
 
-const OS = ({ data }) => {
+const OS = ({ osData }) => {
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 10 },
@@ -52,6 +67,50 @@ const OS = ({ data }) => {
             showIcon
           />
         </div>
+        <HighchartsStockChart>
+          <Chart zoomType="x" />
+
+          <Title>Highstocks Example</Title>
+
+          <Legend>
+            <Legend.Title>Key</Legend.Title>
+          </Legend>
+
+          <Tooltip />
+
+          <XAxis>
+            <XAxis.Title>Time</XAxis.Title>
+          </XAxis>
+
+          <YAxis>
+            <YAxis.Title>Price</YAxis.Title>
+            <AreaSplineSeries id="profit" name="Profit" />
+          </YAxis>
+
+          <YAxis opposite>
+            <YAxis.Title>Social Buzz</YAxis.Title>
+            <SplineSeries id="twitter" name="Twitter mentions" />
+          </YAxis>
+
+          <RangeSelector selected={1}>
+            <RangeSelector.Button count={1} type="day">
+              1d
+            </RangeSelector.Button>
+            <RangeSelector.Button count={7} type="day">
+              7d
+            </RangeSelector.Button>
+            <RangeSelector.Button count={1} type="month">
+              1m
+            </RangeSelector.Button>
+            <RangeSelector.Button type="all">All</RangeSelector.Button>
+            <RangeSelector.Input boxBorderColor="#7cb5ec" />
+          </RangeSelector>
+
+          <Navigator>
+            <Navigator.Series seriesId="profit" />
+            <Navigator.Series seriesId="twitter" />
+          </Navigator>
+        </HighchartsStockChart>
       </Card>
     </Form>
   );
@@ -59,9 +118,11 @@ const OS = ({ data }) => {
 
 OS.propTypes = {
   data: PropTypes.instanceOf(Array),
+  osData: PropTypes.instanceOf(Array),
 };
 
 OS.defaultProps = {
   data: [],
+  osData: [],
 };
-export default OS;
+export default withHighcharts(OS, Highcharts);
