@@ -13,7 +13,7 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const AccessPointDetails = ({ data }) => {
+const AccessPointDetails = ({ data, osData }) => {
   const [tab, setTab] = useState('general');
   const [redirect, setRedirect] = useState(false);
 
@@ -39,7 +39,6 @@ const AccessPointDetails = ({ data }) => {
       tab: 'Firmware',
     },
   ];
-
   return (
     <>
       {redirect && <Redirect to="/network/access-points" />}
@@ -81,7 +80,7 @@ const AccessPointDetails = ({ data }) => {
       {tab === 'general' && <General data={data} />}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && <Location />}
-      {tab === 'os' && <OS />}
+      {tab === 'os' && <OS data={data} osData={osData} />}
       {tab === 'firmware' && <Firmware />}
     </>
   );
@@ -89,9 +88,11 @@ const AccessPointDetails = ({ data }) => {
 
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Array),
+  osData: PropTypes.instanceOf(Array),
 };
 
 AccessPointDetails.defaultProps = {
   data: [],
+  osData: [],
 };
 export default AccessPointDetails;

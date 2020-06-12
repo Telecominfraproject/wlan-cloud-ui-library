@@ -3,14 +3,14 @@ import { Card, Form } from 'antd';
 import PropTypes from 'prop-types';
 import styles from '../index.module.scss';
 
-const { Item } = Form;
-
-const layout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 10 },
-};
-
 const Status = ({ data }) => {
+  const { Item } = Form;
+
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 10 },
+  };
+
   return (
     <>
       <Form {...layout}>

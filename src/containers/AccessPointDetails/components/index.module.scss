@@ -9,6 +9,17 @@
   border-radius: 5px;
 }
 
+:global(.ant-alert) {
+  border: 1px solid #434343;
+  border-radius: 5px;
+  width: 100%;
+  margin-right: 20px;
+
+  &:last-child {
+    margin-right: 0px;
+  }
+}
+
 :global(.ant-textarea) {
   border: 1px solid #434343;
   border-radius: 5px;
@@ -18,6 +29,10 @@
 :global(.ant-collapse) {
   margin-top: 10px;
   background: #141414;
+}
+
+:global(.ant-progress) {
+  margin-right: 5px;
 }
 
 .Field {
