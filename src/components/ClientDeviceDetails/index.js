@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from './index.module.scss';
-import DeviceDetailCard from './component/DeviceDetailCard';
-import DeviceStatsCard from './component/DeviceStatsCard';
+import DeviceDetailCard from './components/DeviceDetailCard';
+import DeviceStatsCard from './components/DeviceStatsCard';
 
 const ClientDeviceDetails = ({
   macAddress,
@@ -20,7 +20,7 @@ const ClientDeviceDetails = ({
 }) => {
   const history = useHistory();
   const onBack = () => {
-    history.goBack();
+    history.push('/network/client-devices');
   };
   return (
     <>
