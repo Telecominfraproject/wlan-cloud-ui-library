@@ -11,11 +11,13 @@ import {
 } from '@ant-design/icons';
 import styles from '../index.module.scss';
 
+const { Option } = Select;
+const { TextArea } = Input;
+const { Item } = Form;
+
 const Firmware = () => {
-  const { Item } = Form;
   const [form] = Form.useForm();
-  const { Option } = Select;
-  const { TextArea } = Input;
+
   const [confirmModal, setConfirmModal] = useState(false);
   const [rebootModal, setRebootModal] = useState(false);
   const [version, setVersion] = useState(null);

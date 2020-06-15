@@ -3,9 +3,10 @@ import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
 
+const { Option } = Select;
+const { Item } = Form;
+
 const Location = () => {
-  const { Option } = Select;
-  const { Item } = Form;
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },

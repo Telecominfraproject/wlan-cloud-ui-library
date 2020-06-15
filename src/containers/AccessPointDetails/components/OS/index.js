@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Alert, Progress, Tooltip } from 'antd';
+import { Card, Form, Alert, Progress, Tooltip as AntdTooltip } from 'antd';
 import { InfoCircleOutlined, PoweroffOutlined, LineChartOutlined } from '@ant-design/icons';
 import Highcharts from 'highcharts/highstock';
 import {
@@ -9,17 +9,15 @@ import {
   withHighcharts,
   XAxis,
   YAxis,
-  Title,
   Legend,
-  AreaSplineSeries,
   SplineSeries,
-  Navigator,
   RangeSelector,
+  Tooltip,
 } from 'react-jsx-highstock';
-
+import SolidGauge from './components/SolidGauge';
 import styles from '../index.module.scss';
 
-const OS = ({ osData }) => {
+const OS = ({ data, osData, handleRefetch }) => {
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 10 },
@@ -39,24 +37,67 @@ const OS = ({ osData }) => {
     };
   }, []);
 
+  if (percent === 0) {
+    handleRefetch();
+  }
+
+  const convertDate = time => {
+    const hour = Math.floor(time / 3600);
+    const min = Math.floor((time % 3600) / 60);
+    const sec = Math.floor((time % 3600) % 60);
+
+    const hDisplay = hour > 0 ? hour + (hour === 1 ? ' hour, ' : ' hours, ') : '';
+    const mDisplay = min > 0 ? min + (min === 1 ? ' minute, ' : ' minutes, ') : '';
+    const sDisplay = sec > 0 ? sec + (sec === 1 ? ' second' : ' seconds') : '';
+    return hDisplay + mDisplay + sDisplay;
+  };
+
+  const dateTimeLabelFormats = {
+    millisecond: '%l:%M:%S%P',
+    second: '%l:%M:%S%P',
+    minute: '%l:%M:%S%P',
+    hour: '%l:%M:%S%P',
+    day: '%a. %l:%M:%S%P',
+    week: '',
+    month: '',
+    year: '',
+  };
+
+  const memory = parseFloat(
+    (data.status.osPerformance.detailsJSON.avgFreeMemory / 256000).toFixed(2),
+    10
+  );
+  const cpu = parseFloat(data.status.osPerformance.detailsJSON.avgCpuUtilization.toFixed(2), 10);
+  const temperature = parseFloat(
+    data.status.osPerformance.detailsJSON.avgCpuTemperature.toFixed(2),
+    10
+  );
+
   return (
     <Form {...layout}>
       <Card
         title="Operating System Statistics"
         extra={
           <div className={styles.InLineDiv}>
-            <Tooltip title={`Time refreshes in approx: ${60 - percent} seconds...`}>
-              <Progress type="circle" width={25} percent={percent} showInfo={false} />
-            </Tooltip>
+            <AntdTooltip title={`Refreshes in approx: ${60 - percent} seconds...`}>
+              <Progress type="circle" width={25} percent={percent * 1.67} showInfo={false} />
+            </AntdTooltip>
             {date}
           </div>
         }
       >
         <div className={styles.InlineBetweenDiv}>
-          <Alert icon={<LineChartOutlined />} message="Up-time:" type="info" showIcon />
+          <Alert
+            icon={<LineChartOutlined />}
+            message={`Up-time: ${convertDate(
+              data.status.osPerformance.detailsJSON.uptimeInSeconds
+            )}`}
+            type="info"
+            showIcon
+          />
           <Alert
             icon={<InfoCircleOutlined />}
-            message="CAMI crashes since boot:"
+            message={`CAMI crashes since boot: ${data.status.osPerformance.detailsJSON.numCamiCrashes}`}
             type="info"
             showIcon
           />
@@ -67,62 +108,121 @@ const OS = ({ osData }) => {
             showIcon
           />
         </div>
-        <HighchartsStockChart>
-          <Chart zoomType="x" />
 
-          <Title>Highstocks Example</Title>
+        <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
+          <SolidGauge data={cpu} title="Current CPU" />
+          <SolidGauge data={memory} title="Current Free Memory" />
+          <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
+        </div>
 
-          <Legend>
-            <Legend.Title>Key</Legend.Title>
-          </Legend>
+        <div style={{ marginTop: '10px' }}>
+          <HighchartsStockChart>
+            <Chart zoomType="x" backgroundColor="#141414" />
+            <Legend>
+              <Legend.Title style={{ color: '#FFFFFF' }}>Key</Legend.Title>
+            </Legend>
+            <Tooltip split={false} shared useHTML />
+            <XAxis
+              tickPixelInterval={90}
+              dateTimeLabelFormats={dateTimeLabelFormats}
+              offset={20}
+              type="datetime"
+              showEmpty
+            >
+              <XAxis.Title>Time</XAxis.Title>
+            </XAxis>
 
-          <Tooltip />
+            <YAxis
+              labels={{
+                style: { color: '#7cb5ec' },
+              }}
+            >
+              <YAxis.Title
+                style={{
+                  color: '#7cb5ec',
+                }}
+              >
+                CPU Usage (%)
+              </YAxis.Title>
+              <SplineSeries id="cpuCore1" name="CPU Core 1" data={osData[0].values.CpuUtilCore2} />
+              <SplineSeries id="cpuCore0" name="CPU Core 0" data={osData[0].values.CpuUtilCore1} />
+            </YAxis>
 
-          <XAxis>
-            <XAxis.Title>Time</XAxis.Title>
-          </XAxis>
+            <YAxis
+              labels={{
+                style: { color: '#34AE29' },
+              }}
+              opposite
+            >
+              <YAxis.Title
+                style={{
+                  color: '#34AE29',
+                }}
+              >
+                Free Memory (MB)
+              </YAxis.Title>
+              <SplineSeries id="freeMemory" name="Free Memory" data={osData[0].values.FreeMemory} />
+            </YAxis>
 
-          <YAxis>
-            <YAxis.Title>Price</YAxis.Title>
-            <AreaSplineSeries id="profit" name="Profit" />
-          </YAxis>
+            <YAxis
+              labels={{
+                style: { color: '#f7a35c' },
+              }}
+            >
+              <YAxis.Title
+                style={{
+                  color: '#f7a35c',
+                }}
+              >
+                CPU Temperature (°C)
+              </YAxis.Title>
+              <SplineSeries
+                id="cpuTemp"
+                name="CPU Temperature"
+                data={osData[0].values.CpuTemperature}
+              />
+            </YAxis>
 
-          <YAxis opposite>
-            <YAxis.Title>Social Buzz</YAxis.Title>
-            <SplineSeries id="twitter" name="Twitter mentions" />
-          </YAxis>
-
-          <RangeSelector selected={1}>
-            <RangeSelector.Button count={1} type="day">
-              1d
-            </RangeSelector.Button>
-            <RangeSelector.Button count={7} type="day">
-              7d
-            </RangeSelector.Button>
-            <RangeSelector.Button count={1} type="month">
-              1m
-            </RangeSelector.Button>
-            <RangeSelector.Button type="all">All</RangeSelector.Button>
-            <RangeSelector.Input boxBorderColor="#7cb5ec" />
-          </RangeSelector>
-
-          <Navigator>
-            <Navigator.Series seriesId="profit" />
-            <Navigator.Series seriesId="twitter" />
-          </Navigator>
-        </HighchartsStockChart>
+            <RangeSelector
+              selected={1}
+              buttonSpacing={10}
+              inputBoxBorderColor="gray"
+              inputBoxWidth={120}
+              inputBoxHeight={18}
+              inputStyle={{ color: '#039', fontWeight: 'bold' }}
+              labelStyle={{ colod: 'silver', fontWeight: 'bold' }}
+              buttonTheme={{
+                fill: 'none',
+                r: '8',
+                states: { select: { fill: '#039', style: { color: 'white' } } },
+              }}
+            >
+              <RangeSelector.Button count={5} type="minute">
+                5 Min
+              </RangeSelector.Button>
+              <RangeSelector.Button count={7} type="hour">
+                1 Hr
+              </RangeSelector.Button>
+              <RangeSelector.Button count={1} type="day">
+                1 Day
+              </RangeSelector.Button>
+              <RangeSelector.Input inputEnabled={false} />
+            </RangeSelector>
+          </HighchartsStockChart>
+        </div>
       </Card>
     </Form>
   );
 };
 
 OS.propTypes = {
-  data: PropTypes.instanceOf(Array),
   osData: PropTypes.instanceOf(Array),
+  data: PropTypes.instanceOf(Array),
+  handleRefetch: PropTypes.func.isRequired,
 };
 
 OS.defaultProps = {
-  data: [],
   osData: [],
+  data: [],
 };
 export default withHighcharts(OS, Highcharts);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import { WifiOutlined } from '@ant-design/icons';
@@ -13,9 +13,8 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const AccessPointDetails = ({ data, osData }) => {
+const AccessPointDetails = ({ data, osData, handleRefetch }) => {
   const [tab, setTab] = useState('general');
-  const [redirect, setRedirect] = useState(false);
 
   const tabList = [
     {
@@ -41,10 +40,9 @@ const AccessPointDetails = ({ data, osData }) => {
   ];
   return (
     <>
-      {redirect && <Redirect to="/network/access-points" />}
-      <Button className={styles.backButton} onClick={() => setRedirect(true)}>
-        BACK
-      </Button>
+      <Link to="/network/access-points">
+        <Button className={styles.backButton}>BACK</Button>
+      </Link>
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
@@ -80,7 +78,7 @@ const AccessPointDetails = ({ data, osData }) => {
       {tab === 'general' && <General data={data} />}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && <Location />}
-      {tab === 'os' && <OS data={data} osData={osData} />}
+      {tab === 'os' && <OS data={data} osData={osData} handleRefetch={handleRefetch} />}
       {tab === 'firmware' && <Firmware />}
     </>
   );
@@ -89,10 +87,12 @@ const AccessPointDetails = ({ data, osData }) => {
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Array),
   osData: PropTypes.instanceOf(Array),
+  handleRefetch: PropTypes.func.isRequired,
 };
 
 AccessPointDetails.defaultProps = {
   data: [],
   osData: [],
 };
+
 export default AccessPointDetails;

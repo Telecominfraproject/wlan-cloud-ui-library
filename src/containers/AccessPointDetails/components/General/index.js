@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
 
-const General = ({ data }) => {
-  const { Item } = Form;
-  const { Option } = Select;
-  const { Panel } = Collapse;
+const { Item } = Form;
+const { Option } = Select;
+const { Panel } = Collapse;
 
+const General = ({ data }) => {
   const [form] = Form.useForm();
 
   const layout = {
@@ -26,60 +26,65 @@ const General = ({ data }) => {
       .catch(() => {});
   };
 
-  form.setFieldsValue({
-    enableRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioAdminState,
-    enableRadio5U: data.details.advancedRadioMap.is5GHzU.radioAdminState,
-    enableRadio5L: data.details.advancedRadioMap.is5GHzL.radioAdminState,
-    beaconRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.beaconInterval,
-    beaconRadio5U: data.details.advancedRadioMap.is5GHzU.beaconInterval,
-    beaconRadio5L: data.details.advancedRadioMap.is5GHzL.beaconInterval,
-    deuthAttack2dot4: data.details.advancedRadioMap.is2dot4GHz.deauthAttackDetection,
-    deuthAttack5U: data.details.advancedRadioMap.is5GHzU.deauthAttackDetection,
-    deuthAttack5L: data.details.advancedRadioMap.is5GHzL.deauthAttackDetection,
-    threshold2dot4: data.details.advancedRadioMap.is2dot4GHz.rtsCtsThreshold,
-    threshold5U: data.details.advancedRadioMap.is5GHzU.rtsCtsThreshold,
-    threshold5L: data.details.advancedRadioMap.is5GHzL.rtsCtsThreshold,
-    radio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioMode,
-    radio5U: data.details.advancedRadioMap.is5GHzU.radioMode,
-    radio5L: data.details.advancedRadioMap.is5GHzL.radioMode,
-    uapsd2dot4: data.details.advancedRadioMap.is2dot4GHz.uapsdState,
-    uapsd5U: data.details.advancedRadioMap.is5GHzU.uapsdState,
-    uapsd5L: data.details.advancedRadioMap.is5GHzL.uapsdState,
-    maxDevices2dot4: data.details.advancedRadioMap.is2dot4GHz.maxNumClients,
-    maxDevices5U: data.details.advancedRadioMap.is5GHzU.maxNumClients,
-    maxDevices5L: data.details.advancedRadioMap.is5GHzL.maxNumClients,
-    bandwidth2dot4: data.details.radioMap.is2dot4GHz.channelBandwidth,
-    bandwidth5U: data.details.radioMap.is5GHzU.channelBandwidth,
-    bandwidth5L: data.details.radioMap.is5GHzL.channelBandwidth,
-    perimeter2dot4: data.details.radioMap.is2dot4GHz.perimeterDetectionEnabled,
-    perimeter5U: data.details.radioMap.is5GHzU.perimeterDetectionEnabled,
-    perimeter5L: data.details.radioMap.is5GHzL.perimeterDetectionEnabled,
-    signal2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.minSignal,
-    signal5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.minSignal,
-    signal5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.minSignal,
-    aps2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.maxAps,
-    aps5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.maxAps,
-    aps5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.maxAps,
-    noiseFloor2dot4:
-      data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.noiseFloorThresholdInDB,
-    noiseFloor5U: data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdInDB,
-    noiseFloor5L: data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdInDB,
-    noiseFloorTime2dot4:
-      data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.noiseFloorThresholdTimeInSeconds,
-    noiseFloorTime5U:
-      data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdTimeInSeconds,
-    noiseFloorTime5L:
-      data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdTimeInSeconds,
-    dfs2dot4: data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.obssHopMode,
-    dfs5U: data.details.advancedRadioMap.is5GHzU.channelHopSettings.obssHopMode,
-    dfs5L: data.details.advancedRadioMap.is5GHzL.channelHopSettings.obssHopMode,
-    snr2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.dropInSnrPercentage,
-    snr5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.dropInSnrPercentage,
-    snr5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.dropInSnrPercentage,
-    minLoad2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.minLoadFactor,
-    minLoad5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.minLoadFactor,
-    minLoad5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.minLoadFactor,
-  });
+  useEffect(() => {
+    form.setFieldsValue({
+      enableRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioAdminState,
+      enableRadio5U: data.details.advancedRadioMap.is5GHzU.radioAdminState,
+      enableRadio5L: data.details.advancedRadioMap.is5GHzL.radioAdminState,
+      beaconRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.beaconInterval,
+      beaconRadio5U: data.details.advancedRadioMap.is5GHzU.beaconInterval,
+      beaconRadio5L: data.details.advancedRadioMap.is5GHzL.beaconInterval,
+      deuthAttack2dot4: data.details.advancedRadioMap.is2dot4GHz.deauthAttackDetection,
+      deuthAttack5U: data.details.advancedRadioMap.is5GHzU.deauthAttackDetection,
+      deuthAttack5L: data.details.advancedRadioMap.is5GHzL.deauthAttackDetection,
+      threshold2dot4: data.details.advancedRadioMap.is2dot4GHz.rtsCtsThreshold,
+      threshold5U: data.details.advancedRadioMap.is5GHzU.rtsCtsThreshold,
+      threshold5L: data.details.advancedRadioMap.is5GHzL.rtsCtsThreshold,
+      radio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioMode,
+      radio5U: data.details.advancedRadioMap.is5GHzU.radioMode,
+      radio5L: data.details.advancedRadioMap.is5GHzL.radioMode,
+      uapsd2dot4: data.details.advancedRadioMap.is2dot4GHz.uapsdState,
+      uapsd5U: data.details.advancedRadioMap.is5GHzU.uapsdState,
+      uapsd5L: data.details.advancedRadioMap.is5GHzL.uapsdState,
+      maxDevices2dot4: data.details.advancedRadioMap.is2dot4GHz.maxNumClients,
+      maxDevices5U: data.details.advancedRadioMap.is5GHzU.maxNumClients,
+      maxDevices5L: data.details.advancedRadioMap.is5GHzL.maxNumClients,
+      bandwidth2dot4: data.details.radioMap.is2dot4GHz.channelBandwidth,
+      bandwidth5U: data.details.radioMap.is5GHzU.channelBandwidth,
+      bandwidth5L: data.details.radioMap.is5GHzL.channelBandwidth,
+      perimeter2dot4: data.details.radioMap.is2dot4GHz.perimeterDetectionEnabled,
+      perimeter5U: data.details.radioMap.is5GHzU.perimeterDetectionEnabled,
+      perimeter5L: data.details.radioMap.is5GHzL.perimeterDetectionEnabled,
+      signal2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.minSignal,
+      signal5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.minSignal,
+      signal5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.minSignal,
+      aps2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.maxAps,
+      aps5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.maxAps,
+      aps5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.maxAps,
+      noiseFloor2dot4:
+        data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.noiseFloorThresholdInDB,
+      noiseFloor5U:
+        data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdInDB,
+      noiseFloor5L:
+        data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdInDB,
+      noiseFloorTime2dot4:
+        data.details.advancedRadioMap.is2dot4GHz.channelHopSettings
+          .noiseFloorThresholdTimeInSeconds,
+      noiseFloorTime5U:
+        data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdTimeInSeconds,
+      noiseFloorTime5L:
+        data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdTimeInSeconds,
+      dfs2dot4: data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.obssHopMode,
+      dfs5U: data.details.advancedRadioMap.is5GHzU.channelHopSettings.obssHopMode,
+      dfs5L: data.details.advancedRadioMap.is5GHzL.channelHopSettings.obssHopMode,
+      snr2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.dropInSnrPercentage,
+      snr5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.dropInSnrPercentage,
+      snr5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.dropInSnrPercentage,
+      minLoad2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.minLoadFactor,
+      minLoad5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.minLoadFactor,
+      minLoad5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.minLoadFactor,
+    });
+  }, []);
 
   const columns = [
     {
