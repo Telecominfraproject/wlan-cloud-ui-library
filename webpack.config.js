@@ -7,7 +7,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
     filename: 'index.js',
-    library: 'connectus-ui-lib',
+    library: 'wlan-cloud-ui-library',
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },
@@ -84,9 +84,9 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: ['node_modules', path.resolve(`${__dirname}/src`)],
+    modules: [path.resolve('./node_modules'), path.resolve('./src')],
     alias: {
-      src: path.resolve(`${__dirname}/src`),
+      src: path.resolve(__dirname, './src'),
       react: path.resolve(__dirname, './node_modules/react'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
       antd: path.resolve(__dirname, './node_modules/antd'),

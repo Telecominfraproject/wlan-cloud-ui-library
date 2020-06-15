@@ -14,18 +14,23 @@ const Network = ({
   onCheck,
   activeTab,
   children,
-  locationPath,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
-  onGetSelectedLocation,
   selectedLocation,
+  deleteModal,
+  editModal,
+  addModal,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
 }) => {
   const location = useLocation();
 
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
+
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -34,12 +39,16 @@ const Network = ({
           onSelect={onSelect}
           onCheck={onCheck}
           checkedLocations={checkedLocations}
-          locationPath={locationPath}
           onAddLocation={onAddLocation}
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
-          onGetSelectedLocation={onGetSelectedLocation}
           selectedLocation={selectedLocation}
+          deleteModal={deleteModal}
+          editModal={editModal}
+          addModal={addModal}
+          setAddModal={setAddModal}
+          setEditModal={setEditModal}
+          setDeleteModal={setDeleteModal}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -59,17 +68,21 @@ const Network = ({
 };
 
 Network.propTypes = {
+  children: PropTypes.node.isRequired,
+  activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
-  activeTab: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  locationPath: PropTypes.instanceOf(Array),
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
-  onGetSelectedLocation: PropTypes.func.isRequired,
+  deleteModal: PropTypes.bool.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  addModal: PropTypes.bool.isRequired,
+  setAddModal: PropTypes.func.isRequired,
+  setEditModal: PropTypes.func.isRequired,
+  setDeleteModal: PropTypes.func.isRequired,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -80,8 +93,7 @@ Network.propTypes = {
 };
 
 Network.defaultProps = {
-  locationPath: [],
-  selectedLocation: {},
+  selectedLocation: null,
 };
 
 export default Network;

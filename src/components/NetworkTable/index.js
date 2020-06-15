@@ -18,10 +18,11 @@ const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
         scroll={{ x: 2000 }}
         pagination={false}
         rowClassName={styles.Row}
+        rowKey="id"
         onRow={record => {
           return {
             onClick: () => {
-              history.push(`${url}/${record.key}`);
+              history.push(`${url}/${record.id}`);
             },
           };
         }}
