@@ -15,6 +15,7 @@ const DeviceDetailCard = ({
   signal,
   dataTransferred,
   dataThroughput,
+  status,
 }) => {
   return (
     <div className={styles.mainHeadWrap}>
@@ -30,10 +31,12 @@ const DeviceDetailCard = ({
         <p>{macAddress}</p>
       </div>
       <div className={styles.rightWrapContent}>
-        <p>
-          Connected for 16 minutes
-          <WifiOutlined />
-        </p>
+        {status && (
+          <p>
+            {status}
+            <WifiOutlined />
+          </p>
+        )}
         <p>
           {formatBytes(dataTransferred, 1)}
           <span>({Math.round(dataThroughput)} bps)</span>
@@ -56,6 +59,7 @@ DeviceDetailCard.propTypes = {
   ipAddress: PropTypes.string,
   radioType: PropTypes.string,
   signal: PropTypes.string,
+  status: PropTypes.string,
   dataTransferred: PropTypes.number,
   dataThroughput: PropTypes.number,
 };
@@ -68,6 +72,7 @@ DeviceDetailCard.defaultProps = {
   ipAddress: '',
   radioType: '',
   signal: '',
+  status: '',
   dataTransferred: 0,
   dataThroughput: 0,
 };
