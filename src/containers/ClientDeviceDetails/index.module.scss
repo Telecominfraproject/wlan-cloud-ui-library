@@ -2,17 +2,19 @@
   display: flex;
   justify-content: space-between;
   padding: 0px;
-  margin: 26px 0px;
+  margin: 20px 0px;
 }
 
 .Row {
   cursor: pointer;
 }
+
 .infoWrapper {
   display: flex;
   justify-content: space-between;
-  margin: 20px 0;
+  margin: 10px 0;
 }
+
 @media screen and (max-width: 1024px) {
   .infoWrapper {
     flex-direction: column;

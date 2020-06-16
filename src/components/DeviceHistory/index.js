@@ -148,7 +148,7 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         plotBackgroundColor={null}
         plotBorderWidth={0}
         plotShadow={false}
-        height={400}
+        height={350}
         spacingTop={0}
         spacingBottom={0}
       />
