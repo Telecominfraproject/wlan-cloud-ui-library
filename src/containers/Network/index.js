@@ -30,7 +30,6 @@ const Network = ({
   const onReload = () => {
     // console.log('Reload Button Clicked');
   };
-
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>

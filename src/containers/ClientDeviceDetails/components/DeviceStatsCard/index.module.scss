@@ -1,0 +1,74 @@
+.individualCard {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 20px;
+  background: #141414 0% 0% no-repeat padding-box;
+  padding: 20px;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 23px;
+    line-height: 16px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    line-height: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    text-align: right;
+    margin-bottom: 10px;
+    div {
+      flex: 1;
+      margin-right: 20px;
+      &:nth-of-type(even) {
+        text-align: left;
+        color: #fff;
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .individualCard {
+    .row {
+      div {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .individualCard {
+    margin-bottom: 20px;
+    margin-right: 0;
+    .row {
+      div {
+        font-size: 12px;
+        line-height: 16px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .individualCard {
+    .row {
+      flex-direction: column;
+      div {
+        text-align: left;
+        &:nth-of-type(even) {
+          margin-bottom: 13px;
+        }
+      }
+    }
+  }
+}

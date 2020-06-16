@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "author": "ConnectUs",
   "description": "React UI Library",
   "engines": {
@@ -30,6 +30,7 @@
     "prop-types": "^15.7.0",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
+    "react-jsx-highcharts": "^4.1.0",
     "react-jsx-highstock": "^4.1.0",
     "react-router-dom": "^5.1.0"
   },
@@ -75,6 +76,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-jsx-highcharts": "^4.1.0",
     "react-jsx-highstock": "^4.1.0",
     "react-router-dom": "^5.1.2",
     "react-test-renderer": "^16.13.1",
