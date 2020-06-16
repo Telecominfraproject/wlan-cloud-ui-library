@@ -102,12 +102,6 @@ const OS = ({ data, osData, handleRefetch }) => {
             type="info"
             showIcon
           />
-          <Alert
-            icon={<PoweroffOutlined />}
-            message="Reboots in last 7 days:"
-            type="info"
-            showIcon
-          />
         </div>
 
         <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
@@ -119,9 +113,7 @@ const OS = ({ data, osData, handleRefetch }) => {
         <div style={{ marginTop: '10px' }}>
           <HighchartsStockChart>
             <Chart zoomType="x" backgroundColor="#141414" />
-            <Legend>
-              <Legend.Title style={{ color: '#FFFFFF' }}>Key</Legend.Title>
-            </Legend>
+
             <Tooltip split={false} shared useHTML />
             <XAxis
               tickPixelInterval={90}
@@ -133,6 +125,9 @@ const OS = ({ data, osData, handleRefetch }) => {
               <XAxis.Title>Time</XAxis.Title>
             </XAxis>
 
+            <Legend verticalAlign="top">
+              <Legend.Title />
+            </Legend>
             <YAxis
               labels={{
                 style: { color: '#7cb5ec' },
