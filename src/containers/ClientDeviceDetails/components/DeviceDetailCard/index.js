@@ -1,6 +1,7 @@
 import React from 'react';
 import { WifiOutlined, SwapOutlined, SignalFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import { Card } from 'antd';
 
 import { formatBytes } from 'utils/bytes';
 import styles from './index.module.scss';
@@ -18,36 +19,38 @@ const DeviceDetailCard = ({
   status,
 }) => {
   return (
-    <div className={styles.mainHeadWrap}>
-      <div className={styles.leftWrapContent}>
-        <p>{name}</p>
-        <p>{hostName}</p>
-        <p>{manufacturer}</p>
-      </div>
+    <Card>
+      <div className={styles.mainHeadWrap}>
+        <div className={styles.leftWrapContent}>
+          <p>{name}</p>
+          <p>{hostName}</p>
+          <p>{manufacturer}</p>
+        </div>
 
-      <div className={styles.middleWrapContent}>
-        <p>{radioType}</p>
-        <p>{ipAddress}</p>
-        <p>{macAddress}</p>
-      </div>
-      <div className={styles.rightWrapContent}>
-        {status && (
+        <div className={styles.middleWrapContent}>
+          <p>{radioType}</p>
+          <p>{ipAddress}</p>
+          <p>{macAddress}</p>
+        </div>
+        <div className={styles.rightWrapContent}>
+          {status && (
+            <p>
+              {status}
+              <WifiOutlined />
+            </p>
+          )}
           <p>
-            {status}
-            <WifiOutlined />
+            {formatBytes(dataTransferred, 1)}
+            <span>({Math.round(dataThroughput)} bps)</span>
+            <SwapOutlined />
           </p>
-        )}
-        <p>
-          {formatBytes(dataTransferred, 1)}
-          <span>({Math.round(dataThroughput)} bps)</span>
-          <SwapOutlined />
-        </p>
-        <p>
-          {signal} dBm
-          <SignalFilled />
-        </p>
+          <p>
+            {signal} dBm
+            <SignalFilled />
+          </p>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

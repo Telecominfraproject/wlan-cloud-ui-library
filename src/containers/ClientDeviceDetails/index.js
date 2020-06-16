@@ -1,16 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 import { formatBytes } from 'utils/bytes';
 import Button from 'components/Button';
-import styles from './index.module.scss';
+import DeviceHistory from 'components/DeviceHistory';
+
 import DeviceDetailCard from './components/DeviceDetailCard';
 import DeviceStatsCard from './components/DeviceStatsCard';
+import styles from './index.module.scss';
 
-const ClientDeviceDetails = ({ data, onRefresh }) => {
+const ClientDeviceDetails = ({
+  data,
+  onRefresh,
+  metricsLoading,
+  metricsError,
+  metricsData,
+  historyDate,
+}) => {
   const {
     macAddress,
     ipAddress,
@@ -92,10 +102,17 @@ const ClientDeviceDetails = ({ data, onRefresh }) => {
         dataThroughput={txMbps + rxMbps}
       />
       <div className={styles.infoWrapper}>
-        <DeviceStatsCard title="GENERAL" cardData={getGeneralStats()} />
-        <DeviceStatsCard title="TRAFFIC" cardData={getTrafficStats()} />
+        <DeviceStatsCard title="General" cardData={getGeneralStats()} />
+        <DeviceStatsCard title="Traffic" cardData={getTrafficStats()} />
         <DeviceStatsCard title="IP LAN" cardData={getIpStats()} />
       </div>
+      <Card title="History">
+        {metricsError ? (
+          <Alert message="Error" description="Failed to load History." type="error" showIcon />
+        ) : (
+          <DeviceHistory loading={metricsLoading} historyDate={historyDate} data={metricsData} />
+        )}
+      </Card>
     </>
   );
 };
@@ -103,11 +120,19 @@ const ClientDeviceDetails = ({ data, onRefresh }) => {
 ClientDeviceDetails.propTypes = {
   data: PropTypes.instanceOf(Object),
   onRefresh: PropTypes.func,
+  metricsLoading: PropTypes.bool,
+  metricsData: PropTypes.instanceOf(Array),
+  metricsError: PropTypes.instanceOf(Object),
+  historyDate: PropTypes.instanceOf(Object),
 };
 
 ClientDeviceDetails.defaultProps = {
   data: {},
   onRefresh: () => {},
+  metricsLoading: true,
+  metricsError: null,
+  metricsData: [],
+  historyDate: moment(),
 };
 
 export default ClientDeviceDetails;

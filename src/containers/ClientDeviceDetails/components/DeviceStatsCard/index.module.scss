@@ -3,19 +3,11 @@
   flex-direction: column;
   flex: 1;
   margin-right: 20px;
-  background: #141414 0% 0% no-repeat padding-box;
-  padding: 20px;
 
   &:last-child {
     margin: 0;
   }
 
-  h2 {
-    font-size: 14px;
-    font-weight: normal;
-    margin-bottom: 23px;
-    line-height: 16px;
-  }
   .row {
     display: flex;
     flex-wrap: wrap;
