@@ -5,25 +5,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from 'tests/utils';
 import ClientDeviceDetails from '..';
 
-const mockProps = {
-  macAddress: '',
-  ipAddress: '',
-  hostname: '',
-  radioType: '',
-  signal: '',
-  name: '',
-  generalCardState: [],
-  trafficCardState: [],
-  ipLanCardState: [],
-};
-
 describe('<ClientDeviceDetails />', () => {
   const URL = '/network/client-devices';
 
   it('URL should change back to /network/client-devices when Back button is clicked', () => {
     const { getByRole } = render(
       <Router>
-        <ClientDeviceDetails {...mockProps} />
+        <ClientDeviceDetails />
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
