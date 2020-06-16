@@ -134,7 +134,7 @@ const General = ({ data }) => {
         >
           <Input className={styles.Field} placeholder="Enter Access Point Name" />
         </Item>
-        <Item label="Model"> MODEL</Item>
+        <Item label="Model"> </Item>
         <Item label="Serial Number">{data.serial} </Item>
         <Item label="SKU"> {data.status.protocol.detailsJSON.reportedSku}</Item>
         <Item label="Country Code"> {data.status.protocol.detailsJSON.countryCode}</Item>

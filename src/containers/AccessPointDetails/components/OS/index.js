@@ -14,6 +14,7 @@ import {
   RangeSelector,
   Tooltip,
 } from 'react-jsx-highstock';
+import moment from 'moment';
 import SolidGauge from './components/SolidGauge';
 import styles from '../index.module.scss';
 
@@ -82,7 +83,7 @@ const OS = ({ data, osData, handleRefetch }) => {
             <AntdTooltip title={`Refreshes in approx: ${60 - percent} seconds...`}>
               <Progress type="circle" width={25} percent={percent * 1.67} showInfo={false} />
             </AntdTooltip>
-            {date}
+            {moment(date).format('DD MMMM YYYY, hh:mm:ss A')}
           </div>
         }
       >
