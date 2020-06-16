@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Card } from 'antd';
 
 import styles from './index.module.scss';
 
 const DeviceStatsCard = ({ title, cardData }) => {
   return (
-    <div className={styles.individualCard}>
-      <h2>{title}</h2>
+    <Card title={title} className={styles.individualCard}>
       {Object.keys(cardData).map(d => (
         <div key={d} className={styles.row}>
           <div>{d}</div>
           <div>{cardData[d]}</div>
         </div>
       ))}
-    </div>
+    </Card>
   );
 };
 
