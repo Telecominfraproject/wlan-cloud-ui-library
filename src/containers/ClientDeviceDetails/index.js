@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
+import { formatBytes } from 'utils/bytes';
 import Button from 'components/Button';
 import styles from './index.module.scss';
 import DeviceDetailCard from './components/DeviceDetailCard';
@@ -43,19 +45,19 @@ const ClientDeviceDetails = ({ data, onRefresh }) => {
 
   const getGeneralStats = () => ({
     Status: '',
-    'Associated On': assocTimestamp,
+    'Associated On': moment(assocTimestamp).format('llll'),
     'Access Point': name,
     SSID: ssid,
     'Radio Band': radioType,
-    'Signal Strength': signal,
-    'Tx Rate': txRateKbps,
-    'Rx Rate': rxRateKbps,
+    'Signal Strength': `${signal} dBm`,
+    'Tx Rate': `${Math.round(txRateKbps)} Mbps`,
+    'Rx Rate': `${Math.round(rxRateKbps)} Mbps`,
   });
 
   const getTrafficStats = () => ({
-    'Data Transferred': txBytes + rxBytes,
-    'Tx Throughput': txMbps,
-    'Rx Throughput': rxMbps,
+    'Data Transferred': formatBytes(txBytes + rxBytes),
+    'Tx Throughput': `${Math.round(txMbps)} bps`,
+    'Rx Throughput': `${Math.round(rxMbps)} bps`,
     'Total Tx Packets': totalTxPackets,
     'Total Rx Packets': totalRxPackets,
   });
@@ -67,8 +69,8 @@ const ClientDeviceDetails = ({ data, onRefresh }) => {
     'Secondary DNS': secondaryDns,
     'Gateway ': gatewayIp,
     'Subnet Mask': subnetMask,
-    'IP Lease Time': leaseTimeInSeconds,
-    'IP Lease Start': leaseStartTimestamp,
+    'IP Lease Time': `${leaseTimeInSeconds} seconds`,
+    'IP Lease Start': moment(leaseStartTimestamp).format('llll'),
   });
 
   return (
