@@ -1,36 +1,38 @@
-:global(.ant-card-body) {
-  padding: 10px 20px;
-}
-
-.mainHeadWrap {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  font-size: 14px;
-
-  p {
-    line-height: 28px;
-    margin: 0;
+.DeviceDetailCard {
+  :global(.ant-card-body) {
+    padding: 10px 20px;
   }
-}
 
-.leftWrapContent {
-  p {
-    &:first-child {
-      font-size: 16px;
+  .mainHeadWrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-size: 14px;
+
+    p {
+      line-height: 28px;
+      margin: 0;
     }
   }
-}
-.rightWrapContent {
-  p {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    :global(.anticon) {
-      font-size: 17px;
-      color: #fff;
-      width: 27px;
-      text-align: right;
+
+  .leftWrapContent {
+    p {
+      &:first-child {
+        font-size: 16px;
+      }
+    }
+  }
+  .rightWrapContent {
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      :global(.anticon) {
+        font-size: 17px;
+        color: #fff;
+        width: 27px;
+        text-align: right;
+      }
     }
   }
 }

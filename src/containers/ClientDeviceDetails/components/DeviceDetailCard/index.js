@@ -19,7 +19,7 @@ const DeviceDetailCard = ({
   status,
 }) => {
   return (
-    <Card>
+    <Card className={styles.DeviceDetailCard}>
       <div className={styles.mainHeadWrap}>
         <div className={styles.leftWrapContent}>
           <p>{name}</p>
