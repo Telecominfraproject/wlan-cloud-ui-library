@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Alert, Progress, Tooltip as AntdTooltip } from 'antd';
-import { InfoCircleOutlined, PoweroffOutlined, LineChartOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
 import Highcharts from 'highcharts/highstock';
 import {
   HighchartsStockChart,
@@ -65,7 +65,11 @@ const OS = ({ data, osData, handleRefetch }) => {
   };
 
   const memory = parseFloat(
-    (data.status.osPerformance.detailsJSON.avgFreeMemory / 256000).toFixed(2),
+    (
+      (data.status.osPerformance.detailsJSON.avgFreeMemoryKb /
+        data.status.osPerformance.detailsJSON.totalAvailableMemoryKb) *
+      100
+    ).toFixed(2),
     10
   );
   const cpu = parseFloat(data.status.osPerformance.detailsJSON.avgCpuUtilization.toFixed(2), 10);
@@ -104,7 +108,7 @@ const OS = ({ data, osData, handleRefetch }) => {
           />
         </div>
 
-        <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
+        <div className={styles.InlineBetweenDiv} style={{ marginTop: '15px' }}>
           <SolidGauge data={cpu} title="Current CPU" />
           <SolidGauge data={memory} title="Current Free Memory" />
           <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
@@ -140,8 +144,8 @@ const OS = ({ data, osData, handleRefetch }) => {
               >
                 CPU Usage (%)
               </YAxis.Title>
-              <SplineSeries id="cpuCore1" name="CPU Core 1" data={osData[0].values.CpuUtilCore2} />
-              <SplineSeries id="cpuCore0" name="CPU Core 0" data={osData[0].values.CpuUtilCore1} />
+              <SplineSeries id="cpuCore1" name="CPU Core 1" data={osData.CpuUtilCore2} />
+              <SplineSeries id="cpuCore0" name="CPU Core 0" data={osData.CpuUtilCore1} />
             </YAxis>
 
             <YAxis
@@ -157,7 +161,7 @@ const OS = ({ data, osData, handleRefetch }) => {
               >
                 Free Memory (MB)
               </YAxis.Title>
-              <SplineSeries id="freeMemory" name="Free Memory" data={osData[0].values.FreeMemory} />
+              <SplineSeries id="freeMemory" name="Free Memory" data={osData.FreeMemory} />
             </YAxis>
 
             <YAxis
@@ -172,11 +176,7 @@ const OS = ({ data, osData, handleRefetch }) => {
               >
                 CPU Temperature (°C)
               </YAxis.Title>
-              <SplineSeries
-                id="cpuTemp"
-                name="CPU Temperature"
-                data={osData[0].values.CpuTemperature}
-              />
+              <SplineSeries id="cpuTemp" name="CPU Temperature" data={osData.CpuTemperature} />
             </YAxis>
 
             <RangeSelector

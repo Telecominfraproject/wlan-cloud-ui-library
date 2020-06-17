@@ -14,12 +14,7 @@ const Location = () => {
   };
 
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-      })
-      .catch(() => {});
+    form.validateFields().catch(() => {});
   };
   return (
     <Form {...layout} form={form}>

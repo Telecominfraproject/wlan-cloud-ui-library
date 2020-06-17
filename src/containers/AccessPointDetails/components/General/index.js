@@ -18,12 +18,7 @@ const General = ({ data }) => {
   };
 
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-      })
-      .catch(() => {});
+    form.validateFields().catch(() => {});
   };
 
   useEffect(() => {
@@ -117,7 +112,7 @@ const General = ({ data }) => {
   return (
     <Form {...layout} form={form}>
       <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
+        <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
         </Button>
       </div>
@@ -134,7 +129,7 @@ const General = ({ data }) => {
         >
           <Input className={styles.Field} placeholder="Enter Access Point Name" />
         </Item>
-        <Item label="Model"> </Item>
+        <Item label="Model"> {data.model}</Item>
         <Item label="Serial Number">{data.serial} </Item>
         <Item label="SKU"> {data.status.protocol.detailsJSON.reportedSku}</Item>
         <Item label="Country Code"> {data.status.protocol.detailsJSON.countryCode}</Item>
@@ -149,7 +144,7 @@ const General = ({ data }) => {
         </Item>
       </Card>
       <Collapse expandIconPosition="right">
-        <Panel header="Advanced Settings">
+        <Panel header="Advanced Settings" name="settings">
           <Item label=" " colon={false}>
             <div className={styles.InlineDiv}>
               <p>2.4 GHz</p>
@@ -411,7 +406,11 @@ const General = ({ data }) => {
                   { required: true, message: '0-100' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('maxDevices2dot4') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('maxDevices2dot4') <= 100 &&
+                          getFieldValue('maxDevices2dot4') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -435,7 +434,10 @@ const General = ({ data }) => {
                   { required: true, message: '0-100' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('maxDevices5U') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('maxDevices5U') <= 100 && getFieldValue('maxDevices5U') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -459,7 +461,10 @@ const General = ({ data }) => {
                   { required: true, message: '0-100' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('maxDevices5L') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('maxDevices5L') <= 100 && getFieldValue('maxDevices5L') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -561,7 +566,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter minimal signal (dB)"
+                  placeholder="Enter minimal signal (dB) for 2.4GHz"
                   type="number"
                   min={-90}
                   max={-50}
@@ -586,7 +591,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter minimal signal (dB)"
+                  placeholder="Enter minimal signal (dB) for 5GHzU"
                   type="number"
                   min={-90}
                   max={-50}
@@ -611,7 +616,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter min. detection for 5GHzL"
+                  placeholder="Enter minimal signal (dB) for 5GHzL"
                   type="number"
                   min={-90}
                   max={-50}
@@ -638,7 +643,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter maximum number of neighbours"
+                  placeholder="Enter maximum number of neighbours for 2.4GHz"
                   type="number"
                   min={0}
                   max={512}
@@ -661,7 +666,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter maximum number of neighbours"
+                  placeholder="Enter maximum number of neighbours for 5GHzU"
                   type="number"
                   min={0}
                   max={512}
@@ -684,7 +689,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter maximum number of neighbours"
+                  placeholder="Enter maximum number of neighbours for 5GHzL"
                   type="number"
                   min={0}
                   max={512}
@@ -715,7 +720,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor (dB)"
+                  placeholder="Enter noise floor (dB) for 2.4GHz"
                   type="number"
                   min={-90}
                   max={-10}
@@ -741,7 +746,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor (dB)"
+                  placeholder="Enter noise floor (dB) for 5GHzU"
                   type="number"
                   min={-90}
                   max={-10}
@@ -767,7 +772,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor (dB)"
+                  placeholder="Enter noise floor (dB) for 5GHzL"
                   type="number"
                   min={-90}
                   max={-10}
@@ -783,7 +788,11 @@ const General = ({ data }) => {
                   { required: true, message: '120 - 600 seconds' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('noiseFloorTime2dot4') <= 600) {
+                      if (
+                        !value ||
+                        (getFieldValue('noiseFloorTime2dot4') <= 600 &&
+                          getFieldValue('noiseFloorTime2dot4') >= 120)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('120 - 600 seconds'));
@@ -793,7 +802,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor time (s)"
+                  placeholder="Enter noise floor time (s) for 2.4GHz"
                   type="number"
                   min={120}
                   max={600}
@@ -805,7 +814,11 @@ const General = ({ data }) => {
                   { required: true, message: '120 - 600 seconds' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('noiseFloorTime5U') <= 600) {
+                      if (
+                        !value ||
+                        (getFieldValue('noiseFloorTime5U') <= 600 &&
+                          getFieldValue('noiseFloorTime5U') >= 120)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('120 - 600 seconds'));
@@ -815,7 +828,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor time (s)"
+                  placeholder="Enter noise floor time (s) for 5GHzU"
                   type="number"
                   min={120}
                   max={600}
@@ -827,7 +840,11 @@ const General = ({ data }) => {
                   { required: true, message: '120 - 600 seconds' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('noiseFloorTime5L') <= 600) {
+                      if (
+                        !value ||
+                        (getFieldValue('noiseFloorTime5L') <= 600 &&
+                          getFieldValue('noiseFloorTime5L') >= 120)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('120 - 600 seconds'));
@@ -837,7 +854,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter noise floor time (s)"
+                  placeholder="Enter noise floor time (s) for 5GHzL"
                   type="number"
                   min={120}
                   max={600}
@@ -873,7 +890,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('snr2dot4') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('snr2dot4') <= 100 && getFieldValue('snr2dot4') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -883,7 +903,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter SNR percentage drop"
+                  placeholder="Enter SNR percentage drop for 2.4GHz"
                   type="number"
                   min={0}
                   max={100}
@@ -895,7 +915,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('snr5U') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('snr5U') <= 100 && getFieldValue('snr5U') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -905,7 +928,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter SNR percentage drop"
+                  placeholder="Enter SNR percentage drop for 5GHzU"
                   type="number"
                   min={0}
                   max={100}
@@ -917,7 +940,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('snr5L') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('snr5L') <= 100 && getFieldValue('snr5L') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -927,7 +953,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter SNR percentage drop"
+                  placeholder="Enter SNR percentage drop for 5GHzL"
                   type="number"
                   min={0}
                   max={100}
@@ -943,7 +969,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('minLoad2dot4') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('minLoad2dot4') <= 100 && getFieldValue('minLoad2dot4') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -953,7 +982,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter minimum load %"
+                  placeholder="Enter minimum load % for 2.4GHz"
                   type="number"
                   min={0}
                   max={100}
@@ -965,7 +994,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('minLoad5U') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('minLoad5U') <= 100 && getFieldValue('minLoad5U') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -975,7 +1007,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter minimum load %"
+                  placeholder="Enter minimum load % for 5GHzU"
                   type="number"
                   min={0}
                   max={100}
@@ -987,7 +1019,10 @@ const General = ({ data }) => {
                   { required: true, message: '0 - 100%' },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('minLoad5L') <= 100) {
+                      if (
+                        !value ||
+                        (getFieldValue('minLoad5L') <= 100 && getFieldValue('minLoad5L') >= 0)
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('0 - 100%'));
@@ -997,7 +1032,7 @@ const General = ({ data }) => {
               >
                 <Input
                   className={styles.Field}
-                  placeholder="Enter minimum load %"
+                  placeholder="Enter minimum load % for 5GHzL"
                   type="number"
                   min={0}
                   max={100}

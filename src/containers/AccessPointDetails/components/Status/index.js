@@ -1,6 +1,7 @@
 import React from 'react';
-import { Card, Form } from 'antd';
+import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
+
 import styles from '../index.module.scss';
 
 const Status = ({ data }) => {
@@ -10,6 +11,33 @@ const Status = ({ data }) => {
     labelCol: { span: 5 },
     wrapperCol: { span: 10 },
   };
+
+  const columns = [
+    {
+      title: 'Severity	',
+      dataIndex: 'severity',
+      key: 'severity',
+    },
+    {
+      title: 'Type',
+      dataIndex: 'alarmCode',
+      key: 'type',
+    },
+    {
+      title: 'Message	',
+      dataIndex: ['details', 'message'],
+      key: 'security',
+    },
+    {
+      title: 'Timestamp',
+      dataIndex: 'createdTimestamp',
+      key: 'timestamp',
+      render: time => {
+        const date = new Date(parseInt(time, 10));
+        return date.toLocaleString();
+      },
+    },
+  ];
 
   return (
     <>
@@ -59,6 +87,9 @@ const Status = ({ data }) => {
               </span>
             </div>
           </Item>
+        </Card>
+        <Card title="Alarms">
+          <Table columns={columns} dataSource={data.alarms} pagination={false} />
         </Card>
       </Form>
     </>

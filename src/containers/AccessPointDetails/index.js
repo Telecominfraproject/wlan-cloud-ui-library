@@ -38,10 +38,13 @@ const AccessPointDetails = ({ data, osData, handleRefetch }) => {
       tab: 'Firmware',
     },
   ];
+
   return (
     <>
       <Link to="/network/access-points">
-        <Button className={styles.backButton}>BACK</Button>
+        <Button className={styles.backButton} name="back">
+          BACK
+        </Button>
       </Link>
       <Card
         title={
@@ -50,14 +53,16 @@ const AccessPointDetails = ({ data, osData, handleRefetch }) => {
             <div className={styles.InlineBlockDiv}>
               <div> NAME </div>
               <div> LAB TYPE </div>
-              <div> # OF ALARMS</div>
+              <div>
+                {data.alarmsCount} &nbsp;{data.alarmsCount === 1 ? 'Alarm' : 'Alarms'}
+              </div>
             </div>
           </div>
         }
         extra={
           <div>
             <div>
-              <strong> Model:</strong> &nbsp;
+              <strong> Model:</strong> &nbsp; {data.model}
             </div>
             <div>
               <strong>IP Address:</strong> &nbsp;
@@ -78,7 +83,7 @@ const AccessPointDetails = ({ data, osData, handleRefetch }) => {
       {tab === 'general' && <General data={data} />}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && <Location />}
-      {tab === 'os' && <OS data={data} osData={osData} handleRefetch={handleRefetch} />}
+      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefetch={handleRefetch} />}
       {tab === 'firmware' && <Firmware />}
     </>
   );

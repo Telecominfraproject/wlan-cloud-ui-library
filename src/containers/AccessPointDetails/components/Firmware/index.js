@@ -20,7 +20,6 @@ const Firmware = () => {
 
   const [confirmModal, setConfirmModal] = useState(false);
   const [rebootModal, setRebootModal] = useState(false);
-  const [version, setVersion] = useState(null);
 
   const status = 'current';
   const layout = {
@@ -28,19 +27,10 @@ const Firmware = () => {
     wrapperCol: { span: 10 },
   };
 
-  const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-      })
-      .catch(() => {});
-  };
-
   return (
     <Form {...layout} form={form}>
       <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
+        <Button className={styles.saveButton} type="primary">
           Save
         </Button>
       </div>
@@ -103,20 +93,16 @@ const Firmware = () => {
         </Item>
       </Card>
       <Card title="Upgrade">
-        <Item label="Target Version" name="target">
+        <Item label="Target Version" name="targetValue">
           <div className={styles.InlineEndDiv}>
             <Select
               className={styles.Field}
               placeholder="Select a version to apply..."
-              onChange={value => setVersion(value)}
+              defaultValue="default"
             >
               <Option value="default">Default</Option>
             </Select>
-            <Button
-              onClick={() => setConfirmModal(true)}
-              icon={<DownloadOutlined />}
-              disabled={version === null}
-            >
+            <Button onClick={() => setConfirmModal(true)} icon={<DownloadOutlined />}>
               Download, Flash, and Reboot
             </Button>
           </div>
