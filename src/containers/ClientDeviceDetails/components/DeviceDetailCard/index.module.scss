@@ -1,0 +1,89 @@
+.DeviceDetailCard {
+  :global(.ant-card-body) {
+    padding: 10px 20px;
+  }
+
+  .mainHeadWrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-size: 14px;
+
+    p {
+      line-height: 28px;
+      margin: 0;
+    }
+  }
+
+  .leftWrapContent {
+    p {
+      &:first-child {
+        font-size: 16px;
+      }
+    }
+  }
+  .rightWrapContent {
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      :global(.anticon) {
+        font-size: 17px;
+        color: #fff;
+        width: 27px;
+        text-align: right;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .mainHeadWrap {
+    p {
+      font-size: 12px;
+    }
+  }
+  .leftWrapContent {
+    p {
+      &:first-child {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .mainHeadWrap {
+    flex-direction: column;
+  }
+  .leftWrapContent {
+    width: 100%;
+    text-align: left;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .middleWrapContent {
+    width: 100%;
+    text-align: left;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .rightWrapContent {
+    width: 100%;
+    text-align: left;
+    p {
+      justify-content: flex-start;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mainHeadWrap {
+    p {
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+  }
+}
