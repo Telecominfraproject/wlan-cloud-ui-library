@@ -505,7 +505,7 @@ const mockProps = {
       ],
     },
   ],
-  handleRefetch: () => {},
+  handleRefresh: () => {},
 };
 
 describe('<AccessPointDetails />', () => {

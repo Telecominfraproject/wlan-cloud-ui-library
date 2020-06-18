@@ -95,14 +95,20 @@ const Firmware = () => {
       <Card title="Upgrade">
         <Item label="Target Version" name="targetValue">
           <div className={styles.InlineDiv}>
-            <Select
-              className={styles.Field}
-              placeholder="Select a version to apply..."
-              defaultValue="default"
+            <Item>
+              <Select
+                className={styles.Field}
+                placeholder="Select a version to apply..."
+                defaultValue="default"
+              >
+                <Option value="default">Default</Option>
+              </Select>
+            </Item>
+            <Button
+              style={{ flex: 0.25 }}
+              onClick={() => setConfirmModal(true)}
+              icon={<DownloadOutlined />}
             >
-              <Option value="default">Default</Option>
-            </Select>
-            <Button onClick={() => setConfirmModal(true)} icon={<DownloadOutlined />}>
               Download, Flash, and Reboot
             </Button>
           </div>

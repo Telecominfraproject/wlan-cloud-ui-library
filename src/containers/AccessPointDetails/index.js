@@ -13,7 +13,7 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const AccessPointDetails = ({ data, osData, handleRefetch }) => {
+const AccessPointDetails = ({ data, osData, handleRefresh }) => {
   const [tab, setTab] = useState('general');
 
   const tabList = [
@@ -83,7 +83,7 @@ const AccessPointDetails = ({ data, osData, handleRefetch }) => {
       {tab === 'general' && <General data={data} />}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && <Location />}
-      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefetch={handleRefetch} />}
+      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefetch={handleRefresh} />}
       {tab === 'firmware' && <Firmware />}
     </>
   );
@@ -92,7 +92,7 @@ const AccessPointDetails = ({ data, osData, handleRefetch }) => {
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Array),
   osData: PropTypes.instanceOf(Array),
-  handleRefetch: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func.isRequired,
 };
 
 AccessPointDetails.defaultProps = {

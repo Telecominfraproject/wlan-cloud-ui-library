@@ -18,7 +18,7 @@ import moment from 'moment';
 import SolidGauge from './components/SolidGauge';
 import styles from '../index.module.scss';
 
-const OS = ({ data, osData, handleRefetch }) => {
+const OS = ({ data, osData, handleRefresh }) => {
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 10 },
@@ -39,7 +39,7 @@ const OS = ({ data, osData, handleRefetch }) => {
   }, []);
 
   if (percent === 0) {
-    handleRefetch();
+    handleRefresh();
   }
 
   const convertDate = time => {
@@ -214,7 +214,7 @@ const OS = ({ data, osData, handleRefetch }) => {
 OS.propTypes = {
   osData: PropTypes.instanceOf(Array),
   data: PropTypes.instanceOf(Array),
-  handleRefetch: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func.isRequired,
 };
 
 OS.defaultProps = {
