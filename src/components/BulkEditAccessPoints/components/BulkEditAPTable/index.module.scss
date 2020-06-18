@@ -1,8 +1,24 @@
-.Field {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
+.editableCell {
+  position: relative;
 }
-.breadCrumbWrap {
-  margin-bottom: 25px;
+
+.editableCellValueWrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editableRow:hover .editableCellValueWrap {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 11px;
+}
+
+[data-theme='dark'] .editableRow:hover .editableCellValueWrap {
+  border: 1px solid #434343;
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }

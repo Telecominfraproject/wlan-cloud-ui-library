@@ -12,3 +12,4 @@ export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';
 export { default as Loading } from 'components/Loading';
 export { default as PopoverMenu } from 'components/LocationsTree/components/PopoverMenu';
+export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints';
