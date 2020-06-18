@@ -2,19 +2,12 @@
   background: #141414;
   border: 1px solid #434343;
   border-radius: 5px;
-  margin-right: 10px;
   margin-bottom: 5px;
-  min-width: 280px;
 }
 
-.Field:last-child {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  min-width: 280px;
+:global(.ant-form-item) {
+  flex: 1;
 }
-
 :global(.ant-checkbox) {
   margin-left: 10px;
 }
@@ -33,13 +26,20 @@
 
 .InlineDiv {
   display: flex;
-  justify-content: space-evenly;
-  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-left: 0 -10px;
+}
+
+.InlineDiv > * {
+  margin: 0 5px;
 }
 
 .InlineEndDiv {
   display: flex;
+  width: 100%;
   justify-content: flex-end;
+  margin-left: 8;
 }
 
 .Disclaimer {

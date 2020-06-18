@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+
 import { Card, Form, Input, Tooltip, Checkbox, Radio, Select, Button } from 'antd';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 import styles from '../index.module.scss';
 
-const SSIDForm = () => {
-  const { Item } = Form;
-  const { Option } = Select;
+const { Item } = Form;
+const { Option } = Select;
 
-  const [bridge, setBridge] = useState(true);
+const SSIDForm = () => {
+  const [bridge, setBridge] = useState(false);
   const [captivePortal, setCaptivePortal] = useState(false);
   const [vlan, setVlan] = useState(false);
   const [mode, setMode] = useState('');
@@ -28,19 +29,29 @@ const SSIDForm = () => {
           name="ssid"
           rules={[{ required: true, message: 'Please input your new SSID name' }]}
         >
-          <div className={styles.InlineDiv}>
-            <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
-            <Radio.Group>
-              <Radio value="hide">Hide SSID </Radio>
-              <Radio value="show">Show SSID</Radio>
-            </Radio.Group>
-          </div>
+          <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
+        </Item>
+
+        <Item
+          label="Broadcast SSID"
+          name="broadcastSSID"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your SSID visibility setting',
+            },
+          ]}
+        >
+          <Radio.Group>
+            <Radio value="showSSID">Show SSID</Radio>
+            <Radio value="hideSSID">Hide SSID</Radio>
+          </Radio.Group>
         </Item>
 
         <Item label="Bandwidth">
           <div className={styles.InlineDiv}>
             <Item
-              name="downstream"
+              name="downstreamBandwidth"
               rules={[
                 {
                   required: true,
@@ -65,16 +76,19 @@ const SSIDForm = () => {
                 type="number"
                 min={0}
                 max={100}
-                addonBefore="Down Mbps"
                 addonAfter={
-                  <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
-                    <InfoCircleOutlined />
-                  </Tooltip>
+                  <div>
+                    Down Mbps&nbsp;
+                    <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </div>
                 }
               />
             </Item>
+
             <Item
-              name="upstream"
+              name="upstreamBandwidth"
               rules={[
                 {
                   required: true,
@@ -99,18 +113,20 @@ const SSIDForm = () => {
                 type="number"
                 min={0}
                 max={100}
-                addonBefore="Up Mbps"
                 addonAfter={
-                  <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
-                    <InfoCircleOutlined />
-                  </Tooltip>
+                  <div>
+                    Up Mbps&nbsp;
+                    <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </div>
                 }
               />
             </Item>
           </div>
         </Item>
 
-        <Item name="checkbox-group" label="Use On">
+        <Item name="ssidUseOn" label="Use On">
           <Checkbox.Group>
             <Checkbox value="2.4Ghz">2.4 GHz</Checkbox>
 
@@ -120,6 +136,13 @@ const SSIDForm = () => {
       </Card>
       <Card title="Network Connectivity">
         <Item
+          name="mode"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your connectivity mode',
+            },
+          ]}
           label={
             <span>
               <Tooltip
@@ -156,6 +179,12 @@ const SSIDForm = () => {
         </Item>
 
         <Item
+          name="localAccess"
+          rules={[
+            {
+              message: 'Please select your local access configuration',
+            },
+          ]}
           label={
             <span>
               <Tooltip title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied.">
@@ -175,7 +204,16 @@ const SSIDForm = () => {
           )}
         </Item>
 
-        <Item label="Captive Portal" name="captive">
+        <Item
+          label="Captive Portal"
+          name="captive"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your captive portal setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="notPortal" onChange={() => setCaptivePortal(false)}>
               Do Not Use
@@ -205,7 +243,7 @@ const SSIDForm = () => {
       <Card title="Security and Encryption">
         <Item
           label="Mode"
-          name="mode"
+          name="securityMode"
           rules={[
             {
               required: true,
@@ -379,14 +417,16 @@ const SSIDForm = () => {
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
               <span>2.4GHz</span>
-              <span>5Ghz</span>
+              <span>5GHz</span>
+              <span>5GHzU</span>
+              <span>5GHzL</span>
             </div>
           </Item>
 
           {mode !== 'open' && (
             <Item
               label={
-                <span>
+                <span style={{ marginTop: '5px' }}>
                   <Tooltip title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly.">
                     <InfoCircleOutlined />
                   </Tooltip>
@@ -396,6 +436,12 @@ const SSIDForm = () => {
                 </span>
               }
               name="802.11r"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select your 802.11r setting',
+                },
+              ]}
             >
               <Select className={styles.Field}>
                 <Option value="auto">Auto</Option>
@@ -406,7 +452,16 @@ const SSIDForm = () => {
           )}
 
           {(mode === 'wpa2Personal' || mode === 'wpa2Enterprise') && (
-            <Item label="802.11w" name="802.11w">
+            <Item
+              label="802.11w"
+              name="802.11w"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select your 802.11w setting',
+                },
+              ]}
+            >
               <Select className={styles.Field}>
                 <Option value="auto">Auto</Option>
                 <Option value="enabled">Enabled</Option>
@@ -417,14 +472,60 @@ const SSIDForm = () => {
 
           <Item label="802.11k ">
             <div className={styles.InlineDiv}>
-              <Item name="802.11k2dot4GHz">
+              <Item
+                name="802.11k2dot4GHz"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11w setting for 2.4GHz',
+                  },
+                ]}
+              >
                 <Select className={styles.Field}>
                   <Option value="auto">Auto</Option>
                   <Option value="enabled">Enabled</Option>
                   <Option value="disabled">Disabled</Option>
                 </Select>
               </Item>
-              <Item name="802.11k5GHz">
+              <Item
+                name="802.11k5GHz"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11w setting for 5GHz',
+                  },
+                ]}
+              >
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item
+                name="802.11k5GHzU"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11w setting for 5GHzU',
+                  },
+                ]}
+              >
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item
+                name="802.11k5GHzL"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11w setting for 5GHzL',
+                  },
+                ]}
+              >
                 <Select className={styles.Field}>
                   <Option value="auto">Auto</Option>
                   <Option value="enabled">Enabled</Option>
@@ -435,14 +536,60 @@ const SSIDForm = () => {
           </Item>
           <Item label="802.11v ">
             <div className={styles.InlineDiv}>
-              <Item name="802.11v2dot4GHz">
+              <Item
+                name="802.11v2dot4GHz"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11v setting for 2.4GHz',
+                  },
+                ]}
+              >
                 <Select className={styles.Field}>
                   <Option value="auto">Auto</Option>
                   <Option value="enabled">Enabled</Option>
                   <Option value="disabled">Disabled</Option>
                 </Select>
               </Item>
-              <Item name="802.11v5GHz">
+              <Item
+                name="802.11v5GHz"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11v setting for 5GHz',
+                  },
+                ]}
+              >
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item
+                name="802.11v5GHzU"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11v setting for 5GHzU',
+                  },
+                ]}
+              >
+                <Select className={styles.Field}>
+                  <Option value="auto">Auto</Option>
+                  <Option value="enabled">Enabled</Option>
+                  <Option value="disabled">Disabled</Option>
+                </Select>
+              </Item>
+              <Item
+                name="802.11v5GHzL"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select your 802.11v setting for 5GHzL',
+                  },
+                ]}
+              >
                 <Select className={styles.Field}>
                   <Option value="auto">Auto</Option>
                   <Option value="enabled">Enabled</Option>
