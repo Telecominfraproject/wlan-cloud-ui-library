@@ -108,7 +108,7 @@ const OS = ({ data, osData, handleRefetch }) => {
           />
         </div>
 
-        <div className={styles.InlineBetweenDiv} style={{ marginTop: '15px' }}>
+        <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
           <SolidGauge data={cpu} title="Current CPU" />
           <SolidGauge data={memory} title="Current Free Memory" />
           <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
@@ -129,7 +129,7 @@ const OS = ({ data, osData, handleRefetch }) => {
               <XAxis.Title>Time</XAxis.Title>
             </XAxis>
 
-            <Legend verticalAlign="top">
+            <Legend>
               <Legend.Title />
             </Legend>
             <YAxis

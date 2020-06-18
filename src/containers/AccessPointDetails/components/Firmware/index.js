@@ -24,7 +24,7 @@ const Firmware = () => {
   const status = 'current';
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 10 },
+    wrapperCol: { span: 12 },
   };
 
   return (
@@ -94,7 +94,7 @@ const Firmware = () => {
       </Card>
       <Card title="Upgrade">
         <Item label="Target Version" name="targetValue">
-          <div className={styles.InlineEndDiv}>
+          <div className={styles.InlineDiv}>
             <Select
               className={styles.Field}
               placeholder="Select a version to apply..."

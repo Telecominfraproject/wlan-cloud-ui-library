@@ -14,10 +14,6 @@
   border-radius: 5px;
   width: 100%;
   margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0px;
-  }
 }
 
 :global(.ant-textarea) {
@@ -41,18 +37,30 @@
   border-radius: 5px;
   margin-right: 10px;
   margin-bottom: 5px;
-  min-width: 200px;
+  min-width: 150px;
 }
 
 .InlineDiv {
   display: flex;
   justify-content: space-around;
+  @media screen and (max-width: 1200px) {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+  }
+  overflow: hidden;
 }
 
 .InlineBetweenDiv {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media screen and (max-width: 1200px) {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+  }
+  overflow: hidden;
 }
 
 .saveButton {

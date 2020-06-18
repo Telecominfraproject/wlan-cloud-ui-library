@@ -14,7 +14,7 @@ const General = ({ data }) => {
 
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 10 },
+    wrapperCol: { span: 14 },
   };
 
   const handleOnSave = () => {
@@ -86,26 +86,22 @@ const General = ({ data }) => {
       title: 'Wireless Network	',
       dataIndex: 'name',
       key: 'network',
-      width: 200,
     },
     {
       title: 'SSID',
       dataIndex: ['details', 'ssid'],
       key: 'ssid',
-      width: 300,
     },
     {
       title: 'Security Mode	',
       dataIndex: ['details', 'secureMode'],
       key: 'security',
-      width: 300,
     },
     {
       title: 'Radio(s)',
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
       render: appliedRadios => appliedRadios.join(',  '),
-      width: 300,
     },
   ];
 
@@ -140,7 +136,14 @@ const General = ({ data }) => {
       <Card title="Profile">
         <Item label="Access Point Profile"> {data.profile.name}</Item>
         <Item label="Summary">
-          <Table dataSource={data.profile.childProfiles} columns={columns} pagination={false} />
+          <Item>
+            <Table
+              scroll={{ x: true }}
+              dataSource={data.profile.childProfiles}
+              columns={columns}
+              pagination={false}
+            />
+          </Item>
         </Item>
       </Card>
       <Collapse expandIconPosition="right">

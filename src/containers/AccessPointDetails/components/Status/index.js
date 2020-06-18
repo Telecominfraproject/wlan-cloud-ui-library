@@ -2,14 +2,14 @@ import React from 'react';
 import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
 
-import styles from '../index.module.scss';
+import styles from './index.module.scss';
 
 const Status = ({ data }) => {
   const { Item } = Form;
 
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 10 },
+    wrapperCol: { span: 12 },
   };
 
   const columns = [
@@ -89,7 +89,12 @@ const Status = ({ data }) => {
           </Item>
         </Card>
         <Card title="Alarms">
-          <Table columns={columns} dataSource={data.alarms} pagination={false} />
+          <Table
+            scroll={{ x: true }}
+            columns={columns}
+            dataSource={data.alarms}
+            pagination={false}
+          />
         </Card>
       </Form>
     </>

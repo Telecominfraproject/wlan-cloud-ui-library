@@ -10,7 +10,7 @@ const Location = () => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 10 },
+    wrapperCol: { span: 12 },
   };
 
   const handleOnSave = () => {
