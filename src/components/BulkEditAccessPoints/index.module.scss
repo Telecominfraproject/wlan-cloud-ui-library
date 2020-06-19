@@ -28,3 +28,13 @@
   color: #f7f7f7;
   background-color: #35a648;
 }
+.saveBtn:hover {
+  color: #35a648;
+  background-color: transparent;
+  border-color: #35a648;
+}
+.saveBtn:focus {
+  color: #35a648;
+  background: unset;
+  border-color: #35a648;
+}

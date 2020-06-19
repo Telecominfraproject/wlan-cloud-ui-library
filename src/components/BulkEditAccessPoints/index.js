@@ -43,7 +43,7 @@ const BulkEditAccessPoints = ({
             }}
             className={styles.saveBtn}
           >
-            Save Changes
+            SAVE CHANGES
           </Button>
         </div>
         <BulkEditAPTable
