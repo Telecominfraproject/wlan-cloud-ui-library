@@ -123,7 +123,7 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
       snrDrop,
       minLoad,
     };
-    const itemIndex = editedRows.findIndex(item => row.key === item.key);
+    const itemIndex = editedRows.findIndex(a => row.key === a.key);
     const tempRows = [...editedRows];
 
     if (itemIndex === -1) {

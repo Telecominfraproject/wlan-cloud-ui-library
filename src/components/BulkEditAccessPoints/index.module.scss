@@ -13,11 +13,11 @@
   }
 }
 .innerText {
-  font-family: Roboto;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
   font-size: 18px;
   height: auto;
   margin: 0px;
-  font: Regular 20px/24px Roboto;
   color: #ffffff;
   @media screen and (max-width: 575px) {
     line-height: 1.3;
