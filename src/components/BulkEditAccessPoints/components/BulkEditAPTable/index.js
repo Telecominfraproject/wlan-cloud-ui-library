@@ -137,7 +137,7 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
     }
 
     tempEditedRows.push(updatedRow);
-    const index = newData.findIndex(element => row.key === element.key);
+    const index = newData.findIndex(b => row.key === b.key);
     const element = newData[index];
     newData.splice(index, 1, { ...element, ...updatedRow });
     setTableData(newData);
