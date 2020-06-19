@@ -10,7 +10,6 @@ const DeviceDetailCard = ({
   macAddress,
   manufacturer,
   name,
-  hostName,
   ipAddress,
   radioType,
   signal,
@@ -23,7 +22,6 @@ const DeviceDetailCard = ({
       <div className={styles.mainHeadWrap}>
         <div className={styles.leftWrapContent}>
           <p>{name}</p>
-          <p>{hostName}</p>
           <p>{manufacturer}</p>
         </div>
 
@@ -58,7 +56,6 @@ DeviceDetailCard.propTypes = {
   macAddress: PropTypes.string,
   name: PropTypes.string,
   manufacturer: PropTypes.string,
-  hostName: PropTypes.string,
   ipAddress: PropTypes.string,
   radioType: PropTypes.string,
   signal: PropTypes.string,
@@ -71,7 +68,6 @@ DeviceDetailCard.defaultProps = {
   macAddress: '',
   name: '',
   manufacturer: '',
-  hostName: '',
   ipAddress: '',
   radioType: '',
   signal: '',

@@ -24,7 +24,7 @@ const ClientDeviceDetails = ({
   const {
     macAddress,
     ipAddress,
-    hostName,
+    hostname,
     ssid,
     radioType,
     signal,
@@ -92,10 +92,9 @@ const ClientDeviceDetails = ({
         <Button icon={<ReloadOutlined />} onClick={onRefresh} />
       </div>
       <DeviceDetailCard
-        name={name}
+        name={hostname}
         macAddress={macAddress}
         ipAddress={ipAddress}
-        hostName={hostName}
         radioType={radioType}
         signal={signal}
         dataTransferred={txBytes + rxBytes}
