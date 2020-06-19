@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
-import styles from '../index.module.scss';
+import styles from '../../index.module.scss';
 
 const { Option } = Select;
 const { Item } = Form;

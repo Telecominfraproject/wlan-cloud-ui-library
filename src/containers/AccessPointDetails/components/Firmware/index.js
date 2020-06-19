@@ -9,7 +9,7 @@ import {
   ExportOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import styles from '../index.module.scss';
+import styles from '../../index.module.scss';
 
 const { Option } = Select;
 const { TextArea } = Input;

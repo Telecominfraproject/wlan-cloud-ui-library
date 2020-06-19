@@ -40,7 +40,7 @@ const AccessPointDetails = ({ data, osData, handleRefresh }) => {
   ];
 
   return (
-    <>
+    <div className={styles.AccessPointDetails}>
       <Link to="/network/access-points">
         <Button className={styles.backButton} name="back">
           BACK
@@ -83,9 +83,9 @@ const AccessPointDetails = ({ data, osData, handleRefresh }) => {
       {tab === 'general' && <General data={data} />}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && <Location />}
-      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefetch={handleRefresh} />}
+      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefresh={handleRefresh} />}
       {tab === 'firmware' && <Firmware />}
-    </>
+    </div>
   );
 };
 

@@ -1,35 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Alert, Progress, Tooltip as AntdTooltip } from 'antd';
+import { Card, Alert, Progress, Tooltip as AntdTooltip } from 'antd';
 import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
-import Highcharts from 'highcharts/highstock';
-import {
-  HighchartsStockChart,
-  Chart,
-  withHighcharts,
-  XAxis,
-  YAxis,
-  Legend,
-  SplineSeries,
-  RangeSelector,
-  Tooltip,
-} from 'react-jsx-highstock';
-import moment from 'moment';
+
 import SolidGauge from './components/SolidGauge';
-import styles from '../index.module.scss';
+import HighChartGraph from './components/HighChartGraph';
+
+import Timer from './components/Timer';
+
+import styles from '../../index.module.scss';
 
 const OS = ({ data, osData, handleRefresh }) => {
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 10 },
-  };
-
-  const [date, setDate] = useState(new Date().toLocaleString());
   const [percent, setPercent] = useState(new Date().getSeconds());
 
   useEffect(() => {
     const secTimer = setInterval(() => {
-      setDate(new Date().toLocaleString());
       setPercent(new Date().getSeconds());
     }, 1000);
 
@@ -53,161 +38,63 @@ const OS = ({ data, osData, handleRefresh }) => {
     return hDisplay + mDisplay + sDisplay;
   };
 
-  const dateTimeLabelFormats = {
-    millisecond: '%l:%M:%S%P',
-    second: '%l:%M:%S%P',
-    minute: '%l:%M:%S%P',
-    hour: '%l:%M:%S%P',
-    day: '%a. %l:%M:%S%P',
-    week: '',
-    month: '',
-    year: '',
-  };
-
-  const memory = parseFloat(
-    (
-      (data.status.osPerformance.detailsJSON.avgFreeMemoryKb /
-        data.status.osPerformance.detailsJSON.totalAvailableMemoryKb) *
-      100
-    ).toFixed(2),
-    10
+  const memory = useMemo(
+    () =>
+      parseFloat(
+        (
+          (data.status.osPerformance.detailsJSON.avgFreeMemoryKb /
+            data.status.osPerformance.detailsJSON.totalAvailableMemoryKb) *
+          100
+        ).toFixed(2),
+        10
+      ),
+    [data]
   );
-  const cpu = parseFloat(data.status.osPerformance.detailsJSON.avgCpuUtilization.toFixed(2), 10);
-  const temperature = parseFloat(
-    data.status.osPerformance.detailsJSON.avgCpuTemperature.toFixed(2),
-    10
+
+  const cpu = useMemo(
+    () => parseFloat(data.status.osPerformance.detailsJSON.avgCpuUtilization.toFixed(2), 10),
+    [data]
+  );
+
+  const temperature = useMemo(
+    () => parseFloat(data.status.osPerformance.detailsJSON.avgCpuTemperature.toFixed(2), 10),
+    [data]
   );
 
   return (
-    <Form {...layout}>
-      <Card
-        title="Operating System Statistics"
-        extra={
-          <div className={styles.InLineDiv}>
-            <AntdTooltip title={`Refreshes in approx: ${60 - percent} seconds...`}>
-              <Progress type="circle" width={25} percent={percent * 1.67} showInfo={false} />
-            </AntdTooltip>
-            {moment(date).format('DD MMMM YYYY, hh:mm:ss A')}
-          </div>
-        }
-      >
-        <div className={styles.InlineBetweenDiv}>
-          <Alert
-            icon={<LineChartOutlined />}
-            message={`Up-time: ${convertDate(
-              data.status.osPerformance.detailsJSON.uptimeInSeconds
-            )}`}
-            type="info"
-            showIcon
-          />
-          <Alert
-            icon={<InfoCircleOutlined />}
-            message={`CAMI crashes since boot: ${data.status.osPerformance.detailsJSON.numCamiCrashes}`}
-            type="info"
-            showIcon
-          />
+    <Card
+      title="Operating System Statistics"
+      extra={
+        <div className={styles.InLineDiv}>
+          <AntdTooltip title={`Refreshes in approx: ${60 - percent} seconds...`}>
+            <Progress type="circle" width={25} percent={percent * 1.67} showInfo={false} />
+          </AntdTooltip>
+          <Timer />
         </div>
+      }
+    >
+      <div className={styles.InlineBetweenDiv}>
+        <Alert
+          icon={<LineChartOutlined />}
+          message={`Up-time: ${convertDate(data.status.osPerformance.detailsJSON.uptimeInSeconds)}`}
+          type="info"
+          showIcon
+        />
+        <Alert
+          icon={<InfoCircleOutlined />}
+          message={`CAMI crashes since boot: ${data.status.osPerformance.detailsJSON.numCamiCrashes}`}
+          type="info"
+          showIcon
+        />
+      </div>
 
-        <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
-          <SolidGauge data={cpu} title="Current CPU" />
-          <SolidGauge data={memory} title="Current Free Memory" />
-          <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
-        </div>
-
-        <div style={{ marginTop: '10px' }}>
-          <HighchartsStockChart>
-            <Chart zoomType="x" backgroundColor="#141414" />
-
-            <Tooltip split={false} shared useHTML />
-            <XAxis
-              tickPixelInterval={90}
-              dateTimeLabelFormats={dateTimeLabelFormats}
-              offset={20}
-              type="datetime"
-              showEmpty
-            >
-              <XAxis.Title>Time</XAxis.Title>
-            </XAxis>
-
-            <Legend>
-              <Legend.Title />
-            </Legend>
-            <YAxis
-              labels={{
-                style: { color: '#7cb5ec' },
-              }}
-            >
-              <YAxis.Title
-                style={{
-                  color: '#7cb5ec',
-                }}
-              >
-                CPU Usage (%)
-              </YAxis.Title>
-              <SplineSeries id="cpuCore1" name="CPU Core 1" data={osData.CpuUtilCore2} />
-              <SplineSeries id="cpuCore0" name="CPU Core 0" data={osData.CpuUtilCore1} />
-            </YAxis>
-
-            <YAxis
-              labels={{
-                style: { color: '#34AE29' },
-              }}
-              opposite
-            >
-              <YAxis.Title
-                style={{
-                  color: '#34AE29',
-                }}
-              >
-                Free Memory (MB)
-              </YAxis.Title>
-              <SplineSeries id="freeMemory" name="Free Memory" data={osData.FreeMemory} />
-            </YAxis>
-
-            <YAxis
-              labels={{
-                style: { color: '#f7a35c' },
-              }}
-            >
-              <YAxis.Title
-                style={{
-                  color: '#f7a35c',
-                }}
-              >
-                CPU Temperature (°C)
-              </YAxis.Title>
-              <SplineSeries id="cpuTemp" name="CPU Temperature" data={osData.CpuTemperature} />
-            </YAxis>
-
-            <RangeSelector
-              selected={1}
-              buttonSpacing={10}
-              inputBoxBorderColor="gray"
-              inputBoxWidth={120}
-              inputBoxHeight={18}
-              inputStyle={{ color: '#039', fontWeight: 'bold' }}
-              labelStyle={{ colod: 'silver', fontWeight: 'bold' }}
-              buttonTheme={{
-                fill: 'none',
-                r: '8',
-                states: { select: { fill: '#039', style: { color: 'white' } } },
-              }}
-            >
-              <RangeSelector.Button count={5} type="minute">
-                5 Min
-              </RangeSelector.Button>
-              <RangeSelector.Button count={7} type="hour">
-                1 Hr
-              </RangeSelector.Button>
-              <RangeSelector.Button count={1} type="day">
-                1 Day
-              </RangeSelector.Button>
-              <RangeSelector.Input inputEnabled={false} />
-            </RangeSelector>
-          </HighchartsStockChart>
-        </div>
-      </Card>
-    </Form>
+      <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
+        <SolidGauge data={cpu} title="Current CPU" />
+        <SolidGauge data={memory} title="Current Free Memory" />
+        <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
+      </div>
+      <HighChartGraph osData={osData} />
+    </Card>
   );
 };
 
@@ -221,4 +108,5 @@ OS.defaultProps = {
   osData: [],
   data: [],
 };
-export default withHighcharts(OS, Highcharts);
+
+export default OS;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
 
-import styles from '../index.module.scss';
+import styles from '../../index.module.scss';
 
 const Status = ({ data }) => {
   const { Item } = Form;

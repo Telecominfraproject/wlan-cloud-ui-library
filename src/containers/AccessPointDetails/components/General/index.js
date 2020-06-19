@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
-import styles from '../index.module.scss';
+import styles from '../../index.module.scss';
 
 const { Item } = Form;
 const { Option } = Select;
