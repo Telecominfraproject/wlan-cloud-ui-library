@@ -93,6 +93,7 @@ const AccessPointForm = () => {
                   },
                 }),
               ]}
+              style={{ marginTop: '10px' }}
               hasFeedback
             >
               <Input
@@ -114,6 +115,7 @@ const AccessPointForm = () => {
             <Item
               name="ntpServer"
               rules={[{ required: true, message: 'Please enter your NTP server' }]}
+              style={{ marginTop: '10px' }}
             >
               <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
@@ -145,6 +147,7 @@ const AccessPointForm = () => {
                     message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                   },
                 ]}
+                style={{ marginTop: '10px' }}
                 hasFeedback
               >
                 <Input className={styles.Field} placeholder="IP Address" />
@@ -199,6 +202,7 @@ const AccessPointForm = () => {
                       message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
                   ]}
+                  style={{ marginTop: '10px', marginBottom: '10px' }}
                   hasFeedback
                 >
                   <Input className={styles.Field} placeholder="IP Address" />
@@ -223,6 +227,7 @@ const AccessPointForm = () => {
                 >
                   <Input
                     className={styles.Field}
+                    style={{ marginTop: '10px', marginBottom: '10px' }}
                     placeholder="Enter NTP server"
                     type="number"
                     min={1}
@@ -275,7 +280,9 @@ const AccessPointForm = () => {
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Table columns={columns} pagination={false} />
-        <Button onClick={() => setAddModal(true)}> Create Wireless Networks</Button>
+        <Button style={{ marginTop: '10px' }} onClick={() => setAddModal(true)}>
+          Create Wireless Network
+        </Button>
       </Card>
     </>
   );

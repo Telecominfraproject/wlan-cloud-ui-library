@@ -88,7 +88,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
         <h1>Profiles</h1>
         <div className={styles.Buttons}>
           <Link to="/addprofile">
-            <Button> Add Profile </Button>
+            <Button className={styles.AddProfile}> Add Profile </Button>
           </Link>
           <Button icon={<ReloadOutlined />} onClick={onReload} />
         </div>

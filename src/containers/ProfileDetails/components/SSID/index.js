@@ -231,6 +231,7 @@ const SSIDForm = () => {
                   message: 'Please input your default captive ID',
                 },
               ]}
+              style={{ marginTop: '10px' }}
             >
               <Select className={styles.Field} placeholder="Select Captive Portal">
                 <Option value="default">Default</Option>
@@ -397,6 +398,7 @@ const SSIDForm = () => {
                   },
                 }),
               ]}
+              style={{ marginTop: '10px' }}
               hasFeedback
             >
               <Input
