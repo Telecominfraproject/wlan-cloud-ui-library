@@ -76,13 +76,13 @@ const Firmware = () => {
               title={
                 <ol>
                   <ul>
-                    <li>
+                    <li key="version">
                       <code>Version:</code>
                     </li>
-                    <li>
+                    <li key="releaseDate">
                       <code>Release Date:</code>
                     </li>
-                    <li>
+                    <li key="device">
                       <code>Device:</code>
                     </li>
                   </ul>

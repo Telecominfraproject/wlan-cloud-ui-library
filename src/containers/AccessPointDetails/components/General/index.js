@@ -17,58 +17,63 @@ const General = ({ data }) => {
       enableRadiois2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.radioAdminState,
       enableRadiois5GHzU: data.details.advancedRadioMap.is5GHzU.radioAdminState,
       enableRadiois5GHzL: data.details.advancedRadioMap.is5GHzL.radioAdminState,
-      beaconRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.beaconInterval,
-      beaconRadio5U: data.details.advancedRadioMap.is5GHzU.beaconInterval,
-      beaconRadio5L: data.details.advancedRadioMap.is5GHzL.beaconInterval,
+      beaconRadiois2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.beaconInterval,
+      beaconRadiois5GHzU: data.details.advancedRadioMap.is5GHzU.beaconInterval,
+      beaconRadiois5GHzL: data.details.advancedRadioMap.is5GHzL.beaconInterval,
       deauthAttackis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.deauthAttackDetection,
       deauthAttackis5GHzU: data.details.advancedRadioMap.is5GHzU.deauthAttackDetection,
       deauthAttackis5GHzL: data.details.advancedRadioMap.is5GHzL.deauthAttackDetection,
-      threshold2dot4: data.details.advancedRadioMap.is2dot4GHz.rtsCtsThreshold,
-      threshold5U: data.details.advancedRadioMap.is5GHzU.rtsCtsThreshold,
-      threshold5L: data.details.advancedRadioMap.is5GHzL.rtsCtsThreshold,
-      radio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioMode,
-      radio5U: data.details.advancedRadioMap.is5GHzU.radioMode,
-      radio5L: data.details.advancedRadioMap.is5GHzL.radioMode,
-      uapsd2dot4: data.details.advancedRadioMap.is2dot4GHz.uapsdState,
-      uapsd5U: data.details.advancedRadioMap.is5GHzU.uapsdState,
-      uapsd5L: data.details.advancedRadioMap.is5GHzL.uapsdState,
-      maxDevices2dot4: data.details.advancedRadioMap.is2dot4GHz.maxNumClients,
-      maxDevices5U: data.details.advancedRadioMap.is5GHzU.maxNumClients,
-      maxDevices5L: data.details.advancedRadioMap.is5GHzL.maxNumClients,
-      bandwidth2dot4: data.details.radioMap.is2dot4GHz.channelBandwidth,
-      bandwidth5U: data.details.radioMap.is5GHzU.channelBandwidth,
-      bandwidth5L: data.details.radioMap.is5GHzL.channelBandwidth,
-      perimeter2dot4: data.details.radioMap.is2dot4GHz.perimeterDetectionEnabled,
-      perimeter5U: data.details.radioMap.is5GHzU.perimeterDetectionEnabled,
-      perimeter5L: data.details.radioMap.is5GHzL.perimeterDetectionEnabled,
-      signal2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.minSignal,
-      signal5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.minSignal,
-      signal5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.minSignal,
-      aps2dot4: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.maxAps,
-      aps5U: data.details.radioMap.is5GHzU.neighbouringListApConfig.maxAps,
-      aps5L: data.details.radioMap.is5GHzL.neighbouringListApConfig.maxAps,
-      noiseFloor2dot4:
+      thresholdis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.rtsCtsThreshold,
+      thresholdis5GHzU: data.details.advancedRadioMap.is5GHzU.rtsCtsThreshold,
+      thresholdis5GHzL: data.details.advancedRadioMap.is5GHzL.rtsCtsThreshold,
+      radioModeis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.radioMode,
+      radioModeis5GHzU: data.details.advancedRadioMap.is5GHzU.radioMode,
+      radioModeis5GHzL: data.details.advancedRadioMap.is5GHzL.radioMode,
+      uapsdis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.uapsdState,
+      uapsdis5GHzU: data.details.advancedRadioMap.is5GHzU.uapsdState,
+      uapsdis5GHzL: data.details.advancedRadioMap.is5GHzL.uapsdState,
+      maxDevicesis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.maxNumClients,
+      maxDevicesis5GHzU: data.details.advancedRadioMap.is5GHzU.maxNumClients,
+      maxDevicesis5GHzL: data.details.advancedRadioMap.is5GHzL.maxNumClients,
+      bandwidthis2dot4GHz: data.details.radioMap.is2dot4GHz.channelBandwidth,
+      bandwidthis5GHzU: data.details.radioMap.is5GHzU.channelBandwidth,
+      bandwidthis5GHzL: data.details.radioMap.is5GHzL.channelBandwidth,
+      perimeterDetectionis2dot4GHz:
+        data.details.radioMap.is2dot4GHz.perimeterDetectionEnabled === true
+          ? 'enabled'
+          : 'disabled',
+      perimeterDetectionis5GHzU:
+        data.details.radioMap.is5GHzU.perimeterDetectionEnabled === true ? 'enabled' : 'disabled',
+      perimeterDetectionis5GHzL:
+        data.details.radioMap.is5GHzL.perimeterDetectionEnabled === true ? 'enabled' : 'disabled',
+      signalis2dot4GHz: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.minSignal,
+      signalis5GHzU: data.details.radioMap.is5GHzU.neighbouringListApConfig.minSignal,
+      signalis5GHzL: data.details.radioMap.is5GHzL.neighbouringListApConfig.minSignal,
+      apsis2dot4GHz: data.details.radioMap.is2dot4GHz.neighbouringListApConfig.maxAps,
+      apsis5GHzU: data.details.radioMap.is5GHzU.neighbouringListApConfig.maxAps,
+      apsis5GHzL: data.details.radioMap.is5GHzL.neighbouringListApConfig.maxAps,
+      noiseFlooris2dot4GHz:
         data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.noiseFloorThresholdInDB,
-      noiseFloor5U:
+      noiseFlooris5GHzU:
         data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdInDB,
-      noiseFloor5L:
+      noiseFlooris5GHzL:
         data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdInDB,
-      noiseFloorTime2dot4:
+      noiseFloorTimeis2dot4GHz:
         data.details.advancedRadioMap.is2dot4GHz.channelHopSettings
           .noiseFloorThresholdTimeInSeconds,
-      noiseFloorTime5U:
+      noiseFloorTimeis5GHzU:
         data.details.advancedRadioMap.is5GHzU.channelHopSettings.noiseFloorThresholdTimeInSeconds,
-      noiseFloorTime5L:
+      noiseFloorTimeis5GHzL:
         data.details.advancedRadioMap.is5GHzL.channelHopSettings.noiseFloorThresholdTimeInSeconds,
-      dfs2dot4: data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.obssHopMode,
-      dfs5U: data.details.advancedRadioMap.is5GHzU.channelHopSettings.obssHopMode,
-      dfs5L: data.details.advancedRadioMap.is5GHzL.channelHopSettings.obssHopMode,
-      snr2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.dropInSnrPercentage,
-      snr5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.dropInSnrPercentage,
-      snr5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.dropInSnrPercentage,
-      minLoad2dot4: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.minLoadFactor,
-      minLoad5U: data.details.advancedRadioMap.is5GHzU.bestApSettings.minLoadFactor,
-      minLoad5L: data.details.advancedRadioMap.is5GHzL.bestApSettings.minLoadFactor,
+      dfsis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.channelHopSettings.obssHopMode,
+      dfsis5GHzU: data.details.advancedRadioMap.is5GHzU.channelHopSettings.obssHopMode,
+      dfsis5GHzL: data.details.advancedRadioMap.is5GHzL.channelHopSettings.obssHopMode,
+      snris2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.dropInSnrPercentage,
+      snris5GHzU: data.details.advancedRadioMap.is5GHzU.bestApSettings.dropInSnrPercentage,
+      snris5GHzL: data.details.advancedRadioMap.is5GHzL.bestApSettings.dropInSnrPercentage,
+      minLoadis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.bestApSettings.minLoadFactor,
+      minLoadis5GHzU: data.details.advancedRadioMap.is5GHzU.bestApSettings.minLoadFactor,
+      minLoadis5GHzL: data.details.advancedRadioMap.is5GHzL.bestApSettings.minLoadFactor,
     });
   }, []);
 
@@ -102,61 +107,66 @@ const General = ({ data }) => {
   };
 
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        console.log(values);
-      })
-      .catch(() => {});
+    form.validateFields().catch(() => {});
   };
 
-  const renderSpanItem = (label, obj, dataIndex) => {
-    if (typeof dataIndex !== 'undefined') {
-      return (
-        <Item label={label} colon={false}>
-          <div className={styles.InlineDiv}>
-            {Object.keys(obj).map(i => (
-              <span key={i}>{obj[i][dataIndex]}</span>
-            ))}
-          </div>
-        </Item>
-      );
-    }
-    return (
-      <Item label={label} colon={false}>
-        <div className={styles.InlineDiv}>
-          {Object.keys(obj).map(i => (
-            <span key={i}>{obj[i]}</span>
-          ))}
-        </div>
-      </Item>
-    );
-  };
+  const renderItem = (label, obj, dataIndex, renderInput, dropdown, min, max, error) => (
+    <Item label={label} colon={false}>
+      <div className={styles.InlineDiv}>
+        {Object.keys(obj).map(i =>
+          renderInput ? (
+            renderInput(dataIndex, i, label, dropdown, min, max, error)
+          ) : (
+            <span key={i} className={styles.spanStyle}>
+              {dataIndex ? obj[i][dataIndex] : obj[i]}
+            </span>
+          )
+        )}
+      </div>
+    </Item>
+  );
 
-  const renderOptionItem = (label, itemName, name, obj) => {
-    return (
-      <Item label={label} colon={false}>
-        <div className={styles.InlineDiv}>
-          {Object.keys(obj).map(i => (
-            <Item
-              name={name + i}
-              rules={[
-                {
-                  required: true,
-                  message: `Please enter the ${itemName} for ${name + i}.`,
-                },
-              ]}
-            >
-              <Select className={styles.Field}>
-                <Option value="enabled">enabled</Option>
-                <Option value="disabled">disabled</Option>
-              </Select>
-            </Item>
-          ))}
-        </div>
-      </Item>
-    );
-  };
+  const renderOptionItem = (dataIndex, key, label, dropdown) => (
+    <Item
+      name={dataIndex + key}
+      rules={[
+        {
+          required: true,
+          message: `Enter ${label} for ${key}`,
+        },
+      ]}
+    >
+      {dropdown}
+    </Item>
+  );
+
+  const renderInputItem = (dataIndex, key, label, min, max, error) => (
+    <Item
+      name={dataIndex + key}
+      rules={[
+        { required: true, message: error },
+        ({ getFieldValue }) => ({
+          validator(_rule, value) {
+            if (
+              !value ||
+              (getFieldValue(dataIndex + key) <= max && getFieldValue(dataIndex + key) >= min)
+            ) {
+              return Promise.resolve();
+            }
+            return Promise.reject(new Error(error));
+          },
+        }),
+      ]}
+    >
+      <Input
+        className={styles.Field}
+        placeholder={`Enter ${label} for ${key}`}
+        type="number"
+        min={min}
+        max={max}
+      />
+    </Item>
+  );
 
   return (
     <Form {...layout} form={form}>
@@ -172,7 +182,7 @@ const General = ({ data }) => {
           rules={[
             {
               required: true,
-              message: 'Please enter the Access Point name.',
+              message: 'Enter the Access Point name',
             },
           ]}
         >
@@ -191,6 +201,7 @@ const General = ({ data }) => {
         <Item label="Summary">
           <Item>
             <Table
+              rowKey="id"
               scroll={{ x: true }}
               dataSource={data.profile.childProfiles}
               columns={columns}
@@ -201,833 +212,210 @@ const General = ({ data }) => {
       </Card>
       <Collapse expandIconPosition="right">
         <Panel header="Advanced Settings" name="settings">
-          {renderSpanItem(' ', data.details.radioMap, 'radioType')}
+          {renderItem(' ', data.details.radioMap, 'radioType')}
 
           <p>Radio Specific Parameters:</p>
 
-          {renderOptionItem(
+          {renderItem(
             'Enable Radio',
-            'radio value',
+            data.details.advancedRadioMap,
             'enableRadio',
-            data.details.advancedRadioMap
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
           )}
 
-          <Item
-            label={
-              <span>
-                <Tooltip title="TU (Time Unit) is 1.024ms ">
-                  <InfoCircleOutlined />
-                </Tooltip>
-                &nbsp; Beacon Interval
-              </span>
-            }
-          >
-            <div className={styles.InlineDiv}>
-              <Item name="beaconRadio2dot4">
-                <Select className={styles.Field}>
-                  <Option value={100}>100</Option>
-                  <Option value={200}>200</Option>
-                  <Option value={300}>300</Option>
-                  <Option value={400}>400</Option>
-                  <Option value={500}>500</Option>
-                </Select>
-              </Item>
-              <Item name="beaconRadio5U">
-                <Select className={styles.Field}>
-                  <Option value={100}>100</Option>
-                  <Option value={200}>200</Option>
-                  <Option value={300}>300</Option>
-                  <Option value={400}>400</Option>
-                  <Option value={500}>500</Option>
-                </Select>
-              </Item>
-              <Item name="beaconRadio5L">
-                <Select className={styles.Field}>
-                  <Option value={100}>100</Option>
-                  <Option value={200}>200</Option>
-                  <Option value={300}>300</Option>
-                  <Option value={400}>400</Option>
-                  <Option value={500}>500</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
-          {renderOptionItem(
+          {renderItem(
+            <span>
+              <Tooltip title="TU (Time Unit) is 1.024ms ">
+                <InfoCircleOutlined />
+              </Tooltip>
+              &nbsp; Beacon Interval
+            </span>,
+            data.details.advancedRadioMap,
+            'beaconRadio',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value={100}>100</Option>
+              <Option value={200}>200</Option>
+              <Option value={300}>300</Option>
+              <Option value={400}>400</Option>
+              <Option value={500}>500</Option>
+            </Select>
+          )}
+
+          {renderItem(
             'Deauth Attack Detection',
-            'detection value',
+            data.details.advancedRadioMap,
             'deauthAttack',
-            data.details.advancedRadioMap
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
           )}
-          <Item label="RTS/CTS threshold">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="threshold2dot4"
-                rules={[
-                  { required: true, message: 'Enter the RTS/CTS threshold' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('threshold2dot4') > 0) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('Enter the RTS/CTS threshold'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter threshold for 2.4GHz"
-                  type="number"
-                />
-              </Item>
-              <Item
-                name="threshold5U"
-                rules={[
-                  { required: true, message: 'Enter the RTS/CTS threshold' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('threshold5U') > 0) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('Enter the RTS/CTS threshold'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter threshold for 5GHzU"
-                  type="number"
-                />
-              </Item>
-              <Item
-                name="threshold5L"
-                rules={[
-                  { required: true, message: 'Enter the RTS/CTS threshold' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('threshold5L') > 0) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('Enter the RTS/CTS threshold'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter threshold for 5GHzL"
-                  type="number"
-                />
-              </Item>
-            </div>
-          </Item>
-          <Item label="Radio Mode">
-            <div className={styles.InlineDiv}>
-              <Item name="radio2dot4">
-                <Select className={styles.Field}>
-                  <Option value="BGN">BGN</Option>
-                  <Option value="N">N</Option>
-                </Select>
-              </Item>
-              <Item name="radio5U">
-                <Select className={styles.Field}>
-                  <Option value="N">N</Option>
-                  <Option value="AC">AC</Option>
-                </Select>
-              </Item>
-              <Item name="radio5L">
-                <Select className={styles.Field}>
-                  <Option value="N">N</Option>
-                  <Option value="AC">AC</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
-          <Item label="Mimo Mode">
-            <div className={styles.InlineDiv}>
-              <span>{data.details.advancedRadioMap.is2dot4GHz.mimoMode}</span>
-              <span>{data.details.advancedRadioMap.is5GHzU.mimoMode}</span>
-              <span>{data.details.advancedRadioMap.is5GHzL.mimoMode}</span>
-            </div>
-          </Item>
-          <Item label="UAPSD State">
-            <div className={styles.InlineDiv}>
-              <Item name="uapsd2dot4">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="uapsd5U">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="uapsd5L">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
-          <Item label="SMPS Power Save Mode">
-            <div className={styles.InlineDiv}>
-              <Item name="smps2dot4">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="smps5U">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="smps5L">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
-          <Item label="Maximum Devices">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="maxDevices2dot4"
-                rules={[
-                  { required: true, message: '0-100' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('maxDevices2dot4') <= 100 &&
-                          getFieldValue('maxDevices2dot4') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error('Maximum devices can be a number between 0 and 100.')
-                      );
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum devices for 2.4 GHz"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="maxDevices5U"
-                rules={[
-                  { required: true, message: '0-100' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('maxDevices5U') <= 100 && getFieldValue('maxDevices5U') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error('Maximum devices can be a number between 0 and 100.')
-                      );
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum devices for 5GHzU"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="maxDevices5L"
-                rules={[
-                  { required: true, message: '0-100' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('maxDevices5L') <= 100 && getFieldValue('maxDevices5L') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error('Maximum devices can be a number between 0 and 100.')
-                      );
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum devices for 5GHzL"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-            </div>
-          </Item>
 
-          {renderSpanItem('Active Channel', data.details.radioMap, 'activeChannel')}
+          {renderItem(
+            'RTS/CTS threshold',
+            data.details.advancedRadioMap,
+            'threshold',
+            renderInputItem,
+            0,
+            65535,
+            '0 - 65535 (Bytes)'
+          )}
 
-          {renderSpanItem('Backup Channel', data.details.radioMap, 'backupChannelNumber')}
+          {renderItem(
+            'Radio Mode',
+            data.details.advancedRadioMap,
+            'radioMode',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="BGN">BGN</Option>
+              <Option value="N">N</Option>
+              <Option value="AC">AC</Option>
+            </Select>
+          )}
 
-          <Item label="Channel Bandwidth">
-            <div className={styles.InlineDiv}>
-              <Item name="bandwidth2dot4">
-                <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                </Select>
-              </Item>
-              <Item name="bandwidth5U">
-                <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                  <Option value="40MHz">40MHz</Option>
-                  <Option value="80MHz">80MHz</Option>
-                </Select>
-              </Item>
-              <Item name="bandwidth5L">
-                <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                  <Option value="40MHz">40MHz</Option>
-                  <Option value="80MHz">80MHz</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
+          {renderItem('Mimo Mode', data.details.advancedRadioMap, 'mimoMode')}
+
+          {renderItem(
+            'UAPSD',
+            data.details.advancedRadioMap,
+            'uapsd',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
+          )}
+
+          {renderItem(
+            'SMPS Power Save Mode',
+            data.details.advancedRadioMap,
+            'smps',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
+          )}
+
+          {renderItem(
+            'Maximum Devices',
+            data.details.advancedRadioMap,
+            'maxDevices',
+            renderInputItem,
+            0,
+            100,
+            '0 - 100'
+          )}
+
+          {renderItem('Active Channel', data.details.radioMap, 'activeChannel')}
+
+          {renderItem('Backup Channel', data.details.radioMap, 'backupChannelNumber')}
+
+          {renderItem(
+            'Channel Bandwidth',
+            data.details.advancedRadioMap,
+            'bandwidth',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="20MHz">20MHz</Option>
+              <Option value="40MHz">40MHz</Option>
+              <Option value="80MHz">80MHz</Option>
+            </Select>
+          )}
+
           <p>Radio Resource Management:</p>
-          <Item label="Perimeter Detection">
-            <div className={styles.InlineDiv}>
-              <Item name="perimeter2dot4">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="perimeter5U">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="perimeter5L">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
+
+          {renderItem(
+            'Perimeter Detection',
+            data.details.advancedRadioMap,
+            'perimeterDetection',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
+          )}
           <p>Neighbouring AP List:</p>
-          <Item label="Minimum Signal">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="signal2dot4"
-                rules={[
-                  { required: true, message: '-90 - -50' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('signal2dot4') <= -50 && getFieldValue('signal2dot4') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -50 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimal signal (dB) for 2.4GHz"
-                  type="number"
-                  min={-90}
-                  max={-50}
-                />
-              </Item>
-              <Item
-                name="signal5U"
-                rules={[
-                  { required: true, message: '-90 - -50 dB' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('signal5U') <= -50 && getFieldValue('signal5U') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -50 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimal signal (dB) for 5GHzU"
-                  type="number"
-                  min={-90}
-                  max={-50}
-                />
-              </Item>
-              <Item
-                name="signal5L"
-                rules={[
-                  { required: true, message: '-90 - -50 dB' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('signal5L') <= -50 && getFieldValue('signal5L') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -50 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimal signal (dB) for 5GHzL"
-                  type="number"
-                  min={-90}
-                  max={-50}
-                />
-              </Item>
-            </div>
-          </Item>
-          <Item label="Maximum APs">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="aps2dot4"
-                rules={[
-                  { required: true, message: '0 - 512 APs' },
 
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('aps2dot4') <= 512) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 512 APs'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum number of neighbours for 2.4GHz"
-                  type="number"
-                  min={0}
-                  max={512}
-                />
-              </Item>
-              <Item
-                name="aps5U"
-                rules={[
-                  { required: true, message: '0 - 512 APs' },
+          {renderItem(
+            'Minimum Signal',
+            data.details.advancedRadioMap,
+            'signal',
+            renderInputItem,
+            -90,
+            -50,
+            '-90 - -50 dB'
+          )}
 
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('aps5U') <= 512) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 512 APs'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum number of neighbours for 5GHzU"
-                  type="number"
-                  min={0}
-                  max={512}
-                />
-              </Item>
-              <Item
-                name="aps5L"
-                rules={[
-                  { required: true, message: '0 - 512 APs' },
+          {renderItem(
+            'Maximum APs',
+            data.details.advancedRadioMap,
+            'aps',
+            renderInputItem,
+            0,
+            512,
+            '0 - 512 APs'
+          )}
 
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue('aps5L') <= 512) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 512 APs'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter maximum number of neighbours for 5GHzL"
-                  type="number"
-                  min={0}
-                  max={512}
-                />
-              </Item>
-            </div>
-          </Item>
           <p>Channel Hop Configuration:</p>
-          <Item label="Noise Floor (dB)">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="noiseFloor2dot4"
-                rules={[
-                  { required: true, message: '-90 - -10 dB' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloor2dot4') <= -10 &&
-                          getFieldValue('noiseFloor2dot4') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -10 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor (dB) for 2.4GHz"
-                  type="number"
-                  min={-90}
-                  max={-10}
-                />
-              </Item>
-              <Item
-                name="noiseFloor5U"
-                rules={[
-                  { required: true, message: '-90 - -10 dB' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloor5U') <= -10 &&
-                          getFieldValue('noiseFloor5U') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -10 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor (dB) for 5GHzU"
-                  type="number"
-                  min={-90}
-                  max={-10}
-                />
-              </Item>
-              <Item
-                name="noiseFloor5L"
-                rules={[
-                  { required: true, message: '-90 - -10 dB' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloor5L') <= -10 &&
-                          getFieldValue('noiseFloor5L') >= -90)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('-90 - -10 dB'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor (dB) for 5GHzL"
-                  type="number"
-                  min={-90}
-                  max={-10}
-                />
-              </Item>
-            </div>
-          </Item>
-          <Item label="Noise Floor Time (secs)">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="noiseFloorTime2dot4"
-                rules={[
-                  { required: true, message: '120 - 600 seconds' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloorTime2dot4') <= 600 &&
-                          getFieldValue('noiseFloorTime2dot4') >= 120)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('120 - 600 seconds'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor time (s) for 2.4GHz"
-                  type="number"
-                  min={120}
-                  max={600}
-                />
-              </Item>
-              <Item
-                name="noiseFloorTime5U"
-                rules={[
-                  { required: true, message: '120 - 600 seconds' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloorTime5U') <= 600 &&
-                          getFieldValue('noiseFloorTime5U') >= 120)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('120 - 600 seconds'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor time (s) for 5GHzU"
-                  type="number"
-                  min={120}
-                  max={600}
-                />
-              </Item>
-              <Item
-                name="noiseFloorTime5L"
-                rules={[
-                  { required: true, message: '120 - 600 seconds' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('noiseFloorTime5L') <= 600 &&
-                          getFieldValue('noiseFloorTime5L') >= 120)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('120 - 600 seconds'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter noise floor time (s) for 5GHzL"
-                  type="number"
-                  min={120}
-                  max={600}
-                />
-              </Item>
-            </div>
-          </Item>
-          <Item label="DFS on/off">
-            <div className={styles.InlineDiv}>
-              <Item name="dfs2dot4">
-                <Select className={styles.Field}>
-                  <Option value="default">default</Option>
-                </Select>
-              </Item>
-              <Item name="dfs5U">
-                <Select className={styles.Field}>
-                  <Option value="default">default</Option>
-                </Select>
-              </Item>
-              <Item name="dfs5L">
-                <Select className={styles.Field}>
-                  <Option value="default">default</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
+
+          {renderItem(
+            'Noise Floor (db)',
+            data.details.advancedRadioMap,
+            'noiseFloor',
+            renderInputItem,
+            -90,
+            -10,
+            '-90 - -10 dB'
+          )}
+          {renderItem(
+            'Noise Floor Time (secs)',
+            data.details.advancedRadioMap,
+            'noiseFloorTime',
+            renderInputItem,
+            120,
+            600,
+            '120 - 600 seconds'
+          )}
+
+          {renderItem(
+            'DFS on/off',
+            data.details.advancedRadioMap,
+            'dfs',
+            renderOptionItem,
+            <Select className={styles.Field}>
+              <Option value="enabled">enabled</Option>
+              <Option value="disabled">disabled</Option>
+            </Select>
+          )}
+
           <p>Steering Threshold:</p>
-          <Item label="SNR (% Drop)">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="snr2dot4"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('snr2dot4') <= 100 && getFieldValue('snr2dot4') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter SNR percentage drop for 2.4GHz"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="snr5U"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('snr5U') <= 100 && getFieldValue('snr5U') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter SNR percentage drop for 5GHzU"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="snr5L"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('snr5L') <= 100 && getFieldValue('snr5L') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter SNR percentage drop for 5GHzL"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-            </div>
-          </Item>
-          <Item label="Min Load (%)">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="minLoad2dot4"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('minLoad2dot4') <= 100 && getFieldValue('minLoad2dot4') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimum load % for 2.4GHz"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="minLoad5U"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('minLoad5U') <= 100 && getFieldValue('minLoad5U') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimum load % for 5GHzU"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-              <Item
-                name="minLoad5L"
-                rules={[
-                  { required: true, message: '0 - 100%' },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (
-                        !value ||
-                        (getFieldValue('minLoad5L') <= 100 && getFieldValue('minLoad5L') >= 0)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('0 - 100%'));
-                    },
-                  }),
-                ]}
-              >
-                <Input
-                  className={styles.Field}
-                  placeholder="Enter minimum load % for 5GHzL"
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Item>
-            </div>
-          </Item>
+
+          {renderItem(
+            'SNR (% Drop)',
+            data.details.advancedRadioMap,
+            'snr',
+            renderInputItem,
+            0,
+            100,
+            '0 - 100%'
+          )}
+
+          {renderItem(
+            'Min Load (%)',
+            data.details.advancedRadioMap,
+            'minLoad',
+            renderInputItem,
+            0,
+            100,
+            '0 - 100%'
+          )}
         </Panel>
       </Collapse>
     </Form>

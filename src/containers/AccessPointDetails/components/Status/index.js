@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import styles from '../../index.module.scss';
 
-const Status = ({ data }) => {
-  const { Item } = Form;
+const { Item } = Form;
 
+const Status = ({ data }) => {
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 12 },
@@ -39,28 +39,18 @@ const Status = ({ data }) => {
     },
   ];
 
-  const renderSpanItem = (label, obj, dataIndex) => {
-    if (typeof dataIndex !== 'undefined') {
-      return (
-        <Item label={label} colon={false}>
-          <div className={styles.InlineDiv}>
-            {Object.keys(obj).map(i => (
-              <span key={i}>{obj[i][dataIndex]}</span>
-            ))}
-          </div>
-        </Item>
-      );
-    }
-    return (
-      <Item label={label} colon={false}>
-        <div className={styles.InlineDiv}>
-          {Object.keys(obj).map(i => (
-            <span key={i}>{obj[i]}</span>
-          ))}
-        </div>
-      </Item>
-    );
-  };
+  const renderSpanItem = (label, obj, dataIndex) => (
+    <Item label={label} colon={false}>
+      <div className={styles.InlineDiv}>
+        {Object.keys(obj).map(i => (
+          <span key={i} className={styles.spanStyle}>
+            {dataIndex ? obj[i][dataIndex] : obj[i]}
+          </span>
+        ))}
+      </div>
+    </Item>
+  );
+
   return (
     <>
       <Form {...layout}>
@@ -81,6 +71,7 @@ const Status = ({ data }) => {
         </Card>
         <Card title="Alarms">
           <Table
+            rowKey="id"
             scroll={{ x: true }}
             columns={columns}
             dataSource={data.alarms}

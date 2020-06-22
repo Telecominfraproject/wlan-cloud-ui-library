@@ -612,7 +612,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Please enter the Access Point name.')).toBeVisible();
+      expect(getByText('Enter the Access Point name')).toBeVisible();
     });
   });
 
@@ -629,7 +629,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByRole('button', { name: /settings/i }));
   });
 
-  it('RTS/CTS threshold value must be positive for the 2.4GHz setting', async () => {
+  it('RTS/CTS threshold value must be positive for the is2dot4GHz setting', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -641,17 +641,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter threshold for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is2dot4GHz'), {
       target: { value: -101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Enter the RTS/CTS threshold')).toBeVisible();
+      expect(getByText('0 - 65535 (Bytes)')).toBeVisible();
     });
   });
 
-  it('RTS/CTS threshold value must be positive for the 5GHzU setting', async () => {
+  it('RTS/CTS threshold value must be positive for the is5GHzU setting', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -663,17 +663,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter threshold for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is5GHzU'), {
       target: { value: -101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Enter the RTS/CTS threshold')).toBeVisible();
+      expect(getByText('0 - 65535 (Bytes)')).toBeVisible();
     });
   });
 
-  it('RTS/CTS threshold value must be positive for the 5GHzL setting', async () => {
+  it('RTS/CTS threshold value must be positive for the is5GHzL setting', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -685,17 +685,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter threshold for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is5GHzL'), {
       target: { value: -101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Enter the RTS/CTS threshold')).toBeVisible();
+      expect(getByText('0 - 65535 (Bytes)')).toBeVisible();
     });
   });
 
-  it('error if the maximum device exceeds 100 for the 2.4GHz setting ', async () => {
+  it('error if the maximum device exceeds 100 for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -707,17 +707,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum devices for 2.4 GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is2dot4GHz'), {
       target: { value: -1 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Maximum devices can be a number between 0 and 100.')).toBeVisible();
+      expect(getByText('0 - 100')).toBeVisible();
     });
   });
 
-  it('error if the maximum device exceeds 100 for the 5GHzU setting ', async () => {
+  it('error if the maximum device exceeds 100 for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -729,17 +729,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum devices for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is5GHzU'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Maximum devices can be a number between 0 and 100.')).toBeVisible();
+      expect(getByText('0 - 100')).toBeVisible();
     });
   });
 
-  it('error if the maximum device exceeds 100 for the 5GHzL setting ', async () => {
+  it('error if the maximum device exceeds 100 for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -751,17 +751,17 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum devices for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is5GHzL'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Maximum devices can be a number between 0 and 100.')).toBeVisible();
+      expect(getByText('0 - 100')).toBeVisible();
     });
   });
 
-  it('error if the minimum signal exceeds bounds for the 2.4GHz setting ', async () => {
+  it('error if the minimum signal exceeds bounds for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -773,29 +773,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter minimal signal (dB) for 2.4GHz'), {
-      target: { value: 101 },
-    });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('-90 - -50 dB')).toBeVisible();
-    });
-  });
-
-  it('error if the minimum signal exceeds bounds for the 5GHzU setting ', async () => {
-    const history = createMemoryHistory();
-    const { getByText, getByRole, getByPlaceholderText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-    fireEvent.click(getByRole('tab', { name: /general/i }));
-    const paragraph = getByText('Identity');
-    expect(paragraph).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter minimal signal (dB) for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Minimum Signal for is2dot4GHz'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -805,7 +783,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum signal exceeds bounds for the 5GHzL setting ', async () => {
+  it('error if the minimum signal exceeds bounds for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -817,7 +795,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter minimal signal (dB) for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Minimum Signal for is5GHzU'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -827,7 +805,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum number of neighbours exceeds 512 for the 2.4GHz setting ', async () => {
+  it('error if the minimum signal exceeds bounds for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -839,7 +817,29 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum number of neighbours for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Minimum Signal for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-90 - -50 dB')).toBeVisible();
+    });
+  });
+
+  it('error if the maximum number of neighbours exceeds 512 for the is2dot4GHz setting ', async () => {
+    const history = createMemoryHistory();
+    const { getByText, getByRole, getByPlaceholderText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Maximum APs for is2dot4GHz'), {
       target: { value: 513 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -849,7 +849,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum number of neighbours exceeds 512 for the 5GHzL setting ', async () => {
+  it('error if the maximum number of neighbours exceeds 512 for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -861,7 +861,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum number of neighbours for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum APs for is5GHzL'), {
       target: { value: 513 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -871,7 +871,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum number of neighbours exceeds 512 for the 5GHzU setting ', async () => {
+  it('error if the maximum number of neighbours exceeds 512 for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -883,7 +883,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter maximum number of neighbours for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum APs for is5GHzU'), {
       target: { value: 513 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -893,7 +893,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floorl exceeds bounds for the 2.4GHz setting ', async () => {
+  it('error if the noise floorl exceeds bounds for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -905,7 +905,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor (dB) for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor (db) for is2dot4GHz'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -915,7 +915,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floor exceeds bounds for the 5GHzU setting ', async () => {
+  it('error if the noise floor exceeds bounds for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -927,7 +927,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor (dB) for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor (db) for is5GHzU'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -937,7 +937,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floor exceeds bounds for the 5GHzL setting ', async () => {
+  it('error if the noise floor exceeds bounds for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -949,7 +949,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor (dB) for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor (db) for is5GHzL'), {
       target: { value: 650 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -959,7 +959,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floor time exceeds bounds for the 2.4GHz setting ', async () => {
+  it('error if the noise floor time exceeds bounds for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -971,7 +971,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor time (s) for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time (secs) for is2dot4GHz'), {
       target: { value: 650 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -981,7 +981,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floor time exceeds bounds for the 5GHzU setting ', async () => {
+  it('error if the noise floor time exceeds bounds for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -993,7 +993,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor time (s) for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time (secs) for is5GHzU'), {
       target: { value: 119 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1003,7 +1003,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the noise floor time exceeds bounds for the 5GHzL setting ', async () => {
+  it('error if the noise floor time exceeds bounds for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1015,7 +1015,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter noise floor time (s) for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time (secs) for is5GHzL'), {
       target: { value: 601 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1025,7 +1025,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the steering threshold exceeds bounds for the 2.4GHz setting ', async () => {
+  it('error if the steering threshold exceeds bounds for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1037,7 +1037,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter SNR percentage drop for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR (% Drop) for is2dot4GHz'), {
       target: { value: -1 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1047,7 +1047,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the steering threshold exceeds bounds for the 5GHzU setting ', async () => {
+  it('error if the steering threshold exceeds bounds for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1059,7 +1059,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter SNR percentage drop for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR (% Drop) for is5GHzU'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1069,7 +1069,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the steering threshold exceeds bounds for the 5GHzL setting ', async () => {
+  it('error if the steering threshold exceeds bounds for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1081,7 +1081,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter SNR percentage drop for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR (% Drop) for is5GHzL'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1091,7 +1091,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum load percentage exceeds bounds for the 2.4GHz setting ', async () => {
+  it('error if the minimum load percentage exceeds bounds for the is2dot4GHz setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1103,7 +1103,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter minimum load % for 2.4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load (%) for is2dot4GHz'), {
       target: { value: -1 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1113,7 +1113,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum load percentage exceeds bounds for the 5GHzU setting ', async () => {
+  it('error if the minimum load percentage exceeds bounds for the is5GHzU setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1125,7 +1125,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter minimum load % for 5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load (%) for is5GHzU'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -1135,7 +1135,7 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('error if the minimum load percentage exceeds bounds for the 5GHzL setting ', async () => {
+  it('error if the minimum load percentage exceeds bounds for the is5GHzL setting ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
@@ -1147,7 +1147,7 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter minimum load % for 5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load (%) for is5GHzL'), {
       target: { value: 101 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));

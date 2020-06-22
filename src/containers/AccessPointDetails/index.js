@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
-import { WifiOutlined } from '@ant-design/icons';
+import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 
 import General from './components/General';
@@ -42,7 +42,7 @@ const AccessPointDetails = ({ data, osData, handleRefresh }) => {
   return (
     <div className={styles.AccessPointDetails}>
       <Link to="/network/access-points">
-        <Button className={styles.backButton} name="back">
+        <Button className={styles.backButton} icon={<LeftOutlined />} name="back">
           BACK
         </Button>
       </Link>

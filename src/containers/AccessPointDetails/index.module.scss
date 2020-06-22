@@ -39,63 +39,66 @@
   :global(.ant-form-item) {
     flex: 1;
   }
-}
-.InlineBlockDiv {
-  display: inline-block;
-  vertical-align: middle;
-}
 
-.WifiIcon {
-  background-color: transparent;
-  color: #35a649;
-  border: none;
-  font-size: 40px;
-  vertical-align: middle;
-  margin-right: 20px;
-}
+  .InlineBlockDiv {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-.backButton {
-  border: none;
-  margin-top: 5px;
-}
+  .WifiIcon {
+    background-color: transparent;
+    color: #35a649;
+    border: none;
+    font-size: 40px;
+    vertical-align: middle;
+    margin-right: 20px;
+  }
 
-.Field {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
-  margin-bottom: 5px;
-}
+  .backButton {
+    margin-top: 5px;
+  }
 
-.InlineDiv {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
+  .Field {
+    background: #141414;
+    border: 1px solid #434343;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
 
-.InlineDiv > * {
-  margin: 0 5px;
-}
+  .InlineDiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 
-.InlineBetweenDiv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .InlineDiv > * {
+    margin: 0 10px;
+  }
 
-.saveButton {
-  border: 1px solid #434343;
-  border-radius: 5px;
-  margin-right: 25px;
-  margin-top: 10px;
-  width: 139px;
-}
+  .InlineBetweenDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.InlineEndDiv {
-  display: flex;
-  justify-content: flex-end;
-}
+  .saveButton {
+    border: 1px solid #434343;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 139px;
+  }
 
-p {
-  font-weight: bold !important;
-  font-size: 16px;
+  .InlineEndDiv {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  p {
+    font-weight: bold !important;
+    font-size: 16px;
+  }
+  .spanStyle {
+    flex: 1;
+    margin-left: 10px;
+  }
 }
