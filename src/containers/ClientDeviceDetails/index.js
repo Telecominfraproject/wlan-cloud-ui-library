@@ -28,6 +28,7 @@ const ClientDeviceDetails = ({
     ssid,
     radioType,
     signal,
+    manufacturer,
     equipment: { name } = {},
     details: {
       assocTimestamp,
@@ -93,6 +94,7 @@ const ClientDeviceDetails = ({
       </div>
       <DeviceDetailCard
         name={hostname}
+        manufacturer={manufacturer}
         macAddress={macAddress}
         ipAddress={ipAddress}
         radioType={radioType}
