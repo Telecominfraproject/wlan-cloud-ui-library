@@ -36,6 +36,7 @@ const Firmware = () => {
       </div>
       <Modal
         onCancel={() => setConfirmModal(false)}
+        onSuccess={() => {}}
         visible={confirmModal}
         buttonText="Confirm"
         title="Confirm"
@@ -43,6 +44,7 @@ const Firmware = () => {
       />
       <Modal
         onCancel={() => setRebootModal(false)}
+        onSuccess={() => {}}
         visible={rebootModal}
         buttonText="Confirm"
         title="Reboot NAME"
@@ -93,11 +95,12 @@ const Firmware = () => {
         </Item>
       </Card>
       <Card title="Upgrade">
-        <Item label="Target Version" name="targetValue">
+        <Item label="Target Version">
           <div className={styles.InlineDiv}>
             <Item>
               <Select
                 className={styles.Field}
+                name="targetValue"
                 placeholder="Select a version to apply..."
                 defaultValue="default"
               >

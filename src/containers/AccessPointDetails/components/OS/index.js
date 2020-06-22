@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Alert, Progress, Tooltip as AntdTooltip } from 'antd';
+import { Card, Alert } from 'antd';
 import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
 
 import SolidGauge from './components/SolidGauge';
 import HighChartGraph from './components/HighChartGraph';
-
 import Timer from './components/Timer';
 
 import styles from '../../index.module.scss';
@@ -62,17 +61,7 @@ const OS = ({ data, osData, handleRefresh }) => {
   );
 
   return (
-    <Card
-      title="Operating System Statistics"
-      extra={
-        <div className={styles.InLineDiv}>
-          <AntdTooltip title={`Refreshes in approx: ${60 - percent} seconds...`}>
-            <Progress type="circle" width={25} percent={percent * 1.67} showInfo={false} />
-          </AntdTooltip>
-          <Timer />
-        </div>
-      }
-    >
+    <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
       <div className={styles.InlineBetweenDiv}>
         <Alert
           icon={<LineChartOutlined />}
@@ -99,14 +88,14 @@ const OS = ({ data, osData, handleRefresh }) => {
 };
 
 OS.propTypes = {
-  osData: PropTypes.instanceOf(Array),
-  data: PropTypes.instanceOf(Array),
+  osData: PropTypes.instanceOf(Object),
+  data: PropTypes.instanceOf(Object),
   handleRefresh: PropTypes.func.isRequired,
 };
 
 OS.defaultProps = {
-  osData: [],
-  data: [],
+  osData: {},
+  data: {},
 };
 
 export default OS;

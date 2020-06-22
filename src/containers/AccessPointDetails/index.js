@@ -90,13 +90,13 @@ const AccessPointDetails = ({ data, osData, handleRefresh }) => {
 };
 
 AccessPointDetails.propTypes = {
-  data: PropTypes.instanceOf(Array),
+  data: PropTypes.instanceOf(Object),
   osData: PropTypes.instanceOf(Array),
   handleRefresh: PropTypes.func.isRequired,
 };
 
 AccessPointDetails.defaultProps = {
-  data: [],
+  data: {},
   osData: [],
 };
 

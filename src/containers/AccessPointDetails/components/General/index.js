@@ -12,26 +12,17 @@ const { Panel } = Collapse;
 const General = ({ data }) => {
   const [form] = Form.useForm();
 
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 14 },
-  };
-
-  const handleOnSave = () => {
-    form.validateFields().catch(() => {});
-  };
-
   useEffect(() => {
     form.setFieldsValue({
-      enableRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.radioAdminState,
-      enableRadio5U: data.details.advancedRadioMap.is5GHzU.radioAdminState,
-      enableRadio5L: data.details.advancedRadioMap.is5GHzL.radioAdminState,
+      enableRadiois2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.radioAdminState,
+      enableRadiois5GHzU: data.details.advancedRadioMap.is5GHzU.radioAdminState,
+      enableRadiois5GHzL: data.details.advancedRadioMap.is5GHzL.radioAdminState,
       beaconRadio2dot4: data.details.advancedRadioMap.is2dot4GHz.beaconInterval,
       beaconRadio5U: data.details.advancedRadioMap.is5GHzU.beaconInterval,
       beaconRadio5L: data.details.advancedRadioMap.is5GHzL.beaconInterval,
-      deuthAttack2dot4: data.details.advancedRadioMap.is2dot4GHz.deauthAttackDetection,
-      deuthAttack5U: data.details.advancedRadioMap.is5GHzU.deauthAttackDetection,
-      deuthAttack5L: data.details.advancedRadioMap.is5GHzL.deauthAttackDetection,
+      deauthAttackis2dot4GHz: data.details.advancedRadioMap.is2dot4GHz.deauthAttackDetection,
+      deauthAttackis5GHzU: data.details.advancedRadioMap.is5GHzU.deauthAttackDetection,
+      deauthAttackis5GHzL: data.details.advancedRadioMap.is5GHzL.deauthAttackDetection,
       threshold2dot4: data.details.advancedRadioMap.is2dot4GHz.rtsCtsThreshold,
       threshold5U: data.details.advancedRadioMap.is5GHzU.rtsCtsThreshold,
       threshold5L: data.details.advancedRadioMap.is5GHzL.rtsCtsThreshold,
@@ -83,7 +74,7 @@ const General = ({ data }) => {
 
   const columns = [
     {
-      title: 'Wireless Network	',
+      title: 'Wireless Network',
       dataIndex: 'name',
       key: 'network',
     },
@@ -93,7 +84,7 @@ const General = ({ data }) => {
       key: 'ssid',
     },
     {
-      title: 'Security Mode	',
+      title: 'Security Mode',
       dataIndex: ['details', 'secureMode'],
       key: 'security',
     },
@@ -104,6 +95,68 @@ const General = ({ data }) => {
       render: appliedRadios => appliedRadios.join(',  '),
     },
   ];
+
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 14 },
+  };
+
+  const handleOnSave = () => {
+    form
+      .validateFields()
+      .then(values => {
+        console.log(values);
+      })
+      .catch(() => {});
+  };
+
+  const renderSpanItem = (label, obj, dataIndex) => {
+    if (typeof dataIndex !== 'undefined') {
+      return (
+        <Item label={label} colon={false}>
+          <div className={styles.InlineDiv}>
+            {Object.keys(obj).map(i => (
+              <span key={i}>{obj[i][dataIndex]}</span>
+            ))}
+          </div>
+        </Item>
+      );
+    }
+    return (
+      <Item label={label} colon={false}>
+        <div className={styles.InlineDiv}>
+          {Object.keys(obj).map(i => (
+            <span key={i}>{obj[i]}</span>
+          ))}
+        </div>
+      </Item>
+    );
+  };
+
+  const renderOptionItem = (label, itemName, name, obj) => {
+    return (
+      <Item label={label} colon={false}>
+        <div className={styles.InlineDiv}>
+          {Object.keys(obj).map(i => (
+            <Item
+              name={name + i}
+              rules={[
+                {
+                  required: true,
+                  message: `Please enter the ${itemName} for ${name + i}.`,
+                },
+              ]}
+            >
+              <Select className={styles.Field}>
+                <Option value="enabled">enabled</Option>
+                <Option value="disabled">disabled</Option>
+              </Select>
+            </Item>
+          ))}
+        </div>
+      </Item>
+    );
+  };
 
   return (
     <Form {...layout} form={form}>
@@ -148,60 +201,17 @@ const General = ({ data }) => {
       </Card>
       <Collapse expandIconPosition="right">
         <Panel header="Advanced Settings" name="settings">
-          <Item label=" " colon={false}>
-            <div className={styles.InlineDiv}>
-              <p>2.4 GHz</p>
-              <p>5 GHzU</p>
-              <p>5 GHzL</p>
-            </div>
-          </Item>
+          {renderSpanItem(' ', data.details.radioMap, 'radioType')}
+
           <p>Radio Specific Parameters:</p>
-          <Item label="Enable Radio">
-            <div className={styles.InlineDiv}>
-              <Item
-                name="enableRadio2dot4"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the radio value for 2.4GHz.',
-                  },
-                ]}
-              >
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item
-                name="enableRadio5U"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the radio value for 5GHz U.',
-                  },
-                ]}
-              >
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item
-                name="enableRadio5L"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter the radio value for 5GHz L.',
-                  },
-                ]}
-              >
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
+
+          {renderOptionItem(
+            'Enable Radio',
+            'radio value',
+            'enableRadio',
+            data.details.advancedRadioMap
+          )}
+
           <Item
             label={
               <span>
@@ -242,28 +252,12 @@ const General = ({ data }) => {
               </Item>
             </div>
           </Item>
-          <Item label="Deauth Attack Detection">
-            <div className={styles.InlineDiv}>
-              <Item name="deuthAttack2dot4">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="deuthAttack5U">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-              <Item name="deuthAttack5L">
-                <Select className={styles.Field}>
-                  <Option value="enabled">enabled</Option>
-                  <Option value="disabled">disabled</Option>
-                </Select>
-              </Item>
-            </div>
-          </Item>
+          {renderOptionItem(
+            'Deauth Attack Detection',
+            'detection value',
+            'deauthAttack',
+            data.details.advancedRadioMap
+          )}
           <Item label="RTS/CTS threshold">
             <div className={styles.InlineDiv}>
               <Item
@@ -487,20 +481,11 @@ const General = ({ data }) => {
               </Item>
             </div>
           </Item>
-          <Item label="Active Channel">
-            <div className={styles.InlineDiv}>
-              <span>{data.details.radioMap.is2dot4GHz.activeChannel}</span>
-              <span>{data.details.radioMap.is5GHzU.activeChannel}</span>
-              <span>{data.details.radioMap.is5GHzL.activeChannel}</span>
-            </div>
-          </Item>
-          <Item label="Backup Channel">
-            <div className={styles.InlineDiv}>
-              <span>{data.details.radioMap.is2dot4GHz.backupChannelNumber}</span>
-              <span>{data.details.radioMap.is5GHzU.backupChannelNumber}</span>
-              <span>{data.details.radioMap.is5GHzL.backupChannelNumber}</span>
-            </div>
-          </Item>
+
+          {renderSpanItem('Active Channel', data.details.radioMap, 'activeChannel')}
+
+          {renderSpanItem('Backup Channel', data.details.radioMap, 'backupChannelNumber')}
+
           <Item label="Channel Bandwidth">
             <div className={styles.InlineDiv}>
               <Item name="bandwidth2dot4">
@@ -1050,11 +1035,11 @@ const General = ({ data }) => {
 };
 
 General.propTypes = {
-  data: PropTypes.instanceOf(Array),
+  data: PropTypes.instanceOf(Object),
 };
 
 General.defaultProps = {
-  data: [],
+  data: {},
 };
 
 export default General;

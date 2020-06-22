@@ -26,7 +26,7 @@ const HighChartGraph = ({ osData }) => {
   };
 
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div>
       <HighchartsStockChart>
         <Chart zoomType="x" backgroundColor="#141414" />
 
@@ -105,16 +105,16 @@ const HighChartGraph = ({ osData }) => {
             states: { select: { fill: '#039', style: { color: 'white' } } },
           }}
         >
-          <RangeSelector.Button count={5} type="minute">
+          <RangeSelector.Button offsetMin={0} offsetMax={0} count={5} type="minute">
             5 Min
           </RangeSelector.Button>
-          <RangeSelector.Button count={7} type="hour">
+          <RangeSelector.Button offsetMin={0} offsetMax={0} count={7} type="hour">
             1 Hr
           </RangeSelector.Button>
-          <RangeSelector.Button count={1} type="day">
+          <RangeSelector.Button offsetMin={0} offsetMax={0} count={1} type="day">
             1 Day
           </RangeSelector.Button>
-          <RangeSelector.Input inputEnabled={false} />
+          <RangeSelector.Input enabled={false} inputEnabled={false} />
         </RangeSelector>
       </HighchartsStockChart>
     </div>
@@ -122,11 +122,11 @@ const HighChartGraph = ({ osData }) => {
 };
 
 HighChartGraph.propTypes = {
-  osData: PropTypes.instanceOf(Array),
+  osData: PropTypes.instanceOf(Object),
 };
 
 HighChartGraph.defaultProps = {
-  osData: [],
+  osData: {},
 };
 
 export default withHighcharts(HighChartGraph, Highcharts);
