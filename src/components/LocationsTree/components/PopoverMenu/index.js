@@ -48,7 +48,7 @@ PopoverMenu.propTypes = {
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
-  setBulkEditApIds: PropTypes.func.isRequired,
+  setBulkEditApIds: PropTypes.func,
   locationType: PropTypes.string,
   locationId: PropTypes.number.isRequired,
 };
@@ -58,6 +58,7 @@ PopoverMenu.defaultProps = {
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
+  setBulkEditApIds: () => {},
 };
 
 export default PopoverMenu;

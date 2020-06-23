@@ -213,7 +213,7 @@ EditableCell.propTypes = {
   title: PropTypes.string.isRequired,
   editable: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  dataIndex: PropTypes.number.isRequired,
+  dataIndex: PropTypes.string.isRequired,
   record: PropTypes.shape({
     key: PropTypes.number,
     name: PropTypes.string,
