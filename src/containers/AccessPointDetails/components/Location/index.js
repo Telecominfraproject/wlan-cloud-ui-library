@@ -21,6 +21,20 @@ const Location = ({ locations, data }) => {
   console.log(data);
   console.log(locations);
 
+  const findLocation = (objects, id) => {
+    const arr = [...objects];
+    while (arr.length) {
+      const obj = arr.shift();
+      if (obj.id === id) return obj;
+      arr.push(...(obj.children || []));
+    }
+    return null;
+  };
+
+  const initialLocation = findLocation(locations, data.locationId);
+  const parentLocation = findLocation(locations, initialLocation.parentId);
+  const grandparentLocation = findLocation(locations, parentLocation.parentId);
+
   return (
     <Form {...layout} form={form}>
       <div className={styles.InlineEndDiv}>
@@ -41,23 +55,32 @@ const Location = ({ locations, data }) => {
           ]}
         >
           <Select className={styles.Field} placeholder="Select Location City...">
-            {Object.keys(locations).map(i => (
-              <Option value={locations[i].name}>{locations[i].name}</Option>
-            ))}
+            {grandparentLocation.locationType === 'SITE' && (
+              <Option value={grandparentLocation.name}>{grandparentLocation.name}</Option>
+            )}
           </Select>
         </Item>
 
         <Item label="Building" name="building">
-          <Select className={styles.Field} placeholder="Select Location Building...">
-            <Option value="COUNTRY">COUNTRY</Option>
-            <Option value="SITE">SITE</Option>
-            <Option value="BUILDING">BUILDING</Option>
-            <Option value="FLOOR">FLOOR</Option>
+          <Select
+            className={styles.Field}
+            placeholder="Select Location Building..."
+            disabled={initialLocation.locationType === 'SITE'}
+          >
+            {parentLocation.locationType === 'BUILDING' && (
+              <Option value={parentLocation.name}>{parentLocation.name}</Option>
+            )}
           </Select>
         </Item>
         <Item label="Floor" name="floor">
-          <Select className={styles.Field} placeholder="Select Location Floor...">
-            <Option value="default">Default</Option>
+          <Select
+            className={styles.Field}
+            placeholder="Select Location Floor..."
+            disabled={initialLocation.locationType === 'SITE'}
+          >
+            {initialLocation.locationType === 'FLOOR' && (
+              <Option value={initialLocation.name}>{initialLocation.name}</Option>
+            )}
           </Select>
         </Item>
       </Card>
