@@ -1157,26 +1157,6 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
-  it('handleSubmit should not be called if any field is empty on location tab', async () => {
-    const history = createMemoryHistory();
-    const { getByText, getByRole } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-    fireEvent.click(getByRole('tab', { name: /location/i }));
-    const paragraph = getByText('Building');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('Please select your location city.')).toBeVisible();
-      expect(getByText('Please select your location building.')).toBeVisible();
-      expect(getByText('Please select your location floor.')).toBeVisible();
-    });
-  });
-
   it('firmware tab should show confirm reboot modal', async () => {
     const history = createMemoryHistory();
 

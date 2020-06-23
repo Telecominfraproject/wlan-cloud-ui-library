@@ -27,12 +27,12 @@ const Timer = ({ handleRefresh }) => {
   }, [percent]);
 
   return (
-    <div>
+    <>
       <Tooltip title={`Refreshes in approx: ${percent} seconds...`}>
         <Progress type="circle" width={25} percent={(1 - percent / 60) * 100} showInfo={false} />
         {date}
       </Tooltip>
-    </div>
+    </>
   );
 };
 
