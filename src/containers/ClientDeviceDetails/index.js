@@ -24,10 +24,11 @@ const ClientDeviceDetails = ({
   const {
     macAddress,
     ipAddress,
-    hostName,
+    hostname,
     ssid,
     radioType,
     signal,
+    manufacturer,
     equipment: { name } = {},
     details: {
       assocTimestamp,
@@ -92,10 +93,10 @@ const ClientDeviceDetails = ({
         <Button icon={<ReloadOutlined />} onClick={onRefresh} />
       </div>
       <DeviceDetailCard
-        name={name}
+        name={hostname}
+        manufacturer={manufacturer}
         macAddress={macAddress}
         ipAddress={ipAddress}
-        hostName={hostName}
         radioType={radioType}
         signal={signal}
         dataTransferred={txBytes + rxBytes}
