@@ -10,9 +10,16 @@ const PopoverMenuContent = ({
   setAddModal,
   setEditModal,
   setDeleteModal,
+  setBulkEditApIds,
   hide,
 }) => {
   const history = useHistory();
+
+  const handleBulkEdit = () => {
+    setBulkEditApIds(locationId);
+    history.push(`/network/access-points/bulk-edit/${locationId}`);
+  };
+
   return (
     <div className={styles.popOver}>
       {locationType !== 'FLOOR' && (
@@ -38,7 +45,7 @@ const PopoverMenuContent = ({
           <Button
             onClick={() => {
               hide();
-              history.push(`/network/access-points/bulk-edit/${locationId}`);
+              handleBulkEdit();
             }}
           >
             Bulk Edit APs
@@ -61,6 +68,7 @@ PopoverMenuContent.propTypes = {
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
+  setBulkEditApIds: PropTypes.isRequired,
   locationType: PropTypes.string,
   locationId: PropTypes.number.isRequired,
 };
