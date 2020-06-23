@@ -90,7 +90,14 @@ const EditableCell = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, isLastPage }) => {
+const BulkEditAPTable = ({
+  tableColumns,
+  tableData,
+  onEditedRows,
+  onLoadMore,
+  isLastPage,
+  resetEditedRows,
+}) => {
   const [bulkEditTableData, setTableData] = useState([]);
   const [editedRows, setEditedRows] = useState([]);
   const components = {
@@ -164,6 +171,10 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
     onEditedRows(editedRows);
   }, [editedRows]);
 
+  useEffect(() => {
+    setEditedRows([]);
+  }, [resetEditedRows]);
+
   return (
     <>
       <Table
@@ -191,6 +202,7 @@ BulkEditAPTable.propTypes = {
   onEditedRows: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool.isRequired,
+  resetEditedRows: PropTypes.bool.isRequired,
 };
 
 EditableRow.propTypes = {
