@@ -1,94 +1,10 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, Form } from 'antd';
+import { Table } from 'antd';
 import Button from 'components/Button';
+import { EditableRow } from './components/EditableRow';
+import { EditableCell } from './components/EditableCell';
 import styles from './index.module.scss';
-
-const EditableContext = React.createContext();
-
-const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef();
-  const form = useContext(EditableContext);
-
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({
-      [dataIndex]: record[dataIndex],
-    });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      // console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} IS REQUIRED.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div
-        className={styles.editableCellValueWrap}
-        role="button"
-        tabIndex={0}
-        onKeyDown={() => {}}
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
 
 const BulkEditAPTable = ({
   tableColumns,
@@ -203,28 +119,6 @@ BulkEditAPTable.propTypes = {
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool.isRequired,
   resetEditedRows: PropTypes.bool.isRequired,
-};
-
-EditableRow.propTypes = {
-  index: PropTypes.number.isRequired,
-};
-
-EditableCell.propTypes = {
-  title: PropTypes.string.isRequired,
-  editable: PropTypes.bool.isRequired,
-  children: PropTypes.node.isRequired,
-  dataIndex: PropTypes.string.isRequired,
-  record: PropTypes.shape({
-    key: PropTypes.number,
-    name: PropTypes.string,
-    cellSize: PropTypes.instanceOf(Array),
-    channel: PropTypes.instanceOf(Array),
-    clientDisconnectThreshold: PropTypes.instanceOf(Array),
-    probeResponseThreshold: PropTypes.instanceOf(Array),
-    snrDrop: PropTypes.instanceOf(Array),
-    minLoad: PropTypes.instanceOf(Array),
-  }).isRequired,
-  handleSave: PropTypes.func.isRequired,
 };
 
 BulkEditAPTable.defaultProps = {
