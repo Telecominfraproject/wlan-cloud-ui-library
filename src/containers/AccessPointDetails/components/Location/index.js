@@ -7,7 +7,7 @@ import styles from '../../index.module.scss';
 const { Option } = Select;
 const { Item } = Form;
 
-const Location = ({ locations, data }) => {
+const Location = ({ locations, data, onUpdateEquipment }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
@@ -15,11 +15,11 @@ const Location = ({ locations, data }) => {
   };
 
   const handleOnSave = () => {
-    form.validateFields().catch(() => {});
+    form
+      .validateFields()
+      .then(values => onUpdateEquipment(values))
+      .catch(() => {});
   };
-
-  console.log(data);
-  console.log(locations);
 
   const findLocation = (objects, id) => {
     const arr = [...objects];
@@ -31,9 +31,47 @@ const Location = ({ locations, data }) => {
     return null;
   };
 
-  const initialLocation = findLocation(locations, data.locationId);
-  const parentLocation = findLocation(locations, initialLocation.parentId);
-  const grandparentLocation = findLocation(locations, parentLocation.parentId);
+  const selectedLocation = findLocation(locations, data.locationId);
+
+  const getLocationPath = () => {
+    const locationsPath = [];
+    const treeRecurse = (parentNodeId, node) => {
+      if (node.id === parentNodeId) {
+        locationsPath.unshift({
+          id: node.id,
+          parentId: node.parentId,
+          name: node.name,
+        });
+        return node;
+      }
+      if (node.children) {
+        let parent;
+        node.children.some(i => {
+          parent = treeRecurse(parentNodeId, i);
+          return parent;
+        });
+        if (parent) {
+          locationsPath.unshift({ id: node.id, parentId: node.parentId, name: node.name });
+        }
+        return parent;
+      }
+      return null;
+    };
+    if (selectedLocation) {
+      locationsPath.unshift({ ...selectedLocation });
+      treeRecurse(selectedLocation.parentId, locations[0]);
+    }
+    return locationsPath;
+  };
+
+  const locationPath = getLocationPath();
+
+  const validate = num => {
+    if (typeof locationPath[num] !== 'undefined') {
+      return <Option value={locationPath[num].name}>{locationPath[num].name}</Option>;
+    }
+    return null;
+  };
 
   return (
     <Form {...layout} form={form}>
@@ -55,32 +93,44 @@ const Location = ({ locations, data }) => {
           ]}
         >
           <Select className={styles.Field} placeholder="Select Location City...">
-            {grandparentLocation.locationType === 'SITE' && (
-              <Option value={grandparentLocation.name}>{grandparentLocation.name}</Option>
-            )}
+            <Option value={locationPath[0].name}>{locationPath[0].name}</Option>
           </Select>
         </Item>
 
-        <Item label="Building" name="building">
+        <Item
+          label="Building"
+          name="building"
+          rules={[
+            {
+              required: locationPath.length >= 2,
+              message: 'Please select your location building.',
+            },
+          ]}
+        >
           <Select
             className={styles.Field}
             placeholder="Select Location Building..."
-            disabled={initialLocation.locationType === 'SITE'}
+            disabled={selectedLocation.locationType === 'SITE'}
           >
-            {parentLocation.locationType === 'BUILDING' && (
-              <Option value={parentLocation.name}>{parentLocation.name}</Option>
-            )}
+            {validate(1)}
           </Select>
         </Item>
-        <Item label="Floor" name="floor">
+        <Item
+          label="Floor"
+          name="floor"
+          rules={[
+            {
+              required: locationPath.length === 3,
+              message: 'Please select your location building.',
+            },
+          ]}
+        >
           <Select
             className={styles.Field}
             placeholder="Select Location Floor..."
-            disabled={initialLocation.locationType === 'SITE'}
+            disabled={selectedLocation.locationType === 'SITE'}
           >
-            {initialLocation.locationType === 'FLOOR' && (
-              <Option value={initialLocation.name}>{initialLocation.name}</Option>
-            )}
+            {validate(2)}
           </Select>
         </Item>
       </Card>
@@ -91,6 +141,7 @@ const Location = ({ locations, data }) => {
 Location.propTypes = {
   data: PropTypes.instanceOf(Object),
   locations: PropTypes.instanceOf(Array).isRequired,
+  onUpdateEquipment: PropTypes.func.isRequired,
 };
 
 Location.defaultProps = {

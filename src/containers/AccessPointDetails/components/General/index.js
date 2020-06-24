@@ -9,7 +9,7 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data }) => {
+const General = ({ data, onUpdateEquipment }) => {
   const [form] = Form.useForm();
 
   const columns = [
@@ -44,7 +44,7 @@ const General = ({ data }) => {
   const handleOnSave = () => {
     form
       .validateFields()
-      .then(values => console.log(values))
+      .then(values => onUpdateEquipment(values))
       .catch(() => {});
   };
 
@@ -152,7 +152,7 @@ const General = ({ data }) => {
         <Item label="SKU"> {data.status.protocol.detailsJSON.reportedSku}</Item>
         <Item label="Country Code"> {data.status.protocol.detailsJSON.countryCode}</Item>
         <Item label="Ethernet MAC Address"> {data.status.protocol.details.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> </Item>
+        <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
       <Card title="Profile">
@@ -341,6 +341,7 @@ const General = ({ data }) => {
 
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
+  onUpdateEquipment: PropTypes.func.isRequired,
 };
 
 General.defaultProps = {
