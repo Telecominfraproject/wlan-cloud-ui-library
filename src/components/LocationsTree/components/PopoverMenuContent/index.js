@@ -10,13 +10,11 @@ const PopoverMenuContent = ({
   setAddModal,
   setEditModal,
   setDeleteModal,
-  setBulkEditApIds,
   hide,
 }) => {
   const history = useHistory();
 
   const handleBulkEdit = () => {
-    setBulkEditApIds(locationId);
     history.push(`/network/access-points/bulk-edit/${locationId}`);
   };
 
@@ -68,7 +66,6 @@ PopoverMenuContent.propTypes = {
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
-  setBulkEditApIds: PropTypes.func,
   locationType: PropTypes.string,
   locationId: PropTypes.number.isRequired,
 };
@@ -78,7 +75,6 @@ PopoverMenuContent.defaultProps = {
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
-  setBulkEditApIds: () => {},
 };
 
 export default PopoverMenuContent;
