@@ -66,11 +66,12 @@ BulkEditAccessPoints.propTypes = {
   tableData: PropTypes.instanceOf(Array),
   onSaveChanges: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
-  isLastPage: PropTypes.bool.isRequired,
+  isLastPage: PropTypes.bool,
 };
 
 BulkEditAccessPoints.defaultProps = {
   tableData: [],
+  isLastPage: true,
 };
 
 export default BulkEditAccessPoints;

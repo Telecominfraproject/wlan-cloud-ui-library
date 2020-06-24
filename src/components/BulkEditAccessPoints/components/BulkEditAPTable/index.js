@@ -100,10 +100,10 @@ const BulkEditAPTable = ({
         }}
         columns={columns}
         dataSource={bulkEditTableData}
-        scroll={{ x: 2000 }}
+        scroll={{ x: 1000 }}
         pagination={false}
       />
-      {!isLastPage && (
+      {isLastPage === false && (
         <div className={styles.LoadMore}>
           <Button onClick={onLoadMore}>Load More</Button>
         </div>
@@ -117,12 +117,13 @@ BulkEditAPTable.propTypes = {
   tableData: PropTypes.instanceOf(Array),
   onEditedRows: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
-  isLastPage: PropTypes.bool.isRequired,
+  isLastPage: PropTypes.bool,
   resetEditedRows: PropTypes.bool.isRequired,
 };
 
 BulkEditAPTable.defaultProps = {
   tableData: [],
+  isLastPage: true,
 };
 
 export default BulkEditAPTable;
