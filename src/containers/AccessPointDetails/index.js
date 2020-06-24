@@ -51,7 +51,7 @@ const AccessPointDetails = ({ data, osData, handleRefresh, locations, onUpdateEq
           <div className={styles.InlineBlockDiv}>
             <WifiOutlined className={styles.WifiIcon} />
             <div className={styles.InlineBlockDiv}>
-              <div> NAME </div>
+              <div> {data.name} </div>
               <div> LAB TYPE </div>
               <div>
                 {data.alarmsCount} &nbsp;{data.alarmsCount === 1 ? 'Alarm' : 'Alarms'}

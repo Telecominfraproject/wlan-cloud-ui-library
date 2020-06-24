@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
@@ -13,19 +13,44 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
+  const {
+    id,
+    equipmentType,
+    inventoryId,
+    customerId,
+    profileId,
+    locationId,
+    name,
+    latitude,
+    longitude,
+    serial,
+    lastModifiedTimestamp,
+  } = data;
 
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => onUpdateEquipment(values))
-      .catch(() => {});
+    form.validateFields().then(details => {
+      onUpdateEquipment(
+        id,
+        equipmentType,
+        inventoryId,
+        customerId,
+        profileId,
+        locationId,
+        name,
+        latitude,
+        longitude,
+        serial,
+        lastModifiedTimestamp,
+        Object.assign(data.details, details)
+      );
+    });
   };
 
-  const findLocation = (objects, id) => {
+  const findLocation = (objects, idKey) => {
     const arr = [...objects];
     while (arr.length) {
       const obj = arr.shift();
-      if (obj.id === id) return obj;
+      if (obj.id === idKey) return obj;
       arr.push(...(obj.children || []));
     }
     return null;
@@ -65,6 +90,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   const locationPath = getLocationPath();
+  const [city, setCity] = useState(locationPath[0].name);
 
   const validate = num => {
     if (typeof locationPath[num] !== 'undefined') {
@@ -74,7 +100,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} initialValues={{ city: locationPath[0].name }}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -92,44 +118,24 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
             },
           ]}
         >
-          <Select className={styles.Field} placeholder="Select Location City...">
-            <Option value={locationPath[0].name}>{locationPath[0].name}</Option>
+          <Select
+            className={styles.Field}
+            onChange={value => setCity(value)}
+            placeholder="Select Location City..."
+          >
+            {Object.keys(locations).map(i => (
+              <Option value={locations[i].name}>{locations[i].name}</Option>
+            ))}
           </Select>
         </Item>
 
-        <Item
-          label="Building"
-          name="building"
-          rules={[
-            {
-              required: locationPath.length >= 2,
-              message: 'Please select your location building.',
-            },
-          ]}
-        >
-          <Select
-            className={styles.Field}
-            placeholder="Select Location Building..."
-            disabled={selectedLocation.locationType === 'SITE'}
-          >
+        <Item label="Building" name="building">
+          <Select className={styles.Field} placeholder="Select Location Building...">
             {validate(1)}
           </Select>
         </Item>
-        <Item
-          label="Floor"
-          name="floor"
-          rules={[
-            {
-              required: locationPath.length === 3,
-              message: 'Please select your location building.',
-            },
-          ]}
-        >
-          <Select
-            className={styles.Field}
-            placeholder="Select Location Floor..."
-            disabled={selectedLocation.locationType === 'SITE'}
-          >
+        <Item label="Floor" name="floor">
+          <Select className={styles.Field} placeholder="Select Location Floor...">
             {validate(2)}
           </Select>
         </Item>

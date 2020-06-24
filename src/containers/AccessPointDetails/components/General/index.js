@@ -41,11 +41,37 @@ const General = ({ data, onUpdateEquipment }) => {
     wrapperCol: { span: 14 },
   };
 
+  const {
+    id,
+    equipmentType,
+    inventoryId,
+    customerId,
+    profileId,
+    locationId,
+    name,
+    latitude,
+    longitude,
+    serial,
+    lastModifiedTimestamp,
+  } = data;
+
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => onUpdateEquipment(values))
-      .catch(() => {});
+    form.validateFields().then(details => {
+      onUpdateEquipment(
+        id,
+        equipmentType,
+        inventoryId,
+        customerId,
+        profileId,
+        locationId,
+        name,
+        latitude,
+        longitude,
+        serial,
+        lastModifiedTimestamp,
+        Object.assign(data.details, details)
+      );
+    });
   };
 
   const defaultOptions = (
