@@ -5,11 +5,10 @@ import styles from './index.module.scss';
 
 const DeviceStatsCard = ({ title, cardData }) => {
   const headerStyle = {
-    backgroundColor: '#35a648',
     textAlign: 'center',
     marginBottom: 10,
   };
-  const bodyStyle = { backgroundColor: '#35a648', height: 'calc(100% - 67px)' };
+  const bodyStyle = { height: 'calc(100% - 67px)' };
   return (
     <Card
       title={title}
