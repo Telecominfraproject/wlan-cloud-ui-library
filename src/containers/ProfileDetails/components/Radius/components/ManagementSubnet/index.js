@@ -14,7 +14,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
     wrapperCol: { span: 12 },
   };
 
-  const ip = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+  const ipPattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
   const addServerContent = (
     <Form {...layout} form={form}>
@@ -39,7 +39,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
         rules={[
           {
             required: true,
-            pattern: ip,
+            pattern: ipPattern,
             message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
           },
         ]}
@@ -58,7 +58,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
-              if (!value || getFieldValue('cidr') <= 32 || ip.test(getFieldValue('cidr'))) {
+              if (!value || getFieldValue('cidr') <= 32 || ipPattern.test(getFieldValue('cidr'))) {
                 return Promise.resolve();
               }
               return Promise.reject(
@@ -85,7 +85,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
           rules={[
             {
               required: true,
-              pattern: ip,
+              pattern: ipPattern,
               message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
             },
           ]}
@@ -103,6 +103,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
       title={title}
       content={addServerContent}
       closable={false}
+      onSuccess={() => {}}
     />
   );
 };
@@ -110,7 +111,6 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
 ManagementSubnetModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
   region: PropTypes.string,
   disabled: PropTypes.bool,

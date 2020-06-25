@@ -6,6 +6,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import { LeftOutlined } from '@ant-design/icons';
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
 import RadiusForm from './components/Radius';
@@ -33,21 +34,18 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
   const { Item } = Form;
 
   const handleOnSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        form.resetFields();
-        console.log(values);
-      })
-      .catch(() => {});
+    form.validateFields().then(value => {
+      onUpdateProfile(profileType, name, value);
+    });
   };
 
   form.setFieldsValue({
     name,
   });
 
+  console.log(details);
   return (
-    <Container>
+    <Container classname={styles.ProfileDetails}>
       {redirect && <Redirect to="/profiles" />}
 
       <Modal
@@ -72,7 +70,7 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
         content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
       />
       <Header>
-        <Button className={styles.backButton} onClick={() => setConfirmModal(true)}>
+        <Button icon={<LeftOutlined />} onClick={() => setConfirmModal(true)}>
           BACK
         </Button>
         <div>
@@ -92,6 +90,9 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
           upstreamBandwidth: details.bandwidthLimitUp,
           broadcastSSID: details.broadcastSsid === 'enabled' ? 'showSSID' : 'hideSSID',
           key: details.keyStr,
+          vlanId: details.vlanId,
+          securityMode: details.secureMode,
+          r80211w: details.enable80211w,
         }}
       >
         <Card title={`Edit ${name}`}>
@@ -106,7 +107,7 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
         {profileType === 'ssid' && <SSIDForm />}
         {profileType === 'equipment_ap' && <AccessPointForm />}
         {profileType === 'captivePortal' && <CaptivePortalForm />}
-        {profileType === 'radius' && <RadiusForm />}
+        {profileType === 'radius' && <RadiusForm details={details} />}
       </Form>
     </Container>
   );
@@ -115,7 +116,7 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
 ProfileDetails.propTypes = {
   name: PropTypes.string,
   profileType: PropTypes.string,
-  details: PropTypes.instanceOf(Array),
+  details: PropTypes.instanceOf(Object),
   onDeleteProfile: PropTypes.func.isRequired,
   onUpdateProfile: PropTypes.func.isRequired,
 };
@@ -123,7 +124,7 @@ ProfileDetails.propTypes = {
 ProfileDetails.defaultProps = {
   name: null,
   profileType: null,
-  details: [],
+  details: {},
 };
 
 export default ProfileDetails;

@@ -71,34 +71,42 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
 
   return (
     <Container>
-      <Modal
-        onCancel={() => setDeleteModal(false)}
-        onSuccess={deleteProfile}
-        visible={deleteModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the account: <strong> {activeProfile.name}</strong>
-          </p>
-        }
-      />
-      <Header>
-        <h1>Profiles</h1>
-        <div className={styles.Buttons}>
-          <Link to="/addprofile">
-            <Button className={styles.AddProfile}> Add Profile </Button>
-          </Link>
-          <Button icon={<ReloadOutlined />} onClick={onReload} />
-        </div>
-      </Header>
-      <Table dataSource={data} columns={columns} pagination={false} />
-      {!isLastPage && (
-        <div className={styles.LoadMore}>
-          <Button onClick={onLoadMore}>Load More</Button>
-        </div>
-      )}
+      <div className={styles.Profile}>
+        <Modal
+          onCancel={() => setDeleteModal(false)}
+          onSuccess={deleteProfile}
+          visible={deleteModal}
+          title="Are you sure?"
+          buttonText="Delete"
+          buttonType="danger"
+          content={
+            <p>
+              Are you sure you want to delete the account: <strong> {activeProfile.name}</strong>
+            </p>
+          }
+        />
+        <Header>
+          <h1>Profiles</h1>
+          <div className={styles.Buttons}>
+            <Link to="/addprofile">
+              <Button className={styles.AddProfile}> Add Profile </Button>
+            </Link>
+            <Button icon={<ReloadOutlined />} onClick={onReload} />
+          </div>
+        </Header>
+        <Table
+          rowKey="id"
+          className={styles.Profile}
+          dataSource={data}
+          columns={columns}
+          pagination={false}
+        />
+        {!isLastPage && (
+          <div className={styles.LoadMore}>
+            <Button onClick={onLoadMore}>Load More</Button>
+          </div>
+        )}
+      </div>
     </Container>
   );
 };

@@ -45,7 +45,11 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
         <Input className={styles.Field} disabled={disabled} defaultValue={service} />
       </Item>
 
-      {!serverCard && <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>}
+      {!serverCard && (
+        <div className={styles.InlineEndDiv}>
+          <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>{' '}
+        </div>
+      )}
 
       {serverCard && (
         <Card
@@ -116,10 +120,12 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
   return (
     <Modal
       onCancel={onCancel}
+      onSubmit={() => {}}
       visible={visible}
       title={title}
       content={addServerContent}
       closable={false}
+      onSuccess={() => {}}
     />
   );
 };
@@ -127,7 +133,6 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
 RadiusServiceModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
   service: PropTypes.string,
   disabled: PropTypes.bool,

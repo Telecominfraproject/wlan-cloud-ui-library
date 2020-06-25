@@ -51,10 +51,11 @@ const AccessPointForm = () => {
   ];
 
   return (
-    <>
+    <div className={styles.ProfilePage}>
       <Modal
         onCancel={() => setAddModal(false)}
         visible={addModal}
+        onSuccess={() => {}}
         title="Add Wireless Network Profile"
         width={1200}
         content={
@@ -72,28 +73,31 @@ const AccessPointForm = () => {
         }
       />
       <Card title="LAN and Services ">
-        <Item label="Management VLAN" name="managementVlan">
-          <Checkbox onChange={() => setVlan(!vlan)} defaultChecked>
-            Use Default Management VLAN
-          </Checkbox>
-          {!vlan && (
+        <Item label="Management VLAN" valuePropName="checked" name="managementVlan">
+          <Checkbox onChange={() => setVlan(!vlan)}>Use Default Management VLAN</Checkbox>
+        </Item>
+
+        {vlan && (
+          <Item label=" " colon={false}>
             <Item
               name="vlanValue"
               rules={[
                 {
-                  required: true,
+                  required: vlan,
                   message: 'Vlan expected between 2 and 4095',
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
+                    if (
+                      !value ||
+                      (getFieldValue('vlanValue') <= 4095 && getFieldValue('vlanValue') > 1)
+                    ) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('Vlan expected between 2 and 4095'));
                   },
                 }),
               ]}
-              style={{ marginTop: '10px' }}
               hasFeedback
             >
               <Input
@@ -102,32 +106,43 @@ const AccessPointForm = () => {
                 type="number"
                 min={2}
                 max={4095}
+                maxLength={4}
               />
             </Item>
-          )}
-        </Item>
+          </Item>
+        )}
 
-        <Item label="NTP" name="ntp">
+        <Item label="NTP" name="ntp" valuePropName="checked">
           <Checkbox onChange={() => setNTP(!ntp)} defaultChecked>
             Use Default Servers
           </Checkbox>
-          {!ntp && (
+        </Item>
+        {ntp && (
+          <Item label=" " colon={false}>
             <Item
               name="ntpServer"
-              rules={[{ required: true, message: 'Please enter your NTP server' }]}
-              style={{ marginTop: '10px' }}
+              rules={[{ required: ntp, message: 'Please enter your NTP server' }]}
             >
               <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
-          )}
-        </Item>
-        <Item label="LED Status" name="ledStatus">
-          <Checkbox onChange={() => setLed(!led)} defaultChecked>
+          </Item>
+        )}
+        <Item label="LED Status" name="ledStatus" valuePropName="checked">
+          <Checkbox value="led" onChange={() => setLed(!led)} defaultChecked>
             Show LED indicators on APs
           </Checkbox>
         </Item>
 
-        <Item label="RTLS" name="rtls">
+        <Item
+          label="RTLS"
+          name="rtls"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your RTLS setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="disabledRTLS" onChange={() => setRtls(false)}>
               Disabled
@@ -136,18 +151,19 @@ const AccessPointForm = () => {
               Enabled
             </Radio>
           </Radio.Group>
-          {rtls && (
-            <>
+        </Item>
+        {rtls && (
+          <>
+            <Item label=" " colon={false}>
               <Item
                 name="RTLSipAddress"
                 rules={[
                   {
-                    required: true,
+                    required: rtls,
                     pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
                     message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                   },
                 ]}
-                style={{ marginTop: '10px' }}
                 hasFeedback
               >
                 <Input className={styles.Field} placeholder="IP Address" />
@@ -156,12 +172,12 @@ const AccessPointForm = () => {
                 name="RTLSport"
                 rules={[
                   {
-                    required: true,
+                    required: rtls,
                     message: 'Port expected between 1 - 65535',
                   },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('port') < 65535) {
+                      if (!value || getFieldValue('RTLSport') < 65535) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('Port expected between 1 - 65535'));
@@ -178,10 +194,19 @@ const AccessPointForm = () => {
                   max={65535}
                 />
               </Item>
-            </>
-          )}
-        </Item>
-        <Item label="Syslog" name="syslog">
+            </Item>
+          </>
+        )}
+        <Item
+          label="Syslog"
+          name="syslog"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your Syslog setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="disabledSyslog" onChange={() => setSyslog(false)}>
               Disabled
@@ -190,19 +215,20 @@ const AccessPointForm = () => {
               Enabled
             </Radio>
           </Radio.Group>
-          {syslog && (
-            <>
+        </Item>
+        {syslog && (
+          <>
+            <Item label=" " colon={false}>
               <div className={styles.InlineDiv}>
                 <Item
                   name="SyslogIP"
                   rules={[
                     {
-                      required: true,
+                      required: syslog,
                       pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
                       message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
                   ]}
-                  style={{ marginTop: '10px', marginBottom: '10px' }}
                   hasFeedback
                 >
                   <Input className={styles.Field} placeholder="IP Address" />
@@ -211,12 +237,12 @@ const AccessPointForm = () => {
                   name="SyslogPort"
                   rules={[
                     {
-                      required: true,
+                      required: syslog,
                       message: 'Port expected between 1 - 65535',
                     },
                     ({ getFieldValue }) => ({
                       validator(_rule, value) {
-                        if (!value || getFieldValue('syslogPort') < 65535) {
+                        if (!value || getFieldValue('SyslogPort') < 65535) {
                           return Promise.resolve();
                         }
                         return Promise.reject(new Error('Port expected between 1 - 65535'));
@@ -227,17 +253,10 @@ const AccessPointForm = () => {
                 >
                   <Input
                     className={styles.Field}
-                    style={{ marginTop: '10px', marginBottom: '10px' }}
-                    placeholder="Enter NTP server"
+                    placeholder="Port"
                     type="number"
                     min={1}
                     max={65535}
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Port expected between 1 - 65535',
-                      },
-                    ]}
                     hasFeedback
                   />
                 </Item>
@@ -262,16 +281,34 @@ const AccessPointForm = () => {
                   <Option value="emergency">Emergency (EMERG)</Option>
                 </Select>
               </Item>
-            </>
-          )}
-        </Item>
-        <Item label="Synthetic Client" name="syntheticClient">
+            </Item>
+          </>
+        )}
+        <Item
+          label="Synthetic Client"
+          name="syntheticClient"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your Synthetic Client setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="disabledClient">Disabled</Radio>
             <Radio value="enabledClient">Enabled</Radio>
           </Radio.Group>
         </Item>
-        <Item label="Equipment Discovery" name="equipmentDiscovery">
+        <Item
+          label="Equipment Discovery"
+          name="equipmentDiscovery"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your Equipment Discovery setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="disabledEq">Disabled</Radio>
             <Radio value="enabledEq">Enabled</Radio>
@@ -280,11 +317,9 @@ const AccessPointForm = () => {
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Table columns={columns} pagination={false} />
-        <Button style={{ marginTop: '10px' }} onClick={() => setAddModal(true)}>
-          Create Wireless Network
-        </Button>
+        <Button onClick={() => setAddModal(true)}>Create Wireless Network</Button>
       </Card>
-    </>
+    </div>
   );
 };
 

@@ -43,6 +43,7 @@ const RadiusZoneModal = ({ onCancel, visible, title, region }) => {
       title={title}
       content={addServerZone}
       closable={false}
+      onSuccess={() => {}}
     />
   );
 };
@@ -50,7 +51,6 @@ const RadiusZoneModal = ({ onCancel, visible, title, region }) => {
 RadiusZoneModal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
   region: PropTypes.string,
 };

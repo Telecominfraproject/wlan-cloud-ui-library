@@ -1,13 +1,11 @@
-.backButton {
-  border: none;
-}
+.AddProfile {
+  .Field {
+    background: #141414;
+    border: 1px solid #434343;
+    border-radius: 5px;
+  }
 
-.Field {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
-}
-
-:global(.ant-card) {
-  margin-top: 10px;
+  :global(.ant-card) {
+    margin-top: 10px;
+  }
 }

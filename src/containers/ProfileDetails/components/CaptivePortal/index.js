@@ -22,7 +22,7 @@ const CaptivePortalForm = () => {
   const [contentText, setContentText] = useState('user');
 
   return (
-    <>
+    <div className={styles.ProfilePage}>
       <Card title="General Settings ">
         <Item
           name="authentication"
@@ -313,7 +313,7 @@ const CaptivePortalForm = () => {
           </Item>
         </Panel>
       </Collapse>
-    </>
+    </div>
   );
 };
 

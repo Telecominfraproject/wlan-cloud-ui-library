@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-
 import { Card, Form, Input, Tooltip, Checkbox, Radio, Select, Button } from 'antd';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import Modal from 'components/Modal';
+import RadiusForm from '../Radius';
 
 import styles from '../index.module.scss';
 
@@ -10,6 +11,7 @@ const { Option } = Select;
 
 const SSIDForm = () => {
   const [bridge, setBridge] = useState(false);
+  const [radiusModal, setRadiusModal] = useState(false);
   const [captivePortal, setCaptivePortal] = useState(false);
   const [vlan, setVlan] = useState(false);
   const [mode, setMode] = useState('');
@@ -21,8 +23,36 @@ const SSIDForm = () => {
     }
   };
 
+  const dropdownOptions = (
+    <Select className={styles.Field}>
+      <Option value="auto">Auto</Option>
+      <Option value="enabled">Enabled</Option>
+      <Option value="disabled">Disabled</Option>
+    </Select>
+  );
+
   return (
-    <>
+    <div className={styles.ProfilePage}>
+      <Modal
+        onCancel={() => setRadiusModal(false)}
+        visible={radiusModal}
+        onSuccess={() => {}}
+        title="Add Radius Profile"
+        width={1200}
+        content={
+          <div>
+            <Card title="Create Profile Name">
+              <Item
+                label="Profile Name"
+                rules={[{ required: true, message: 'Please input your new profile name' }]}
+              >
+                <Input className={styles.Field} placeholder="Enter profile name" />
+              </Item>
+            </Card>
+            <RadiusForm />
+          </div>
+        }
+      />
       <Card title="SSID">
         <Item
           label="SSID Name"
@@ -70,7 +100,6 @@ const SSIDForm = () => {
               ]}
             >
               <Input
-                hasFeedback
                 className={styles.Field}
                 placeholder="0-100"
                 type="number"
@@ -107,7 +136,6 @@ const SSIDForm = () => {
               ]}
             >
               <Input
-                hasFeedback
                 className={styles.Field}
                 placeholder="0-100"
                 type="number"
@@ -129,8 +157,8 @@ const SSIDForm = () => {
         <Item name="ssidUseOn" label="Use On">
           <Checkbox.Group>
             <Checkbox value="2.4Ghz">2.4 GHz</Checkbox>
-
-            <Checkbox value="5Ghz">5 GHz</Checkbox>
+            <Checkbox value="5GhzU">5 GHzU</Checkbox>
+            <Checkbox value="5GhzL">5 GHzL</Checkbox>
           </Checkbox.Group>
         </Item>
       </Card>
@@ -169,7 +197,7 @@ const SSIDForm = () => {
           }
         >
           <Radio.Group>
-            <Radio value="bridge" onChange={() => setBridge(true)}>
+            <Radio value="bridge" onChange={() => setBridge(true)} defaultSelected>
               Bridge
             </Radio>
             <Radio value="NAT" onChange={() => setBridge(false)}>
@@ -182,6 +210,7 @@ const SSIDForm = () => {
           name="localAccess"
           rules={[
             {
+              required: bridge,
               message: 'Please select your local access configuration',
             },
           ]}
@@ -222,12 +251,14 @@ const SSIDForm = () => {
               Use
             </Radio>
           </Radio.Group>
-          {captivePortal && (
+        </Item>
+        {captivePortal && (
+          <Item label=" " colon={false}>
             <Item
               name="captiveID"
               rules={[
                 {
-                  required: true,
+                  required: captivePortal,
                   message: 'Please input your default captive ID',
                 },
               ]}
@@ -237,8 +268,8 @@ const SSIDForm = () => {
                 <Option value="default">Default</Option>
               </Select>
             </Item>
-          )}
-        </Item>
+          </Item>
+        )}
       </Card>
 
       <Card title="Security and Encryption">
@@ -279,7 +310,7 @@ const SSIDForm = () => {
             ]}
           >
             <Tooltip title="Add new RADIUS service">
-              <Button icon={<PlusOutlined />} />
+              <Button icon={<PlusOutlined />} onClick={() => setRadiusModal(true)} />
             </Tooltip>
           </Item>
         )}
@@ -351,7 +382,7 @@ const SSIDForm = () => {
             </Item>
             <Item
               label="Default Key ID "
-              name="keyID"
+              name="vlanId"
               rules={[
                 {
                   required: true,
@@ -359,7 +390,7 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Select className={styles.Field} placeholder="Select default key ID">
+              <Select className={styles.Field} placeholder="Select vlan key ID">
                 <Option value={1}>1</Option>
                 <Option value={2}>2</Option>
                 <Option value={3}>3</Option>
@@ -368,7 +399,16 @@ const SSIDForm = () => {
             </Item>
           </>
         )}
-        <Item label="VLAN" name="vlan">
+        <Item
+          label="VLAN"
+          name="vlan"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your VLAN setting',
+            },
+          ]}
+        >
           <Radio.Group>
             <Radio value="customVLAN" onChange={() => setVlan(true)}>
               Use Custom VLAN
@@ -377,20 +417,21 @@ const SSIDForm = () => {
               Use Default VLAN
             </Radio>
           </Radio.Group>
-
-          {vlan && (
+        </Item>
+        {vlan && (
+          <Item label=" " colon={false}>
             <Item
               name="vlanValue"
               rules={[
                 {
-                  required: true,
+                  required: vlan,
                   message: 'Vlan expected between 2 and 4095',
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
                     if (
                       !value ||
-                      (getFieldValue('vlan') <= 4095 && getFieldValue('vlanValue') > 1)
+                      (getFieldValue('vlanValue') <= 4095 && getFieldValue('vlanValue') > 1)
                     ) {
                       return Promise.resolve();
                     }
@@ -410,8 +451,8 @@ const SSIDForm = () => {
                 maxLength={4}
               />
             </Item>
-          )}
-        </Item>
+          </Item>
+        )}
       </Card>
 
       {mode !== 'wpaPersonal' && mode !== 'wep' && (
@@ -437,7 +478,7 @@ const SSIDForm = () => {
                   Transition (802.11r)
                 </span>
               }
-              name="802.11r"
+              name="r802dot11r"
               rules={[
                 {
                   required: true,
@@ -445,18 +486,14 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Select className={styles.Field}>
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
+              {dropdownOptions}
             </Item>
           )}
 
           {(mode === 'wpa2Personal' || mode === 'wpa2Enterprise') && (
             <Item
               label="802.11w"
-              name="802.11w"
+              name="r80211w"
               rules={[
                 {
                   required: true,
@@ -464,18 +501,14 @@ const SSIDForm = () => {
                 },
               ]}
             >
-              <Select className={styles.Field}>
-                <Option value="auto">Auto</Option>
-                <Option value="enabled">Enabled</Option>
-                <Option value="disabled">Disabled</Option>
-              </Select>
+              {dropdownOptions}
             </Item>
           )}
 
           <Item label="802.11k ">
             <div className={styles.InlineDiv}>
               <Item
-                name="802.11k2dot4GHz"
+                name="r80211k2dot4GHz"
                 rules={[
                   {
                     required: true,
@@ -483,14 +516,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11k5GHz"
+                name="r80211k5GHz"
                 rules={[
                   {
                     required: true,
@@ -498,14 +527,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11k5GHzU"
+                name="r80211k5GHzU"
                 rules={[
                   {
                     required: true,
@@ -513,14 +538,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11k5GHzL"
+                name="r80211k5GHzL"
                 rules={[
                   {
                     required: true,
@@ -528,18 +549,14 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
             </div>
           </Item>
           <Item label="802.11v ">
             <div className={styles.InlineDiv}>
               <Item
-                name="802.11v2dot4GHz"
+                name="r80211v2dot4GHz"
                 rules={[
                   {
                     required: true,
@@ -547,14 +564,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11v5GHz"
+                name="r80211v5GHz"
                 rules={[
                   {
                     required: true,
@@ -562,14 +575,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11v5GHzU"
+                name="r80211v5GHzU"
                 rules={[
                   {
                     required: true,
@@ -577,14 +586,10 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
               <Item
-                name="802.11v5GHzL"
+                name="r80211v5GHzL"
                 rules={[
                   {
                     required: true,
@@ -592,17 +597,13 @@ const SSIDForm = () => {
                   },
                 ]}
               >
-                <Select className={styles.Field}>
-                  <Option value="auto">Auto</Option>
-                  <Option value="enabled">Enabled</Option>
-                  <Option value="disabled">Disabled</Option>
-                </Select>
+                {dropdownOptions}
               </Item>
             </div>
           </Item>
         </Card>
       )}
-    </>
+    </div>
   );
 };
 

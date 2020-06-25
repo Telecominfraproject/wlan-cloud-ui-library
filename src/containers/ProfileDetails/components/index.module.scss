@@ -1,27 +1,56 @@
-.Field {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
-  margin-bottom: 5px;
-}
+.ProfilePage {
+  .Field {
+    background: #141414;
+    border: 1px solid #434343;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
 
-:global(.ant-form-item) {
-  flex: 1;
-}
-:global(.ant-checkbox) {
-  margin-left: 10px;
-}
+  :global(.ant-form-item) {
+    flex: 1;
+  }
+  :global(.ant-checkbox) {
+    margin-left: 10px;
+  }
 
-:global(.ant-radio) {
-  margin-left: 10px;
-}
+  :global(.ant-radio) {
+    margin-left: 10px;
+  }
 
-:global(.ant-collapse) {
-  margin-top: 10px;
-  background: #141414;
-}
-:global(.ant-list) {
-  padding: 20px;
+  :global(.ant-collapse) {
+    margin-top: 10px;
+    background: #141414;
+  }
+  :global(.ant-list) {
+    padding: 20px;
+  }
+
+  .Disclaimer {
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-style: italic;
+    font-size: 10px;
+  }
+
+  .Image {
+    border: dashed;
+    width: 100%;
+    border: 2px dashed #aaaaa9;
+    padding: 20px;
+    cursor: pointer;
+    margin-right: 20px;
+    margin-top: 5px;
+  }
+
+  code {
+    background-color: #35a649;
+    color: black;
+  }
+
+  .infoCard {
+    margin-right: 10px;
+  }
 }
 
 .InlineDiv {
@@ -37,34 +66,5 @@
 
 .InlineEndDiv {
   display: flex;
-  width: 100%;
   justify-content: flex-end;
-  margin-left: 8;
-}
-
-.Disclaimer {
-  margin-left: 10px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-  font-style: italic;
-  font-size: 10px;
-}
-
-.Image {
-  border: dashed;
-  width: 100%;
-  border: 2px dashed #aaaaa9;
-  padding: 20px;
-  cursor: pointer;
-  margin-right: 20px;
-  margin-top: 5px;
-}
-
-code {
-  background-color: #35a649;
-  color: black;
-}
-
-.infoCard {
-  margin-right: 10px;
 }

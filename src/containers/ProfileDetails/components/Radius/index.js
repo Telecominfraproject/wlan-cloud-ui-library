@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Form, Input, List, Collapse, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
@@ -7,7 +8,7 @@ import RadiusServiceModal from './components/RadiusService';
 import RadiusZoneModal from './components/RadiusZone';
 import ManagementSubnetModal from './components/ManagementSubnet';
 
-const RadiusForm = () => {
+const RadiusForm = ({ details }) => {
   const { Item } = Form;
   const { Panel } = Collapse;
 
@@ -25,16 +26,18 @@ const RadiusForm = () => {
   ];
 
   return (
-    <>
+    <div className={styles.ProfilePage}>
       <RadiusServiceModal
         onCancel={() => setAddService(false)}
         visible={addService}
         title="Add RADIUS Service"
+        onSuccess={() => {}}
       />
       <ManagementSubnetModal
         onCancel={() => setAddSubset(false)}
         visible={addSubset}
         title="Add Subnet Configuration"
+        onSuccess={() => {}}
       />
       <RadiusServiceModal
         onCancel={() => setEditService(false)}
@@ -42,17 +45,20 @@ const RadiusForm = () => {
         title="Edit RADIUS Service"
         disabled
         service="test service"
+        onSuccess={() => {}}
       />
       <RadiusZoneModal
         onCancel={() => setAddZone(false)}
         visible={addZone}
         title="Add Service Zone Configuration"
+        onSuccess={() => {}}
       />
       <RadiusZoneModal
         onCancel={() => setEditZone(false)}
         visible={editZone}
         title="Edit Service Zone Configuration"
         region="test region"
+        onSuccess={() => {}}
       />
 
       <Card title="Radius Probe Configuration">
@@ -68,8 +74,9 @@ const RadiusForm = () => {
               validator(_rule, value) {
                 if (
                   !value ||
-                  getFieldValue('probe') === 0 ||
-                  (getFieldValue('probe') >= 60 && getFieldValue('probe') <= 100)
+                  (getFieldValue('probe') >= 60 && getFieldValue('probe') <= 100) ||
+                  // eslint-disable-next-line eqeqeq
+                  getFieldValue('probe') == 0
                 ) {
                   return Promise.resolve();
                 }
@@ -153,7 +160,6 @@ const RadiusForm = () => {
                                 onClick={() => setEditService(true)}
                                 icon={<EditOutlined />}
                               />
-                              &nbsp;{item.title}
                             </>
                           }
                         />
@@ -181,15 +187,22 @@ const RadiusForm = () => {
                       <Button icon={<DeleteOutlined />} type="danger" />
                     </>
                   }
-                  title={item.region}
                 />
               </List.Item>
             )}
           />
         </Panel>
       </Collapse>
-    </>
+    </div>
   );
+};
+
+RadiusForm.propTypes = {
+  details: PropTypes.instanceOf(Object),
+};
+
+RadiusForm.defaultProps = {
+  details: {},
 };
 
 export default RadiusForm;
