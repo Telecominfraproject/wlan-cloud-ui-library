@@ -94,6 +94,7 @@ const BulkEditAPTable = ({
   return (
     <>
       <Table
+        data-testid="bulkEditTable"
         components={components}
         rowClassName={() => {
           return styles.editableRow;

@@ -24,7 +24,7 @@ const mockProps = {
   tableData: [],
   onSaveChanges: () => {},
   onLoadMore: () => {},
-  isLastPage: false,
+  isLastPage: true,
 };
 describe('<BulkEditAccessPoints />', () => {
   afterEach(cleanup);
@@ -49,5 +49,36 @@ describe('<BulkEditAccessPoints />', () => {
     );
     fireEvent.click(getByRole('button', { name: /save changes/i }));
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('if isLastPage is true Load More button should not be visible', async () => {
+    const { queryByRole } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+    expect(queryByRole('button', { name: 'Load More' })).toBeNull();
+  });
+
+  it('if isLastPage is false Load More button should be visible', async () => {
+    const { getByRole } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} isLastPage={false} />
+      </Router>
+    );
+    expect(getByRole('button', { name: 'Load More' })).toBeVisible();
+  });
+
+  it('onLoadMore should be called when ', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} isLastPage={false} onLoadMore={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('button', { name: 'Load More' }));
+
+    expect(submitSpy).toHaveBeenCalledTimes(1);
   });
 });

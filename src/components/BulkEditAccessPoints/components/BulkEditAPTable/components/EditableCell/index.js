@@ -45,6 +45,7 @@ export const EditableCell = ({
   if (editable) {
     childNode = editing ? (
       <Form.Item
+        data-testid="bulkEditFormElement"
         style={{
           margin: 0,
         }}
@@ -56,10 +57,11 @@ export const EditableCell = ({
           },
         ]}
       >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        <Input data-testid="bulkEditFormInput" ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
       <div
+        data-testid="bulkEditTableCell"
         className={styles.editableCellValueWrap}
         role="button"
         tabIndex={0}

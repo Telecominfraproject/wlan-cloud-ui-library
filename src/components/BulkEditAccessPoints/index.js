@@ -35,28 +35,27 @@ const BulkEditAccessPoints = ({
       >
         Back
       </Button>
-      <div>
-        <div className={styles.innerContainer}>
-          <p className={styles.innerText}>Bulk Edit Access Points</p>
-          <Button
-            onClick={() => {
-              onSaveChanges(editedRows);
-              setRestEditedRows(!resetEditedRows);
-            }}
-            className={styles.saveBtn}
-          >
-            SAVE CHANGES
-          </Button>
-        </div>
-        <BulkEditAPTable
-          tableColumns={tableColumns}
-          tableData={tableData}
-          onEditedRows={handleEditedRows}
-          onLoadMore={onLoadMore}
-          isLastPage={isLastPage}
-          resetEditedRows={resetEditedRows}
-        />
+
+      <div className={styles.innerContainer}>
+        <p className={styles.innerText}>Bulk Edit Access Points</p>
+        <Button
+          onClick={() => {
+            onSaveChanges(editedRows);
+            setRestEditedRows(!resetEditedRows);
+          }}
+          className={styles.saveBtn}
+        >
+          SAVE CHANGES
+        </Button>
       </div>
+      <BulkEditAPTable
+        tableColumns={tableColumns}
+        tableData={tableData}
+        onEditedRows={handleEditedRows}
+        onLoadMore={onLoadMore}
+        isLastPage={isLastPage}
+        resetEditedRows={resetEditedRows}
+      />
     </div>
   );
 };
