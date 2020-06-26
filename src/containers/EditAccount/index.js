@@ -35,7 +35,7 @@ const EditAccount = ({ email, onSubmit }) => {
               },
             ]}
           >
-            <Input.Password className={styles.Field} />
+            <Input.Password className={styles.field} />
           </Item>
 
           <Item
@@ -58,7 +58,7 @@ const EditAccount = ({ email, onSubmit }) => {
             ]}
             hasFeedback
           >
-            <Input.Password className={styles.Field} />
+            <Input.Password className={styles.field} />
           </Item>
           <Button className={styles.Save} type="primary" htmlType="submit" data-testid="saveButton">
             SAVE CHANGES

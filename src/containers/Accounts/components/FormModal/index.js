@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Select } from 'antd';
 
 import Modal from 'components/Modal';
-import styles from './index.module.scss';
+import styles from 'styles/index.scss';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -37,7 +37,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
           },
         ]}
       >
-        <Input className={styles.Field} />
+        <Input className={styles.field} />
       </Item>
 
       <Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
@@ -57,7 +57,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
           },
         ]}
       >
-        <Input.Password visibilityToggle className={styles.Field} />
+        <Input.Password visibilityToggle className={styles.field} />
       </Item>
 
       <Item
@@ -80,7 +80,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
         ]}
         hasFeedback
       >
-        <Input.Password className={styles.Field} />
+        <Input.Password className={styles.field} />
       </Item>
     </Form>
   );

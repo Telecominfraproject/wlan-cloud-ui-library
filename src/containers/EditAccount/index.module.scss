@@ -1,3 +1,5 @@
+@import 'styles';
+
 .Container {
   display: flex;
   justify-content: center;
@@ -5,6 +7,12 @@
   text-align: center;
   flex-direction: column;
   padding: 5px;
+
+  h1 {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
 }
 
 .Card {
@@ -14,22 +22,10 @@
   height: 100%;
 }
 
-.Field {
-  background: #141414;
-  border: 1px solid #434343;
-  border-radius: 5px;
-}
-
 .Email {
   text-align: left;
 }
 
 .Save {
   margin-top: 30px;
-}
-
-h1 {
-  color: #fff;
-  font-size: 22px;
-  margin-bottom: 30px;
 }
