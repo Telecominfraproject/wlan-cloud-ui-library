@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, List, Collapse, Tooltip } from 'antd';
+import { Card, Form, Input, List, Collapse, Tooltip, Table } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
@@ -18,12 +18,32 @@ const RadiusForm = ({ details }) => {
   const [editZone, setEditZone] = useState(false);
   const [addSubset, setAddSubset] = useState(false);
 
-  const data = [
+  const columns = [
     {
-      title: 'test1@connectus.ai',
-      region: 'region',
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Server List',
+      dataIndex: 'ipAddress',
+      key: 'ip',
     },
   ];
+
+  const managementColumn = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Subnet',
+      key: 'ip',
+    },
+  ];
+
+  const data = Object.values(details.serviceRegionMap);
 
   console.log(details);
 
@@ -148,35 +168,44 @@ const RadiusForm = ({ details }) => {
         >
           <List
             itemLayout="horizontal"
-            dataSource={details}
+            dataSource={Object.values(details.serviceRegionMap)}
             renderItem={item => (
               <List.Item
                 extra={
                   <>
                     <div className={styles.InlineDiv}>
                       <Card className={styles.infoCard} title=" Radius Services" bordered={false}>
-                        <Card.Meta
-                          description={
-                            <>
-                              <Button
-                                onClick={() => setEditService(true)}
-                                icon={<EditOutlined />}
-                              />
-                            </>
-                          }
+                        <Table
+                          dataSource={data[0].serverMap['Radius-Profile']}
+                          columns={columns}
+                          pagination={false}
+                          size="small"
+                          onRow={() => ({
+                            onClick: () => {
+                              setEditService(true);
+                            },
+                          })}
                         />
                       </Card>
+
                       <Card className={styles.infoCard} title=" Management Subset" bordered={false}>
-                        <Card.Meta
-                          description={
-                            <>
-                              <span className={styles.Disclaimer}>
-                                A region must include at least 1 Management Subset
-                              </span>
-                              <Button onClick={() => setAddSubset(true)} icon={<PlusOutlined />} />
-                            </>
-                          }
+                        <Table
+                          dataSource={data[0].serverMap['Radius-Profile']}
+                          columns={managementColumn}
+                          pagination={false}
+                          size="small"
+                          onRow={() => ({
+                            onClick: () => {
+                              setEditZone(true);
+                            },
+                          })}
                         />
+
+                        <>
+                          <Button onClick={() => setAddSubset(true)} icon={<PlusOutlined />}>
+                            Add Subnet
+                          </Button>
+                        </>
                       </Card>
                     </div>
                   </>
@@ -189,6 +218,7 @@ const RadiusForm = ({ details }) => {
                       <Button icon={<DeleteOutlined />} type="danger" />
                     </>
                   }
+                  title={item.regionName}
                 />
               </List.Item>
             )}

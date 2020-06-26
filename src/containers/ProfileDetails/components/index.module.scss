@@ -17,6 +17,10 @@
     margin-left: 10px;
   }
 
+  :global(.ant-table) {
+    margin-bottom: 10px;
+  }
+
   :global(.ant-collapse) {
     margin-top: 10px;
     background: #141414;
