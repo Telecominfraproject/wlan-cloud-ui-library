@@ -43,7 +43,6 @@ const ProfileDetails = ({ name, details, profileType, onDeleteProfile, onUpdateP
     name,
   });
 
-  console.log(details);
   return (
     <Container classname={styles.ProfileDetails}>
       {redirect && <Redirect to="/profiles" />}

@@ -25,6 +25,8 @@ const RadiusForm = ({ details }) => {
     },
   ];
 
+  console.log(details);
+
   return (
     <div className={styles.ProfilePage}>
       <RadiusServiceModal
@@ -146,7 +148,7 @@ const RadiusForm = ({ details }) => {
         >
           <List
             itemLayout="horizontal"
-            dataSource={data}
+            dataSource={details}
             renderItem={item => (
               <List.Item
                 extra={

@@ -73,17 +73,22 @@ const AccessPointForm = () => {
         }
       />
       <Card title="LAN and Services ">
-        <Item label="Management VLAN" valuePropName="checked" name="managementVlan">
+        <Item
+          label="Management VLAN"
+          valuePropName="checked"
+          name="managementVlan"
+          initialValue={{ managementVlan: true }}
+        >
           <Checkbox onChange={() => setVlan(!vlan)}>Use Default Management VLAN</Checkbox>
         </Item>
 
-        {vlan && (
+        {!vlan && (
           <Item label=" " colon={false}>
             <Item
               name="vlanValue"
               rules={[
                 {
-                  required: vlan,
+                  required: !vlan,
                   message: 'Vlan expected between 2 and 4095',
                 },
                 ({ getFieldValue }) => ({
@@ -112,22 +117,27 @@ const AccessPointForm = () => {
           </Item>
         )}
 
-        <Item label="NTP" name="ntp" valuePropName="checked">
+        <Item label="NTP" name="ntp" valuePropName="checked" initialValue={{ ntp: true }}>
           <Checkbox onChange={() => setNTP(!ntp)} defaultChecked>
             Use Default Servers
           </Checkbox>
         </Item>
-        {ntp && (
+        {!ntp && (
           <Item label=" " colon={false}>
             <Item
               name="ntpServer"
-              rules={[{ required: ntp, message: 'Please enter your NTP server' }]}
+              rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
             >
               <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
           </Item>
         )}
-        <Item label="LED Status" name="ledStatus" valuePropName="checked">
+        <Item
+          label="LED Status"
+          name="ledStatus"
+          valuePropName="checked"
+          initialValue={{ ledStatus: true }}
+        >
           <Checkbox value="led" onChange={() => setLed(!led)} defaultChecked>
             Show LED indicators on APs
           </Checkbox>

@@ -89,7 +89,7 @@ const SSIDForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('downstream') <= 100) {
+                    if (!value || getFieldValue('downstreamBandwidth') <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -125,7 +125,7 @@ const SSIDForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('upstream') <= 100) {
+                    if (!value || getFieldValue('upstreamBandwidth') <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(

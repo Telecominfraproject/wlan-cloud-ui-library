@@ -30,6 +30,7 @@ const AddProfile = ({ onCreateProfile }) => {
   const handleOnSave = () => {
     form.validateFields().then(details => {
       onCreateProfile(profileType, name, details);
+      console.log(details);
     });
   };
 
