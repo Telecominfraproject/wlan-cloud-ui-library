@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { Card, Form, Input, Tooltip, Checkbox, Radio, Select, Button } from 'antd';
-import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import Modal from 'components/Modal';
-import RadiusForm from '../Radius';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Card, Form, Input, Tooltip, Checkbox, Radio, Select } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
+import Modal from 'components/Modal';
+
+import RadiusForm from '../Radius';
 import styles from '../index.module.scss';
+import { RADIOS, ROAMING } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
 
-const SSIDForm = () => {
-  const [bridge, setBridge] = useState(false);
+const SSIDForm = ({ form, details }) => {
+  const [mode, setMode] = useState(details.secureMode || 'open');
   const [radiusModal, setRadiusModal] = useState(false);
-  const [captivePortal, setCaptivePortal] = useState(false);
-  const [vlan, setVlan] = useState(false);
-  const [mode, setMode] = useState('');
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -26,10 +26,41 @@ const SSIDForm = () => {
   const dropdownOptions = (
     <Select className={styles.Field}>
       <Option value="auto">Auto</Option>
-      <Option value="enabled">Enabled</Option>
-      <Option value="disabled">Disabled</Option>
+      <Option value="true">Enabled</Option>
+      <Option value="false">Disabled</Option>
     </Select>
   );
+
+  useEffect(() => {
+    const radioBasedValues = {};
+
+    RADIOS.forEach(i => {
+      ROAMING.forEach(j => {
+        radioBasedValues[`${j}${i}`] =
+          (details.radioBasedConfigs && details.radioBasedConfigs[i][j]) || 'auto';
+      });
+    });
+
+    form.setFieldsValue({
+      ssid: details.ssid || '',
+      bandwidthLimitDown: details.bandwidthLimitDown || 0,
+      bandwidthLimitUp: details.bandwidthLimitUp || 0,
+      broadcastSSID: details.broadcastSsid === 'enabled' ? 'showSSID' : 'hideSSID',
+      appliedRadios: details.appliedRadios || ['is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+      forwardMode: details.forwardMode || 'BRIDGE',
+      noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
+      captivePortal:
+        details.captivePortalId && details.captivePortalId > 0 ? 'usePortal' : 'notPortal',
+      captivePortalId: details.captivePortalId || 'default',
+      secureMode: details.secureMode || 'open',
+      vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
+      keyStr: details.keyStr,
+      wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
+      wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
+      vlanId: details.vlanId,
+      ...radioBasedValues,
+    });
+  }, [form, details]);
 
   return (
     <div className={styles.ProfilePage}>
@@ -81,7 +112,7 @@ const SSIDForm = () => {
         <Item label="Bandwidth">
           <div className={styles.InlineDiv}>
             <Item
-              name="downstreamBandwidth"
+              name="bandwidthLimitDown"
               rules={[
                 {
                   required: true,
@@ -89,7 +120,7 @@ const SSIDForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('downstreamBandwidth') <= 100) {
+                    if (!value || getFieldValue('bandwidthLimitDown') <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -117,7 +148,7 @@ const SSIDForm = () => {
             </Item>
 
             <Item
-              name="upstreamBandwidth"
+              name="bandwidthLimitUp"
               rules={[
                 {
                   required: true,
@@ -125,7 +156,7 @@ const SSIDForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('upstreamBandwidth') <= 100) {
+                    if (!value || getFieldValue('bandwidthLimitUp') <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -154,23 +185,17 @@ const SSIDForm = () => {
           </div>
         </Item>
 
-        <Item name="ssidUseOn" label="Use On">
+        <Item name="appliedRadios" label="Use On">
           <Checkbox.Group>
-            <Checkbox value="2.4Ghz">2.4 GHz</Checkbox>
-            <Checkbox value="5GhzU">5 GHzU</Checkbox>
-            <Checkbox value="5GhzL">5 GHzL</Checkbox>
+            <Checkbox value="is2dot4GHz">2.4 GHz</Checkbox>
+            <Checkbox value="is5GHzU">5 GHzU</Checkbox>
+            <Checkbox value="is5GHzL">5 GHzL</Checkbox>
           </Checkbox.Group>
         </Item>
       </Card>
       <Card title="Network Connectivity">
         <Item
-          name="mode"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your connectivity mode',
-            },
-          ]}
+          name="forwardMode"
           label={
             <span>
               <Tooltip
@@ -197,85 +222,75 @@ const SSIDForm = () => {
           }
         >
           <Radio.Group>
-            <Radio value="bridge" onChange={() => setBridge(true)} defaultSelected>
+            <Radio value="BRIDGE" defaultSelected>
               Bridge
             </Radio>
-            <Radio value="NAT" onChange={() => setBridge(false)}>
-              NAT
-            </Radio>
+            <Radio value="NAT">NAT</Radio>
           </Radio.Group>
         </Item>
 
         <Item
-          name="localAccess"
-          rules={[
-            {
-              required: bridge,
-              message: 'Please select your local access configuration',
-            },
-          ]}
-          label={
-            <span>
-              <Tooltip title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied.">
-                <InfoCircleOutlined />
-              </Tooltip>
-              &nbsp; Local Access
-            </span>
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode
           }
         >
-          {bridge ? (
-            <Radio.Group>
-              <Radio value="access">Allow Local Access</Radio>
-              <Radio value="noAccess">No Local Access</Radio>
-            </Radio.Group>
-          ) : (
-            <span className={styles.Disclaimer}>Not Applicable</span>
-          )}
+          {({ getFieldValue }) => {
+            return (
+              <Item
+                name="noLocalSubnets"
+                label={
+                  <span>
+                    <Tooltip title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied.">
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                    &nbsp; Local Access
+                  </span>
+                }
+              >
+                {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                  <Radio.Group>
+                    <Radio value="false">Allow Local Access</Radio>
+                    <Radio value="true">No Local Access</Radio>
+                  </Radio.Group>
+                ) : (
+                  <span className={styles.Disclaimer}>Not Applicable</span>
+                )}
+              </Item>
+            );
+          }}
         </Item>
 
-        <Item
-          label="Captive Portal"
-          name="captive"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your captive portal setting',
-            },
-          ]}
-        >
+        <Item label="Captive Portal" name="captivePortal">
           <Radio.Group>
-            <Radio value="notPortal" onChange={() => setCaptivePortal(false)}>
-              Do Not Use
-            </Radio>
-            <Radio value="usePortal" onChange={() => setCaptivePortal(true)}>
-              Use
-            </Radio>
+            <Radio value="notPortal">Do Not Use</Radio>
+            <Radio value="usePortal">Use</Radio>
           </Radio.Group>
         </Item>
-        {captivePortal && (
-          <Item label=" " colon={false}>
-            <Item
-              name="captiveID"
-              rules={[
-                {
-                  required: captivePortal,
-                  message: 'Please input your default captive ID',
-                },
-              ]}
-              style={{ marginTop: '10px' }}
-            >
-              <Select className={styles.Field} placeholder="Select Captive Portal">
-                <Option value="default">Default</Option>
-              </Select>
-            </Item>
-          </Item>
-        )}
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.captivePortal !== currentValues.captivePortal
+          }
+        >
+          {({ getFieldValue }) => {
+            return getFieldValue('captivePortal') === 'usePortal' ? (
+              <Item label=" " colon={false}>
+                <Item name="captivePortalId" style={{ marginTop: '10px' }}>
+                  <Select className={styles.Field} placeholder="Select Captive Portal">
+                    <Option value="default">Default</Option>
+                  </Select>
+                </Item>
+              </Item>
+            ) : null;
+          }}
+        </Item>
       </Card>
 
       <Card title="Security and Encryption">
         <Item
           label="Mode"
-          name="securityMode"
+          name="secureMode"
           rules={[
             {
               required: true,
@@ -289,36 +304,32 @@ const SSIDForm = () => {
             placeholder="Select Security and Encryption Mode"
           >
             <Option value="open">Open (No ecryption)</Option>
-            <Option value="wpaPersonal">WPA Personal</Option>
-            <Option value="mixedPersonal">WPA & WPA2 Personal (mixed mode)</Option>
-            <Option value="mixedEnterprise">WPA & WPA2 Enterprise (mixed mode)</Option>
-            <Option value="wpa2Personal">WPA2 Personal</Option>
-            <Option value="wpa2Enterprise">WPA2 Enterprise</Option>
+            <Option value="wpaPSK">WPA Personal</Option>
+            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
+            <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
+            <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wep">WEP</Option>
           </Select>
         </Item>
 
-        {(mode === 'mixedEnterprise' || mode === 'wpa2Enterprise') && (
-          <Item
-            label="RADIUS Service"
-            name="radius"
-            rules={[
-              {
-                required: true,
-                message: 'Please select your RADIUS service',
-              },
-            ]}
-          >
-            <Tooltip title="Add new RADIUS service">
-              <Button icon={<PlusOutlined />} onClick={() => setRadiusModal(true)} />
-            </Tooltip>
+        {mode === 'wep' && (
+          <Item label=" " colon={false}>
+            <span className={styles.Disclaimer}>
+              When using WEP, high performance features like 11n and 11ac will not work with this
+              SSID.
+            </span>
           </Item>
         )}
 
-        {(mode === 'wpa' || mode === 'mixedPersonal' || mode === 'wpa2Personal') && (
+        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && details.radiusServiceName && (
+          <Item label="RADIUS Service">{details.radiusServiceName}</Item>
+        )}
+
+        {(mode === 'wpa' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK') && (
           <Item
             label="Security Key"
-            name="key"
+            name="keyStr"
             rules={[
               {
                 required: true,
@@ -340,11 +351,6 @@ const SSIDForm = () => {
 
         {mode === 'wep' && (
           <>
-            <span className={styles.Disclaimer}>
-              When using WEP, high performance features like 11n and 11ac will not work with this
-              SSID.
-            </span>
-
             <Item
               label="WEP Key"
               name="wepKey"
@@ -382,7 +388,7 @@ const SSIDForm = () => {
             </Item>
             <Item
               label="Default Key ID "
-              name="vlanId"
+              name="wepDefaultKeyId"
               rules={[
                 {
                   required: true,
@@ -400,59 +406,69 @@ const SSIDForm = () => {
           </>
         )}
         <Item
-          label="VLAN"
-          name="vlan"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your VLAN setting',
-            },
-          ]}
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode
+          }
         >
-          <Radio.Group>
-            <Radio value="customVLAN" onChange={() => setVlan(true)}>
-              Use Custom VLAN
-            </Radio>
-            <Radio value="defaultVLAN" onChange={() => setVlan(false)}>
-              Use Default VLAN
-            </Radio>
-          </Radio.Group>
+          {({ getFieldValue }) => {
+            return (
+              <Item label="VLAN" name="vlan">
+                {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                  <Radio.Group>
+                    <Radio value="customVLAN">Use Custom VLAN</Radio>
+                    <Radio value="defaultVLAN">Use Default VLAN</Radio>
+                  </Radio.Group>
+                ) : (
+                  <span className={styles.Disclaimer}>Not Applicable</span>
+                )}
+              </Item>
+            );
+          }}
         </Item>
-        {vlan && (
-          <Item label=" " colon={false}>
-            <Item
-              name="vlanValue"
-              rules={[
-                {
-                  required: vlan,
-                  message: 'Vlan expected between 2 and 4095',
-                },
-                ({ getFieldValue }) => ({
-                  validator(_rule, value) {
-                    if (
-                      !value ||
-                      (getFieldValue('vlanValue') <= 4095 && getFieldValue('vlanValue') > 1)
-                    ) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('Vlan expected between 2 and 4095'));
-                  },
-                }),
-              ]}
-              style={{ marginTop: '10px' }}
-              hasFeedback
-            >
-              <Input
-                className={styles.Field}
-                placeholder="2-4095"
-                type="number"
-                min={2}
-                max={4095}
-                maxLength={4}
-              />
-            </Item>
-          </Item>
-        )}
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) => prevValues.vlan !== currentValues.vlan}
+        >
+          {({ getFieldValue }) => {
+            return getFieldValue('forwardMode') === 'BRIDGE' &&
+              getFieldValue('vlan') === 'customVLAN' ? (
+              <Item label=" " colon={false}>
+                <Item
+                  name="vlanId"
+                  rules={[
+                    {
+                      required: getFieldValue('vlan'),
+                      message: 'Vlan expected between 1 and 4095',
+                    },
+                    () => ({
+                      validator(_rule, value) {
+                        if (
+                          !value ||
+                          (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
+                        ) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
+                      },
+                    }),
+                  ]}
+                  style={{ marginTop: '10px' }}
+                  hasFeedback
+                >
+                  <Input
+                    className={styles.Field}
+                    placeholder="2-4095"
+                    type="number"
+                    min={2}
+                    max={4095}
+                    maxLength={4}
+                  />
+                </Item>
+              </Item>
+            ) : null;
+          }}
+        </Item>
       </Card>
 
       {mode !== 'wpaPersonal' && mode !== 'wep' && (
@@ -478,133 +494,50 @@ const SSIDForm = () => {
                   Transition (802.11r)
                 </span>
               }
-              name="r802dot11r"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please select your 802.11r setting',
-                },
-              ]}
             >
-              {dropdownOptions}
+              <div className={styles.InlineDiv}>
+                {RADIOS.map(i => (
+                  <Item key={i} name={`enable80211r${i}`}>
+                    {dropdownOptions}
+                  </Item>
+                ))}
+              </div>
             </Item>
           )}
 
-          {(mode === 'wpa2Personal' || mode === 'wpa2Enterprise') && (
-            <Item
-              label="802.11w"
-              name="r80211w"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please select your 802.11w setting',
-                },
-              ]}
-            >
-              {dropdownOptions}
-            </Item>
-          )}
-
-          <Item label="802.11k ">
+          <Item label="802.11k">
             <div className={styles.InlineDiv}>
-              <Item
-                name="r80211k2dot4GHz"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11w setting for 2.4GHz',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211k5GHz"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11w setting for 5GHz',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211k5GHzU"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11w setting for 5GHzU',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211k5GHzL"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11w setting for 5GHzL',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
+              {RADIOS.map(i => (
+                <Item key={i} name={`enable80211k${i}`}>
+                  {dropdownOptions}
+                </Item>
+              ))}
             </div>
           </Item>
-          <Item label="802.11v ">
+
+          <Item label="802.11v">
             <div className={styles.InlineDiv}>
-              <Item
-                name="r80211v2dot4GHz"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11v setting for 2.4GHz',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211v5GHz"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11v setting for 5GHz',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211v5GHzU"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11v setting for 5GHzU',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
-              <Item
-                name="r80211v5GHzL"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select your 802.11v setting for 5GHzL',
-                  },
-                ]}
-              >
-                {dropdownOptions}
-              </Item>
+              {RADIOS.map(i => (
+                <Item key={i} name={`enable80211v${i}`}>
+                  {dropdownOptions}
+                </Item>
+              ))}
             </div>
           </Item>
         </Card>
       )}
     </div>
   );
+};
+
+SSIDForm.propTypes = {
+  form: PropTypes.instanceOf(Object),
+  details: PropTypes.instanceOf(Object),
+};
+
+SSIDForm.defaultProps = {
+  form: null,
+  details: {},
 };
 
 export default SSIDForm;

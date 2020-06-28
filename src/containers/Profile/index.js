@@ -52,20 +52,22 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       dataIndex: 'delete',
       key: 'delete',
       width: 80,
-      render: (_, record) => (
-        <Button
-          icon={<DeleteFilled />}
-          onClick={() => {
-            setDeleteModal(true);
-            setActiveProfile({
-              id: record.id,
-              name: record.name,
-              profileType: record.profileType,
-              __typename: record.__typename,
-            });
-          }}
-        />
-      ),
+      render: (_, record) => {
+        return record.profileType === 'ssid' || record.profileType === 'equipment_ap' ? (
+          <Button
+            icon={<DeleteFilled />}
+            onClick={() => {
+              setDeleteModal(true);
+              setActiveProfile({
+                id: record.id,
+                name: record.name,
+                profileType: record.profileType,
+                __typename: record.__typename,
+              });
+            }}
+          />
+        ) : null;
+      },
     },
   ];
 

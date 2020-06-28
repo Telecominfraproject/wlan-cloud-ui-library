@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { Form, Input, Card, Select } from 'antd';
-import PropTypes from 'prop-types';
+import { LeftOutlined } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
-import { LeftOutlined } from '@ant-design/icons';
-import SSIDForm from '../ProfileDetails/components/SSID';
-import AccessPointForm from '../ProfileDetails/components/AccessPoint';
+
+import { formatSsidProfileForm } from 'utils/profiles';
 
 import styles from './index.module.scss';
+
+import SSIDForm from '../ProfileDetails/components/SSID';
+import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 
 const AddProfile = ({ onCreateProfile }) => {
   const layout = {
@@ -28,9 +32,13 @@ const AddProfile = ({ onCreateProfile }) => {
   const [redirect, setRedirect] = useState(false);
 
   const handleOnSave = () => {
-    form.validateFields().then(details => {
-      onCreateProfile(profileType, name, details);
-      console.log(details);
+    form.validateFields().then(values => {
+      let formattedData = { ...values, model_type: 'SsidConfiguration' };
+
+      if (profileType === 'ssid') {
+        formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
+      }
+      onCreateProfile(profileType, name, formattedData);
     });
   };
 
@@ -56,7 +64,9 @@ const AddProfile = ({ onCreateProfile }) => {
             BACK
           </Button>
           <div>
-            <Button onClick={handleOnSave}>Save</Button>
+            <Button type="primary" onClick={handleOnSave}>
+              Save
+            </Button>
           </div>
         </Header>
 
@@ -90,7 +100,7 @@ const AddProfile = ({ onCreateProfile }) => {
               <Input className={styles.Field} placeholder="Enter profile name" />
             </Item>
           </Card>
-          {profileType === 'ssid' && <SSIDForm />}
+          {profileType === 'ssid' && <SSIDForm form={form} />}
           {profileType === 'accessPoint' && <AccessPointForm />}
         </Form>
       </div>
