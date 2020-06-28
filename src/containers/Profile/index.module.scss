@@ -1,0 +1,21 @@
+.Profile {
+  .Buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  .Buttons > * {
+    margin-left: 10px;
+  }
+
+  a {
+    color: #fff;
+  }
+
+  .LoadMore {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
