@@ -45,7 +45,7 @@ const RadiusForm = ({ details }) => {
 
   const data = Object.values(details.serviceRegionMap);
 
-  console.log(details);
+  // console.log(details);
 
   return (
     <div className={styles.ProfilePage}>
