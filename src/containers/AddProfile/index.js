@@ -33,9 +33,10 @@ const AddProfile = ({ onCreateProfile }) => {
 
   const handleOnSave = () => {
     form.validateFields().then(values => {
-      let formattedData = { ...values, model_type: 'SsidConfiguration' };
+      let formattedData = { ...values };
 
       if (profileType === 'ssid') {
+        formattedData.model_type = 'SsidConfiguration';
         formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
       }
       onCreateProfile(profileType, name, formattedData);
