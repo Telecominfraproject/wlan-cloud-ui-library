@@ -4,7 +4,14 @@ import { Popover } from 'antd';
 
 import PopoverMenuContent from '../PopoverMenuContent';
 
-const PopoverMenu = ({ children, locationType, setAddModal, setEditModal, setDeleteModal }) => {
+const PopoverMenu = ({
+  children,
+  locationId,
+  locationType,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
+}) => {
   const [visible, setVisible] = useState(false);
 
   const handleVisibleChange = state => {
@@ -17,6 +24,7 @@ const PopoverMenu = ({ children, locationType, setAddModal, setEditModal, setDel
       onVisibleChange={handleVisibleChange}
       content={
         <PopoverMenuContent
+          locationId={locationId}
           locationType={locationType}
           hide={() => setVisible(false)}
           setAddModal={setAddModal}
@@ -39,10 +47,12 @@ PopoverMenu.propTypes = {
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
   locationType: PropTypes.string,
+  locationId: PropTypes.number,
 };
 
 PopoverMenu.defaultProps = {
   locationType: null,
+  locationId: 0,
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
