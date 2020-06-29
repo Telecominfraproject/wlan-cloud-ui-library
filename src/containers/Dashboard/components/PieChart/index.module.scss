@@ -1,0 +1,10 @@
+.pieChart {
+  width: 49.6%;
+  text-align: center;
+  margin-top: 20px;
+  border: 0;
+}
+
+.pieChart > div rect {
+  fill: rgb(19, 19, 19);
+}

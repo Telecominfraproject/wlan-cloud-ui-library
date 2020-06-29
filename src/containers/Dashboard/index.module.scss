@@ -4,6 +4,7 @@
   padding: 60px;
   .rightInfoWrap {
     width: 65%;
+    margin: 0 auto;
   }
   .infoWrapper {
     display: flex;
@@ -12,6 +13,11 @@
   }
 }
 
+.pieChartWrap {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
 @media screen and (max-width: 1024px) {
   .infoWrapper {
     flex-direction: column;
