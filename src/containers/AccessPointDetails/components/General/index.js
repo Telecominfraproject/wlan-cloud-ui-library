@@ -57,7 +57,49 @@ const General = ({ data, onUpdateEquipment }) => {
   const handleOnSave = () => {
     form
       .validateFields()
-      .then(details => {
+      .then(values => {
+        console.log(values);
+
+        const formattedData = { ...data.details };
+        Object.keys(formattedData.radioMap).forEach(radio => {
+          Object.keys(formattedData.radioMap[radio]).forEach(field => {
+            console.log(field);
+            if (field === 'maxAps') {
+              formattedData.radioMap[radio].neighbouringListApConfig[field] =
+                values[`${field}${radio}`];
+            } else if (field === 'minSignal') {
+              formattedData.radioMap[radio].neighbouringListApConfig[field] =
+                values[`${field}${radio}`];
+            } else if (`${field}${radio}` in values) {
+              formattedData.radioMap[radio][field] = values[`${field}${radio}`];
+            }
+          });
+        });
+
+        Object.keys(formattedData.advancedRadioMap).forEach(radio => {
+          Object.keys(formattedData.advancedRadioMap[radio]).forEach(field => {
+            console.log(field);
+            if (field === 'noiseFloorThresholdInDB') {
+              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
+                values[`${field}${radio}`];
+            } else if (field === 'noiseFloorThresholdTimeInSeconds') {
+              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
+                values[`${field}${radio}`];
+            } else if (field === 'obssHopMode') {
+              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
+                values[`${field}${radio}`];
+            } else if (field === 'dropInSnrPercentage') {
+              formattedData.advancedRadioMap[radio].bestApSettings[field] =
+                values[`${field}${radio}`];
+            } else if (field === 'minLoadFactor') {
+              formattedData.advancedRadioMap[radio].bestApSettings[field] =
+                values[`${field}${radio}`];
+            } else if (`${field}${radio}` in values) {
+              formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+            }
+          });
+        });
+        console.log(formattedData);
         onUpdateEquipment(
           id,
           equipmentType,
@@ -65,15 +107,17 @@ const General = ({ data, onUpdateEquipment }) => {
           customerId,
           profileId,
           locationId,
-          details.access,
+          values.access,
           latitude,
           longitude,
           serial,
           lastModifiedTimestamp,
-          Object.assign(data.details, details)
+          formattedData
         );
       })
-      .catch(() => {});
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   const defaultOptions = (
