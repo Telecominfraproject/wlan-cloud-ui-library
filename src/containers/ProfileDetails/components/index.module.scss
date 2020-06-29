@@ -65,6 +65,15 @@
   margin: 0 5px;
 }
 
+.InlineCenterDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.InlineCenterDiv > * {
+  margin: -15px 10px 20px 0;
+}
+
 .InlineEndDiv {
   display: flex;
   justify-content: flex-end;
