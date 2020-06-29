@@ -94,7 +94,7 @@ const ProfileDetails = ({ name, details, profileType, onUpdateProfile }) => {
         </Card>
         {profileType === 'ssid' && <SSIDForm form={form} details={details} />}
         {profileType === 'equipment_ap' && <AccessPointForm form={form} details={details} />}
-        {profileType === 'captivePortal' && <CaptivePortalForm form={form} details={details} />}
+        {profileType === 'captive_portal' && <CaptivePortalForm form={form} details={details} />}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
     </Container>
