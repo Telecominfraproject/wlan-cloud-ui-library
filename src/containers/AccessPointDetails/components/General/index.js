@@ -58,18 +58,19 @@ const General = ({ data, onUpdateEquipment }) => {
     form
       .validateFields()
       .then(values => {
-        console.log(values);
-
         const formattedData = { ...data.details };
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
-            console.log(field);
-            if (field === 'maxAps') {
-              formattedData.radioMap[radio].neighbouringListApConfig[field] =
-                values[`${field}${radio}`];
-            } else if (field === 'minSignal') {
-              formattedData.radioMap[radio].neighbouringListApConfig[field] =
-                values[`${field}${radio}`];
+            if (field === 'neighbouringListApConfig') {
+              formattedData.radioMap[radio].neighbouringListApConfig.maxAps =
+                values[`maxAps${radio}`];
+              formattedData.radioMap[radio].neighbouringListApConfig.minSignal =
+                values[`minSignal${radio}`];
+            } else if (field === 'perimeterDetectionEnabled') {
+              formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
+            } else if (field === 'deauthAttackDetection') {
+              formattedData.advancedRadioMap[radio][field] =
+                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
               formattedData.radioMap[radio][field] = values[`${field}${radio}`];
             }
@@ -78,28 +79,29 @@ const General = ({ data, onUpdateEquipment }) => {
 
         Object.keys(formattedData.advancedRadioMap).forEach(radio => {
           Object.keys(formattedData.advancedRadioMap[radio]).forEach(field => {
-            console.log(field);
-            if (field === 'noiseFloorThresholdInDB') {
-              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
-                values[`${field}${radio}`];
-            } else if (field === 'noiseFloorThresholdTimeInSeconds') {
-              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
-                values[`${field}${radio}`];
-            } else if (field === 'obssHopMode') {
-              formattedData.advancedRadioMap[radio].channelHopSettings[field] =
-                values[`${field}${radio}`];
-            } else if (field === 'dropInSnrPercentage') {
-              formattedData.advancedRadioMap[radio].bestApSettings[field] =
-                values[`${field}${radio}`];
-            } else if (field === 'minLoadFactor') {
-              formattedData.advancedRadioMap[radio].bestApSettings[field] =
-                values[`${field}${radio}`];
+            if (field === 'channelHopSettings') {
+              formattedData.advancedRadioMap[radio].channelHopSettings.noiseFloorThresholdInDB =
+                values[`noiseFloorThresholdInDB${radio}`];
+              formattedData.advancedRadioMap[
+                radio
+              ].channelHopSettings.noiseFloorThresholdTimeInSeconds =
+                values[`noiseFloorThresholdTimeInSeconds${radio}`];
+              formattedData.advancedRadioMap[radio].channelHopSettings.obssHopMode =
+                values[`obssHopMode${radio}`];
+            } else if (field === 'bestApSettings') {
+              formattedData.advancedRadioMap[radio].bestApSettings.dropInSnrPercentage =
+                values[`dropInSnrPercentage${radio}`];
+              formattedData.advancedRadioMap[radio].bestApSettings.minLoadFactor =
+                values[`minLoadFactor${radio}`];
+            } else if (field === 'deauthAttackDetection') {
+              formattedData.advancedRadioMap[radio][field] =
+                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
               formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
             }
           });
         });
-        console.log(formattedData);
+
         onUpdateEquipment(
           id,
           equipmentType,
@@ -115,9 +117,7 @@ const General = ({ data, onUpdateEquipment }) => {
           formattedData
         );
       })
-      .catch(e => {
-        console.log(e);
-      });
+      .catch(() => {});
   };
 
   const defaultOptions = (
@@ -130,7 +130,7 @@ const General = ({ data, onUpdateEquipment }) => {
   const setInitialValue = (obj, dataIndex, key, options) => {
     const val = options.value ? obj[key][options.value][dataIndex] : obj[key][dataIndex];
     if (val === undefined || val === null) {
-      return 'enabled';
+      return 'disabled';
     }
     if (val === true) {
       return 'enabled';
