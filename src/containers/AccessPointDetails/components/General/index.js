@@ -12,7 +12,6 @@ const { Panel } = Collapse;
 const General = ({ data, profiles, onUpdateEquipment }) => {
   const [form] = Form.useForm();
 
-  console.log(profiles);
   const columns = [
     {
       title: 'Wireless Network',
@@ -42,13 +41,19 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     wrapperCol: { span: 14 },
   };
 
-  console.log(data);
-
   const [profileId, setProfileId] = useState(data.profileId);
+  const [index, setIndex] = useState(
+    Object.values(profiles).findIndex(o => {
+      return o.id === data.profileId;
+    })
+  );
 
   const handleProfileChange = value => {
     setProfileId(value);
-    console.log(profileId);
+    const i = Object.values(profiles).findIndex(o => {
+      return o.id === value;
+    });
+    setIndex(i);
   };
 
   const {
@@ -271,7 +276,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
             <Table
               rowKey="id"
               scroll={{ x: true }}
-              dataSource={data.profile.childProfiles}
+              dataSource={profiles[index].childProfiles}
               columns={columns}
               pagination={false}
             />
