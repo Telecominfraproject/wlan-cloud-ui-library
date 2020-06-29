@@ -17,6 +17,7 @@ const { TextArea } = Input;
 const { Item } = Form;
 
 const Firmware = ({ data }) => {
+  console.log(data);
   const [form] = Form.useForm();
 
   const [confirmModal, setConfirmModal] = useState(false);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts/highstock';
 import {
@@ -9,9 +9,31 @@ import {
   YAxis,
   Legend,
   SplineSeries,
-  RangeSelector,
   Tooltip,
 } from 'react-jsx-highstock';
+
+import Loading from 'components/Loading';
+
+const processMetrics = data => {
+  const cpuUtilCores = {};
+  const freeMemory = [];
+  const cpuTemperature = [];
+
+  data.forEach(i => {
+    if (i.details && i.details.apPerformance) {
+      freeMemory.push(i.details.apPerformance.freeMemory);
+      cpuTemperature.push(i.details.apPerformance.cpuTemperature);
+      i.details.apPerformance.cpuUtilized.forEach((j, index) => {
+        if (!(index in cpuUtilCores)) {
+          cpuUtilCores[index] = [];
+        }
+        cpuUtilCores[index].push(j);
+      });
+    }
+  });
+
+  return { cpuUtilCores, freeMemory, cpuTemperature };
+};
 
 const HighChartGraph = ({ osData }) => {
   const dateTimeLabelFormats = {
@@ -24,6 +46,16 @@ const HighChartGraph = ({ osData }) => {
     month: '',
     year: '',
   };
+
+  const { loading, data } = osData;
+
+  if (loading || !data) {
+    return <Loading />;
+  }
+
+  const metrics = useMemo(() => {
+    return processMetrics(data);
+  }, [osData]);
 
   return (
     <HighchartsStockChart>
@@ -55,8 +87,9 @@ const HighChartGraph = ({ osData }) => {
         >
           CPU Usage (%)
         </YAxis.Title>
-        <SplineSeries id="cpuCore1" name="CPU Core 1" data={osData.CpuUtilCore2} />
-        <SplineSeries id="cpuCore0" name="CPU Core 0" data={osData.CpuUtilCore1} />
+        {Object.keys(metrics.cpuUtilCores).map(i => (
+          <SplineSeries id={`cpuCore${i}`} name={`CPU Core ${i}`} data={metrics.cpuUtilCores[i]} />
+        ))}
       </YAxis>
 
       <YAxis
@@ -72,7 +105,7 @@ const HighChartGraph = ({ osData }) => {
         >
           Free Memory (MB)
         </YAxis.Title>
-        <SplineSeries id="freeMemory" name="Free Memory" data={osData.FreeMemory} />
+        <SplineSeries id="freeMemory" name="Free Memory" data={metrics.freeMemory} />
       </YAxis>
 
       <YAxis
@@ -87,34 +120,8 @@ const HighChartGraph = ({ osData }) => {
         >
           CPU Temperature (°C)
         </YAxis.Title>
-        <SplineSeries id="cpuTemp" name="CPU Temperature" data={osData.CpuTemperature} />
+        <SplineSeries id="cpuTemp" name="CPU Temperature" data={metrics.cpuTemperature} />
       </YAxis>
-
-      <RangeSelector
-        selected={1}
-        buttonSpacing={10}
-        inputBoxBorderColor="gray"
-        inputBoxWidth={120}
-        inputBoxHeight={18}
-        inputStyle={{ color: '#039', fontWeight: 'bold' }}
-        labelStyle={{ colod: 'silver', fontWeight: 'bold' }}
-        buttonTheme={{
-          fill: 'none',
-          r: '8',
-          states: { select: { fill: '#039', style: { color: 'white' } } },
-        }}
-      >
-        <RangeSelector.Button offsetMin={0} offsetMax={0} count={5} type="minute">
-          5 Min
-        </RangeSelector.Button>
-        <RangeSelector.Button offsetMin={0} offsetMax={0} count={7} type="hour">
-          1 Hr
-        </RangeSelector.Button>
-        <RangeSelector.Button offsetMin={0} offsetMax={0} count={1} type="day">
-          1 Day
-        </RangeSelector.Button>
-        <RangeSelector.Input enabled={false} inputEnabled={false} />
-      </RangeSelector>
     </HighchartsStockChart>
   );
 };
