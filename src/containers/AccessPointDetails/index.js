@@ -15,7 +15,14 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const AccessPointDetails = ({ data, osData, handleRefresh, locations, onUpdateEquipment }) => {
+const AccessPointDetails = ({
+  data,
+  profiles,
+  osData,
+  handleRefresh,
+  locations,
+  onUpdateEquipment,
+}) => {
   const [tab, setTab] = useState('general');
 
   const tabList = [
@@ -88,19 +95,22 @@ const AccessPointDetails = ({ data, osData, handleRefresh, locations, onUpdateEq
         bodyStyle={{ marginBottom: '-48px' }}
       />
 
-      {tab === 'general' && <General data={data} onUpdateEquipment={onUpdateEquipment} />}
+      {tab === 'general' && (
+        <General data={data} onUpdateEquipment={onUpdateEquipment} profiles={profiles} />
+      )}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && (
         <Location data={data} locations={locations} onUpdateEquipment={onUpdateEquipment} />
       )}
       {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefresh={handleRefresh} />}
-      {tab === 'firmware' && <Firmware />}
+      {tab === 'firmware' && <Firmware data={data} />}
     </div>
   );
 };
 
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Object),
+  profiles: PropTypes.instanceOf(Object),
   osData: PropTypes.instanceOf(Array),
   handleRefresh: PropTypes.func.isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
@@ -109,6 +119,7 @@ AccessPointDetails.propTypes = {
 
 AccessPointDetails.defaultProps = {
   data: {},
+  profiles: {},
   osData: [],
 };
 
