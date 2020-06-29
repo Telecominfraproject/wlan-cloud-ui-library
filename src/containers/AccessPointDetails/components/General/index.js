@@ -42,9 +42,18 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
   };
 
   const [profileId, setProfileId] = useState(data.profileId);
+  const [index, setIndex] = useState(
+    Object.values(profiles).findIndex(o => {
+      return o.id === data.profileId;
+    })
+  );
 
   const handleProfileChange = value => {
     setProfileId(value);
+    const i = Object.values(profiles).findIndex(o => {
+      return o.id === value;
+    });
+    setIndex(i);
   };
 
   const {
@@ -286,7 +295,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
             <Table
               rowKey="id"
               scroll={{ x: true }}
-              dataSource={data.profile.childProfiles}
+              dataSource={profiles[index].childProfiles}
               columns={columns}
               pagination={false}
             />
