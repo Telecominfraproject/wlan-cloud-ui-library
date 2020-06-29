@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -9,9 +9,10 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, onUpdateEquipment }) => {
+const General = ({ data, profiles, onUpdateEquipment }) => {
   const [form] = Form.useForm();
 
+  console.log(profiles);
   const columns = [
     {
       title: 'Wireless Network',
@@ -41,12 +42,20 @@ const General = ({ data, onUpdateEquipment }) => {
     wrapperCol: { span: 14 },
   };
 
+  console.log(data);
+
+  const [profileId, setProfileId] = useState(data.profileId);
+
+  const handleProfileChange = value => {
+    setProfileId(value);
+    console.log(profileId);
+  };
+
   const {
     id,
     equipmentType,
     inventoryId,
     customerId,
-    profileId,
     locationId,
     latitude,
     longitude,
@@ -232,8 +241,31 @@ const General = ({ data, onUpdateEquipment }) => {
         <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
+
       <Card title="Profile">
-        <Item label="Access Point Profile"> {data.profile.name}</Item>
+        <Item
+          label="Access Point Profile"
+          name="apProfile"
+          initialValue={data.profile.name}
+          rules={[
+            {
+              required: true,
+              message: 'Please select your Access Point Profile city.',
+            },
+          ]}
+        >
+          <Select
+            className={styles.Field}
+            placeholder="Select access point profile..."
+            onChange={handleProfileChange}
+          >
+            {Object.keys(profiles).map(i => (
+              <Option key={profiles[i].id} value={profiles[i].id}>
+                {profiles[i].name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
         <Item label="Summary">
           <Item>
             <Table
@@ -418,11 +450,13 @@ const General = ({ data, onUpdateEquipment }) => {
 
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
+  profiles: PropTypes.instanceOf(Object),
   onUpdateEquipment: PropTypes.func.isRequired,
 };
 
 General.defaultProps = {
   data: {},
+  profiles: {},
 };
 
 export default General;

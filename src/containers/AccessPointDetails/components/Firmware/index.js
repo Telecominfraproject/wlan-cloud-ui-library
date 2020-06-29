@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Form, Input, Tag, Select, Tooltip } from 'antd';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
@@ -15,7 +16,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Item } = Form;
 
-const Firmware = () => {
+const Firmware = ({ data }) => {
   const [form] = Form.useForm();
 
   const [confirmModal, setConfirmModal] = useState(false);
@@ -125,4 +126,11 @@ const Firmware = () => {
   );
 };
 
+Firmware.propTypes = {
+  data: PropTypes.instanceOf(Object),
+};
+
+Firmware.defaultProps = {
+  data: {},
+};
 export default Firmware;
