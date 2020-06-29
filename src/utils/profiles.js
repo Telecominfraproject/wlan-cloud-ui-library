@@ -54,8 +54,6 @@ export const formatApProfileForm = values => {
   const formattedData = { ...values };
 
   formattedData.equipmentDiscovery = isBool(values.equipmentDiscovery);
-  formattedData.ledControlEnabled = isBool(values.ledControlEnabled);
-  formattedData.ntpServer.auto = isBool(values.ntpServer.auto);
   formattedData.rtlsSettings.enabled = isBool(values.rtlsSettings.enabled);
   formattedData.syntheticClientEnabled = isBool(values.syntheticClientEnabled);
   formattedData.syslogRelay.enabled = isBool(values.syslogRelay.enabled);

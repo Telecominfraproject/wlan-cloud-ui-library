@@ -77,7 +77,7 @@ const ProfileDetails = ({
         visible={confirmModal}
         buttonText="Back"
         title="Leave Form?"
-        content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
+        content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
       <Header>
         <Button icon={<LeftOutlined />} onClick={() => setConfirmModal(true)}>
@@ -109,7 +109,7 @@ const ProfileDetails = ({
             childProfileIds={childProfileIds}
           />
         )}
-        {profileType === 'captivePortal' && <CaptivePortalForm form={form} details={details} />}
+        {profileType === 'captive_portal' && <CaptivePortalForm form={form} details={details} />}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
     </Container>

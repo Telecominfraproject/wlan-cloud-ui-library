@@ -15,8 +15,12 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
 
   const [addModal, setAddModal] = useState(false);
 
-  const [vlan, setVlan] = useState(details.vlanNative);
-  const [ntp, setNTP] = useState(details.ntpServer && details.ntpServer.auto);
+  const [vlan, setVlan] = useState(details.vlanNative === undefined ? true : details.vlanNative);
+  const [ntp, setNTP] = useState(
+    (details.ntpServer && details.ntpServer.auto) === undefined
+      ? true
+      : details.ntpServer && details.ntpServer.auto
+  );
 
   const [rtls, setRtls] = useState(details.rtlsSettings && details.rtlsSettings.enabled);
   const [syslog, setSyslog] = useState(details.syslogRelay && details.syslogRelay.enabled);
@@ -40,13 +44,13 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
   useEffect(() => {
     setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
-      vlanNative: details.vlanNative,
+      vlanNative: details.vlanNative === undefined ? true : details.vlanNative,
       vlan: details.vlan,
       ntpServer: {
-        auto: details.ntpServer && details.ntpServer.auto ? 'true' : 'false',
+        auto: details.ntpServer && details.ntpServer.auto,
         value: details.ntpServer && details.ntpServer.value,
       },
-      ledControlEnabled: details.ledControlEnabled ? 'true' : 'false',
+      ledControlEnabled: details.ledControlEnabled,
       rtlsSettings: {
         enabled: details.rtlsSettings && details.rtlsSettings.enabled ? 'true' : 'false',
         srvHostIp: details.rtlsSettings && details.rtlsSettings.srvHostIp,

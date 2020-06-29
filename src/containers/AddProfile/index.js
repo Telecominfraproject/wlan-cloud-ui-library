@@ -16,7 +16,7 @@ import styles from './index.module.scss';
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 
-const AddProfile = ({ onCreateProfile }) => {
+const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 12 },
@@ -45,7 +45,7 @@ const AddProfile = ({ onCreateProfile }) => {
         formattedData = Object.assign(formattedData, formatApProfileForm(values));
       }
 
-      onCreateProfile(profileType, name, formattedData);
+      onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
     });
   };
 
@@ -95,7 +95,7 @@ const AddProfile = ({ onCreateProfile }) => {
                 placeholder="Select Profile Type"
               >
                 <Option value="ssid">SSID</Option>
-                <Option value="accessPoint">Access Point</Option>
+                <Option value="equipment_ap">Access Point</Option>
               </Select>
             </Item>
             <Item
@@ -108,7 +108,9 @@ const AddProfile = ({ onCreateProfile }) => {
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
-          {profileType === 'accessPoint' && <AccessPointForm />}
+          {profileType === 'equipment_ap' && (
+            <AccessPointForm form={form} ssidProfiles={ssidProfiles} />
+          )}
         </Form>
       </div>
     </Container>
@@ -117,6 +119,11 @@ const AddProfile = ({ onCreateProfile }) => {
 
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
+  ssidProfiles: PropTypes.instanceOf(Array),
+};
+
+AddProfile.defaultProps = {
+  ssidProfiles: [],
 };
 
 export default AddProfile;
