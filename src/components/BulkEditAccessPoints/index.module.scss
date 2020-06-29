@@ -1,0 +1,40 @@
+.backButton {
+  margin: 15px;
+}
+.innerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #141414 0% 0% no-repeat padding-box;
+  padding: 15px;
+  margin-bottom: 15px;
+  @media screen and (max-width: 575px) {
+    flex-direction: column;
+  }
+}
+.innerText {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  height: auto;
+  margin: 0px;
+  color: #ffffff;
+  @media screen and (max-width: 575px) {
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+}
+.saveBtn {
+  color: #f7f7f7;
+  background-color: #35a648;
+}
+.saveBtn:hover {
+  color: #35a648;
+  background-color: transparent;
+  border-color: #35a648;
+}
+.saveBtn:focus {
+  color: #35a648;
+  background: unset;
+  border-color: #35a648;
+}

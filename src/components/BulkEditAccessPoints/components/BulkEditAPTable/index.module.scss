@@ -1,0 +1,25 @@
+.editableCell {
+  position: relative;
+}
+
+.editableRow {
+  .ant-table-cell {
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+[data-theme='dark'] {
+  .editableRow {
+    &:hover {
+      border-color: #434343;
+    }
+  }
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
