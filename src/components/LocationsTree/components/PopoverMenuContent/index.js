@@ -1,9 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
+import { useHistory } from 'react-router-dom';
 import styles from './index.module.scss';
 
-const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDeleteModal, hide }) => {
+const PopoverMenuContent = ({
+  locationId,
+  locationType,
+  setAddModal,
+  setEditModal,
+  setDeleteModal,
+  hide,
+}) => {
+  const history = useHistory();
+
+  const handleBulkEdit = () => {
+    history.push(`/network/access-points/bulk-edit/${locationId}`);
+  };
+
   return (
     <div className={styles.popOver}>
       {locationType !== 'FLOOR' && (
@@ -26,7 +40,14 @@ const PopoverMenuContent = ({ locationType, setAddModal, setEditModal, setDelete
           >
             Edit Location
           </Button>
-          <Button>Bulk Edit APs</Button>
+          <Button
+            onClick={() => {
+              hide();
+              handleBulkEdit();
+            }}
+          >
+            Bulk Edit APs
+          </Button>
           <Button
             onClick={() => {
               hide();
@@ -46,10 +67,12 @@ PopoverMenuContent.propTypes = {
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
   locationType: PropTypes.string,
+  locationId: PropTypes.number,
 };
 
 PopoverMenuContent.defaultProps = {
   locationType: null,
+  locationId: 0,
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
