@@ -1,0 +1,21 @@
+.editableCell {
+  position: relative;
+}
+
+.editableCellValueWrap {
+  padding: 5px 12px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  &:hover {
+    border-color: #d9d9d9;
+  }
+}
+
+[data-theme='dark'] {
+  .editableCellValueWrap {
+    &:hover {
+      border-color: #434343;
+    }
+  }
+}
