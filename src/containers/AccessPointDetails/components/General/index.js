@@ -86,12 +86,16 @@ const General = ({ data, onUpdateEquipment }) => {
 
   const setInitialValue = (obj, dataIndex, key, options) => {
     const val = options.value ? obj[key][options.value][dataIndex] : obj[key][dataIndex];
+    if (val === undefined || val === null) {
+      return 'enabled';
+    }
     if (val === true) {
       return 'enabled';
     }
     if (val === false) {
       return 'disabled';
     }
+
     return val;
   };
 
@@ -167,6 +171,7 @@ const General = ({ data, onUpdateEquipment }) => {
         <Item
           label="Access Point Name"
           name="access"
+          initialValue={data.name}
           rules={[
             {
               required: true,
