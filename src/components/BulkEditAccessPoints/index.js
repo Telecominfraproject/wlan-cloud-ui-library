@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
+import { Breadcrumb } from 'antd';
+
 import Button from 'components/Button';
+
 import BulkEditAPTable from './components/BulkEditAPTable';
 import styles from './index.module.scss';
 
@@ -12,6 +15,7 @@ const BulkEditAccessPoints = ({
   onSaveChanges,
   onLoadMore,
   isLastPage,
+  breadcrumbPath,
 }) => {
   const history = useHistory();
   const [editedRows, setEditedRows] = useState([]);
@@ -25,6 +29,10 @@ const BulkEditAccessPoints = ({
     setEditedRows(rows);
   };
 
+  const breadCrumbs = breadcrumbPath.map(location => (
+    <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
+  ));
+
   return (
     <div>
       <Button
@@ -37,7 +45,10 @@ const BulkEditAccessPoints = ({
       </Button>
 
       <div className={styles.innerContainer}>
-        <p className={styles.innerText}>Bulk Edit Access Points</p>
+        <div className={styles.innerText}>
+          Bulk Edit Access Points:
+          <Breadcrumb separator=">">{breadCrumbs}</Breadcrumb>
+        </div>
         <Button
           onClick={() => {
             onSaveChanges(editedRows);
@@ -66,11 +77,13 @@ BulkEditAccessPoints.propTypes = {
   onSaveChanges: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool,
+  breadcrumbPath: PropTypes.instanceOf(Array),
 };
 
 BulkEditAccessPoints.defaultProps = {
   tableData: [],
   isLastPage: true,
+  breadcrumbPath: [],
 };
 
 export default BulkEditAccessPoints;
