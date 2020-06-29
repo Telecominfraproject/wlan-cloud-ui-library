@@ -56,22 +56,25 @@ const General = ({ data, onUpdateEquipment }) => {
   } = data;
 
   const handleOnSave = () => {
-    form.validateFields().then(details => {
-      onUpdateEquipment(
-        id,
-        equipmentType,
-        inventoryId,
-        customerId,
-        profileId,
-        locationId,
-        name,
-        latitude,
-        longitude,
-        serial,
-        lastModifiedTimestamp,
-        Object.assign(data.details, details)
-      );
-    });
+    form
+      .validateFields()
+      .then(details => {
+        onUpdateEquipment(
+          id,
+          equipmentType,
+          inventoryId,
+          customerId,
+          profileId,
+          locationId,
+          name,
+          latitude,
+          longitude,
+          serial,
+          lastModifiedTimestamp,
+          Object.assign(data.details, details)
+        );
+      })
+      .catch(() => {});
   };
 
   const defaultOptions = (

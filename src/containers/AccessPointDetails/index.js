@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
+
 import Button from 'components/Button';
+import { getLocationPath } from 'utils/locations';
 
 import General from './components/General';
 import Firmware from './components/Firmware';
@@ -39,6 +41,10 @@ const AccessPointDetails = ({ data, osData, handleRefresh, locations, onUpdateEq
     },
   ];
 
+  const breadCrumbs = getLocationPath(data.locationId, locations).map(location => (
+    <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
+  ));
+
   return (
     <div className={styles.AccessPointDetails}>
       <Link to="/network/access-points">
@@ -52,7 +58,9 @@ const AccessPointDetails = ({ data, osData, handleRefresh, locations, onUpdateEq
             <WifiOutlined className={styles.WifiIcon} />
             <div className={styles.InlineBlockDiv}>
               <div> {data.name} </div>
-              <div> LAB TYPE </div>
+              <div>
+                <Breadcrumb separator=">">{breadCrumbs}</Breadcrumb>
+              </div>
               <div>
                 {data.alarmsCount} &nbsp;{data.alarmsCount === 1 ? 'Alarm' : 'Alarms'}
               </div>

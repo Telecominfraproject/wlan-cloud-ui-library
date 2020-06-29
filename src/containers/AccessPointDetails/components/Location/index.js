@@ -13,22 +13,68 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
-  const {
-    id,
-    equipmentType,
-    inventoryId,
-    customerId,
-    profileId,
-    locationId,
-    name,
-    latitude,
-    longitude,
-    serial,
-    lastModifiedTimestamp,
-  } = data;
+
+  const getLocationPath = () => {
+    const locationsPath = [];
+    const treeRecurse = (parentNodeId, node) => {
+      if (node.id === parentNodeId) {
+        locationsPath.unshift(node);
+        return node;
+      }
+      if (node.children) {
+        let parent;
+        node.children.some(i => {
+          parent = treeRecurse(parentNodeId, i);
+          return parent;
+        });
+        if (parent) {
+          locationsPath.unshift(node);
+        }
+        return parent;
+      }
+      return null;
+    };
+
+    treeRecurse(data.locationId, {
+      id: 0,
+      children: locations,
+    });
+
+    locationsPath.shift();
+    return locationsPath;
+  };
+
+  const locationPath = getLocationPath();
+
+  const [city, setCity] = useState(locationPath[0]);
+  const [building, setBuilding] = useState(locationPath.length > 1 ? locationPath[1] : null);
+  const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
 
   const handleOnSave = () => {
-    form.validateFields().then(details => {
+    const {
+      id,
+      equipmentType,
+      inventoryId,
+      customerId,
+      profileId,
+      name,
+      latitude,
+      longitude,
+      serial,
+      lastModifiedTimestamp,
+      details,
+    } = data;
+    let { locationId } = data;
+
+    form.validateFields().then(newValues => {
+      if ('floor' in newValues) {
+        locationId = newValues.floor;
+      } else if ('building' in newValues) {
+        locationId = newValues.building;
+      } else if ('city' in newValues) {
+        locationId = newValues.city;
+      }
+
       onUpdateEquipment(
         id,
         equipmentType,
@@ -41,66 +87,37 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
         longitude,
         serial,
         lastModifiedTimestamp,
-        Object.assign(data.details, details)
+        details
       );
     });
   };
 
-  const findLocation = (objects, idKey) => {
-    const arr = [...objects];
-    while (arr.length) {
-      const obj = arr.shift();
-      if (obj.id === idKey) return obj;
-      arr.push(...(obj.children || []));
-    }
-    return null;
+  const handleOnChangeCity = value => {
+    form.setFieldsValue({ city: value, building: null, floor: null });
+    setCity(locations.find(i => i.id === value));
+    setBuilding(null);
+    setFloor(null);
   };
 
-  const selectedLocation = findLocation(locations, data.locationId);
-
-  const getLocationPath = () => {
-    const locationsPath = [];
-    const treeRecurse = (parentNodeId, node) => {
-      if (node.id === parentNodeId) {
-        locationsPath.unshift({
-          id: node.id,
-          parentId: node.parentId,
-          name: node.name,
-        });
-        return node;
-      }
-      if (node.children) {
-        let parent;
-        node.children.some(i => {
-          parent = treeRecurse(parentNodeId, i);
-          return parent;
-        });
-        if (parent) {
-          locationsPath.unshift({ id: node.id, parentId: node.parentId, name: node.name });
-        }
-        return parent;
-      }
-      return null;
-    };
-    if (selectedLocation) {
-      locationsPath.unshift({ ...selectedLocation });
-      treeRecurse(selectedLocation.parentId, locations[0]);
-    }
-    return locationsPath;
+  const handleOnChangeBuilding = value => {
+    form.setFieldsValue({ building: value, floor: null });
+    setBuilding(city.children.find(i => i.id === value));
+    setFloor(null);
   };
 
-  const locationPath = getLocationPath();
-  const [city, setCity] = useState(locationPath[0].name);
-
-  const validate = num => {
-    if (typeof locationPath[num] !== 'undefined') {
-      return <Option value={locationPath[num].name}>{locationPath[num].name}</Option>;
-    }
-    return null;
+  const handleOnChangeFloor = value => {
+    form.setFieldsValue({ floor: value });
+    setFloor(building.children.find(i => i.id === value));
   };
+
+  form.setFieldsValue({
+    city: city.id,
+    building: building && building.id,
+    floor: floor && floor.id,
+  });
 
   return (
-    <Form {...layout} form={form} initialValues={{ city: locationPath[0].name }}>
+    <Form {...layout} form={form}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -108,37 +125,61 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
       </div>
 
       <Card title="Location">
-        <Item
-          label="City"
-          name="city"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your location city.',
-            },
-          ]}
-        >
-          <Select
-            className={styles.Field}
-            onChange={value => setCity(value)}
-            placeholder="Select Location City..."
+        {locationPath.length > 0 && (
+          <Item
+            label="City"
+            name="city"
+            rules={[
+              {
+                required: true,
+                message: 'Please select your location city.',
+              },
+            ]}
           >
-            {Object.keys(locations).map(i => (
-              <Option value={locations[i].name}>{locations[i].name}</Option>
-            ))}
-          </Select>
-        </Item>
+            <Select
+              className={styles.Field}
+              placeholder="Select Location City..."
+              onChange={handleOnChangeCity}
+            >
+              {Object.keys(locations).map(i => (
+                <Option key={locations[i].id} value={locations[i].id}>
+                  {locations[i].name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
+        )}
 
-        <Item label="Building" name="building">
-          <Select className={styles.Field} placeholder="Select Location Building...">
-            {validate(1)}
-          </Select>
-        </Item>
-        <Item label="Floor" name="floor">
-          <Select className={styles.Field} placeholder="Select Location Floor...">
-            {validate(2)}
-          </Select>
-        </Item>
+        {city && city.children && (
+          <Item label="Building" name="building">
+            <Select
+              className={styles.Field}
+              placeholder="Select Location Building..."
+              onChange={handleOnChangeBuilding}
+            >
+              {Object.keys(city.children).map(i => (
+                <Option key={city.children[i].id} value={city.children[i].id}>
+                  {city.children[i].name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
+        )}
+        {building && building.children && (
+          <Item label="Floor" name="floor">
+            <Select
+              className={styles.Field}
+              placeholder="Select Location Floor..."
+              onChange={handleOnChangeFloor}
+            >
+              {Object.keys(building.children).map(i => (
+                <Option key={building.children[i].id} value={building.children[i].id}>
+                  {building.children[i].name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
+        )}
       </Card>
     </Form>
   );
