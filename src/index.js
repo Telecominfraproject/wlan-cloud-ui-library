@@ -18,3 +18,4 @@ export { default as NetworkTable } from 'components/NetworkTable';
 export { default as Loading } from 'components/Loading';
 export { default as DeviceHistory } from 'components/DeviceHistory';
 export { default as PopoverMenu } from 'components/LocationsTree/components/PopoverMenu';
+export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints';
