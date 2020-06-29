@@ -38,7 +38,6 @@
   }
 
   .Image {
-    border: dashed;
     width: 100%;
     border: 2px dashed #aaaaa9;
     padding: 20px;
@@ -64,6 +63,15 @@
 
 .InlineDiv > * {
   margin: 0 5px;
+}
+
+.InlineCenterDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.InlineCenterDiv > * {
+  margin: -15px 10px 20px 0;
 }
 
 .InlineEndDiv {

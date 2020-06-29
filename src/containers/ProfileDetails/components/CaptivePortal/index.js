@@ -1,58 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Form, Input, Radio, Select, Tooltip, Upload, Alert, Collapse } from 'antd';
-import {
-  InfoCircleOutlined,
-  PlusOutlined,
-  EditOutlined,
-  QuestionCircleFilled,
-} from '@ant-design/icons';
+import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
 
-const CaptivePortalForm = () => {
+const CaptivePortalForm = ({ details, form }) => {
   const { Item } = Form;
   const { Option } = Select;
   const { Panel } = Collapse;
   const { TextArea } = Input;
 
   const [authentication, setAuthentication] = useState('');
+
   const [showTips, setShowTips] = useState(false);
 
   const [splash, setSplash] = useState(false);
   const [contentText, setContentText] = useState('user');
 
+  useEffect(() => {
+    form.setFieldsValue({
+      authenticationType: details.authenticationType,
+      sessionTimeoutInMinutes: details.sessionTimeoutInMinutes,
+      browserTitle: details.browserTitle,
+      headerContent: details.headerContent,
+      userAcceptancePolicy: details.userAcceptancePolicy,
+      successPageMarkdownText: details.successPageMarkdownText,
+      redirectURL: details.redirectURL,
+      radiusServiceName: details.radiusServiceName,
+      radiusAuthMethod: details.radiusAuthMethod,
+      externalCaptivePortalURL: details.externalCaptivePortalURL,
+      logoFile: details.logoFile,
+      backgroundFile: details.backgroundFile,
+      splashPage: 'hosted',
+    });
+  }, [form, details]);
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="General Settings ">
         <Item
-          name="authentication"
+          name="authenticationType"
           label="Authentication"
-          rules={[{ required: true, message: ' Please select an authentication mode' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Please select an authentication mode',
+            },
+          ]}
         >
           <Select
             className={styles.Field}
             onChange={value => setAuthentication(value)}
             placeholder="Select authentication mode "
           >
-            <Option value="none">None</Option>
-            <Option value="portalUser">Captive Portal User List</Option>
+            <Option value="guest">Guest</Option>
+            <Option value="username">Captive Portal User List</Option>
             <Option value="radius">RADIUS</Option>
+            <Option value="external">External</Option>
           </Select>
-          {authentication === 'portalUser' && (
-            <div className={styles.InlineDiv}>
-              <Tooltip title="If this is enabled, session timeouts don't affect signed in users. They are signed in as long as their user is valid.">
-                <div className={styles.InlineDiv}>
-                  Go to &quot;Remember user Devices&quot; page
-                  <InfoCircleOutlined style={{ marginLeft: '6px' }} />
-                </div>
-              </Tooltip>
-              <Button> Manage Captive Portal Users</Button>
-            </div>
-          )}
         </Item>
 
+        {authentication === 'username' && (
+          <div className={styles.InlineCenterDiv}>
+            <Tooltip title="If this is enabled, session timeouts don't affect signed in users. They are signed in as long as their user is valid.">
+              <div className={styles.InlineDiv}>
+                Go to &quot;Remember user Devices&quot; page
+                <InfoCircleOutlined style={{ marginLeft: '6px' }} />
+              </div>
+            </Tooltip>
+            <Button> Manage Captive Portal Users</Button>
+          </div>
+        )}
         <Item
-          name="timeout"
+          name="sessionTimeoutInMinutes"
           label="Session Timeout "
           rules={[
             {
@@ -61,7 +82,7 @@ const CaptivePortalForm = () => {
             },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
-                if (!value || getFieldValue('timeout') <= 1440) {
+                if (!value || getFieldValue('sessionTimeoutInMinutes') <= 1440) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -99,11 +120,11 @@ const CaptivePortalForm = () => {
           <Input className={styles.Field} placeholder="http://... or https://..." />
         </Item>
         <Item label="Splash Page" name="splashPage">
-          <Radio.Group defaultValue="hosted">
+          <Radio.Group>
             <Radio value="hosted" onChange={() => setSplash(false)}>
               Access Point Hosted
             </Radio>
-            <Radio value="externallyHosted" onChange={() => setSplash(true)}>
+            <Radio value="external" onChange={() => setSplash(true)}>
               Externally Hosted
             </Radio>
           </Radio.Group>
@@ -113,7 +134,7 @@ const CaptivePortalForm = () => {
         <Card title="RADIUS">
           <Item
             label="Authentication"
-            name="radiusAuthentication"
+            name="radiusAuthMethod"
             rules={[
               {
                 required: true,
@@ -122,14 +143,14 @@ const CaptivePortalForm = () => {
             ]}
           >
             <Select className={styles.Field}>
-              <Option value="chap">Challenge-Handshake (CHAP)</Option>
-              <Option value="pap">Password (PAP)</Option>
-              <Option value="mschap">EAP/MSCHAP v2</Option>
+              <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
+              <Option value="PAP">Password (PAP)</Option>
+              <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
             </Select>
           </Item>
           <Item
+            name="radiusServiceName"
             label="Service"
-            name="radiusService"
             rules={[
               {
                 required: true,
@@ -141,7 +162,6 @@ const CaptivePortalForm = () => {
               <Select className={styles.Field}>
                 <Option value="default">default</Option>
               </Select>
-              <Button icon={<PlusOutlined />} />
             </div>
           </Item>
         </Card>
@@ -153,7 +173,7 @@ const CaptivePortalForm = () => {
             label="URL"
             rules={[
               {
-                required: true,
+                required: splash,
                 type: 'url',
                 message: 'Please enter URL in the format http://... or https://...',
               },
@@ -212,7 +232,7 @@ const CaptivePortalForm = () => {
       <Collapse expandIconPosition="right">
         <Panel header="Splash Page Content">
           <Item
-            name="browser"
+            name="browserTitle"
             label="Browser Title"
             rules={[
               {
@@ -224,7 +244,7 @@ const CaptivePortalForm = () => {
             <Input className={styles.Field} placeholder="Browser title" />
           </Item>
           <Item
-            name="pageTitle"
+            name="headerContent"
             label="Page Title"
             rules={[
               {
@@ -247,21 +267,19 @@ const CaptivePortalForm = () => {
                 onClick={() => setContentText('login')}
                 type={contentText === 'login' ? 'primary ' : 'ghost'}
               >
-                {' '}
                 Login Success Text
               </Button>
             </div>
-            <TextArea
-              className={styles.Field}
-              rows={4}
-              disabled
-              value={
-                contentText === 'user'
-                  ? 'Please agree to the following terms for using this network:'
-                  : 'You are now authorized and connected to the network.'
-              }
-            />
-            <Button icon={<EditOutlined />}> Edit Content</Button>
+            {contentText === 'user' && (
+              <Item name="userAcceptancePolicy">
+                <TextArea className={styles.Field} rows={4} />
+              </Item>
+            )}
+            {contentText !== 'user' && (
+              <Item name="successPageMarkdownText">
+                <TextArea className={styles.Field} rows={4} />
+              </Item>
+            )}
             &nbsp; Markdown and plain text supported.
           </Item>
         </Panel>
@@ -286,12 +304,12 @@ const CaptivePortalForm = () => {
             </div>
 
             <div className={styles.InlineDiv}>
-              <Upload className={styles.Image}>
-                Drop an image here, or click to upload. (jpg, jpeg or png)
-              </Upload>
-              <Upload className={styles.Image}>
-                Drop an image here, or click to upload. (jpg, jpeg or png)
-              </Upload>
+              <Item name="logoFile" className={styles.Image}>
+                <Upload>Drop an image here, or click to upload. (jpg, jpeg or png)</Upload>
+              </Item>
+              <Item name="backgroundFile" className={styles.Image}>
+                <Upload>Drop an image here, or click to upload. (jpg, jpeg or png)</Upload>
+              </Item>
             </div>
           </Item>
         </Panel>
@@ -304,8 +322,8 @@ const CaptivePortalForm = () => {
             label="Configure"
             rules={[
               {
-                required: true,
-                message: 'Unrecognized hostname, IPv4 address, or IP range.',
+                type: 'url',
+                message: 'Hostnames must have at least 1 subdomain label. e.g. mycompany.com',
               },
             ]}
           >
@@ -315,6 +333,16 @@ const CaptivePortalForm = () => {
       </Collapse>
     </div>
   );
+};
+
+CaptivePortalForm.propTypes = {
+  form: PropTypes.instanceOf(Object),
+  details: PropTypes.instanceOf(Object),
+};
+
+CaptivePortalForm.defaultProps = {
+  form: null,
+  details: {},
 };
 
 export default CaptivePortalForm;
