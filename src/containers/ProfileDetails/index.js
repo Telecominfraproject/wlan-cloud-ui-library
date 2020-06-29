@@ -11,7 +11,7 @@ import Modal from 'components/Modal';
 
 import globalStyles from 'styles/index.scss';
 
-import { formatSsidProfileForm } from 'utils/profiles';
+import { formatSsidProfileForm, formatApProfileForm } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
@@ -20,7 +20,14 @@ import CaptivePortalForm from './components/CaptivePortal';
 
 import styles from './index.module.scss';
 
-const ProfileDetails = ({ name, details, profileType, onUpdateProfile }) => {
+const ProfileDetails = ({
+  profileType,
+  name,
+  details,
+  childProfileIds,
+  onUpdateProfile,
+  ssidProfiles,
+}) => {
   const [confirmModal, setConfirmModal] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
@@ -39,16 +46,17 @@ const ProfileDetails = ({ name, details, profileType, onUpdateProfile }) => {
         let formattedData = { ...details };
 
         Object.keys(values).forEach(i => {
-          if (i in formattedData) {
-            formattedData[i] = values[i];
-          }
+          formattedData[i] = values[i];
         });
 
         if (profileType === 'ssid') {
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
+        if (profileType === 'equipment_ap') {
+          formattedData = Object.assign(formattedData, formatApProfileForm(values));
+        }
 
-        onUpdateProfile(values.name, formattedData);
+        onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
       })
       .catch(() => {});
   };
@@ -93,7 +101,14 @@ const ProfileDetails = ({ name, details, profileType, onUpdateProfile }) => {
           </Item>
         </Card>
         {profileType === 'ssid' && <SSIDForm form={form} details={details} />}
-        {profileType === 'equipment_ap' && <AccessPointForm form={form} details={details} />}
+        {profileType === 'equipment_ap' && (
+          <AccessPointForm
+            form={form}
+            details={details}
+            ssidProfiles={ssidProfiles}
+            childProfileIds={childProfileIds}
+          />
+        )}
         {profileType === 'captivePortal' && <CaptivePortalForm form={form} details={details} />}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
@@ -102,16 +117,20 @@ const ProfileDetails = ({ name, details, profileType, onUpdateProfile }) => {
 };
 
 ProfileDetails.propTypes = {
+  onUpdateProfile: PropTypes.func.isRequired,
   name: PropTypes.string,
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
-  onUpdateProfile: PropTypes.func.isRequired,
+  ssidProfiles: PropTypes.instanceOf(Array),
+  childProfileIds: PropTypes.instanceOf(Array),
 };
 
 ProfileDetails.defaultProps = {
   name: null,
   profileType: null,
   details: {},
+  ssidProfiles: [],
+  childProfileIds: [],
 };
 
 export default ProfileDetails;

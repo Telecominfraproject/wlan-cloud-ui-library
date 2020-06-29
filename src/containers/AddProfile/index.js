@@ -9,7 +9,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 
-import { formatSsidProfileForm } from 'utils/profiles';
+import { formatSsidProfileForm, formatApProfileForm } from 'utils/profiles';
 
 import styles from './index.module.scss';
 
@@ -39,6 +39,12 @@ const AddProfile = ({ onCreateProfile }) => {
         formattedData.model_type = 'SsidConfiguration';
         formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
       }
+
+      if (profileType === 'equipment_ap') {
+        formattedData.model_type = 'ApNetworkConfiguration';
+        formattedData = Object.assign(formattedData, formatApProfileForm(values));
+      }
+
       onCreateProfile(profileType, name, formattedData);
     });
   };

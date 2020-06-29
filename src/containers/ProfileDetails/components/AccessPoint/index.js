@@ -1,54 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+
 import SSIDForm from '../SSID';
 import styles from '../index.module.scss';
 
-const AccessPointForm = () => {
+const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
   const { Item } = Form;
   const { Option } = Select;
 
   const [addModal, setAddModal] = useState(false);
 
-  const [vlan, setVlan] = useState(true);
-  const [ntp, setNTP] = useState(true);
-  const [led, setLed] = useState(true);
+  const [vlan, setVlan] = useState(details.vlanNative);
+  const [ntp, setNTP] = useState(details.ntpServer && details.ntpServer.auto);
 
-  const [rtls, setRtls] = useState(false);
-  const [syslog, setSyslog] = useState(false);
+  const [rtls, setRtls] = useState(details.rtlsSettings && details.rtlsSettings.enabled);
+  const [syslog, setSyslog] = useState(details.syslogRelay && details.syslogRelay.enabled);
+
+  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
+
+  const handleOnChangeSsid = selectedItem => {
+    form.setFieldsValue({
+      childProfileIds: [...selectedChildProfiles, selectedItem],
+    });
+    setSelectdChildProfiles([...selectedChildProfiles, selectedItem]);
+  };
+
+  const handleRemoveSsid = id => {
+    form.setFieldsValue({
+      childProfileIds: selectedChildProfiles.filter(i => i !== id),
+    });
+    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+  };
+
+  useEffect(() => {
+    setSelectdChildProfiles(childProfileIds);
+    form.setFieldsValue({
+      vlanNative: details.vlanNative,
+      vlan: details.vlan,
+      ntpServer: {
+        auto: details.ntpServer && details.ntpServer.auto ? 'true' : 'false',
+        value: details.ntpServer && details.ntpServer.value,
+      },
+      ledControlEnabled: details.ledControlEnabled ? 'true' : 'false',
+      rtlsSettings: {
+        enabled: details.rtlsSettings && details.rtlsSettings.enabled ? 'true' : 'false',
+        srvHostIp: details.rtlsSettings && details.rtlsSettings.srvHostIp,
+        srvHostPort: details.rtlsSettings && details.rtlsSettings.srvHostPort,
+      },
+      syslogRelay: {
+        enabled: details.syslogRelay && details.syslogRelay.enabled ? 'true' : 'false',
+        srvHostIp: details.syslogRelay && details.syslogRelay.srvHostIp,
+        srvHostPort: details.syslogRelay && details.syslogRelay.srvHostPort,
+        severity: (details.syslogRelay && details.syslogRelay.severity) || 'DEBUG',
+      },
+      syntheticClientEnabled: details.syntheticClientEnabled ? 'true' : 'false',
+      equipmentDiscovery: details.equipmentDiscovery ? 'true' : 'false',
+      childProfileIds,
+    });
+  }, [form, details, childProfileIds]);
 
   const columns = [
     {
       title: 'Profile Name',
       dataIndex: 'name',
-      key: 'name',
-      width: 250,
     },
     {
       title: 'SSID',
-      key: 'ssidName',
-      width: 250,
+      dataIndex: ['details', 'ssid'],
     },
     {
       title: 'Security Mode',
-      key: 'security',
-      width: 400,
+      dataIndex: ['details', 'secureMode'],
     },
     {
       title: 'Radio',
-      key: 'radio',
-      width: 250,
+      dataIndex: ['details', 'appliedRadios'],
+      render: appliedRadios => appliedRadios.join(',  '),
     },
     {
       title: '',
-      dataIndex: 'delete',
-      key: 'delete',
       width: 80,
-      render: <Button icon={<DeleteFilled />} />,
+      render: (_, record) => (
+        <Button icon={<DeleteFilled />} onClick={() => handleRemoveSsid(record.id)} />
+      ),
     },
   ];
+
+  const enabledRadioOptions = () => (
+    <Radio.Group>
+      <Radio value="false">Disabled</Radio>
+      <Radio value="true">Enabled</Radio>
+    </Radio.Group>
+  );
+
+  const filteredOptions = ssidProfiles.filter(o => !selectedChildProfiles.includes(o.id));
+  const tableData = ssidProfiles.filter(o => selectedChildProfiles.includes(o.id));
 
   return (
     <div className={styles.ProfilePage}>
@@ -73,19 +124,14 @@ const AccessPointForm = () => {
         }
       />
       <Card title="LAN and Services ">
-        <Item
-          label="Management VLAN"
-          valuePropName="checked"
-          name="managementVlan"
-          initialValue={{ managementVlan: true }}
-        >
+        <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
           <Checkbox onChange={() => setVlan(!vlan)}>Use Default Management VLAN</Checkbox>
         </Item>
 
         {!vlan && (
           <Item label=" " colon={false}>
             <Item
-              name="vlanValue"
+              name="vlan"
               rules={[
                 {
                   required: !vlan,
@@ -93,10 +139,7 @@ const AccessPointForm = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
-                    if (
-                      !value ||
-                      (getFieldValue('vlanValue') <= 4095 && getFieldValue('vlanValue') > 1)
-                    ) {
+                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('Vlan expected between 2 and 4095'));
@@ -117,35 +160,26 @@ const AccessPointForm = () => {
           </Item>
         )}
 
-        <Item label="NTP" name="ntp" valuePropName="checked" initialValue={{ ntp: true }}>
-          <Checkbox onChange={() => setNTP(!ntp)} defaultChecked>
-            Use Default Servers
-          </Checkbox>
+        <Item label="NTP" name={['ntpServer', 'auto']} valuePropName="checked">
+          <Checkbox onChange={() => setNTP(!ntp)}>Use Default Servers</Checkbox>
         </Item>
         {!ntp && (
           <Item label=" " colon={false}>
             <Item
-              name="ntpServer"
+              name={['ntpServer', 'value']}
               rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
             >
               <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
           </Item>
         )}
-        <Item
-          label="LED Status"
-          name="ledStatus"
-          valuePropName="checked"
-          initialValue={{ ledStatus: true }}
-        >
-          <Checkbox value="led" onChange={() => setLed(!led)} defaultChecked>
-            Show LED indicators on APs
-          </Checkbox>
+        <Item label="LED Status" name="ledControlEnabled" valuePropName="checked">
+          <Checkbox>Show LED indicators on APs</Checkbox>
         </Item>
 
         <Item
           label="RTLS"
-          name="rtls"
+          name={['rtlsSettings', 'enabled']}
           rules={[
             {
               required: true,
@@ -154,10 +188,10 @@ const AccessPointForm = () => {
           ]}
         >
           <Radio.Group>
-            <Radio value="disabledRTLS" onChange={() => setRtls(false)}>
+            <Radio value="false" onChange={() => setRtls(false)}>
               Disabled
             </Radio>
-            <Radio value="enabledRTLS" onChange={() => setRtls(true)}>
+            <Radio value="true" onChange={() => setRtls(true)}>
               Enabled
             </Radio>
           </Radio.Group>
@@ -166,7 +200,7 @@ const AccessPointForm = () => {
           <>
             <Item label=" " colon={false}>
               <Item
-                name="RTLSipAddress"
+                name={['rtlsSettings', 'srvHostIp']}
                 rules={[
                   {
                     required: rtls,
@@ -179,7 +213,7 @@ const AccessPointForm = () => {
                 <Input className={styles.Field} placeholder="IP Address" />
               </Item>
               <Item
-                name="RTLSport"
+                name={['rtlsSettings', 'srvHostPort']}
                 rules={[
                   {
                     required: rtls,
@@ -187,7 +221,7 @@ const AccessPointForm = () => {
                   },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (!value || getFieldValue('RTLSport') < 65535) {
+                      if (!value || getFieldValue(['rtlsSettings', 'srvHostPort']) < 65535) {
                         return Promise.resolve();
                       }
                       return Promise.reject(new Error('Port expected between 1 - 65535'));
@@ -209,7 +243,7 @@ const AccessPointForm = () => {
         )}
         <Item
           label="Syslog"
-          name="syslog"
+          name={['syslogRelay', 'enabled']}
           rules={[
             {
               required: true,
@@ -218,10 +252,10 @@ const AccessPointForm = () => {
           ]}
         >
           <Radio.Group>
-            <Radio value="disabledSyslog" onChange={() => setSyslog(false)}>
+            <Radio value="false" onChange={() => setSyslog(false)}>
               Disabled
             </Radio>
-            <Radio value="enabledSyslog" onChange={() => setSyslog(true)}>
+            <Radio value="true" onChange={() => setSyslog(true)}>
               Enabled
             </Radio>
           </Radio.Group>
@@ -231,7 +265,7 @@ const AccessPointForm = () => {
             <Item label=" " colon={false}>
               <div className={styles.InlineDiv}>
                 <Item
-                  name="SyslogIP"
+                  name={['syslogRelay', 'srvHostIp']}
                   rules={[
                     {
                       required: syslog,
@@ -244,7 +278,7 @@ const AccessPointForm = () => {
                   <Input className={styles.Field} placeholder="IP Address" />
                 </Item>
                 <Item
-                  name="SyslogPort"
+                  name={['syslogRelay', 'srvHostPort']}
                   rules={[
                     {
                       required: syslog,
@@ -252,7 +286,7 @@ const AccessPointForm = () => {
                     },
                     ({ getFieldValue }) => ({
                       validator(_rule, value) {
-                        if (!value || getFieldValue('SyslogPort') < 65535) {
+                        if (!value || getFieldValue(['syslogRelay', 'srvHostPort']) < 65535) {
                           return Promise.resolve();
                         }
                         return Promise.reject(new Error('Port expected between 1 - 65535'));
@@ -267,12 +301,11 @@ const AccessPointForm = () => {
                     type="number"
                     min={1}
                     max={65535}
-                    hasFeedback
                   />
                 </Item>
               </div>
               <Item
-                name="mode"
+                name={['syslogRelay', 'severity']}
                 rules={[
                   {
                     required: true,
@@ -281,14 +314,14 @@ const AccessPointForm = () => {
                 ]}
               >
                 <Select className={styles.Field} placeholder="Select Syslog Mode">
-                  <Option value="debug">Debug (DEBUG)</Option>
-                  <Option value="info">Info. (INFO)</Option>
-                  <Option value="notice">Notice (NOTICE)</Option>
-                  <Option value="warning">Warning (WARNING)</Option>
-                  <Option value="error">Error (ERR)</Option>
-                  <Option value="critical">Critical (CRIT)</Option>
-                  <Option value="Alert">Alert (ALERT)</Option>
-                  <Option value="emergency">Emergency (EMERG)</Option>
+                  <Option value="DEBUG">Debug (DEBUG)</Option>
+                  <Option value="INFO">Info. (INFO)</Option>
+                  <Option value="NOTICE">Notice (NOTICE)</Option>
+                  <Option value="WARNING">Warning (WARNING)</Option>
+                  <Option value="ERR">Error (ERR)</Option>
+                  <Option value="CRIT">Critical (CRIT)</Option>
+                  <Option value="ALERT">Alert (ALERT)</Option>
+                  <Option value="EMERG">Emergency (EMERG)</Option>
                 </Select>
               </Item>
             </Item>
@@ -296,7 +329,7 @@ const AccessPointForm = () => {
         )}
         <Item
           label="Synthetic Client"
-          name="syntheticClient"
+          name="syntheticClientEnabled"
           rules={[
             {
               required: true,
@@ -304,10 +337,7 @@ const AccessPointForm = () => {
             },
           ]}
         >
-          <Radio.Group>
-            <Radio value="disabledClient">Disabled</Radio>
-            <Radio value="enabledClient">Enabled</Radio>
-          </Radio.Group>
+          {enabledRadioOptions()}
         </Item>
         <Item
           label="Equipment Discovery"
@@ -319,18 +349,49 @@ const AccessPointForm = () => {
             },
           ]}
         >
-          <Radio.Group>
-            <Radio value="disabledEq">Disabled</Radio>
-            <Radio value="enabledEq">Enabled</Radio>
-          </Radio.Group>
+          {enabledRadioOptions()}
         </Item>
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
-        <Table columns={columns} pagination={false} />
-        <Button onClick={() => setAddModal(true)}>Create Wireless Network</Button>
+        <Item>
+          <Select
+            showSearch
+            placeholder="Select a SSID Profile"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            onChange={handleOnChangeSsid}
+            value="Select a SSID Profile"
+          >
+            {filteredOptions.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Table dataSource={tableData} columns={columns} pagination={false} rowKey="id" />
+        <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Input />
+        </Item>
       </Card>
     </div>
   );
+};
+
+AccessPointForm.propTypes = {
+  form: PropTypes.instanceOf(Object),
+  details: PropTypes.instanceOf(Object),
+  childProfileIds: PropTypes.instanceOf(Array),
+  ssidProfiles: PropTypes.instanceOf(Array),
+};
+
+AccessPointForm.defaultProps = {
+  form: null,
+  details: {},
+  childProfileIds: [],
+  ssidProfiles: [],
 };
 
 export default AccessPointForm;
