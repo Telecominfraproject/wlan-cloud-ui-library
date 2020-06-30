@@ -18,6 +18,7 @@ import styles from './index.module.scss';
 const AccessPointDetails = ({
   data,
   profiles,
+  firmware,
   osData,
   handleRefresh,
   locations,
@@ -103,7 +104,7 @@ const AccessPointDetails = ({
         <Location data={data} locations={locations} onUpdateEquipment={onUpdateEquipment} />
       )}
       {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefresh={handleRefresh} />}
-      {tab === 'firmware' && <Firmware data={data} />}
+      {tab === 'firmware' && <Firmware firmware={firmware} />}
     </div>
   );
 };
@@ -111,6 +112,7 @@ const AccessPointDetails = ({
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Object),
+  firmware: PropTypes.instanceOf(Object),
   osData: PropTypes.instanceOf(Array),
   handleRefresh: PropTypes.func.isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
@@ -119,6 +121,7 @@ AccessPointDetails.propTypes = {
 
 AccessPointDetails.defaultProps = {
   data: {},
+  firmware: {},
   profiles: {},
   osData: [],
 };
