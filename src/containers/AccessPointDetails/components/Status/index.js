@@ -55,17 +55,26 @@ const Status = ({ data }) => {
     <>
       <Form {...layout}>
         <Card title="Status">
-          {renderSpanItem(' ', data.details.radioMap, 'radioType')}
+          {renderSpanItem(' ', data.details && data.details.radioMap, 'radioType')}
 
-          {renderSpanItem('Channel', data.details.radioMap, 'channelNumber')}
+          {renderSpanItem('Channel', data.details && data.details.radioMap, 'channelNumber')}
 
-          {renderSpanItem('Noise Floor', data.status.radioUtilization.detailsJSON.avgNoiseFloor)}
+          {renderSpanItem(
+            'Noise Floor',
+            data.status &&
+              data.status.radioUtilization &&
+              data.status.radioUtilization.detailsJSON &&
+              data.status.radioUtilization.detailsJSON.avgNoiseFloor
+          )}
 
-          {renderSpanItem('Number of Devices', data.details.radioMap, 'radioType')}
+          {renderSpanItem('Number of Devices', data.details && data.details.radioMap, 'radioType')}
 
           {renderSpanItem(
             'Available Capacity',
-            data.status.radioUtilization.detailsJSON.capacityDetails,
+            data.status &&
+              data.status.radioUtilization &&
+              data.status.radioUtilization.detailsJSON &&
+              data.status.radioUtilization.detailsJSON.capacityDetails,
             'availableCapacity'
           )}
         </Card>

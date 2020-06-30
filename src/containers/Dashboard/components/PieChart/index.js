@@ -1,47 +1,68 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
-import { HighchartsChart, withHighcharts, PieSeries, Tooltip } from 'react-jsx-highcharts';
-import Highcharts from 'highcharts/highstock';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+
 import styles from './index.module.scss';
 
-const PieChart = ({ chartData, title }) => {
-  const [pieData, setPieData] = useState([]);
-  const headerStyle = {
-    textAlign: 'center',
-    border: 0,
-  };
+const headerStyle = {
+  textAlign: 'center',
+  border: 0,
+};
 
-  useEffect(() => {
+const PieChart = ({ chartData, title }) => {
+  const pieData = useMemo(() => {
     const values = Object.values(chartData);
-    const pieDataArr = [];
+    const pieDataArr = [
+      {
+        name: 'Count',
+        data: [],
+      },
+    ];
+
     Object.keys(chartData).map((key, keyIndex) => {
       const pieDataObj = {
         name: key,
         y: values[keyIndex],
       };
-      return pieDataArr.push(pieDataObj);
+      return pieDataArr[0].data.push(pieDataObj);
     });
-    setPieData(pieDataArr);
-  }, [chartData]);
+    return pieDataArr;
+  });
+
+  const options = {
+    chart: {
+      type: 'pie',
+    },
+    title: {
+      verticalAlign: 'middle',
+      floating: true,
+      text: '',
+      style: {
+        fontSize: '10px',
+      },
+    },
+    plotOptions: {
+      pie: {
+        dataLabels: {
+          color: '#fff',
+          textShadow: 'none',
+          enabled: true,
+          format: '{point.name}: {point.percentage:.1f} %',
+        },
+        innerSize: '0%',
+      },
+    },
+    credits: {
+      enabled: false,
+    },
+    series: pieData,
+  };
 
   return (
     <Card title={title} headStyle={headerStyle} className={styles.pieChart}>
-      <HighchartsChart>
-        <PieSeries
-          name="Count"
-          data={pieData}
-          size={300}
-          showInLegend
-          dataLabels={{ color: '#fff' }}
-        />
-
-        <Tooltip
-          borderWidth={0}
-          backgroundColor="#141414"
-          style={{ color: '#fff', fontSize: '12px' }}
-        />
-      </HighchartsChart>
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </Card>
   );
 };
@@ -54,4 +75,5 @@ PieChart.propTypes = {
 PieChart.defaultProps = {
   title: '',
 };
-export default withHighcharts(PieChart, Highcharts);
+
+export default PieChart;
