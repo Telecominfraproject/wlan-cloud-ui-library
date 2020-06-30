@@ -20,3 +20,16 @@
     flex-direction: column;
   }
 }
+@media screen and (max-width: 767px) {
+  .pieChartWrap {
+    flex-wrap: wrap;
+  }
+  .mainInfoWrap {
+    padding: 30px;
+  }
+}
+@media screen and (max-width: 575px) {
+  .mainInfoWrap {
+    padding: 30px 20px;
+  }
+}
