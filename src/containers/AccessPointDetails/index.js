@@ -103,7 +103,7 @@ const AccessPointDetails = ({
       {tab === 'location' && (
         <Location data={data} locations={locations} onUpdateEquipment={onUpdateEquipment} />
       )}
-      {tab === 'os' && <OS data={data} osData={osData[0].values} handleRefresh={handleRefresh} />}
+      {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
       {tab === 'firmware' && <Firmware firmware={firmware} />}
     </div>
   );
@@ -113,7 +113,7 @@ AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Object),
   firmware: PropTypes.instanceOf(Object),
-  osData: PropTypes.instanceOf(Array),
+  osData: PropTypes.instanceOf(Object),
   handleRefresh: PropTypes.func.isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
