@@ -42,11 +42,12 @@ const Status = ({ data }) => {
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(obj).map(i => (
-          <span key={i} className={styles.spanStyle}>
-            {dataIndex ? obj[i][dataIndex] : obj[i]}
-          </span>
-        ))}
+        {obj &&
+          Object.keys(obj).map(i => (
+            <span key={i} className={styles.spanStyle}>
+              {dataIndex ? obj[i][dataIndex] : obj[i]}
+            </span>
+          ))}
       </div>
     </Item>
   );
@@ -67,7 +68,14 @@ const Status = ({ data }) => {
               data.status.radioUtilization.detailsJSON.avgNoiseFloor
           )}
 
-          {renderSpanItem('Number of Devices', data.details && data.details.radioMap, 'radioType')}
+          {renderSpanItem(
+            'Number of Devices',
+            data.status &&
+              data.status.clientDetails &&
+              data.status.clientDetails.detailsJSON &&
+              data.status.clientDetails.detailsJSON.numClientsPerRadio,
+            'radioType'
+          )}
 
           {renderSpanItem(
             'Available Capacity',

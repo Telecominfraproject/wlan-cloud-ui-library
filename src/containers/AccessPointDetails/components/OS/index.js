@@ -10,6 +10,9 @@ import Timer from './components/Timer';
 import styles from '../../index.module.scss';
 
 const OS = ({ data, osData, handleRefresh }) => {
+  const osPerformance =
+    (data && data.status && data.status.osPerformance && data.status.osPerformance.detailsJSON) ||
+    {};
   const convertDate = time => {
     const hour = Math.floor(time / 3600);
     const min = Math.floor((time % 3600) / 60);
@@ -21,41 +24,45 @@ const OS = ({ data, osData, handleRefresh }) => {
     return hDisplay + mDisplay + sDisplay;
   };
 
-  const memory = useMemo(
-    () =>
-      parseFloat(
-        (
-          (data.status.osPerformance.detailsJSON.avgFreeMemoryKb /
-            data.status.osPerformance.detailsJSON.totalAvailableMemoryKb) *
-          100
-        ).toFixed(2),
-        10
-      ),
-    [data]
-  );
+  const memory = useMemo(() => {
+    if (!osPerformance.avgFreeMemoryKb || !osPerformance.totalAvailableMemoryKb) {
+      return 0;
+    }
 
-  const cpu = useMemo(
-    () => parseFloat(data.status.osPerformance.detailsJSON.avgCpuUtilization.toFixed(2), 10),
-    [data]
-  );
+    return parseFloat(
+      ((osPerformance.avgFreeMemoryKb / osPerformance.totalAvailableMemoryKb) * 100).toFixed(2),
+      10
+    );
+  }, [data]);
 
-  const temperature = useMemo(
-    () => parseFloat(data.status.osPerformance.detailsJSON.avgCpuTemperature.toFixed(2), 10),
-    [data]
-  );
+  const cpu = useMemo(() => {
+    if (!osPerformance.avgCpuUtilization) {
+      return 0;
+    }
+
+    return parseFloat(osPerformance.avgCpuUtilization.toFixed(2), 10);
+  }, [data]);
+
+  const temperature = useMemo(() => {
+    if (!osPerformance.avgCpuTemperature) {
+      return 0;
+    }
+
+    return parseFloat(osPerformance.avgCpuTemperature.toFixed(2), 10);
+  }, [data]);
 
   return (
     <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
       <div className={styles.InlineBetweenDiv}>
         <Alert
           icon={<LineChartOutlined />}
-          message={`Up-time: ${convertDate(data.status.osPerformance.detailsJSON.uptimeInSeconds)}`}
+          message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
           type="info"
           showIcon
         />
         <Alert
           icon={<InfoCircleOutlined />}
-          message={`CAMI crashes since boot: ${data.status.osPerformance.detailsJSON.numCamiCrashes}`}
+          message={`CAMI crashes since boot: ${osPerformance.numCamiCrashes}`}
           type="info"
           showIcon
         />
