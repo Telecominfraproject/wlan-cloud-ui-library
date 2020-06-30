@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
-import styles from './index.module.scss';
 import { HighchartsChart, withHighcharts, PieSeries, Tooltip } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts/highstock';
+import styles from './index.module.scss';
 
 const PieChartOne = ({ chartData, title }) => {
   const [pieData, setPieData] = useState([]);
@@ -14,13 +14,13 @@ const PieChartOne = ({ chartData, title }) => {
 
   useEffect(() => {
     const values = Object.values(chartData);
-    let pieDataArr = [];
+    const pieDataArr = [];
     Object.keys(chartData).map((key, keyIndex) => {
       const pieDataObj = {
         name: key,
         y: values[keyIndex],
       };
-      pieDataArr.push(pieDataObj);
+      return pieDataArr.push(pieDataObj);
     });
     setPieData(pieDataArr);
   }, [chartData]);
@@ -32,14 +32,14 @@ const PieChartOne = ({ chartData, title }) => {
           name="Count"
           data={pieData}
           size={300}
-          showInLegend={true}
+          showInLegend
           dataLabels={{ color: '#fff' }}
         />
 
         <Tooltip
           borderWidth={0}
           backgroundColor="#141414"
-          shadow={true}
+          shadow
           style={{ color: '#fff', fontSize: '12px' }}
         />
       </HighchartsChart>
