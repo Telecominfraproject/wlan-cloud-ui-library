@@ -1,22 +1,19 @@
 .mainInfoWrap {
-  display: flex;
-  justify-content: flex-start;
   padding: 60px;
+
   .rightInfoWrap {
-    width: 65%;
+    flex: 1;
     margin: 0 auto;
   }
   .infoWrapper {
     display: flex;
     justify-content: space-between;
-    margin: 10px 0;
   }
 }
 
 .pieChartWrap {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
 }
 @media screen and (max-width: 1024px) {
   .infoWrapper {

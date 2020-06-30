@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import Highcharts from 'highcharts';
+
 import styles from './index.module.scss';
 
 const PieChart = ({ chartData, title }) => {
@@ -73,8 +74,14 @@ const PieChart = ({ chartData, title }) => {
     </Card>
   );
 };
+
 PieChart.propTypes = {
-  chartData: PropTypes.instanceOf(Array).isRequired,
-  title: PropTypes.instanceOf(Array).isRequired,
+  chartData: PropTypes.instanceOf(Object).isRequired,
+  title: PropTypes.string,
 };
+
+PieChart.defaultProps = {
+  title: '',
+};
+
 export default PieChart;

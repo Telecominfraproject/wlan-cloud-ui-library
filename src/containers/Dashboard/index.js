@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import DeviceStatsCard from './components/DeviceStatsCard';
 import PieChart from './components/PieChart';
 import styles from './index.module.scss';
@@ -12,12 +13,14 @@ const Dashboard = ({ titleList, statsArr, pieChartData }) => {
         <div className={styles.infoWrapper}>
           {statsArr &&
             statsArr.map((data, index) => {
-              return <DeviceStatsCard title={titleList[index]} cardData={data} />;
+              return (
+                <DeviceStatsCard key={titleList[index]} title={titleList[index]} cardData={data} />
+              );
             })}
         </div>
         <div className={styles.pieChartWrap}>
           {pieChartData.map((data, index) => {
-            return <PieChart chartData={data} title={titles[index]} />;
+            return <PieChart key={titles[index]} chartData={data} title={titles[index]} />;
           })}
         </div>
       </div>
