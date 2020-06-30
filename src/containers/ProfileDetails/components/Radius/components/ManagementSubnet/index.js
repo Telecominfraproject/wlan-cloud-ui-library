@@ -1,28 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input } from 'antd';
+
 import Modal from 'components/Modal';
+
 import styles from '../../../index.module.scss';
 
-const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) => {
-  const { Item } = Form;
+const { Item } = Form;
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 12 },
+};
+
+const ipPattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+
+const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) => {
   const [form] = Form.useForm();
-  form.resetFields();
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
+  useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue({ ...subnet });
+  }, [visible, subnet]);
+
+  const handleOnSuccess = () => {
+    form
+      .validateFields()
+      .then(newValues => {
+        onSuccess(newValues);
+      })
+      .catch(() => {});
   };
-
-  const ipPattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
   const addServerContent = (
     <Form {...layout} form={form}>
-      <Item name="region" label="Region Name">
-        <Input className={styles.Field} defaultValue={region} disabled={disabled} />
+      <Item name="serviceRegionName" label="Zone Name">
+        <Input className={styles.Field} disabled />
       </Item>
       <Item
-        name="subnet"
+        name="subnetName"
         label="Subnet Name"
         rules={[
           {
@@ -34,7 +50,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
         <Input className={styles.Field} placeholder="Enter Subnet name" />
       </Item>
       <Item
-        name="subnetIP"
+        name="subnetAddress"
         label="Subnet IP"
         rules={[
           {
@@ -48,7 +64,7 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
         <Input className={styles.Field} placeholder="Enter Subnet IP" />
       </Item>
       <Item
-        name="cidr"
+        name="subnetCidrPrefix"
         label="Subnet CIDR Mask"
         rules={[
           {
@@ -58,7 +74,11 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
-              if (!value || getFieldValue('cidr') <= 32 || ipPattern.test(getFieldValue('cidr'))) {
+              if (
+                !value ||
+                getFieldValue('subnetCidrPrefix') <= 32 ||
+                ipPattern.test(getFieldValue('subnetCidrPrefix'))
+              ) {
                 return Promise.resolve();
               }
               return Promise.reject(
@@ -80,11 +100,10 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
         </span>
 
         <Item
-          name="proxy"
+          name={['proxyConfig', 'floatingIpAddress']}
           label="Proxy Interface IP"
           rules={[
             {
-              required: true,
               pattern: ipPattern,
               message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
             },
@@ -103,23 +122,22 @@ const ManagementSubnetModal = ({ onCancel, visible, title, region, disabled }) =
       title={title}
       content={addServerContent}
       closable={false}
-      onSuccess={() => {}}
+      onSuccess={handleOnSuccess}
     />
   );
 };
 
 ManagementSubnetModal.propTypes = {
+  onSuccess: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   title: PropTypes.string,
-  region: PropTypes.string,
-  disabled: PropTypes.bool,
+  subnet: PropTypes.instanceOf(Object),
 };
 
 ManagementSubnetModal.defaultProps = {
   title: '',
-  region: '',
-  disabled: false,
+  subnet: {},
 };
 
 export default ManagementSubnetModal;

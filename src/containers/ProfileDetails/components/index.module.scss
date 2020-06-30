@@ -78,3 +78,24 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.ServiceZones {
+  .RadiusInline {
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+    & > * {
+      margin: 0 5px;
+    }
+  }
+  .iconButton {
+    margin: 0;
+    margin-right: 10px;
+  }
+  :global(.ant-list-item-meta) {
+    flex: none;
+  }
+  :global(.ant-card) {
+    flex: 1;
+  }
+}

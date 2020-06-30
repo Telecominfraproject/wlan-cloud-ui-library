@@ -1,16 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input } from 'antd';
-import { CloseCircleOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { Form, Input, Table, notification } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+import RadiusServer from '../RadiusServer';
 import styles from '../../../index.module.scss';
 
-const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => {
+const { Item } = Form;
+
+const RadiusServiceModal = ({ onSuccess, onCancel, visible, title, disabled, service }) => {
   const [serverCard, setServerCard] = useState(false);
-  const { Item } = Form;
+  const [ips, setIps] = useState(service.ips || []);
+
   const [form] = Form.useForm();
-  form.resetFields();
+
+  const columns = [
+    {
+      title: '',
+      dataIndex: 'ipAddress',
+    },
+    {
+      title: '',
+      width: 64,
+      // eslint-disable-next-line no-unused-vars
+      render: (_, r, index) => (
+        <Button
+          title="delete"
+          type="danger"
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            setIps(ips.slice(index + 1));
+          }}
+        />
+      ),
+    },
+  ];
+
+  const handleSucessServer = values => {
+    setIps([...ips, values]);
+    setServerCard(false);
+  };
+
+  const handleOnSuccess = () => {
+    form
+      .validateFields()
+      .then(newValues => {
+        if (ips.length === 0) {
+          notification.error({
+            message: 'Error',
+            description: 'At least 1 RADIUS Server is required.',
+          });
+          return;
+        }
+        onSuccess({ name: newValues.name, ips });
+      })
+      .catch(() => {});
+  };
+
+  useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue({
+      name: service.name,
+    });
+    setIps(service.ips || []);
+  }, [visible, service]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -20,7 +75,7 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
   const addServerContent = (
     <Form {...layout} form={form}>
       <Item
-        name="service"
+        name="name"
         label="Service Name"
         rules={[
           {
@@ -28,95 +83,27 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
             pattern: /^\S+$/g,
             message: 'Please enter a name of length 1 - 32 characters, no spaces.',
           },
-          ({ getFieldValue }) => ({
-            validator(_rule, value) {
-              if (!value || getFieldValue('service').length <= 32) {
-                return Promise.resolve();
-              }
-              return Promise.reject(
-                new Error(
-                  'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key'
-                )
-              );
-            },
-          }),
         ]}
       >
-        <Input className={styles.Field} disabled={disabled} defaultValue={service} />
+        <Input className={styles.Field} disabled={disabled} />
       </Item>
 
       {!serverCard && (
-        <div className={styles.InlineEndDiv}>
-          <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>{' '}
-        </div>
+        <>
+          <b>RADIUS Server List:</b>
+          <Table dataSource={ips} columns={columns} pagination={false} size="small" />
+          <div className={styles.InlineEndDiv}>
+            <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>{' '}
+          </div>
+        </>
       )}
 
       {serverCard && (
-        <Card
-          title="Server Properties"
-          extra={<CloseCircleOutlined onClick={() => setServerCard(false)} />}
-        >
-          <Item
-            name="ip"
-            label="IP"
-            rules={[
-              {
-                required: true,
-                pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
-                message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input className={styles.Field} placeholder="Enter IP address" />
-          </Item>
-          <Item
-            name="port"
-            label="Port"
-            rules={[
-              {
-                required: true,
-                message: 'Port expected between 1 - 65535',
-              },
-              ({ getFieldValue }) => ({
-                validator(_rule, value) {
-                  if (!value || getFieldValue('port') < 65535) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error('Port expected between 1 - 65535'));
-                },
-              }),
-            ]}
-            hasFeedback
-          >
-            <Input
-              className={styles.Field}
-              placeholder="Enter Port"
-              type="number"
-              min={1}
-              max={65535}
-            />
-          </Item>
-          <Item
-            name="secret"
-            label="Shared Secret"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter a shared secret.',
-              },
-            ]}
-          >
-            <Input.Password className={styles.Field} placeholder="Enter Shared Secret" />
-          </Item>
-          <div className={styles.InlineEndDiv}>
-            <Button type="danger" onClick={() => setServerCard(false)} icon={<CloseOutlined />} />
-            <Button type="primary" icon={<CheckOutlined />} />
-          </div>
-        </Card>
+        <RadiusServer onSuccess={handleSucessServer} onCancel={() => setServerCard(false)} />
       )}
     </Form>
   );
+
   return (
     <Modal
       onCancel={onCancel}
@@ -125,22 +112,23 @@ const RadiusServiceModal = ({ onCancel, visible, title, disabled, service }) => 
       title={title}
       content={addServerContent}
       closable={false}
-      onSuccess={() => {}}
+      onSuccess={handleOnSuccess}
     />
   );
 };
 
 RadiusServiceModal.propTypes = {
+  onSuccess: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   title: PropTypes.string,
-  service: PropTypes.string,
+  service: PropTypes.instanceOf(Object),
   disabled: PropTypes.bool,
 };
 
 RadiusServiceModal.defaultProps = {
   title: '',
-  service: '',
+  service: {},
   disabled: false,
 };
 

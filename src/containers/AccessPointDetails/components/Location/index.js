@@ -66,30 +66,33 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     } = data;
     let { locationId } = data;
 
-    form.validateFields().then(newValues => {
-      if ('floor' in newValues) {
-        locationId = newValues.floor;
-      } else if ('building' in newValues) {
-        locationId = newValues.building;
-      } else if ('city' in newValues) {
-        locationId = newValues.city;
-      }
+    form
+      .validateFields()
+      .then(newValues => {
+        if ('floor' in newValues) {
+          locationId = newValues.floor;
+        } else if ('building' in newValues) {
+          locationId = newValues.building;
+        } else if ('city' in newValues) {
+          locationId = newValues.city;
+        }
 
-      onUpdateEquipment(
-        id,
-        equipmentType,
-        inventoryId,
-        customerId,
-        profileId,
-        locationId,
-        name,
-        latitude,
-        longitude,
-        serial,
-        lastModifiedTimestamp,
-        details
-      );
-    });
+        onUpdateEquipment(
+          id,
+          equipmentType,
+          inventoryId,
+          customerId,
+          profileId,
+          locationId,
+          name,
+          latitude,
+          longitude,
+          serial,
+          lastModifiedTimestamp,
+          details
+        );
+      })
+      .catch(() => {});
   };
 
   const handleOnChangeCity = value => {
