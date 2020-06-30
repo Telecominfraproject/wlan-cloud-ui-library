@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import styles from './index.module.scss';
-import { HighchartsChart, withHighcharts, Title, PieSeries, Tooltip } from 'react-jsx-highcharts';
+import { HighchartsChart, withHighcharts, PieSeries, Tooltip } from 'react-jsx-highcharts';
 import Highcharts from 'highcharts/highstock';
 
 const PieChartOne = ({ chartData, title }) => {
