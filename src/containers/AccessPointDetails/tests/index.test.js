@@ -505,6 +505,298 @@ const mockProps = {
       ],
     },
   ],
+  profiles: [
+    [
+      {
+        id: 6,
+        name: 'ApProfile-3-radios',
+        profileType: 'equipment_ap',
+        details: {
+          model_type: 'ApNetworkConfiguration',
+          networkConfigVersion: 'AP-1',
+          equipmentType: 'AP',
+          vlanNative: true,
+          vlan: 0,
+          ntpServer: {
+            model_type: 'AutoOrManualString',
+            auto: true,
+            value: 'pool.ntp.org',
+          },
+          syslogRelay: null,
+          rtlsSettings: null,
+          syntheticClientEnabled: true,
+          ledControlEnabled: true,
+          equipmentDiscovery: false,
+          radioMap: {
+            is2dot4GHz: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is5GHzU: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is5GHzL: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+          },
+          profileType: 'equipment_ap',
+        },
+        childProfiles: [
+          {
+            id: 3,
+            name: 'TipWlan-cloud-3-radios',
+            details: {
+              model_type: 'SsidConfiguration',
+              ssid: 'TipWlan-cloud-3-radios',
+              appliedRadios: ['is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+              ssidAdminState: 'enabled',
+              secureMode: 'open',
+              vlanId: 1,
+              keyStr: null,
+              broadcastSsid: 'enabled',
+              keyRefresh: 0,
+              noLocalSubnets: false,
+              radiusServiceName: null,
+              captivePortalId: null,
+              bandwidthLimitDown: 0,
+              bandwidthLimitUp: 0,
+              videoTrafficOnly: false,
+              radioBasedConfigs: {
+                is5GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is2dot4GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzU: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzL: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+              },
+              bonjourGatewayProfileId: null,
+              enable80211w: null,
+              wepConfig: null,
+              forwardMode: null,
+              profileType: 'ssid',
+            },
+            __typename: 'Profile',
+          },
+        ],
+        __typename: 'Profile',
+      },
+      {
+        id: 7,
+        name: 'ApProfile-2-radios',
+        profileType: 'equipment_ap',
+        details: {
+          model_type: 'ApNetworkConfiguration',
+          networkConfigVersion: 'AP-1',
+          equipmentType: 'AP',
+          vlanNative: true,
+          vlan: 0,
+          ntpServer: {
+            model_type: 'AutoOrManualString',
+            auto: true,
+            value: 'pool.ntp.org',
+          },
+          syslogRelay: null,
+          rtlsSettings: null,
+          syntheticClientEnabled: true,
+          ledControlEnabled: true,
+          equipmentDiscovery: false,
+          radioMap: {
+            is5GHz: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is2dot4GHz: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+          },
+          profileType: 'equipment_ap',
+        },
+        childProfiles: [
+          {
+            id: 4,
+            name: 'TipWlan-cloud-2-radios',
+            details: {
+              model_type: 'SsidConfiguration',
+              ssid: 'TipWlan-cloud-2-radios',
+              appliedRadios: ['is2dot4GHz', 'is5GHz'],
+              ssidAdminState: 'enabled',
+              secureMode: 'open',
+              vlanId: 1,
+              keyStr: null,
+              broadcastSsid: 'enabled',
+              keyRefresh: 0,
+              noLocalSubnets: false,
+              radiusServiceName: null,
+              captivePortalId: null,
+              bandwidthLimitDown: 0,
+              bandwidthLimitUp: 0,
+              videoTrafficOnly: false,
+              radioBasedConfigs: {
+                is5GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is2dot4GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzU: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzL: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+              },
+              bonjourGatewayProfileId: null,
+              enable80211w: null,
+              wepConfig: null,
+              forwardMode: null,
+              profileType: 'ssid',
+            },
+            __typename: 'Profile',
+          },
+        ],
+        __typename: 'Profile',
+      },
+      {
+        id: 8,
+        name: 'EnterpriseApProfile',
+        profileType: 'equipment_ap',
+        details: {
+          model_type: 'ApNetworkConfiguration',
+          networkConfigVersion: 'AP-1',
+          equipmentType: 'AP',
+          vlanNative: true,
+          vlan: 0,
+          ntpServer: {
+            model_type: 'AutoOrManualString',
+            auto: true,
+            value: 'pool.ntp.org',
+          },
+          syslogRelay: null,
+          rtlsSettings: null,
+          syntheticClientEnabled: true,
+          ledControlEnabled: true,
+          equipmentDiscovery: false,
+          radioMap: {
+            is5GHz: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is2dot4GHz: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is5GHzU: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+            is5GHzL: {
+              model_type: 'RadioProfileConfiguration',
+              bestApEnabled: true,
+              bestAPSteerType: 'both',
+            },
+          },
+          profileType: 'equipment_ap',
+        },
+        childProfiles: [
+          {
+            id: 2,
+            name: 'TipWlan-cloud-Enterprise',
+            details: {
+              model_type: 'SsidConfiguration',
+              ssid: 'Default-SSID-1593463091151',
+              appliedRadios: ['is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+              ssidAdminState: 'enabled',
+              secureMode: 'wpaEAP',
+              vlanId: 1,
+              keyStr: 'testing123',
+              broadcastSsid: 'enabled',
+              keyRefresh: 0,
+              noLocalSubnets: false,
+              radiusServiceName: 'Radius-Profile',
+              captivePortalId: null,
+              bandwidthLimitDown: 0,
+              bandwidthLimitUp: 0,
+              videoTrafficOnly: false,
+              radioBasedConfigs: {
+                is5GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is2dot4GHz: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzU: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+                is5GHzL: {
+                  model_type: 'RadioBasedSsidConfiguration',
+                  enable80211r: null,
+                  enable80211k: null,
+                  enable80211v: null,
+                },
+              },
+              bonjourGatewayProfileId: null,
+              enable80211w: null,
+              wepConfig: null,
+              forwardMode: null,
+              profileType: 'ssid',
+            },
+            __typename: 'Profile',
+          },
+        ],
+        __typename: 'Profile',
+      },
+    ],
+  ],
   handleRefresh: () => {},
 };
 
@@ -543,50 +835,6 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
   });
 
-  it('location tab should show the location form', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /location/i }));
-
-    const paragraph = getByText('City');
-    expect(paragraph).toBeVisible();
-  });
-
-  it('os tab should show the os form', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /os/i }));
-
-    const paragraph = getByText('Operating System Statistics');
-    expect(paragraph).toBeVisible();
-  });
-  it('firmware tab should show the firmware form', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-  });
-
   it('URL changes to /network/access-points on clicking the back button', () => {
     const history = createMemoryHistory();
     const { getByRole } = render(
@@ -600,7 +848,7 @@ describe('<AccessPointDetails />', () => {
 
   it('handleSubmit should not be called if access point name is empty on general tab', async () => {
     const history = createMemoryHistory();
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole, getByPlaceholderText } = render(
       <Router history={history}>
         <AccessPointDetails {...mockProps} />
       </Router>
@@ -609,6 +857,9 @@ describe('<AccessPointDetails />', () => {
     const paragraph = getByText('Identity');
     expect(paragraph).toBeVisible();
 
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: null },
+    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -1154,113 +1405,6 @@ describe('<AccessPointDetails />', () => {
 
     await waitFor(() => {
       expect(getByText('0 - 100%')).toBeVisible();
-    });
-  });
-
-  it('firmware tab should show confirm reboot modal', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: /Reboot Access Point/i }));
-    const paragraph2 = getByText('Are you sure you want to reboot this device?');
-    expect(paragraph2).toBeVisible();
-  });
-
-  it('canceling the Reboot modal should hide it on the firmware tab', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: /Reboot Access Point/i }));
-    const paragraph2 = getByText('Are you sure you want to reboot this device?');
-    expect(paragraph2).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
-
-    await waitFor(() => {
-      expect(getByText('Are you sure you want to reboot this device?')).not.toBeVisible();
-    });
-  });
-
-  it('firmware tab should show confirm download, flash and reboot modal', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: /Download, Flash, and Reboot/i }));
-    const paragraph2 = getByText('Confirm switching and rebooting?');
-    expect(paragraph2).toBeVisible();
-  });
-
-  it('firmware tab should show confirm switching modal', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: /Switch to Inactive Bank and Reboot/i }));
-    const paragraph2 = getByText('Confirm switching and rebooting?');
-    expect(paragraph2).toBeVisible();
-  });
-
-  it('canceling the Switching/Reboot modal should hide it on the firmware tab', async () => {
-    const history = createMemoryHistory();
-
-    const { getByRole, getByText } = render(
-      <Router history={history}>
-        <AccessPointDetails {...mockProps} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('tab', { name: /firmware/i }));
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: /Switch to Inactive Bank and Reboot/i }));
-    const paragraph2 = getByText('Confirm switching and rebooting?');
-    expect(paragraph2).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
-
-    await waitFor(() => {
-      expect(getByText('Confirm switching and rebooting?')).not.toBeVisible();
     });
   });
 });
