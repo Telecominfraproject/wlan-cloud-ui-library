@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, Tooltip } from 'antd';
+import { Card, Form, Input, Table, Collapse, Select, Tooltip, notification } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../../index.module.scss';
@@ -76,10 +76,14 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
             if (field === 'neighbouringListApConfig') {
-              formattedData.radioMap[radio].neighbouringListApConfig.maxAps =
-                values[`maxAps${radio}`];
-              formattedData.radioMap[radio].neighbouringListApConfig.minSignal =
-                values[`minSignal${radio}`];
+              if (`maxAps${radio}` in values) {
+                formattedData.radioMap[radio].neighbouringListApConfig.maxAps =
+                  values[`maxAps${radio}`];
+              }
+              if (`minSignal${radio}` in values) {
+                formattedData.radioMap[radio].neighbouringListApConfig.minSignal =
+                  values[`minSignal${radio}`];
+              }
             } else if (field === 'perimeterDetectionEnabled') {
               formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
             } else if (field === 'deauthAttackDetection') {
@@ -94,19 +98,29 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
         Object.keys(formattedData.advancedRadioMap).forEach(radio => {
           Object.keys(formattedData.advancedRadioMap[radio]).forEach(field => {
             if (field === 'channelHopSettings') {
-              formattedData.advancedRadioMap[radio].channelHopSettings.noiseFloorThresholdInDB =
-                values[`noiseFloorThresholdInDB${radio}`];
-              formattedData.advancedRadioMap[
-                radio
-              ].channelHopSettings.noiseFloorThresholdTimeInSeconds =
-                values[`noiseFloorThresholdTimeInSeconds${radio}`];
-              formattedData.advancedRadioMap[radio].channelHopSettings.obssHopMode =
-                values[`obssHopMode${radio}`];
+              if (`noiseFloorThresholdInDB${radio}` in values) {
+                formattedData.advancedRadioMap[radio].channelHopSettings.noiseFloorThresholdInDB =
+                  values[`noiseFloorThresholdInDB${radio}`];
+              }
+              if (`noiseFloorThresholdTimeInSeconds${radio}` in values) {
+                formattedData.advancedRadioMap[
+                  radio
+                ].channelHopSettings.noiseFloorThresholdTimeInSeconds =
+                  values[`noiseFloorThresholdTimeInSeconds${radio}`];
+              }
+              if (`obssHopMode${radio}` in values) {
+                formattedData.advancedRadioMap[radio].channelHopSettings.obssHopMode =
+                  values[`obssHopMode${radio}`];
+              }
             } else if (field === 'bestApSettings') {
-              formattedData.advancedRadioMap[radio].bestApSettings.dropInSnrPercentage =
-                values[`dropInSnrPercentage${radio}`];
-              formattedData.advancedRadioMap[radio].bestApSettings.minLoadFactor =
-                values[`minLoadFactor${radio}`];
+              if (`dropInSnrPercentage${radio}` in values) {
+                formattedData.advancedRadioMap[radio].bestApSettings.dropInSnrPercentage =
+                  values[`dropInSnrPercentage${radio}`];
+              }
+              if (`minLoadFactor${radio}` in values) {
+                formattedData.advancedRadioMap[radio].bestApSettings.minLoadFactor =
+                  values[`minLoadFactor${radio}`];
+              }
             } else if (field === 'deauthAttackDetection') {
               formattedData.advancedRadioMap[radio][field] =
                 values[`${field}${radio}`] === 'enabled';
@@ -131,7 +145,12 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
           formattedData
         );
       })
-      .catch(() => {});
+      .catch(() => {
+        notification.error({
+          message: 'Error',
+          description: 'Equipment settings could not be updated.',
+        });
+      });
   };
 
   const defaultOptions = (

@@ -123,7 +123,7 @@ AccessPointDetails.defaultProps = {
   data: {},
   firmware: {},
   profiles: {},
-  osData: [],
+  osData: {},
 };
 
 export default AccessPointDetails;
