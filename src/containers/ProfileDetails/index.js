@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { Form, Input, Card } from 'antd';
+import { Form, Input, Card, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -11,7 +11,7 @@ import Modal from 'components/Modal';
 
 import globalStyles from 'styles/index.scss';
 
-import { formatSsidProfileForm, formatApProfileForm } from 'utils/profiles';
+import { formatSsidProfileForm, formatApProfileForm, formatRadiusForm } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
@@ -54,6 +54,23 @@ const ProfileDetails = ({
         }
         if (profileType === 'equipment_ap') {
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
+        }
+        if (profileType === 'radius') {
+          if (values.services.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service is required.',
+            });
+            return;
+          }
+          if (values.zones.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service Zone is required.',
+            });
+            return;
+          }
+          formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
 
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);

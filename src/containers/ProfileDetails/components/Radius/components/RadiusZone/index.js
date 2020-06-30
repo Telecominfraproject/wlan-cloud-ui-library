@@ -4,7 +4,7 @@ import { Form, Input } from 'antd';
 import Modal from 'components/Modal';
 import styles from '../../../index.module.scss';
 
-const RadiusZoneModal = ({ onCancel, visible, title, region }) => {
+const RadiusZoneModal = ({ onSuccess, onCancel, visible, title, zone }) => {
   const { Item } = Form;
   const [form] = Form.useForm();
   form.resetFields();
@@ -16,22 +16,31 @@ const RadiusZoneModal = ({ onCancel, visible, title, region }) => {
 
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ region });
-  }, [visible]);
+    form.setFieldsValue({ name: zone.name });
+  }, [visible, zone]);
+
+  const handleOnSuccess = () => {
+    form
+      .validateFields()
+      .then(newValues => {
+        onSuccess({ ...zone, name: newValues.name });
+      })
+      .catch(() => {});
+  };
 
   const addServerZone = (
     <Form {...layout} form={form}>
       <Item
-        name="region"
-        label="Region Name"
+        name="name"
+        label="Zone Name"
         rules={[
           {
             required: true,
-            message: 'Please enter service region',
+            message: 'Please enter service zone',
           },
         ]}
       >
-        <Input className={styles.Field} placeholder="Enter region name" />
+        <Input className={styles.Field} placeholder="Enter zone name" />
       </Item>
     </Form>
   );
@@ -43,21 +52,22 @@ const RadiusZoneModal = ({ onCancel, visible, title, region }) => {
       title={title}
       content={addServerZone}
       closable={false}
-      onSuccess={() => {}}
+      onSuccess={handleOnSuccess}
     />
   );
 };
 
 RadiusZoneModal.propTypes = {
+  onSuccess: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   title: PropTypes.string,
-  region: PropTypes.string,
+  zone: PropTypes.instanceOf(Object),
 };
 
 RadiusZoneModal.defaultProps = {
   title: '',
-  region: '',
+  zone: {},
 };
 
 export default RadiusZoneModal;
