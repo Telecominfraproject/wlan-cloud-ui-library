@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import { HighchartsChart, withHighcharts, PieSeries, Tooltip } from 'react-jsx-highcharts';
@@ -6,15 +6,15 @@ import Highcharts from 'highcharts/highstock';
 import styles from './index.module.scss';
 
 const PieChartOne = ({ chartData, title }) => {
-  const [pieData, setPieData] = useState([]);
   const headerStyle = {
     textAlign: 'center',
     border: 0,
   };
 
-  useEffect(() => {
+  const pieData = useMemo(() => {
     const values = Object.values(chartData);
     const pieDataArr = [];
+
     Object.keys(chartData).map((key, keyIndex) => {
       const pieDataObj = {
         name: key,
@@ -22,8 +22,8 @@ const PieChartOne = ({ chartData, title }) => {
       };
       return pieDataArr.push(pieDataObj);
     });
-    setPieData(pieDataArr);
-  }, [chartData]);
+    return pieDataArr;
+  });
 
   return (
     <Card title={title} headStyle={headerStyle} className={styles.pieChart}>
