@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, getByTestId } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -797,6 +797,87 @@ const mockProps = {
       },
     ],
   ],
+  firmware: {
+    id: '1',
+    modelId: 'ap2220',
+    versionName: 'ap2220-2020-06-25-ce03472',
+    description: '',
+    filename:
+      'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ap2220/ap2220-2020-06-25-ce03472.tar.gz',
+    commit: 'ce03472',
+    releaseDate: '1593463091769',
+    __typename: 'Firmware',
+  },
+
+  locations: [
+    {
+      key: 0,
+      title: 'Network',
+      value: '0',
+      children: [
+        {
+          id: 2,
+          key: 2,
+          name: 'Menlo Park',
+          parentId: 0,
+          title: 'Menlo Park',
+          value: '2',
+          children: [
+            {
+              id: 3,
+              key: 3,
+              name: 'Building 1',
+              parentId: 2,
+              title: 'Building 1',
+              value: '3',
+              children: [
+                {
+                  id: 4,
+                  key: 4,
+                  name: 'Floor 1',
+                  parentId: 3,
+                  title: 'Floor 1',
+                  value: '4',
+                },
+                {
+                  id: 5,
+                  key: 5,
+                  name: 'Floor 2',
+                  parentId: 3,
+                  title: 'Floor 2',
+                  value: '5',
+                },
+                {
+                  id: 6,
+                  key: 6,
+                  name: 'Floor 3',
+                  parentId: 3,
+                  title: 'Floor 3',
+                  value: '6',
+                },
+              ],
+            },
+            {
+              id: 7,
+              key: 7,
+              name: 'Building 2',
+              parentId: 2,
+              title: 'Building 2',
+              value: '7',
+            },
+          ],
+        },
+        {
+          id: 8,
+          key: 8,
+          name: 'Ottawa',
+          parentId: 0,
+          title: 'Ottawa',
+          value: '8',
+        },
+      ],
+    },
+  ],
   handleRefresh: () => {},
 };
 
@@ -835,6 +916,108 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
   });
 
+  it('os tab should show the os form', async () => {
+    const history = createMemoryHistory();
+
+    const { getByRole, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /os/i }));
+
+    const paragraph = getByText('Operating System Statistics');
+    expect(paragraph).toBeVisible();
+  });
+
+  it('handleSubmit should  be called on location tab', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+    const paragraph = getByText('City');
+    expect(paragraph).toBeVisible();
+  });
+
+  it('handleSubmit should not be called if city is empty in location tab', async () => {
+    const history = createMemoryHistory();
+    const submitSpy = jest.fn();
+    const { getByRole, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} onUpdateEquipment={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('Please select your location city.')).toBeVisible();
+    });
+  });
+
+  it('handleSubmit should  be called on location tab', async () => {
+    const history = createMemoryHistory();
+    const submitSpy = jest.fn();
+    const { getByRole, getByLabelText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} onUpdateEquipment={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    fireEvent.change(getByLabelText('City'), { target: { value: 'Menlo Park' } });
+    fireEvent.change(getByLabelText('Building'), { target: { value: 'Building 1' } });
+    fireEvent.change(getByLabelText('Floor'), { target: { value: 'Floor 1' } });
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('firmware tab should show the firmware form', async () => {
+    const history = createMemoryHistory();
+
+    const { getByRole, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /firmware/i }));
+
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+  });
+
+  it('firmware tab should show the change the target version on user input', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByText, getByLabelText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /firmware/i }));
+
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByLabelText('Target Version');
+    fireEvent.change(targetVersion, mockProps.firmware.id);
+
+    expect(targetVersion.value).toEqual(mockProps.firmware.id);
+  });
+
   it('URL changes to /network/access-points on clicking the back button', () => {
     const history = createMemoryHistory();
     const { getByRole } = render(
@@ -867,6 +1050,29 @@ describe('<AccessPointDetails />', () => {
     });
   });
 
+  it('handleSubmit should  be called if access point name is entered on general tab', async () => {
+    const history = createMemoryHistory();
+    const submitSpy = jest.fn();
+    const { getByText, getByRole, getByPlaceholderText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} onUpdateEquipment={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'testName' },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
   it('advanced setting tab should load on clicking the dropdown ', async () => {
     const history = createMemoryHistory();
     const { getByText, getByRole } = render(
@@ -878,6 +1084,25 @@ describe('<AccessPointDetails />', () => {
     const paragraph = getByText('Identity');
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: /settings/i }));
+  });
+
+  it(' handleSubmit should  be called if advanced settings are filled', async () => {
+    const history = createMemoryHistory();
+    const submitSpy = jest.fn();
+    const { getByText, getByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...mockProps} onUpdateEquipment={submitSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('RTS/CTS threshold value must be positive for the is2dot4GHz setting', async () => {
