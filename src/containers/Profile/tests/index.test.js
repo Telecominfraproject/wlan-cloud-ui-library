@@ -71,7 +71,7 @@ describe('<Profile />', () => {
     expect(paragraph).toBeVisible();
   });
 
-  it('onDeleteProfile should be called when Delete button on modal is clicked', async () => {
+  it('onDeleteProfile should be called when Delete button on modal is clicked ', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(
       <Router>
