@@ -27,6 +27,7 @@ const ProfileDetails = ({
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  fileUpload,
 }) => {
   const [confirmModal, setConfirmModal] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -126,7 +127,9 @@ const ProfileDetails = ({
             childProfileIds={childProfileIds}
           />
         )}
-        {profileType === 'captive_portal' && <CaptivePortalForm form={form} details={details} />}
+        {profileType === 'captive_portal' && (
+          <CaptivePortalForm form={form} details={details} fileUpload={fileUpload} />
+        )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
     </Container>
@@ -135,6 +138,7 @@ const ProfileDetails = ({
 
 ProfileDetails.propTypes = {
   onUpdateProfile: PropTypes.func.isRequired,
+  fileUpload: PropTypes.func.isRequired,
   name: PropTypes.string,
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),

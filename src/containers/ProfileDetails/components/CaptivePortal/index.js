@@ -5,7 +5,7 @@ import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
 
-const CaptivePortalForm = ({ details, form }) => {
+const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const { Item } = Form;
   const { Option } = Select;
   const { Panel } = Collapse;
@@ -17,6 +17,10 @@ const CaptivePortalForm = ({ details, form }) => {
 
   const [splash, setSplash] = useState(false);
   const [contentText, setContentText] = useState('user');
+
+  const handleFileUpload = file => {
+    fileUpload(file.name, file);
+  };
 
   useEffect(() => {
     form.setFieldsValue({
@@ -30,8 +34,6 @@ const CaptivePortalForm = ({ details, form }) => {
       radiusServiceName: details.radiusServiceName,
       radiusAuthMethod: details.radiusAuthMethod,
       externalCaptivePortalURL: details.externalCaptivePortalURL,
-      logoFile: details.logoFile,
-      backgroundFile: details.backgroundFile,
       splashPage: 'hosted',
     });
   }, [form, details]);
@@ -305,10 +307,14 @@ const CaptivePortalForm = ({ details, form }) => {
 
             <div className={styles.InlineDiv}>
               <Item name="logoFile" className={styles.Image}>
-                <Upload>Drop an image here, or click to upload. (jpg, jpeg or png)</Upload>
+                <Upload action={handleFileUpload}>
+                  Drop an image here, or click to upload. (jpg, jpeg or png)
+                </Upload>
               </Item>
               <Item name="backgroundFile" className={styles.Image}>
-                <Upload>Drop an image here, or click to upload. (jpg, jpeg or png)</Upload>
+                <Upload action={handleFileUpload}>
+                  Drop an image here, or click to upload. (jpg, jpeg or png)
+                </Upload>
               </Item>
             </div>
           </Item>
@@ -338,11 +344,13 @@ const CaptivePortalForm = ({ details, form }) => {
 CaptivePortalForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  fileUpload: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
   form: null,
   details: {},
+  fileUpload: () => {},
 };
 
 export default CaptivePortalForm;
