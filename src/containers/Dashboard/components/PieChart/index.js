@@ -5,7 +5,7 @@ import { HighchartsChart, withHighcharts, PieSeries, Tooltip } from 'react-jsx-h
 import Highcharts from 'highcharts/highstock';
 import styles from './index.module.scss';
 
-const PieChartOne = ({ chartData, title }) => {
+const PieChart = ({ chartData, title }) => {
   const headerStyle = {
     textAlign: 'center',
     border: 0,
@@ -47,12 +47,12 @@ const PieChartOne = ({ chartData, title }) => {
   );
 };
 
-PieChartOne.propTypes = {
+PieChart.propTypes = {
   chartData: PropTypes.instanceOf(Object).isRequired,
   title: PropTypes.string,
 };
 
-PieChartOne.defaultProps = {
+PieChart.defaultProps = {
   title: '',
 };
-export default withHighcharts(PieChartOne, Highcharts);
+export default withHighcharts(PieChart, Highcharts);
