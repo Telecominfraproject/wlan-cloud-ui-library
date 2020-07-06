@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, getByTestId } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
@@ -797,17 +797,19 @@ const mockProps = {
       },
     ],
   ],
-  firmware: {
-    id: '1',
-    modelId: 'ap2220',
-    versionName: 'ap2220-2020-06-25-ce03472',
-    description: '',
-    filename:
-      'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ap2220/ap2220-2020-06-25-ce03472.tar.gz',
-    commit: 'ce03472',
-    releaseDate: '1593463091769',
-    __typename: 'Firmware',
-  },
+  firmware: [
+    {
+      id: '1',
+      modelId: 'ap2220',
+      versionName: 'ap2220-2020-06-25-ce03472',
+      description: '',
+      filename:
+        'https://tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ap2220/ap2220-2020-06-25-ce03472.tar.gz',
+      commit: 'ce03472',
+      releaseDate: '1593463091769',
+      __typename: 'Firmware',
+    },
+  ],
 
   locations: [
     {
@@ -879,6 +881,7 @@ const mockProps = {
     },
   ],
   handleRefresh: () => {},
+  onUpdateEquipment: () => {},
 };
 
 describe('<AccessPointDetails />', () => {
@@ -973,9 +976,9 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
 
-    fireEvent.change(getByLabelText('City'), { target: { value: 'Menlo Park' } });
-    fireEvent.change(getByLabelText('Building'), { target: { value: 'Building 1' } });
-    fireEvent.change(getByLabelText('Floor'), { target: { value: 'Floor 1' } });
+    fireEvent.change(getByLabelText('City'), {
+      target: { value: mockProps.locations[0].children[1].id },
+    });
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -1013,9 +1016,9 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
 
     const targetVersion = getByLabelText('Target Version');
-    fireEvent.change(targetVersion, mockProps.firmware.id);
+    fireEvent.change(targetVersion, mockProps.firmware[0].id);
 
-    expect(targetVersion.value).toEqual(mockProps.firmware.id);
+    expect(targetVersion.value).toEqual(mockProps.firmware[0].id);
   });
 
   it('URL changes to /network/access-points on clicking the back button', () => {
