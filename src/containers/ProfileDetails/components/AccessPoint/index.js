@@ -129,11 +129,13 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       />
       <Card title="LAN and Services ">
         <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
-          <Checkbox onChange={() => setVlan(!vlan)}>Use Default Management VLAN</Checkbox>
+          <Checkbox data-testid="vlanCheckbox" onChange={() => setVlan(!vlan)}>
+            Use Default Management VLAN
+          </Checkbox>
         </Item>
 
         {!vlan && (
-          <Item label=" " colon={false}>
+          <Item label=" " colon={false} data-testid="vlanItem">
             <Item
               name="vlan"
               rules={[
@@ -153,6 +155,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               hasFeedback
             >
               <Input
+                data-testid="vlanInput"
                 className={styles.Field}
                 placeholder="2-4095"
                 type="number"
@@ -165,7 +168,9 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         )}
 
         <Item label="NTP" name={['ntpServer', 'auto']} valuePropName="checked">
-          <Checkbox onChange={() => setNTP(!ntp)}>Use Default Servers</Checkbox>
+          <Checkbox data-testid="ntpCheckbox" onChange={() => setNTP(!ntp)}>
+            Use Default Servers
+          </Checkbox>
         </Item>
         {!ntp && (
           <Item label=" " colon={false}>
@@ -173,7 +178,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               name={['ntpServer', 'value']}
               rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
             >
-              <Input className={styles.Field} placeholder="Enter NTP server" />
+              <Input
+                data-testid="ntpInput"
+                className={styles.Field}
+                placeholder="Enter NTP server"
+              />
             </Item>
           </Item>
         )}
