@@ -1,13 +1,12 @@
 export const osData = [
   {
-    data: [
-      {
-        CpuUtilCore1: 1,
-        CpuUtilCore2: 2,
-        CpuTemperature: 3,
-        avgFreeMemory: 4,
+    details: {
+      apPerformance: {
+        freeMemory: 0,
+        cpuTemperature: 0,
+        cpuUtilized: [0],
       },
-    ],
+    },
   },
 ];
 
@@ -916,4 +915,5 @@ export const defaultProps = {
   },
   profiles,
   locations,
+  osData,
 };
