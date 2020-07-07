@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -20,6 +20,8 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+const DOWN_ARROW = { keyCode: 40 };
 
 describe('<AccessPointDetails />', () => {
   afterEach(() => {
@@ -84,28 +86,43 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
   });
 
-  it('handleSubmit should not be called if city is empty in location tab', async () => {
+  it('handleSubmit should  be called on location tab with floor as new locationID', async () => {
     const history = createMemoryHistory();
     const submitSpy = jest.fn();
-    const { getByRole, getByText } = render(
+    const { getByRole, getByLabelText, getByText } = render(
       <Router history={history}>
         <AccessPointDetails {...defaultProps} onUpdateEquipment={submitSpy} />
       </Router>
     );
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
+
+    const building = getByLabelText('Building');
+    fireEvent.keyDown(building, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 1'));
+    fireEvent.click(getByText('Building 1'));
+
+    const floor = getByLabelText('Floor');
+    fireEvent.keyDown(floor, DOWN_ARROW);
+    await waitForElement(() => getByText('Floor 2'));
+    fireEvent.click(getByText('Floor 2'));
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('Please select your location city.')).toBeVisible();
+      expect(submitSpy).toHaveBeenCalledTimes(1);
     });
   });
 
-  it('handleSubmit should  be called on location tab', async () => {
+  it('handleSubmit should  be called on location tab with building as new locationID', async () => {
     const history = createMemoryHistory();
     const submitSpy = jest.fn();
-    const { getByRole, getByLabelText } = render(
+    const { getByRole, getByLabelText, getByText } = render(
       <Router history={history}>
         <AccessPointDetails {...defaultProps} onUpdateEquipment={submitSpy} />
       </Router>
@@ -113,9 +130,38 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
 
-    fireEvent.change(getByLabelText('City'), {
-      target: { value: defaultProps.locations[0].children[1].id },
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
+
+    const building = getByLabelText('Building');
+    fireEvent.keyDown(building, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 2'));
+    fireEvent.click(getByText('Building 2'));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('handleSubmit should  be called on location tab with city as new locationID', async () => {
+    const history = createMemoryHistory();
+    const submitSpy = jest.fn();
+    const { getByRole, getByLabelText, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} onUpdateEquipment={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText('Ottawa'));
+    fireEvent.click(getByText('Ottawa'));
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -153,9 +199,10 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
 
     const targetVersion = getByLabelText('Target Version');
-    fireEvent.change(targetVersion, firmware[0].id);
 
-    expect(targetVersion.value).toEqual(firmware[0].id);
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
+    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
   });
 
   it('URL changes to /network/access-points on clicking the back button', () => {
@@ -167,6 +214,28 @@ describe('<AccessPointDetails />', () => {
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
     expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('changing the access point profile should update table', async () => {
+    const history = createMemoryHistory();
+    const { getByText, getByRole, getByLabelText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+
+    const apProfile = getByLabelText('Access Point Profile');
+
+    fireEvent.keyDown(apProfile, DOWN_ARROW);
+    await waitForElement(() => getByText('EnterpriseApProfile'));
+    fireEvent.click(getByText('EnterpriseApProfile'));
+
+    await waitFor(() => {
+      expect(getByText('TipWlan-cloud-Enterprise')).toBeVisible();
+    });
   });
 
   it('handleSubmit should not be called if access point name is empty on general tab', async () => {
