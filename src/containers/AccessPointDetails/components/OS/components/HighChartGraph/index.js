@@ -58,7 +58,7 @@ const HighChartGraph = ({ osData }) => {
   }, [osData]);
 
   return (
-    <HighchartsStockChart>
+    <HighchartsStockChart data-testid="highchartsGraph">
       <Chart zoomType="x" backgroundColor="#141414" />
 
       <Tooltip split={false} shared useHTML />

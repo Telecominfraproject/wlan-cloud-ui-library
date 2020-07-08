@@ -11,7 +11,6 @@ const { Panel } = Collapse;
 
 const General = ({ data, profiles, onUpdateEquipment }) => {
   const [form] = Form.useForm();
-
   const columns = [
     {
       title: 'Wireless Network',
@@ -280,8 +279,8 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
         >
           <Select
             className={styles.Field}
-            placeholder="Select access point profile..."
             onChange={handleProfileChange}
+            placeholder="Select access point profile..."
           >
             {Object.keys(profiles).map(i => (
               <Option key={profiles[i].id} value={profiles[i].id}>
@@ -290,6 +289,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
             ))}
           </Select>
         </Item>
+
         <Item label="Summary">
           <Item>
             <Table
