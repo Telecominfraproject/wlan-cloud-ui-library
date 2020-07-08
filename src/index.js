@@ -11,6 +11,7 @@ export { default as AddProfile } from 'containers/AddProfile';
 
 export { default as Accounts } from 'containers/Accounts';
 export { default as Alarms } from 'containers/Alarms';
+export { default as System } from 'containers/System';
 export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
