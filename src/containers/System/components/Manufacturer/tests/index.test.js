@@ -34,7 +34,7 @@ describe('<General />', () => {
     cleanup();
   });
 
-  it('onSearch should be called when correct OUI string is submitted', async () => {
+  it('onSearchOUI should be called when correct OUI string is submitted', async () => {
     const searchSpy = jest.fn();
 
     const { getByPlaceholderText, getByRole } = render(
@@ -52,7 +52,7 @@ describe('<General />', () => {
     });
   });
 
-  it('onUpdateOUI should be called when correct OUI string is submitted', async () => {
+  it('onUpdateOUI should be called when alias string is submitted', async () => {
     const searchSpy = jest.fn();
     const submitSpy = jest.fn();
 
@@ -82,7 +82,7 @@ describe('<General />', () => {
     });
   });
 
-  it('cancel should should the OUI information', async () => {
+  it('cancel button should close the OUI information', async () => {
     const searchSpy = jest.fn();
     const submitSpy = jest.fn();
 
