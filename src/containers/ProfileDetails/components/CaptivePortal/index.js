@@ -21,37 +21,51 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [logoFileList, setLogoFileList] = useState([]);
   const [bgFileList, setBgFileList] = useState([]);
 
-  const handleOnChangeLogo = info => {
-    let fileList = [...info.fileList];
-
-    fileList = fileList.slice(-1);
-
-    setLogoFileList(fileList);
-  };
-
-  const handleOnChangeBg = info => {
-    let fileList = [...info.fileList];
-
-    fileList = fileList.slice(-1);
-
-    setBgFileList(fileList);
-  };
-
-  const handleFileUpload = file => {
+  const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
       file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
+      if (showMessages) message.error('You can only upload JPG/PNG file!');
+      return false;
     }
 
     const isLt2M = file.size / 1024 / 1024 < 1;
     if (!isLt2M) {
-      message.error('Image must smaller than 1MB!');
+      if (showMessages) message.error('Image must smaller than 1MB!');
+      return false;
     }
 
-    fileUpload(file.name, file);
+    return true;
+  };
 
+  const handleOnChange = (file, fileList) => {
+    if (validateFile(file)) {
+      let list = [...fileList];
+
+      list = list.slice(-1);
+      list = list.map(i => {
+        return { ...i, url: i.response && i.response.url };
+      });
+
+      return list;
+    }
     return false;
+  };
+
+  const handleOnChangeLogo = ({ file, fileList }) => {
+    const list = handleOnChange(file, fileList);
+    if (list) setLogoFileList(list);
+  };
+
+  const handleOnChangeBg = ({ file, fileList }) => {
+    const list = handleOnChange(file, fileList);
+    if (list) setBgFileList(list);
+  };
+
+  const handleFileUpload = file => {
+    if (validateFile(file, true)) {
+      fileUpload(file.name, file);
+    }
   };
 
   useEffect(() => {
@@ -321,7 +335,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 
       <Collapse expandIconPosition="right">
         <Panel header="Splash Page Images">
-          <Item label="Advanced Settings">
+          <Item label="Configure">
             <div className={styles.InlineDiv}>
               <Tooltip title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB">
                 <div className={styles.InlineDiv}>
@@ -340,9 +354,10 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             <div className={styles.InlineDiv}>
               <Item name="logoFile" className={styles.Image}>
                 <Upload
+                  accept="image/*"
                   fileList={logoFileList}
                   beforeUpload={handleFileUpload}
-                  listType="picture"
+                  listType="picture-card"
                   onChange={handleOnChangeLogo}
                 >
                   Drop an image here, or click to upload. (jpg, jpeg or png)
@@ -350,9 +365,10 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               </Item>
               <Item name="backgroundFile" className={styles.Image}>
                 <Upload
+                  accept="image/*"
                   fileList={bgFileList}
                   beforeUpload={handleFileUpload}
-                  listType="picture"
+                  listType="picture-card"
                   onChange={handleOnChangeBg}
                 >
                   Drop an image here, or click to upload. (jpg, jpeg or png)

@@ -38,12 +38,8 @@
   }
 
   .Image {
-    width: 100%;
-    border: 2px dashed #aaaaa9;
     padding: 20px;
     cursor: pointer;
-    margin-right: 20px;
-    margin-top: 5px;
   }
 
   code {
@@ -53,6 +49,10 @@
 
   .infoCard {
     margin-right: 10px;
+  }
+
+  :global(.ant-upload.ant-upload-select-picture-card) {
+    width: 100%;
   }
 }
 
