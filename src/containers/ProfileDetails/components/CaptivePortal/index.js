@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Radio, Select, Tooltip, Upload, Alert, Collapse } from 'antd';
+import { Card, Form, Input, Radio, Select, Tooltip, Upload, Alert, Collapse, message } from 'antd';
 import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
 
-const CaptivePortalForm = ({ details, form, fileUpload }) => {
-  const { Item } = Form;
-  const { Option } = Select;
-  const { Panel } = Collapse;
-  const { TextArea } = Input;
+const { Item } = Form;
+const { Option } = Select;
+const { Panel } = Collapse;
+const { TextArea } = Input;
 
+const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [authentication, setAuthentication] = useState('');
 
   const [showTips, setShowTips] = useState(false);
@@ -18,8 +18,40 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [splash, setSplash] = useState(false);
   const [contentText, setContentText] = useState('user');
 
+  const [logoFileList, setLogoFileList] = useState([]);
+  const [bgFileList, setBgFileList] = useState([]);
+
+  const handleOnChangeLogo = info => {
+    let fileList = [...info.fileList];
+
+    fileList = fileList.slice(-1);
+
+    setLogoFileList(fileList);
+  };
+
+  const handleOnChangeBg = info => {
+    let fileList = [...info.fileList];
+
+    fileList = fileList.slice(-1);
+
+    setBgFileList(fileList);
+  };
+
   const handleFileUpload = file => {
+    const isJpgOrPng =
+      file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+    }
+
+    const isLt2M = file.size / 1024 / 1024 < 1;
+    if (!isLt2M) {
+      message.error('Image must smaller than 1MB!');
+    }
+
     fileUpload(file.name, file);
+
+    return false;
   };
 
   useEffect(() => {
@@ -307,12 +339,22 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 
             <div className={styles.InlineDiv}>
               <Item name="logoFile" className={styles.Image}>
-                <Upload action={handleFileUpload}>
+                <Upload
+                  fileList={logoFileList}
+                  beforeUpload={handleFileUpload}
+                  listType="picture"
+                  onChange={handleOnChangeLogo}
+                >
                   Drop an image here, or click to upload. (jpg, jpeg or png)
                 </Upload>
               </Item>
               <Item name="backgroundFile" className={styles.Image}>
-                <Upload action={handleFileUpload}>
+                <Upload
+                  fileList={bgFileList}
+                  beforeUpload={handleFileUpload}
+                  listType="picture"
+                  onChange={handleOnChangeBg}
+                >
                   Drop an image here, or click to upload. (jpg, jpeg or png)
                 </Upload>
               </Item>
