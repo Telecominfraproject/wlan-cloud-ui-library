@@ -97,25 +97,19 @@ const Firmware = ({ firmware, data }) => {
                     <li key="version">
                       <code>
                         Version:&nbsp;
-                        {data.status &&
-                          data.status.firmware &&
-                          data.status.firmware.activeSwVersion}
+                        {data.status && data.status.firmware && data.status.firmware.model_type}
                       </code>
                     </li>
                     <li key="releaseDate">
                       <code>
                         Release Date:&nbsp;
-                        {data.status &&
-                          data.status.firmware &&
-                          data.status.firmware.activeSwVersion}
+                        {data.status && data.status.firmware && data.status.firmware.model_type}
                       </code>
                     </li>
                     <li key="device">
                       <code>
-                        Device:&nbsp;
-                        {data.status &&
-                          data.status.firmware &&
-                          data.status.firmware.activeSwVersion}
+                        Device:&nbsp;s
+                        {data.status && data.status.firmware && data.status.firmware.model_type}
                       </code>
                     </li>
                   </ul>
