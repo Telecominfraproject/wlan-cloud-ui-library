@@ -30,15 +30,13 @@ const Firmware = ({ firmware, data }) => {
     );
   };
 
-  const alertText = value => {
+  const alertText = (value = '') => {
     if (value === 'download_initiated') return 'initiated download';
     if (value === 'download_complete') return 'download completed';
     if (value === 'apply_initiated') return 'initiated firmware flash';
     if (value === 'apply_complete') return 'flashed to inactive bank';
     if (value === 'applying') return 'flashing firmware';
-    if (value) return value.toUpperCase().replace(/_/g, ' ');
-
-    return null;
+    return value.toUpperCase().replace(/_/g, ' ');
   };
 
   const alertColor = value => {
