@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tag, Select, Tooltip } from 'antd';
+import { Card, Form, Input, Tag, Select } from 'antd';
 import moment from 'moment';
-import { InfoCircleOutlined, DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Modal from 'components/Modal';
 import styles from '../../index.module.scss';
@@ -30,29 +30,25 @@ const Firmware = ({ firmware, data }) => {
     );
   };
 
-  const alertStatus = value => {
-    const status = { text: '', color: 'default' };
-    if (value === 'download_initiated') {
-      status.text = 'Initiated Download';
-    } else if (value === 'download_complete') {
-      status.text = 'Download Completed';
-      status.color = 'processing';
-    } else if (value === 'apply_initiated') {
-      status.text = 'Initiated Firmware Flash';
-    } else if (value === 'apply_complete') {
-      status.text = 'Flashed to Inactive Bank';
-      status.color = 'Processing';
-    } else if (value === 'applying') {
-      status.text = 'Flashing Firmware';
-    } else if (value === 'up_to_date') {
-      status.text = 'Up to Date';
-      status.color = 'success';
-    } else if (value === 'out_of_date') {
-      status.text = 'Out of Date';
-      status.color = 'warning';
-    }
-    return status;
+  const alertText = value => {
+    if (value === 'download_initiated') return 'initiated download';
+    if (value === 'download_complete') return 'download completed';
+    if (value === 'apply_initiated') return 'initiated firmware flash';
+    if (value === 'apply_complete') return 'flashed to inactive bank';
+    if (value === 'applying') return 'flashing firmware';
+    if (value) return value.toUpperCase().replace(/_/g, ' ');
+
+    return null;
   };
+
+  const alertColor = value => {
+    if (value === 'out_of_date') return 'warning';
+    if (value === null || value === 'up_to_date') return 'success';
+    if (value === 'download_complete' || value === 'apply_failed') return 'processing';
+    return 'default';
+  };
+
+  const status = (data && data.status && data.status.firmware) || {};
 
   return (
     <>
@@ -67,51 +63,13 @@ const Firmware = ({ firmware, data }) => {
         <Card title="Firmware">
           <Item label="Active Version" name="activeSwVersion">
             <div className={styles.InlineBetweenDiv}>
-              {data.status && data.status.firmware && data.status.firmware.activeSwVersion}
-              <Tag
-                color={
-                  data.status &&
-                  data.status.firmware &&
-                  data.status.firmware.upgradeState &&
-                  alertStatus(data.status.firmware.upgradeState).color
-                }
-              >
-                {data.status &&
-                  data.status.firmware &&
-                  data.status.firmware.upgradeState &&
-                  alertStatus(data.status.firmware.upgradeState).text}
-              </Tag>
+              {status.activeSwVersion}
+              <Tag color={alertColor(status.upgradeState)}>{alertText(status.upgradeState)}</Tag>
             </div>
           </Item>
 
           <Item label="Inactive Version" name="alternateSwVersion">
-            {data.status && data.status.firmware && data.status.firmware.alternateSwVersion}
-          </Item>
-
-          <Item label="Most Recent Version" name="targetSwVersion">
-            <div className={styles.InlineBetweenDiv}>
-              {data.status && data.status.firmware && data.status.firmware.targetSwVersion}
-              <Tooltip
-                title={
-                  <ul>
-                    <li key="version">
-                      <code>Version:&nbsp;</code>
-                      {data.status && data.status.firmware && data.status.firmware.model_type}
-                    </li>
-                    <li key="releaseDate">
-                      <code>Release Date:&nbsp;</code>
-                      {data.status && data.status.firmware && data.status.firmware.model_type}
-                    </li>
-                    <li key="device">
-                      <code>Device:&nbsp;</code>
-                      {data.status && data.status.firmware && data.status.firmware.model_type}
-                    </li>
-                  </ul>
-                }
-              >
-                <InfoCircleOutlined />
-              </Tooltip>
-            </div>
+            {status.alternateSwVersion}
           </Item>
         </Card>
         <Card title="Upgrade">
