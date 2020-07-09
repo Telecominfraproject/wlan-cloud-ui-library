@@ -32,7 +32,12 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
             message={
               <div>
                 Latest sanitized IEEE OUI data file (oui.txt.gz) can be obtained from &nbsp;
-                <a style={{ textDecoration: 'underline' }} href="linuxnet.ca" target="_blank">
+                <a
+                  style={{ textDecoration: 'underline' }}
+                  target="_blank"
+                  href="https://www.linuxnet.ca/ieee/oui/"
+                  rel="noreferrer"
+                >
                   linuxnet.ca.
                 </a>
               </div>
