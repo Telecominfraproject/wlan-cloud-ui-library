@@ -78,9 +78,8 @@ const Firmware = ({ firmware, data }) => {
               <Item>
                 <Select
                   className={styles.Field}
-                  name="targetValue"
-                  placeholder="Select a version to apply..."
                   onChange={handleUpdateVersion}
+                  placeholder="Select a version to apply..."
                 >
                   {Object.keys(firmware).map(i => (
                     <Option key={firmware[i].id} value={firmware[i].id}>
@@ -89,18 +88,21 @@ const Firmware = ({ firmware, data }) => {
                   ))}
                 </Select>
               </Item>
-              <Button
-                icon={<DownloadOutlined />}
-                disabled={!version}
-                onClick={() => setRebootModal(true)}
-              >
-                Download, Flash, and Reboot
-              </Button>
+              <Item noStyle>
+                <Button
+                  icon={<DownloadOutlined />}
+                  disabled={!version}
+                  onClick={() => setRebootModal(true)}
+                >
+                  Download, Flash, and Reboot
+                </Button>
+              </Item>
             </div>
-            {version && (
+          </Item>
+
+          {version && (
+            <Item label=" " colon={false}>
               <TextArea
-                name="textarea_field"
-                placeholder="Select target version..."
                 readOnly
                 rows={6}
                 value={
@@ -113,8 +115,8 @@ const Firmware = ({ firmware, data }) => {
                   `Release Notes:  ${version.description}`
                 }
               />
-            )}
-          </Item>
+            </Item>
+          )}
         </Card>
       </Form>
     </>
