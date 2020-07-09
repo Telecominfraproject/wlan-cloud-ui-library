@@ -104,7 +104,7 @@ const AccessPointDetails = ({
         <Location data={data} locations={locations} onUpdateEquipment={onUpdateEquipment} />
       )}
       {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
-      {tab === 'firmware' && <Firmware firmware={firmware} />}
+      {tab === 'firmware' && <Firmware firmware={firmware} data={data} />}
     </div>
   );
 };
