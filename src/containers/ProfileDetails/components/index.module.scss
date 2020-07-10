@@ -59,10 +59,14 @@
 .InlineDiv {
   display: flex;
   justify-content: space-around;
-}
 
-.InlineDiv > * {
-  margin: 0 5px;
+  & > * {
+    margin: 0;
+    margin-right: 10px;
+  }
+  & > :last-child {
+    margin-right: 0;
+  }
 }
 
 .InlineCenterDiv {
@@ -97,5 +101,14 @@
   }
   :global(.ant-card) {
     flex: 1;
+  }
+}
+
+.Whitelist {
+  margin-left: 16.66666667%;
+  max-width: 50%;
+
+  &:global(.ant-list) {
+    padding: 0;
   }
 }

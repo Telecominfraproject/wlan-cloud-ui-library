@@ -213,7 +213,7 @@ const RadiusForm = ({ form, details }) => {
     {
       title: 'Server List',
       dataIndex: 'ips',
-      render: ips => ips.map(i => <div>{i.ipAddress}</div>),
+      render: ips => ips.map(i => <div key={i.ipAddress}>{i.ipAddress}</div>),
     },
   ];
 
@@ -389,6 +389,7 @@ const RadiusForm = ({ form, details }) => {
           <List
             itemLayout="horizontal"
             dataSource={zones}
+            rowKey="name"
             renderItem={item => (
               <List.Item
                 extra={
@@ -400,6 +401,7 @@ const RadiusForm = ({ form, details }) => {
                           columns={columns}
                           pagination={false}
                           size="small"
+                          rowKey="name"
                         />
                       </Card>
 
@@ -409,6 +411,7 @@ const RadiusForm = ({ form, details }) => {
                           columns={managementColumn}
                           pagination={false}
                           size="small"
+                          rowKey="subnetName"
                         />
                         <>
                           <Button

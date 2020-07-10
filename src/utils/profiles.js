@@ -98,3 +98,43 @@ export const formatRadiusForm = values => {
 
   return formattedData;
 };
+
+export const formatCaptiveForm = values => {
+  const formattedData = { ...values };
+
+  const getFileType = type => {
+    if (type.startsWith('image/')) {
+      return type === 'image/png' ? 'PNG' : 'JPG';
+    }
+    return type;
+  };
+
+  if (
+    !values.logoFile ||
+    (values.logoFile && values.logoFile.fileList && values.logoFile.fileList.length === 0)
+  ) {
+    formattedData.logoFile = null;
+  } else if (values.logoFile && values.logoFile.file) {
+    formattedData.logoFile = {
+      apExportUrl: values.logoFile.file.name,
+      fileType: getFileType(values.logoFile.file.type),
+      fileCategory: 'CaptivePortalLogo',
+    };
+  }
+  if (
+    !values.backgroundFile ||
+    (values.backgroundFile &&
+      values.backgroundFile.fileList &&
+      values.backgroundFile.fileList.length === 0)
+  ) {
+    formattedData.logoFile = null;
+  } else if (values.backgroundFile && values.backgroundFile.file) {
+    formattedData.backgroundFile = {
+      apExportUrl: values.backgroundFile.file.name,
+      fileType: getFileType(values.backgroundFile.file.type),
+      fileCategory: 'CaptivePortalBackground',
+    };
+  }
+
+  return formattedData;
+};

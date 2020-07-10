@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Radio, Select, Tooltip, Upload, Alert, Collapse, message } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Tooltip,
+  Upload,
+  Alert,
+  Collapse,
+  message,
+  List,
+} from 'antd';
 import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
@@ -10,16 +22,56 @@ const { Option } = Select;
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
+const validateIPv4 = inputString => {
+  // allow spaces in place of dots
+  const inputStr = inputString.replace(' ', '.');
+  // from http://www.regextester.com/22
+  if (
+    inputStr.match(
+      /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm
+    )
+  ) {
+    // blacklist certain IPs
+    const disallowed = ['0.0.0.0', '255.255.255.255', '127.0.0.1', '256.1.1.1'];
+    return disallowed.indexOf(inputStr) < 0;
+  }
+  return false;
+};
+
+const formatFile = file => {
+  return {
+    uid: file.apExportUrl,
+    name: file.apExportUrl,
+    type: file.fileType,
+  };
+};
+
 const CaptivePortalForm = ({ details, form, fileUpload }) => {
-  const [authentication, setAuthentication] = useState('');
+  const [authentication, setAuthentication] = useState(details.authenticationType || 'guest');
 
   const [showTips, setShowTips] = useState(false);
 
-  const [splash, setSplash] = useState(false);
-  const [contentText, setContentText] = useState('user');
+  const [externalSplash, setExternalSplash] = useState(!!details.externalCaptivePortalURL);
+  const [isLoginText, setContentText] = useState(false);
 
-  const [logoFileList, setLogoFileList] = useState([]);
-  const [bgFileList, setBgFileList] = useState([]);
+  const [logoFileList, setLogoFileList] = useState(
+    (details.logoFile && [formatFile(details.logoFile)]) || []
+  );
+  const [bgFileList, setBgFileList] = useState(
+    (details.backgroundFile && [formatFile(details.backgroundFile)]) || []
+  );
+
+  const [whitelist, setWhitelist] = useState(details.walledGardenWhitelist || []);
+  const [whitelistSearch, setWhitelistSearch] = useState();
+  const [whitelistValidation, setWhitelistValidation] = useState({});
+
+  const disableExternalSplashChange = () => {
+    setAuthentication('guest');
+    form.setFieldsValue({
+      authenticationType: 'guest',
+    });
+    setExternalSplash(false);
+  };
 
   const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
@@ -53,11 +105,17 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   };
 
   const handleOnChangeLogo = ({ file, fileList }) => {
+    if (fileList.length === 0) {
+      setLogoFileList([]);
+    }
     const list = handleOnChange(file, fileList);
     if (list) setLogoFileList(list);
   };
 
   const handleOnChangeBg = ({ file, fileList }) => {
+    if (fileList.length === 0) {
+      setBgFileList([]);
+    }
     const list = handleOnChange(file, fileList);
     if (list) setBgFileList(list);
   };
@@ -66,7 +124,144 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
     if (validateFile(file, true)) {
       fileUpload(file.name, file);
     }
+    return false;
   };
+
+  const validateWhitelist = (_rule, value) => {
+    let inputString = value.trim();
+
+    if (inputString.match(/[a-z]/i)) {
+      // contains letters, so validate as hostname
+
+      // remove all spaces
+      inputString = inputString.replace(' ', '');
+
+      const hostnameParts = inputString.split('.').reverse();
+
+      // hostname must contain at least two parts (e.g. google.com)
+      if (hostnameParts.length < 2) {
+        return Promise.reject(
+          new Error('Hostnames must have at least 1 subdomain label. e.g. mycompany.com')
+        );
+      }
+
+      // hostname labels must be between 1 and 63 characters
+      let isValidLabelLengths = true;
+      hostnameParts.some(part => {
+        if (part.length < 1 || part.length > 63) {
+          isValidLabelLengths = false;
+          return true;
+        }
+        return false;
+      });
+      if (!isValidLabelLengths) {
+        return Promise.reject(
+          new Error('Hostname labels must be between 1 and 63 characters long.')
+        );
+      }
+
+      // second-level domain cannot be a wildcard
+      if (hostnameParts[1].indexOf('*') >= 0) {
+        return Promise.reject(
+          new Error('Second-level domain labels may not contain a * wildcard.')
+        );
+      }
+
+      // the * wildcard cannot be combined with any other characters
+      if (inputString.indexOf('*')) {
+        let isValid = true;
+        hostnameParts.some(part => {
+          if (part.indexOf('*') >= 0 && part !== '*') {
+            isValid = false;
+            return true;
+          }
+          return false;
+        });
+        if (!isValid) {
+          return Promise.reject(
+            new Error(
+              'The * wildcard may not be combined with other characters in a hostname label.'
+            )
+          );
+        }
+      }
+
+      // validate the hostname format & characters
+      if (
+        !inputString.match(
+          /^((\*\.)|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*(\*|[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$/gm
+        )
+      ) {
+        return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
+      }
+
+      // overall hostname length must be <= 253 characters
+      if (inputString.length > 253) {
+        return Promise.reject(new Error('Hostnames may not exceed 253 characters in length.'));
+      }
+    } else {
+      const ipAddrs = inputString.split('-');
+      if (ipAddrs.length === 2) {
+        // validate as IP Range
+        ipAddrs[0] = ipAddrs[0].trim();
+        ipAddrs[1] = ipAddrs[1].trim();
+        if (!validateIPv4(ipAddrs[0]) || !validateIPv4(ipAddrs[1])) {
+          return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
+        }
+      } else if (!validateIPv4(inputString)) {
+        return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
+      }
+    }
+
+    // limit whitelist to 32 items
+    if (whitelist.length >= 32) {
+      return Promise.reject(new Error('Unable to add more than 32 items to the whitelist.'));
+    }
+
+    // limit whitelist to 2000 characters
+    if (whitelist.join(' ').length > 2000) {
+      return Promise.reject(
+        new Error('Unable to exceed 2,000 characters for all combined whitelist items.')
+      );
+    }
+
+    // prevent duplicate items
+    if (whitelist.indexOf(inputString) >= 0) {
+      return Promise.reject(new Error('This item already exists in the whitelist.'));
+    }
+
+    return Promise.resolve();
+  };
+
+  const handleOnWhitelist = value => {
+    validateWhitelist(null, value).then(() => {
+      setWhitelist([...whitelist, value.trim()]);
+      setWhitelistSearch('');
+      setWhitelistValidation({
+        status: null,
+        help: null,
+      });
+    });
+  };
+
+  const handleOnChangeWhitelist = event => {
+    setWhitelistSearch(event.target.value);
+    validateWhitelist(null, event.target.value)
+      .then(() => {
+        setWhitelistValidation({
+          status: null,
+          help: null,
+        });
+      })
+      .catch(e => {
+        setWhitelistValidation({
+          status: 'error',
+          help: e.message,
+        });
+      });
+  };
+
+  const handleDeleteWhitelist = item => setWhitelist(whitelist.filter(i => i !== item));
 
   useEffect(() => {
     form.setFieldsValue({
@@ -77,49 +272,55 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       userAcceptancePolicy: details.userAcceptancePolicy,
       successPageMarkdownText: details.successPageMarkdownText,
       redirectURL: details.redirectURL,
-      radiusServiceName: details.radiusServiceName,
-      radiusAuthMethod: details.radiusAuthMethod,
+      radiusServiceName: details.radiusServiceName || 'DEFAULT',
+      radiusAuthMethod: details.radiusAuthMethod || 'PAP',
       externalCaptivePortalURL: details.externalCaptivePortalURL,
-      splashPage: 'hosted',
+      externalSplashPage: details.externalCaptivePortalURL ? 'true' : 'false',
+      walledGardenWhitelist: details.walledGardenWhitelist || [],
+      logoFile: details.logoFile && formatFile(details.logoFile),
     });
   }, [form, details]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      walledGardenWhitelist: whitelist,
+    });
+  }, [whitelist]);
 
   return (
     <div className={styles.ProfilePage}>
       <Card title="General Settings ">
-        <Item
-          name="authenticationType"
-          label="Authentication"
-          rules={[
-            {
-              required: true,
-              message: 'Please select an authentication mode',
-            },
-          ]}
-        >
-          <Select
-            className={styles.Field}
-            onChange={value => setAuthentication(value)}
-            placeholder="Select authentication mode "
-          >
-            <Option value="guest">Guest</Option>
-            <Option value="username">Captive Portal User List</Option>
-            <Option value="radius">RADIUS</Option>
-            <Option value="external">External</Option>
-          </Select>
+        <Item label="Authentication">
+          <div className={styles.InlineDiv}>
+            <Item
+              name="authenticationType"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select an authentication mode',
+                },
+              ]}
+            >
+              <Select
+                className={styles.Field}
+                onChange={value => setAuthentication(value)}
+                placeholder="Select authentication mode "
+              >
+                <Option value="guest">None</Option>
+                <Option value="username">Captive Portal User List</Option>
+                <Option value="radius">RADIUS</Option>
+                {externalSplash && <Option value="external">Externally Hosted API</Option>}
+              </Select>
+            </Item>
+
+            {authentication === 'username' && (
+              <Item>
+                <Button> Manage Captive Portal Users</Button>
+              </Item>
+            )}
+          </div>
         </Item>
 
-        {authentication === 'username' && (
-          <div className={styles.InlineCenterDiv}>
-            <Tooltip title="If this is enabled, session timeouts don't affect signed in users. They are signed in as long as their user is valid.">
-              <div className={styles.InlineDiv}>
-                Go to &quot;Remember user Devices&quot; page
-                <InfoCircleOutlined style={{ marginLeft: '6px' }} />
-              </div>
-            </Tooltip>
-            <Button> Manage Captive Portal Users</Button>
-          </div>
-        )}
         <Item
           name="sessionTimeoutInMinutes"
           label="Session Timeout "
@@ -128,9 +329,9 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               required: true,
               message: 'Session timeout can be a number between 1 and 1440',
             },
-            ({ getFieldValue }) => ({
+            () => ({
               validator(_rule, value) {
-                if (!value || getFieldValue('sessionTimeoutInMinutes') <= 1440) {
+                if (!value || value <= 1440) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -159,7 +360,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           label="Redirect URL"
           rules={[
             {
-              required: true,
               type: 'url',
               message: 'Please enter URL in the format http://... or https://...',
             },
@@ -167,12 +367,12 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
         >
           <Input className={styles.Field} placeholder="http://... or https://..." />
         </Item>
-        <Item label="Splash Page" name="splashPage">
+        <Item label="Splash Page" name="externalSplashPage">
           <Radio.Group>
-            <Radio value="hosted" onChange={() => setSplash(false)}>
+            <Radio value="false" onChange={disableExternalSplashChange}>
               Access Point Hosted
             </Radio>
-            <Radio value="external" onChange={() => setSplash(true)}>
+            <Radio value="true" onChange={() => setExternalSplash(true)}>
               Externally Hosted
             </Radio>
           </Radio.Group>
@@ -201,27 +401,22 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             label="Service"
             rules={[
               {
-                required: true,
                 message: 'Please select RADIUS service',
               },
             ]}
           >
-            <div className={styles.InlineDiv}>
-              <Select className={styles.Field}>
-                <Option value="default">default</Option>
-              </Select>
-            </div>
+            <Input disabled className={styles.Field} placeholder="RADIUS Service" />
           </Item>
         </Card>
       )}
-      {splash && (
+      {externalSplash && (
         <Card title="External Splash Page">
           <Item
-            name="splashURL"
+            name="externalCaptivePortalURL"
             label="URL"
             rules={[
               {
-                required: splash,
+                required: externalSplash,
                 type: 'url',
                 message: 'Please enter URL in the format http://... or https://...',
               },
@@ -277,8 +472,8 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           )}
         </Card>
       )}
-      <Collapse expandIconPosition="right">
-        <Panel header="Splash Page Content">
+      <Collapse expandIconPosition="right" defaultActiveKey={['splashcontent']}>
+        <Panel header="Splash Page Content" key="splashcontent" forceRender>
           <Item
             name="browserTitle"
             label="Browser Title"
@@ -296,7 +491,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             label="Page Title"
             rules={[
               {
-                required: true,
                 message: 'Please enter the page title',
               },
             ]}
@@ -306,24 +500,24 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           <Item label="Body Content">
             <div className={styles.InlineDiv}>
               <Button
-                onClick={() => setContentText('user')}
-                type={contentText === 'user' ? 'primary ' : 'ghost'}
+                onClick={() => setContentText(false)}
+                type={!isLoginText ? 'primary ' : 'ghost'}
               >
                 User Acceptance Policy Text
               </Button>
               <Button
-                onClick={() => setContentText('login')}
-                type={contentText === 'login' ? 'primary ' : 'ghost'}
+                onClick={() => setContentText(true)}
+                type={isLoginText ? 'primary ' : 'ghost'}
               >
                 Login Success Text
               </Button>
             </div>
-            {contentText === 'user' && (
+            {!isLoginText && (
               <Item name="userAcceptancePolicy">
                 <TextArea className={styles.Field} rows={4} />
               </Item>
             )}
-            {contentText !== 'user' && (
+            {isLoginText && (
               <Item name="successPageMarkdownText">
                 <TextArea className={styles.Field} rows={4} />
               </Item>
@@ -334,7 +528,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       </Collapse>
 
       <Collapse expandIconPosition="right">
-        <Panel header="Splash Page Images">
+        <Panel header="Splash Page Images" forceRender>
           <Item label="Configure">
             <div className={styles.InlineDiv}>
               <Tooltip title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB">
@@ -380,18 +574,47 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       </Collapse>
 
       <Collapse expandIconPosition="right">
-        <Panel header="Whitelist">
+        <Panel header="Whitelist" forceRender>
           <Item
-            name="configure"
             label="Configure"
             rules={[
-              {
-                type: 'url',
-                message: 'Hostnames must have at least 1 subdomain label. e.g. mycompany.com',
-              },
+              () => ({
+                validator: validateWhitelist,
+              }),
             ]}
+            validateStatus={whitelistValidation.status}
+            help={whitelistValidation.help}
           >
-            <Input.Search placeholder="Hostname, IP, or IP range..." enterButton="Add" />
+            <Input.Search
+              placeholder="Hostname, IP, or IP range..."
+              enterButton="Add"
+              value={whitelistSearch}
+              onSearch={handleOnWhitelist}
+              onChange={handleOnChangeWhitelist}
+            />
+          </Item>
+
+          {whitelist.length > 0 && (
+            <List
+              className={styles.Whitelist}
+              itemLayout="horizontal"
+              dataSource={whitelist}
+              renderItem={item => (
+                <List.Item
+                  extra={
+                    <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
+                      Remove
+                    </Button>
+                  }
+                >
+                  <List.Item.Meta title={item} />
+                </List.Item>
+              )}
+            />
+          )}
+
+          <Item name="walledGardenWhitelist" hidden>
+            <Input />
           </Item>
         </Panel>
       </Collapse>

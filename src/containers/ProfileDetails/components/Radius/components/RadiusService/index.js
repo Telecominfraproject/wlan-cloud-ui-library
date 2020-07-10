@@ -91,7 +91,13 @@ const RadiusServiceModal = ({ onSuccess, onCancel, visible, title, disabled, ser
       {!serverCard && (
         <>
           <b>RADIUS Server List:</b>
-          <Table dataSource={ips} columns={columns} pagination={false} size="small" />
+          <Table
+            dataSource={ips}
+            columns={columns}
+            pagination={false}
+            size="small"
+            rowKey="ipAddress"
+          />
           <div className={styles.InlineEndDiv}>
             <Button onClick={() => setServerCard(true)}>Add RADIUS Server</Button>{' '}
           </div>
