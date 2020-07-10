@@ -43,21 +43,6 @@ describe('<RadiusServiceModal />', () => {
     });
   });
 
-  // it('notification should popup when no of RADIUS Servers is zero and save button is clicked', async () => {
-  //   const submitSpy = jest.fn();
-  //   const { getByRole, getByText, getByLabelText, container } = render(
-  //     <RadiusServiceModal {...mockProps} onSuccess={submitSpy} />
-  //   );
-  //   expect(getByText('Add RADIUS Service')).toBeVisible();
-  //   fireEvent.change(getByLabelText('Service Name'), { target: { value: 'abc' } });
-  //   // fireEvent.click(getByRole('button', { name: 'Save' }));
-  //   fireEvent.click(getByText(/save/i));
-  //   // await waitForElement(() => [getByText('At least 1 RADIUS Server is required.')], { container });
-  //   await waitFor(() => {
-  //     expect(getByText('At least 1 RADIUS Server is required.')).toBeVisible();
-  //   });
-  // });
-
   it('onSuccess should be called when form is submitted correctly', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText, getByLabelText } = render(
