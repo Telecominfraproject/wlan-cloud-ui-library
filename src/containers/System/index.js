@@ -1,39 +1,38 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import Container from 'components/Container';
 
-import Manufacturer from './components/Manufacturer';
-import Firmware from './components/Firmware';
-
-const System = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
+const System = ({ children }) => {
+  const location = useLocation();
   const { TabPane } = Tabs;
+
   return (
-    <Container>
-      <Tabs defaultActiveKey="manufacturer">
-        <TabPane tab="Device Manufacturer" key="manufacturer">
-          <Manufacturer
-            onSearchOUI={onSearchOUI}
-            onUpdateOUI={onUpdateOUI}
-            returnedOUI={returnedOUI}
-          />
-        </TabPane>
-        <TabPane tab="Firmware" key="firmware">
-          <Firmware />
-        </TabPane>
-      </Tabs>
-    </Container>
+    <div>
+      <div>
+        {location.pathname === '/system/manufacturer' ? (
+          <Container>
+            <Tabs defaultActiveKey="manufacturer">
+              <TabPane tab="Device Manufacturer" key="manufacturer">
+                manufacturer
+              </TabPane>
+              <TabPane tab="Firmware" key="firmware">
+                firmware
+              </TabPane>
+            </Tabs>
+          </Container>
+        ) : (
+          ''
+        )}
+        {children}
+      </div>
+    </div>
   );
 };
 
 System.propTypes = {
-  onSearchOUI: PropTypes.func.isRequired,
-  onUpdateOUI: PropTypes.func.isRequired,
-  returnedOUI: PropTypes.instanceOf(Object),
-};
-
-System.defaultProps = {
-  returnedOUI: {},
+  children: PropTypes.node.isRequired,
 };
 
 export default System;
