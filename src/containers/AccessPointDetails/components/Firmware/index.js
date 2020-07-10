@@ -72,24 +72,22 @@ const Firmware = ({ firmware }) => {
         </Item>
       </Card>
       <Card title="Upgrade">
-        <Item label="Target Version">
-          <Item>
-            <Select
-              className={styles.Field}
-              name="targetValue"
-              placeholder="Select a version to apply..."
-              onChange={handleUpdateVersion}
-            >
-              {Object.keys(firmware).map(i => (
-                <Option key={firmware[i].id} value={firmware[i].id}>
-                  {firmware[i].versionName}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-          {version && (
+        <Item label="Target Version" name="targetValue">
+          <Select
+            className={styles.Field}
+            placeholder="Select a version to apply..."
+            onChange={handleUpdateVersion}
+          >
+            {Object.keys(firmware).map(i => (
+              <Option key={firmware[i].id} value={firmware[i].id}>
+                {firmware[i].versionName}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        {version && (
+          <Item label=" " colon={false} data-testid="versionDetails">
             <TextArea
-              name="textarea_field"
               placeholder="Select target version..."
               readOnly
               rows={6}
@@ -103,8 +101,8 @@ const Firmware = ({ firmware }) => {
                 `Release Notes:  ${version.description}`
               }
             />
-          )}
-        </Item>
+          </Item>
+        )}
       </Card>
     </Form>
   );
