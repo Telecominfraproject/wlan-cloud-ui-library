@@ -1,25 +1,27 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import Container from 'components/Container';
+import styles from './index.module.scss';
 
 const System = ({ children }) => {
   const location = useLocation();
+
   const { TabPane } = Tabs;
 
   return (
     <div>
-      <div>
-        {location.pathname === '/system/manufacturer' ? (
+      <div className={styles.System}>
+        {location.pathname === '/system/manufacturer' ||
+        location.pathname === '/system/firmware' ? (
           <Container>
-            <Tabs defaultActiveKey="manufacturer">
-              <TabPane tab="Device Manufacturer" key="manufacturer">
-                manufacturer
-              </TabPane>
-              <TabPane tab="Firmware" key="firmware">
-                firmware
-              </TabPane>
+            <Tabs>
+              <TabPane
+                tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
+                key="manufacturer"
+              />
+              <TabPane tab={<Link to="/system/firmware">Firmware</Link>} key="firmware" />
             </Tabs>
           </Container>
         ) : (
