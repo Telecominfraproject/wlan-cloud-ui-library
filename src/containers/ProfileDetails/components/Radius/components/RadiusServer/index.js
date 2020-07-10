@@ -83,8 +83,20 @@ const RadiusServer = ({ onSuccess, onCancel }) => {
           <Input.Password className={styles.Field} placeholder="Enter Shared Secret" />
         </Item>
         <div className={styles.InlineEndDiv}>
-          <Button type="danger" onClick={onCancel} icon={<CloseOutlined />} />
-          <Button type="primary" icon={<CheckOutlined />} onClick={handleOnSuccess} />
+          <Button
+            data-testid="close"
+            title="close"
+            type="danger"
+            onClick={onCancel}
+            icon={<CloseOutlined />}
+          />
+          <Button
+            data-testid="submit"
+            title="submit"
+            type="primary"
+            icon={<CheckOutlined />}
+            onClick={handleOnSuccess}
+          />
         </div>
       </Card>
     </Form>

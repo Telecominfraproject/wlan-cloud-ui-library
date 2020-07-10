@@ -299,6 +299,7 @@ const SSIDForm = ({ form, details }) => {
           ]}
         >
           <Select
+            data-testid="securityMode"
             className={styles.Field}
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"

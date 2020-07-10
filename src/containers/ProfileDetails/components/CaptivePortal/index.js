@@ -272,12 +272,12 @@ const CaptivePortalForm = ({ details, form }) => {
             </div>
             {contentText === 'user' && (
               <Item name="userAcceptancePolicy">
-                <TextArea className={styles.Field} rows={4} />
+                <TextArea data-testid="bodyContent" className={styles.Field} rows={4} />
               </Item>
             )}
             {contentText !== 'user' && (
               <Item name="successPageMarkdownText">
-                <TextArea className={styles.Field} rows={4} />
+                <TextArea data-testid="bodyContent" className={styles.Field} rows={4} />
               </Item>
             )}
             &nbsp; Markdown and plain text supported.

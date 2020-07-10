@@ -272,23 +272,6 @@ describe('<ProfileDetails />', () => {
     });
   });
 
-  it('onUpdateProfile should not be called when any one of the fields is not submitted correctly', async () => {
-    const submitSpy = jest.fn();
-    const { getByLabelText, getByRole } = render(
-      <Router>
-        <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="radius" />
-      </Router>
-    );
-    fireEvent.change(getByLabelText('Profile Name'), {
-      target: { value: '' },
-    });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(submitSpy).not.toHaveBeenCalled();
-    });
-  });
-
   it('Back button click should show confirmation modal', () => {
     const { getByText, getByRole } = render(
       <Router>
@@ -331,17 +314,4 @@ describe('<ProfileDetails />', () => {
       expect(getByText('Please input your new profile name')).toBeVisible();
     });
   });
-
-  // it('Error msg should be displayed if input field of SSID Name is empty', async () => {
-  //   const { getByLabelText, getByText } = render(
-  //     <Router>
-  //       <ProfileDetails {...mockProps} />
-  //     </Router>
-  //   );
-
-  //   fireEvent.change(getByLabelText('SSID Name'), { target: { value: '' } });
-  //   await waitFor(() => {
-  //     expect(getByText('Please input your new SSID name')).toBeVisible();
-  //   });
-  // });
 });

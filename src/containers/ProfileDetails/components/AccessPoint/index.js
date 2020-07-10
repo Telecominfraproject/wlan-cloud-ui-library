@@ -90,7 +90,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button icon={<DeleteFilled />} onClick={() => handleRemoveSsid(record.id)} />
+        <Button
+          title="removeSsid"
+          icon={<DeleteFilled />}
+          onClick={() => handleRemoveSsid(record.id)}
+        />
       ),
     },
   ];
@@ -135,7 +139,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         </Item>
 
         {!vlan && (
-          <Item label=" " colon={false} data-testid="vlanItem">
+          <Item label=" " colon={false}>
             <Item
               name="vlan"
               rules={[
@@ -178,11 +182,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               name={['ntpServer', 'value']}
               rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
             >
-              <Input
-                data-testid="ntpInput"
-                className={styles.Field}
-                placeholder="Enter NTP server"
-              />
+              <Input className={styles.Field} placeholder="Enter NTP server" />
             </Item>
           </Item>
         )}
@@ -211,7 +211,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         </Item>
         {rtls && (
           <>
-            <Item label=" " colon={false}>
+            <Item data-testid="rtlsInputFields" label=" " colon={false}>
               <Item
                 name={['rtlsSettings', 'srvHostIp']}
                 rules={[
@@ -275,7 +275,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         </Item>
         {syslog && (
           <>
-            <Item label=" " colon={false}>
+            <Item data-testid="syslogInputFields" label=" " colon={false}>
               <div className={styles.InlineDiv}>
                 <Item
                   name={['syslogRelay', 'srvHostIp']}
@@ -326,7 +326,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                   },
                 ]}
               >
-                <Select className={styles.Field} placeholder="Select Syslog Mode">
+                <Select
+                  data-testid="select"
+                  className={styles.Field}
+                  placeholder="Select Syslog Mode"
+                >
                   <Option value="DEBUG">Debug (DEBUG)</Option>
                   <Option value="INFO">Info. (INFO)</Option>
                   <Option value="NOTICE">Notice (NOTICE)</Option>
@@ -368,6 +372,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
+            data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             optionFilterProp="children"

@@ -230,7 +230,11 @@ const RadiusForm = ({ form, details }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button title="edit" icon={<EditOutlined />} onClick={() => handleEditSubnet(record)} />
+        <Button
+          title="editSubnet"
+          icon={<EditOutlined />}
+          onClick={() => handleEditSubnet(record)}
+        />
       ),
     },
     {
@@ -361,7 +365,11 @@ const RadiusForm = ({ form, details }) => {
               >
                 <List.Item.Meta
                   avatar={
-                    <Button icon={<EditOutlined />} onClick={() => handleEditService(item)} />
+                    <Button
+                      title="editService"
+                      icon={<EditOutlined />}
+                      onClick={() => handleEditService(item)}
+                    />
                   }
                   title={item.name}
                 />
@@ -428,11 +436,13 @@ const RadiusForm = ({ form, details }) => {
                     <>
                       <b className={styles.iconButton}>{item.name}</b>
                       <Button
+                        title="editRadiusService"
                         onClick={() => handleEditZone(item)}
                         className={styles.iconButton}
                         icon={<EditOutlined />}
                       />
                       <Button
+                        title="deleteRadiusService"
                         onClick={() => handleDeleteZone(item)}
                         className={styles.iconButton}
                         icon={<DeleteOutlined />}
