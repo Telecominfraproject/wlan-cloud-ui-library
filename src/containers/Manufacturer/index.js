@@ -108,6 +108,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
                 fileList={ouiFileList}
                 beforeUpload={handleFileUpload}
                 onChange={handleOnChangeOUI}
+                showUploadList={false}
                 data-testid="ouiUpload"
               >
                 <Button icon={<UploadOutlined />}>Select File to Import...</Button>
