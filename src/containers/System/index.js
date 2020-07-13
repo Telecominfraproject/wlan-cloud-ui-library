@@ -20,8 +20,13 @@ const System = ({ children }) => {
               <TabPane
                 tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
                 key="manufacturer"
+                data-testId="manufacturer"
               />
-              <TabPane tab={<Link to="/system/firmware">Firmware</Link>} key="firmware" />
+              <TabPane
+                tab={<Link to="/system/firmware">Firmware</Link>}
+                key="firmware"
+                data-testid="firmware"
+              />
             </Tabs>
           </Container>
         ) : (

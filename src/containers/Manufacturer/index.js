@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Alert, Upload, Input, Form } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Card, Alert, Upload, Input, Form, message } from 'antd';
 import Button from 'components/Button';
 import Container from 'components/Container';
 import globalStyles from 'styles/index.scss';
 import styles from './index.module.scss';
 
-const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
+const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => {
   const { Item } = Form;
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
+  const [bgFileList, setBgFileList] = useState([]);
 
   const layout = {
     labelCol: { span: 2 },
@@ -30,6 +30,45 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
     onSearchOUI(value.replace(/:/g, ''));
     setCancel(false);
   };
+  const validateFile = (file, showMessages = false) => {
+    const isTxtOrGz = file.type === 'text/plain' || file.type === 'application/x-gzip';
+    if (!isTxtOrGz) {
+      if (showMessages) message.error('You can only upload TXT/GZ files!');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleOnChange = (file, fileList) => {
+    if (validateFile(file)) {
+      let list = [...fileList];
+
+      list = list.slice(-1);
+      list = list.map(i => {
+        return { ...i, url: i.response && i.response.url };
+      });
+
+      return list;
+    }
+    return false;
+  };
+
+  const handleOnChangeBg = ({ file, fileList }) => {
+    if (fileList.length === 0) {
+      setBgFileList([]);
+    }
+    const list = handleOnChange(file, fileList);
+    if (list) setBgFileList(list);
+  };
+
+  const handleFileUpload = file => {
+    if (validateFile(file, true)) {
+      fileUpload(file.name, file);
+    }
+    return false;
+  };
+
   return (
     <Container>
       <div className={styles.Manufacturer}>
@@ -53,11 +92,17 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
               type="info"
             />
 
-            <Upload>
-              <Button className={styles.fileButton} icon={<UploadOutlined />}>
+            <Item name="backgroundFile" className={styles.Image}>
+              <Upload
+                accept=".txt, .gz"
+                fileList={bgFileList}
+                beforeUpload={handleFileUpload}
+                listType="picture-card"
+                onChange={handleOnChangeBg}
+              >
                 Select File to Import...
-              </Button>
-            </Upload>
+              </Upload>
+            </Item>
           </Card>
           <Card title="Set a Manufacturer Alias">
             <Item name="oui" label="OUI">
@@ -102,6 +147,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI }) => {
 Manufacturer.propTypes = {
   onSearchOUI: PropTypes.func.isRequired,
   onUpdateOUI: PropTypes.func.isRequired,
+  fileUpload: PropTypes.func.isRequired,
   returnedOUI: PropTypes.instanceOf(Object),
 };
 

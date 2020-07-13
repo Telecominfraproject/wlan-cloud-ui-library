@@ -28,6 +28,7 @@ const mockProps = {
   },
   onSearchOUI: () => {},
   onUpdateOUI: () => {},
+  fileUpload: () => {},
 };
 describe('<General />', () => {
   afterEach(() => {
