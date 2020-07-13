@@ -66,6 +66,7 @@ const ProfileDetails = ({
       .then(values => {
         let formattedData = { ...details };
         console.log(values);
+        console.log(details);
 
         Object.keys(values).forEach(i => {
           formattedData[i] = values[i];
@@ -95,14 +96,11 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === 'captive_portal') {
-          formattedData = Object.assign(formattedData, formatCaptiveForm(values));
+          formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
-
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
       })
-      .catch(e => {
-        console.log(e);
-      });
+      .catch(() => {});
   };
 
   useEffect(() => {
