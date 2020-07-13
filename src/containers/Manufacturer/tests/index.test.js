@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { screen } from '@testing-library/dom';
 import { render } from 'tests/utils';
+import userEvent from '@testing-library/user-event';
 import Manufacturer from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -28,8 +29,16 @@ const mockProps = {
   },
   onSearchOUI: () => {},
   onUpdateOUI: () => {},
-  fileUpload: () => {},
 };
+const ouiFile = {
+  lastModified: 1594657075244,
+  name: 'oui.txt.gz',
+  size: 1168627,
+  type: 'application/x-gzip',
+  uid: 'rc-upload-1594665576877-2',
+  webkitRelativePath: '',
+};
+
 describe('<General />', () => {
   afterEach(() => {
     cleanup();
@@ -105,6 +114,26 @@ describe('<General />', () => {
     const submitButton = screen.queryByText('cancel');
     await waitFor(() => {
       expect(submitButton).not.toBeInTheDocument();
+    });
+  });
+
+  it('upload functionality with correct file type', async () => {
+    const uploadSpy = jest.fn();
+
+    const { getByRole } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
+
+    const input = getByRole('button', { name: /Select File to Import.../i });
+    const file = new File([''], 'oui.txt.gz', {
+      ...ouiFile,
+    });
+
+    userEvent.upload(input, file);
+
+    fireEvent.change(input);
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(1);
     });
   });
 });

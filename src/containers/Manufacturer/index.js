@@ -10,7 +10,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
   const { Item } = Form;
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
-  const [bgFileList, setBgFileList] = useState([]);
+  const [ouiFileList, setOUIileList] = useState([]);
 
   const layout = {
     labelCol: { span: 2 },
@@ -61,12 +61,12 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
     return false;
   };
 
-  const handleOnChangeBg = ({ file, fileList }) => {
+  const handleOnChangeOUI = ({ file, fileList }) => {
     if (fileList.length === 0) {
-      setBgFileList([]);
+      setOUIileList([]);
     }
     const list = handleOnChange(file, fileList);
-    if (list) setBgFileList(list);
+    if (list) setOUIileList(list);
   };
 
   const handleFileUpload = file => {
@@ -102,10 +102,10 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
             <Item name="backgroundFile" className={styles.Image}>
               <Upload
                 accept=".gz"
-                fileList={bgFileList}
+                fileList={ouiFileList}
                 beforeUpload={handleFileUpload}
                 listType="picture-card"
-                onChange={handleOnChangeBg}
+                onChange={handleOnChangeOUI}
               >
                 Select File to Import...
               </Upload>
