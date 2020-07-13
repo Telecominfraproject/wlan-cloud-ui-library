@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert, Upload, Input, Form, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Container from 'components/Container';
 import globalStyles from 'styles/index.scss';
+
 import styles from './index.module.scss';
 
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => {
@@ -99,15 +102,15 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
               type="info"
             />
 
-            <Item name="backgroundFile" className={styles.Image}>
+            <Item name="backgroundFile" className={styles.FileButton}>
               <Upload
-                accept=".gz"
+                accept="application/x-gzip"
                 fileList={ouiFileList}
                 beforeUpload={handleFileUpload}
-                listType="picture-card"
                 onChange={handleOnChangeOUI}
+                data-testid="ouiUpload"
               >
-                Select File to Import...
+                <Button icon={<UploadOutlined />}>Select File to Import...</Button>
               </Upload>
             </Item>
           </Card>

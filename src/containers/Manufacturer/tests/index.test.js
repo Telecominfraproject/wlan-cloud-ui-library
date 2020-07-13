@@ -120,10 +120,10 @@ describe('<General />', () => {
   it('upload functionality with correct file type', async () => {
     const uploadSpy = jest.fn();
 
-    const { getByRole } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
+    const { getByTestId } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
 
-    const input = getByRole('button', { name: /Select File to Import.../i });
-    const file = new File([''], 'oui.txt.gz', {
+    const input = getByTestId('ouiUpload');
+    const file = new File(['oui'], 'oui.txt.gz', {
       ...ouiFile,
     });
 
