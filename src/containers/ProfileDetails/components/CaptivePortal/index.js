@@ -81,9 +81,9 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       return false;
     }
 
-    const isLt2M = file.size / 1024 / 1024 < 1;
-    if (!isLt2M) {
-      if (showMessages) message.error('Image must smaller than 1MB!');
+    const isValidSize = file.size / 1024 < 400;
+    if (!isValidSize) {
+      if (showMessages) message.error('Image must smaller than 400KB!');
       return false;
     }
 
@@ -278,6 +278,9 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       externalSplashPage: details.externalCaptivePortalURL ? 'true' : 'false',
       walledGardenWhitelist: details.walledGardenWhitelist || [],
       logoFile: details.logoFile && formatFile(details.logoFile),
+      backgroundFile: details.backgroundFile && formatFile(details.backgroundFile),
+      backgroundRepeat: details.backgroundRepeat || 'no_repeat',
+      backgroundPosition: details.backgroundPosition || 'left_top',
     });
   }, [form, details]);
 
@@ -570,6 +573,32 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               </Item>
             </div>
           </Item>
+          {bgFileList.length > 0 && (
+            <Item label="Background Styles">
+              <div className={styles.InlineDiv}>
+                <Item name="backgroundRepeat">
+                  <Select className={styles.Field} placeholder="Select Background Repeat">
+                    <Option value="no_repeat">No Repeat</Option>
+                    <Option value="repeat">Repeat</Option>
+                    <Option value="cover">Cover</Option>
+                  </Select>
+                </Item>
+                <Item name="backgroundPosition">
+                  <Select className={styles.Field} placeholder="Select Background Position">
+                    <Option value="left_top">Top Left</Option>
+                    <Option value="center_top">Top Center</Option>
+                    <Option value="right_top">Top Right</Option>
+                    <Option value="left_center">Center Left</Option>
+                    <Option value="center_center">Center Center</Option>
+                    <Option value="right_center">Center Right</Option>
+                    <Option value="left_bottom">Bottom Left</Option>
+                    <Option value="center_bottom">Bottom Center</Option>
+                    <Option value="right_bottom">Bottom Right</Option>
+                  </Select>
+                </Item>
+              </div>
+            </Item>
+          )}
         </Panel>
       </Collapse>
 

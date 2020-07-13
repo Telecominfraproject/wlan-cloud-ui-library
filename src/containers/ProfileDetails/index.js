@@ -65,8 +65,6 @@ const ProfileDetails = ({
       .validateFields()
       .then(values => {
         let formattedData = { ...details };
-        console.log(values);
-        console.log(details);
 
         Object.keys(values).forEach(i => {
           formattedData[i] = values[i];
