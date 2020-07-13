@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { Form, Input, Card, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
@@ -11,7 +11,12 @@ import Modal from 'components/Modal';
 
 import globalStyles from 'styles/index.scss';
 
-import { formatSsidProfileForm, formatApProfileForm, formatRadiusForm } from 'utils/profiles';
+import {
+  formatSsidProfileForm,
+  formatApProfileForm,
+  formatRadiusForm,
+  formatCaptiveForm,
+} from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
@@ -27,9 +32,11 @@ const ProfileDetails = ({
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  fileUpload,
 }) => {
+  const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
 
   const layout = {
     labelCol: { span: 4 },
@@ -38,6 +45,20 @@ const ProfileDetails = ({
 
   const [form] = Form.useForm();
   const { Item } = Form;
+
+  const handleOnFormChange = () => {
+    if (!isFormDirty) {
+      setIsFormDirty(true);
+    }
+  };
+
+  const handleOnBack = () => {
+    if (isFormDirty) {
+      setConfirmModal(true);
+    } else {
+      history.push(`/profiles`);
+    }
+  };
 
   const handleOnSave = () => {
     form
@@ -72,7 +93,9 @@ const ProfileDetails = ({
           }
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
-
+        if (profileType === 'captive_portal') {
+          formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
+        }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
       })
       .catch(() => {});
@@ -86,18 +109,16 @@ const ProfileDetails = ({
 
   return (
     <Container>
-      {redirect && <Redirect to="/profiles" />}
-
       <Modal
         onCancel={() => setConfirmModal(false)}
-        onSuccess={() => setRedirect(true)}
+        onSuccess={() => history.push(`/profiles`)}
         visible={confirmModal}
         buttonText="Back"
         title="Leave Form?"
         content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => setConfirmModal(true)}>
+        <Button icon={<LeftOutlined />} onClick={handleOnBack}>
           BACK
         </Button>
         <div>
@@ -107,7 +128,12 @@ const ProfileDetails = ({
         </div>
       </Header>
 
-      <Form {...layout} form={form} className={styles.ProfileDetails}>
+      <Form
+        {...layout}
+        form={form}
+        onValuesChange={handleOnFormChange}
+        className={styles.ProfileDetails}
+      >
         <Card title={`Edit ${name}`}>
           <Item
             name="name"
@@ -126,7 +152,9 @@ const ProfileDetails = ({
             childProfileIds={childProfileIds}
           />
         )}
-        {profileType === 'captive_portal' && <CaptivePortalForm form={form} details={details} />}
+        {profileType === 'captive_portal' && (
+          <CaptivePortalForm form={form} details={details} fileUpload={fileUpload} />
+        )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
     </Container>
@@ -135,6 +163,7 @@ const ProfileDetails = ({
 
 ProfileDetails.propTypes = {
   onUpdateProfile: PropTypes.func.isRequired,
+  fileUpload: PropTypes.func.isRequired,
   name: PropTypes.string,
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
