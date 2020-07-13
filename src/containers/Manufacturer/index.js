@@ -30,10 +30,17 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
     onSearchOUI(value.replace(/:/g, ''));
     setCancel(false);
   };
+
   const validateFile = (file, showMessages = false) => {
-    const isTxtOrGz = file.type === 'text/plain' || file.type === 'application/x-gzip';
+    const isTxtOrGz = file.type === 'application/x-gzip';
     if (!isTxtOrGz) {
-      if (showMessages) message.error('You can only upload TXT/GZ files!');
+      if (showMessages) message.error('You can only upload .gz files!');
+      return false;
+    }
+
+    const isLt2M = file.size / 1024 / 1024 < 5;
+    if (!isLt2M) {
+      if (showMessages) message.error('File must smaller than 5MB!');
       return false;
     }
 
@@ -94,7 +101,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
 
             <Item name="backgroundFile" className={styles.Image}>
               <Upload
-                accept=".txt, .gz"
+                accept=".gz"
                 fileList={bgFileList}
                 beforeUpload={handleFileUpload}
                 listType="picture-card"
