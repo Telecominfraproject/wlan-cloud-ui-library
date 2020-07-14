@@ -1,0 +1,17 @@
+.Manufacturer {
+  :global(.ant-card) {
+    margin-top: 10px;
+  }
+  :global(.ant-upload.ant-upload-select-picture-card) {
+    width: 100%;
+  }
+
+  .FileButton {
+    margin-top: 20px;
+  }
+  .FlexDiv {
+    display: flex;
+    justify-content: center;
+    margin-left: 30px;
+  }
+}
