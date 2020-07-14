@@ -11,7 +11,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Item } = Form;
 
-const Firmware = ({ firmware, data }) => {
+const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
   const [form] = Form.useForm();
 
   const [version, setVersion] = useState(null);
@@ -22,12 +22,17 @@ const Firmware = ({ firmware, data }) => {
     wrapperCol: { span: 12 },
   };
 
-  const handleUpdateVersion = value => {
+  const handleOnChangeVersion = value => {
     setVersion(
       Object.values(firmware).find(o => {
         return o.id === value;
       })
     );
+  };
+
+  const handleUpdateFirmware = () => {
+    onUpdateEquipmentFirmware(data.id, version.id);
+    setRebootModal(false);
   };
 
   const alertText = (value = '') => {
@@ -52,7 +57,7 @@ const Firmware = ({ firmware, data }) => {
     <>
       <Modal
         onCancel={() => setRebootModal(false)}
-        onSuccess={() => {}}
+        onSuccess={handleUpdateFirmware}
         visible={rebootModal}
         title="Confirm"
         content={<p>Confirm downloading, flashing, rebooting? </p>}
@@ -76,7 +81,7 @@ const Firmware = ({ firmware, data }) => {
               <Item>
                 <Select
                   className={styles.Field}
-                  onChange={handleUpdateVersion}
+                  onChange={handleOnChangeVersion}
                   placeholder="Select a version to apply..."
                 >
                   {Object.keys(firmware).map(i => (
@@ -89,7 +94,10 @@ const Firmware = ({ firmware, data }) => {
               <Item noStyle>
                 <Button
                   icon={<DownloadOutlined />}
-                  disabled={!version}
+                  disabled={
+                    !version ||
+                    version.id === (data.status && data.status.firmware && data.status.firmware.id)
+                  }
                   onClick={() => setRebootModal(true)}
                 >
                   Download, Flash, and Reboot
@@ -124,10 +132,12 @@ const Firmware = ({ firmware, data }) => {
 Firmware.propTypes = {
   data: PropTypes.instanceOf(Object),
   firmware: PropTypes.instanceOf(Object),
+  onUpdateEquipmentFirmware: PropTypes.func,
 };
 
 Firmware.defaultProps = {
   data: {},
   firmware: {},
+  onUpdateEquipmentFirmware: () => {},
 };
 export default Firmware;
