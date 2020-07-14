@@ -10,7 +10,7 @@ const System = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div>
+    <>
       {(location.pathname === '/system/manufacturer' ||
         location.pathname === '/system/firmware') && (
         <Container>
@@ -24,7 +24,7 @@ const System = ({ children }) => {
         </Container>
       )}
       {children}
-    </div>
+    </>
   );
 };
 

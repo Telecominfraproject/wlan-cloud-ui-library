@@ -9,16 +9,17 @@ import globalStyles from 'styles/index.scss';
 
 import styles from './index.module.scss';
 
+const { Item } = Form;
+
+const layout = {
+  labelCol: { span: 2 },
+  wrapperCol: { span: 12 },
+};
+
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => {
-  const { Item } = Form;
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);
-
-  const layout = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 12 },
-  };
 
   const onSubmit = () => {
     form
@@ -27,11 +28,6 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
         onUpdateOUI(returnedOUI.oui.toLowerCase(), values.alias, returnedOUI.manufacturerName);
       })
       .catch(() => {});
-  };
-
-  const handleOnSearch = value => {
-    onSearchOUI(value.replace(/:/g, ''));
-    setCancel(false);
   };
 
   const validateFile = (file, showMessages = false) => {
@@ -74,6 +70,11 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
       fileUpload(file.name, file);
     }
     return false;
+  };
+
+  const handleOnSearch = value => {
+    onSearchOUI(value.replace(/:/g, ''));
+    setCancel(false);
   };
 
   return (
