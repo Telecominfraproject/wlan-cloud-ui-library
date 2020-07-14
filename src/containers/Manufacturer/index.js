@@ -13,7 +13,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
   const { Item } = Form;
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
-  const [ouiFileList, setOUIileList] = useState([]);
+  const [ouiFileList, setOUIFileList] = useState([]);
 
   const layout = {
     labelCol: { span: 2 },
@@ -41,8 +41,8 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
       return false;
     }
 
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
+    const validSize = file.size / 1024 / 1024 < 5;
+    if (!validSize) {
       if (showMessages) message.error('File must smaller than 5MB!');
       return false;
     }
@@ -65,11 +65,8 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
   };
 
   const handleOnChangeOUI = ({ file, fileList }) => {
-    if (fileList.length === 0) {
-      setOUIileList([]);
-    }
     const list = handleOnChange(file, fileList);
-    if (list) setOUIileList(list);
+    if (list) setOUIFileList(list);
   };
 
   const handleFileUpload = file => {
