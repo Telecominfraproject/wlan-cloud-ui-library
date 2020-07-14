@@ -118,9 +118,9 @@ const SSIDForm = ({ form, details }) => {
                   required: true,
                   message: 'Downstream bandwidth limit can be a number between 0 and 100.',
                 },
-                ({ getFieldValue }) => ({
+                () => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('bandwidthLimitDown') <= 100) {
+                    if (!value || value <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -154,9 +154,9 @@ const SSIDForm = ({ form, details }) => {
                   required: true,
                   message: 'Upstream bandwidth limit can be a number between 0 and 100.',
                 },
-                ({ getFieldValue }) => ({
+                () => ({
                   validator(_rule, value) {
-                    if (!value || getFieldValue('bandwidthLimitUp') <= 100) {
+                    if (!value || value <= 100) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -361,13 +361,9 @@ const SSIDForm = ({ form, details }) => {
                   message:
                     'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key',
                 },
-                ({ getFieldValue }) => ({
+                () => ({
                   validator(_rule, value) {
-                    if (
-                      !value ||
-                      getFieldValue('wepKey').length === 10 ||
-                      getFieldValue('wepKey').length === 26
-                    ) {
+                    if (!value || value.length === 10 || value.length === 26) {
                       return Promise.resolve();
                     }
                     return Promise.reject(

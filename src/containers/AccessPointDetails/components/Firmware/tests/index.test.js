@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitForElement } from '@testing-library/react';
+import { fireEvent, cleanup, waitForElement, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import { firmware } from '../../../tests/constants';
 import Firmware from '..';
@@ -27,15 +27,54 @@ describe('<Firmware />', () => {
   });
 
   it('firmware tab should show the change the target version on user input', async () => {
-    const { getByText, getByLabelText } = render(<Firmware firmware={firmware} />);
+    const { getByText, getByRole } = render(<Firmware firmware={firmware} />);
 
     const paragraph = getByText('Upgrade');
     expect(paragraph).toBeVisible();
 
-    const targetVersion = getByLabelText('Target Version');
+    const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
     await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
     fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+  });
+
+  it('reboot button should show the reboot model', async () => {
+    const { getByText, getByRole } = render(<Firmware firmware={firmware} />);
+
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
+    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+
+    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+
+    expect(getByText('Confirm')).toBeVisible();
+  });
+
+  it('cancel button should hide the reboot model', async () => {
+    const { getByText, getByRole } = render(<Firmware firmware={firmware} />);
+
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
+    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+
+    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+    expect(getByText('Confirm')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(getByText('Confirm')).not.toBeVisible();
+    });
   });
 });
