@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -16,6 +16,8 @@ import {
 import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import styles from '../index.module.scss';
+import DeviceWhitelist from './components/DeviceWhitelist';
+import Users from './components/Users';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -47,6 +49,12 @@ const formatFile = file => {
 };
 
 const CaptivePortalForm = ({ details, form, fileUpload }) => {
+  const captivePortal = useRef(null);
+
+  const scrollToBottom = () => {
+    captivePortal.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const [authentication, setAuthentication] = useState(details.authenticationType || 'guest');
 
   const [showTips, setShowTips] = useState(false);
@@ -318,7 +326,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 
             {authentication === 'username' && (
               <Item>
-                <Button> Manage Captive Portal Users</Button>
+                <Button onClick={() => scrollToBottom()}>Manage Captive Portal Users</Button>
               </Item>
             )}
           </div>
@@ -529,7 +537,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Item>
         </Panel>
       </Collapse>
-
       <Collapse expandIconPosition="right">
         <Panel header="Splash Page Images" forceRender>
           <Item label="Configure">
@@ -601,7 +608,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           )}
         </Panel>
       </Collapse>
-
       <Collapse expandIconPosition="right">
         <Panel header="Whitelist" forceRender>
           <Item
@@ -647,6 +653,12 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Item>
         </Panel>
       </Collapse>
+      {authentication === 'username' && (
+        <div ref={captivePortal}>
+          <Users userList={details.userList} />
+          <DeviceWhitelist whitelist={details.macWhiteList} />
+        </div>
+      )}
     </div>
   );
 };
