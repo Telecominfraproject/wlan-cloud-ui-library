@@ -15,15 +15,16 @@
   display: flex;
   justify-content: space-between;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
   .infoWrapper {
+    flex-direction: column;
+  }
+  .pieChartWrap {
+    flex-wrap: wrap;
     flex-direction: column;
   }
 }
 @media screen and (max-width: 767px) {
-  .pieChartWrap {
-    flex-wrap: wrap;
-  }
   .mainInfoWrap {
     padding: 30px;
   }

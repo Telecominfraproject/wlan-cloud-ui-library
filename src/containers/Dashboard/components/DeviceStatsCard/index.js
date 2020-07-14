@@ -8,6 +8,7 @@ const DeviceStatsCard = ({ title, cardData }) => {
     textAlign: 'center',
     marginBottom: 10,
   };
+
   const bodyStyle = { height: 'calc(100% - 67px)' };
   return (
     <Card
@@ -16,12 +17,27 @@ const DeviceStatsCard = ({ title, cardData }) => {
       bodyStyle={bodyStyle}
       className={styles.individualCard}
     >
-      {Object.keys(cardData).map(d => (
-        <div key={d} className={styles.row}>
-          <div>{d}</div>
-          <div>: {cardData[d]}</div>
-        </div>
-      ))}
+      {Object.keys(cardData).map(d => {
+        if (d === '5GHz') {
+          return (
+            <div key={d} className={styles.row}>
+              <div>{d}</div>
+              <div>: {parseInt((cardData['5GHz (L)'] || 0) + (cardData['5GHz (U)'] || 0), 10)}</div>
+            </div>
+          );
+        }
+
+        if (d === '5GHz (L)' || d === '5GHz (U)') {
+          return '';
+        }
+
+        return (
+          <div key={d} className={styles.row}>
+            <div>{d}</div>
+            <div>: {cardData[d]}</div>
+          </div>
+        );
+      })}
     </Card>
   );
 };

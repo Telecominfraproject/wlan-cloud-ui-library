@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Layout, Drawer } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { Layout, Drawer, Badge } from 'antd';
+import { MenuOutlined, BellOutlined } from '@ant-design/icons';
 
 import SettingsDropdown from 'components/SettingsDropdown';
 import ThemeContext from 'contexts/ThemeContext';
@@ -20,6 +20,7 @@ const Navbar = ({
   onMenuToggle,
   onMenuItemClick,
   onLogout,
+  totalAlarms,
 }) => {
   const theme = useContext(ThemeContext);
 
@@ -63,6 +64,11 @@ const Navbar = ({
         <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
+        <a href="/alarms">
+          <Badge count={totalAlarms} showZero>
+            <BellOutlined style={{ fontSize: '20px' }} />
+          </Badge>
+        </a>
         {isMobile ? (
           <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
         ) : (
@@ -82,6 +88,7 @@ Navbar.propTypes = {
   mobileMenuItems: PropTypes.instanceOf(Array),
   onMenuItemClick: PropTypes.func,
   onLogout: PropTypes.func,
+  totalAlarms: PropTypes.number,
 };
 
 Navbar.defaultProps = {
@@ -89,6 +96,7 @@ Navbar.defaultProps = {
   mobileMenuItems: null,
   onMenuItemClick: () => {},
   onLogout: () => {},
+  totalAlarms: 0,
 };
 
 export default Navbar;
