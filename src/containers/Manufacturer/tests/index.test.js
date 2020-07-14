@@ -30,16 +30,8 @@ const mockProps = {
   onSearchOUI: () => {},
   onUpdateOUI: () => {},
 };
-const ouiFile = {
-  lastModified: 1594657075244,
-  name: 'oui.txt.gz',
-  size: 1168627,
-  type: 'application/x-gzip',
-  uid: 'rc-upload-1594665576877-2',
-  webkitRelativePath: '',
-};
 
-describe('<General />', () => {
+describe('<Manufacturer />', () => {
   afterEach(() => {
     cleanup();
   });
@@ -124,7 +116,7 @@ describe('<General />', () => {
 
     const input = getByTestId('ouiUpload');
     const file = new File(['oui'], 'oui.txt.gz', {
-      ...ouiFile,
+      type: 'application/x-gzip',
     });
 
     userEvent.upload(input, file);
@@ -134,6 +126,68 @@ describe('<General />', () => {
       expect(input.files[0]).toStrictEqual(file);
       expect(input.files).toHaveLength(1);
       expect(uploadSpy).toBeCalledTimes(1);
+    });
+  });
+
+  it('upload should be accepted with with correct file type', async () => {
+    const uploadSpy = jest.fn();
+
+    const { getByTestId } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
+
+    const input = getByTestId('ouiUpload');
+    const file = new File(['oui'], 'oui.txt.gz', {
+      type: 'application/x-gzip',
+    });
+
+    userEvent.upload(input, file);
+
+    fireEvent.change(input);
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(1);
+    });
+  });
+
+  it('upload should not be accepted with incorrect file type', async () => {
+    const uploadSpy = jest.fn();
+
+    const { getByTestId } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
+
+    const input = getByTestId('ouiUpload');
+    const file = new File(['oui'], 'oui.txt.gz', {
+      type: 'incorrectType.file',
+    });
+
+    userEvent.upload(input, file);
+
+    fireEvent.change(input);
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(0);
+    });
+  });
+
+  it('upload should not be accepted with incorrect file size', async () => {
+    const uploadSpy = jest.fn();
+
+    const { getByTestId } = render(<Manufacturer {...mockProps} fileUpload={uploadSpy} />);
+
+    const input = getByTestId('ouiUpload');
+    const file = new File(['oui'], 'oui.txt.gz', {
+      type: 'application/x-gzip',
+    });
+
+    Object.defineProperty(file, 'size', { value: 100000000 });
+
+    userEvent.upload(input, file);
+
+    fireEvent.change(input);
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(0);
     });
   });
 });
