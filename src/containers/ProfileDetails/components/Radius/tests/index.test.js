@@ -42,7 +42,7 @@ const mockProps = {
       },
     },
     subnetConfiguration: {
-      proxyConfig: { floatingIpAddress: undefined },
+      proxyConfig: { floatingIpAddress: '1.1.1.1' },
       serviceRegionName: 'Ottawa',
       subnetAddress: '0.0.0.0',
       subnetCidrPrefix: '0.0.0.0',
@@ -52,6 +52,9 @@ const mockProps = {
 };
 
 describe('<RadiusForm />', () => {
+  beforeEach(() => {
+    jest.setTimeout(10000);
+  });
   afterEach(cleanup);
 
   it('error message should be displayed when input value for Session Timeout is invalid', async () => {
@@ -370,37 +373,6 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Error messages should be visible when input values are invalid for Add Subnet Configuration modal', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getByText, getAllByText, getByLabelText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
-    fireEvent.change(getByLabelText('Proxy Interface IP'), { target: { value: 'abc' } });
-
-    fireEvent.click(getByRole('button', { name: /save/i }));
-
-    await waitFor(() => {
-      expect(getByText('Please enter subnet name')).toBeVisible();
-      expect(getAllByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')[0]).toBeVisible();
-      expect(getAllByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')[1]).toBeVisible();
-      expect(
-        getByText(
-          'Please include only numbers in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]'
-        )
-      ).toBeVisible();
-    });
-  });
-
   it('cancel button click should hide Add Subnet Configuration modal', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
@@ -423,32 +395,6 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('save button click should hide Add Subnet Configuration modal', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
-    fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
-    fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
-    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
-
-    fireEvent.click(getByRole('button', { name: /save/i }));
-
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).not.toBeVisible();
-    });
-  });
-
   it('Edit Subnet Configuration modal should popup when edit button from Management Subnet list is clicked', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
@@ -460,6 +406,32 @@ describe('<RadiusForm />', () => {
     };
     const { getByRole, getByLabelText, getByText } = render(<RadiusFormComp />);
     fireEvent.click(getByRole('button', { name: /add subnet/i }));
+    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
+    fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
+    fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(getByRole('button', { name: /editSubnet/i })).toBeVisible();
+    });
+    fireEvent.click(getByRole('button', { name: /editSubnet/i }));
+
+    expect(getByText('Edit Subnet Configuration')).toBeVisible();
+  });
+
+  it('click on delete button should remove subnet from management subnet list', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, queryAllByText, getByLabelText, getByText } = render(<RadiusFormComp />);
+    fireEvent.click(getByRole('button', { name: /add subnet/i }));
     await waitFor(() => {
       expect(getByText('Add Subnet Configuration')).toBeVisible();
     });
@@ -471,11 +443,10 @@ describe('<RadiusForm />', () => {
     fireEvent.click(getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(getByRole('button', { name: /editSubnet/i })).toBeVisible();
+      expect(getByRole('button', { name: /deleteSubnet/i })).toBeVisible();
     });
+    fireEvent.click(getByRole('button', { name: /deleteSubnet/i }));
 
-    fireEvent.click(getByRole('button', { name: /editSubnet/i }));
-
-    expect(getByText('Edit Subnet Configuration')).toBeVisible();
+    expect(queryAllByText('No Data')[0]).toBeVisible();
   });
 });

@@ -119,6 +119,25 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
+  it('hover on Session Timeout should display tooltip msg', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { container } = render(<CaptivePortalFormComp />);
+    fireEvent.mouseOver(container.querySelector('.ant-input-wrapper.ant-input-group > span span'));
+
+    await waitFor(() => {
+      expect(container.querySelector('.ant-input-wrapper.ant-input-group > span span')).toHaveClass(
+        'anticon anticon-info-circle ant-tooltip-open'
+      );
+    });
+  });
+
   it('error message should be displayed when input value for Redirect URL is invalid', async () => {
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
@@ -152,6 +171,8 @@ describe('<CaptivePortalForm />', () => {
     await waitFor(() => {
       expect(getByText('External Splash Page')).toBeVisible();
     });
+
+    fireEvent.click(getByText('Access Point Hosted'));
   });
 
   it('error message should be displayed when input value for URL for External Splash Page is invalid', async () => {
@@ -165,7 +186,7 @@ describe('<CaptivePortalForm />', () => {
     };
     const { getAllByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     fireEvent.click(getByText('Externally Hosted'));
-    fireEvent.change(getAllByPlaceholderText('http://... or https://...')[0], {
+    fireEvent.change(getAllByPlaceholderText('http://... or https://...')[1], {
       target: { value: '1' },
     });
 

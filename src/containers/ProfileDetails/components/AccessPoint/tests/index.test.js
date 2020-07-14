@@ -368,6 +368,8 @@ describe('<AccessPoints />', () => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
       expect(getByText('Port expected between 1 - 65535')).toBeVisible();
     });
+    const disabledRadio = queryAllByText('Disabled');
+    fireEvent.click(disabledRadio[1]);
   });
 
   it('on click dropdown should show dropdown values for Syslog', async () => {

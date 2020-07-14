@@ -242,7 +242,7 @@ const RadiusForm = ({ form, details }) => {
       width: 80,
       render: (_, record) => (
         <Button
-          title="delete"
+          title="deleteSubnet"
           type="danger"
           icon={<DeleteOutlined />}
           onClick={() => handleDeleteSubnet(record)}

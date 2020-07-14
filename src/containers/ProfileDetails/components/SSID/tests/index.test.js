@@ -153,10 +153,13 @@ describe('<SSIDForm />', () => {
     // fireEvent.keyDown(authentication, DOWN_ARROW);
 
     const node = getByLabelText('WEP Key');
+    fireEvent.change(node, { target: { value: 1234567890 } });
+
     fireEvent.change(node, {
-      target: { value: fireEvent.keyPress(node, { keyCode: 49 }) },
+      target: { value: fireEvent.keyPress(node, { key: 1, code: 49, charCode: 49 }) },
     });
 
+    // fireEvent.change(node, { target: { value: 1 } });
     await waitFor(() => {
       expect(
         getByText(
