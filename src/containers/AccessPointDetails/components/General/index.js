@@ -159,7 +159,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     </Select>
   );
 
-  const setInitialValue = (obj, dataIndex, key, options) => {
+  const setInitialValue = (obj = {}, dataIndex, key, options = {}) => {
     const val = options.value ? obj[key][options.value][dataIndex] : obj[key][dataIndex];
     if (val === undefined || val === null) {
       return 'disabled';
@@ -174,7 +174,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     return val;
   };
 
-  const renderItem = (label, obj, dataIndex, renderInput, options) => (
+  const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
         {Object.keys(obj).map(i =>
@@ -190,7 +190,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     </Item>
   );
 
-  const renderOptionItem = (obj, dataIndex, key, label, options) => (
+  const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => (
     <Item
       name={dataIndex + key}
       initialValue={setInitialValue(obj, dataIndex, key, options)}
@@ -205,7 +205,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     </Item>
   );
 
-  const renderInputItem = (obj, dataIndex, key, label, options) => (
+  const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => (
     <Item
       name={dataIndex + key}
       initialValue={setInitialValue(obj, dataIndex, key, options)}
@@ -258,10 +258,10 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
         </Item>
         <Item label="Model"> {data.model}</Item>
         <Item label="Serial Number">{data.serial} </Item>
-        <Item label="SKU"> {data.status.protocol.detailsJSON.reportedSku}</Item>
-        <Item label="Country Code"> {data.status.protocol.detailsJSON.countryCode}</Item>
-        <Item label="Ethernet MAC Address"> {data.status.protocol.details.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
+        <Item label="SKU"> {data.protocol.reportedSku}</Item>
+        <Item label="Country Code"> {data.protocol.countryCode}</Item>
+        <Item label="Ethernet MAC Address"> {data.protocol.reportedMacAddr}</Item>
+        <Item label="Manufacturer"> {data.protocol.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
 
