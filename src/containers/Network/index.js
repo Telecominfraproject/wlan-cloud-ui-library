@@ -17,13 +17,17 @@ const Network = ({
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
+  onCreateEquipment,
   selectedLocation,
   deleteModal,
   editModal,
   addModal,
+  apModal,
   setAddModal,
   setEditModal,
   setDeleteModal,
+  setApModal,
+  profiles,
 }) => {
   const location = useLocation();
 
@@ -41,13 +45,17 @@ const Network = ({
           onAddLocation={onAddLocation}
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
+          onCreateEquipment={onCreateEquipment}
           selectedLocation={selectedLocation}
           deleteModal={deleteModal}
           editModal={editModal}
           addModal={addModal}
+          apModal={apModal}
           setAddModal={setAddModal}
           setEditModal={setEditModal}
           setDeleteModal={setDeleteModal}
+          setApModal={setApModal}
+          profiles={profiles}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -70,18 +78,22 @@ Network.propTypes = {
   children: PropTypes.node.isRequired,
   activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
+  profiles: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,
+  onCreateEquipment: PropTypes.func.isRequired,
   deleteModal: PropTypes.bool.isRequired,
   editModal: PropTypes.bool.isRequired,
+  apModal: PropTypes.bool.isRequired,
   addModal: PropTypes.bool.isRequired,
   setAddModal: PropTypes.func.isRequired,
   setEditModal: PropTypes.func.isRequired,
   setDeleteModal: PropTypes.func.isRequired,
+  setApModal: PropTypes.func.isRequired,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,

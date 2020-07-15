@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
 import { screen } from '@testing-library/dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
@@ -99,8 +99,89 @@ const selectedLocation = {
   lastModifiedTimestamp: 1591804177219,
 };
 
+const apProfiles = [
+  {
+    id: 6,
+    name: 'ApProfile-3-radios',
+    profileType: 'equipment_ap',
+    details: {
+      model_type: 'ApNetworkConfiguration',
+      networkConfigVersion: 'AP-1',
+      equipmentType: 'AP',
+      vlanNative: true,
+      vlan: 0,
+      ntpServer: {
+        model_type: 'AutoOrManualString',
+        auto: true,
+        value: 'pool.ntp.org',
+      },
+      syslogRelay: null,
+      rtlsSettings: null,
+      syntheticClientEnabled: true,
+      ledControlEnabled: true,
+      equipmentDiscovery: false,
+      radioMap: {
+        is2dot4GHz: {
+          model_type: 'RadioProfileConfiguration',
+          bestApEnabled: true,
+          bestAPSteerType: 'both',
+        },
+        is5GHzU: {
+          model_type: 'RadioProfileConfiguration',
+          bestApEnabled: true,
+          bestAPSteerType: 'both',
+        },
+        is5GHzL: {
+          model_type: 'RadioProfileConfiguration',
+          bestApEnabled: true,
+          bestAPSteerType: 'both',
+        },
+      },
+      profileType: 'equipment_ap',
+    },
+    __typename: 'Profile',
+  },
+  {
+    id: 7,
+    name: 'ApProfile-2-radios',
+    profileType: 'equipment_ap',
+    details: {
+      model_type: 'ApNetworkConfiguration',
+      networkConfigVersion: 'AP-1',
+      equipmentType: 'AP',
+      vlanNative: true,
+      vlan: 0,
+      ntpServer: {
+        model_type: 'AutoOrManualString',
+        auto: true,
+        value: 'pool.ntp.org',
+      },
+      syslogRelay: null,
+      rtlsSettings: null,
+      syntheticClientEnabled: true,
+      ledControlEnabled: true,
+      equipmentDiscovery: false,
+      radioMap: {
+        is5GHz: {
+          model_type: 'RadioProfileConfiguration',
+          bestApEnabled: true,
+          bestAPSteerType: 'both',
+        },
+        is2dot4GHz: {
+          model_type: 'RadioProfileConfiguration',
+          bestApEnabled: true,
+          bestAPSteerType: 'both',
+        },
+      },
+      profileType: 'equipment_ap',
+    },
+    __typename: 'Profile',
+  },
+];
+
 const mockProps = {
   locations: treeData,
+  profiles: apProfiles,
   checkedLocations,
   locationPath: [],
   selectedLocation: {},
@@ -109,13 +190,17 @@ const mockProps = {
   deleteModal: false,
   editModal: false,
   addModal: false,
+  apModal: false,
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},
   setAddModal: () => {},
   setEditModal: () => {},
   setDeleteModal: () => {},
+  setApModal: () => {},
 };
+
+const DOWN_ARROW = { keyCode: 40 };
 
 describe('<LocationTree />', () => {
   afterEach(cleanup);
@@ -365,5 +450,49 @@ describe('<LocationTree />', () => {
     await waitFor(() => {
       expect(onEditLocationSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should call onCreateEquipment on submit, if form input is valid', async () => {
+    const history = createMemoryHistory();
+    const onCreateEquipment = jest.fn();
+
+    const { getByLabelText, getByRole, getByText } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          apModal
+          selectedLocation={selectedLocation}
+          onCreateEquipment={onCreateEquipment}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('Asset ID'), { target: { value: 'test' } });
+    fireEvent.change(getByLabelText('Name'), { target: { value: 'test' } });
+
+    const profile = getByLabelText('Profile');
+    fireEvent.keyDown(profile, DOWN_ARROW);
+    await waitForElement(() => getByText('ApProfile-3-radios'));
+
+    fireEvent.click(getByText('ApProfile-3-radios'));
+
+    fireEvent.click(getByRole('button', { name: /add/i }));
+
+    await waitFor(() => {
+      expect(onCreateEquipment).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should hide setApModal if Cancel button is clicked', () => {
+    const history = createMemoryHistory();
+    const setApModalSpy = jest.fn();
+
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} apModal setApModal={setApModalSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    expect(setApModalSpy).toHaveBeenCalledTimes(1);
   });
 });

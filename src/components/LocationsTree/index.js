@@ -6,6 +6,7 @@ import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
 import EditFormModal from './components/EditFormModal';
+import AddApModal from './components/AddApModal';
 
 const LocationsTree = ({
   locations,
@@ -16,12 +17,16 @@ const LocationsTree = ({
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
+  onCreateEquipment,
   addModal,
   editModal,
   deleteModal,
+  apModal,
   setAddModal,
   setEditModal,
   setDeleteModal,
+  setApModal,
+  profiles,
 }) => {
   const getLocationPath = () => {
     const locationsPath = [];
@@ -75,6 +80,11 @@ const LocationsTree = ({
     onDeleteLocation(id);
   };
 
+  const createEquipment = ({ inventoryId, name, profileId }) => {
+    const { id: locationId } = selectedLocation;
+    onCreateEquipment(inventoryId, locationId, name, profileId);
+  };
+
   return (
     <div className={styles.sideTree}>
       <Tree
@@ -95,6 +105,16 @@ const LocationsTree = ({
         onCancel={() => setAddModal(false)}
         title="Add Location"
       />
+      <AddApModal
+        visible={apModal}
+        onSubmit={createEquipment}
+        onCancel={() => setApModal(false)}
+        profiles={profiles}
+        title="Add Access Point"
+        buttonText="Add"
+        selectedLocation={selectedLocation}
+      />
+
       <EditFormModal
         visible={editModal}
         onSubmit={editLocation}
@@ -125,15 +145,19 @@ LocationsTree.propTypes = {
   onSelect: PropTypes.func.isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
+  profiles: PropTypes.instanceOf(Array).isRequired,
   onAddLocation: PropTypes.func,
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
+  onCreateEquipment: PropTypes.func,
   addModal: PropTypes.bool.isRequired,
   editModal: PropTypes.bool.isRequired,
   deleteModal: PropTypes.bool.isRequired,
+  apModal: PropTypes.bool.isRequired,
   setAddModal: PropTypes.func.isRequired,
   setEditModal: PropTypes.func.isRequired,
   setDeleteModal: PropTypes.func.isRequired,
+  setApModal: PropTypes.func.isRequired,
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -147,6 +171,7 @@ LocationsTree.defaultProps = {
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},
+  onCreateEquipment: () => {},
   selectedLocation: null,
 };
 

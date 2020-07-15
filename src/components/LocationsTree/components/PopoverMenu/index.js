@@ -11,6 +11,7 @@ const PopoverMenu = ({
   setAddModal,
   setEditModal,
   setDeleteModal,
+  setApModal,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -30,6 +31,7 @@ const PopoverMenu = ({
           setAddModal={setAddModal}
           setEditModal={setEditModal}
           setDeleteModal={setDeleteModal}
+          setApModal={setApModal}
         />
       }
       placement="rightTop"
@@ -46,6 +48,7 @@ PopoverMenu.propTypes = {
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
+  setApModal: PropTypes.func,
   locationType: PropTypes.string,
   locationId: PropTypes.number,
 };
@@ -56,6 +59,7 @@ PopoverMenu.defaultProps = {
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
+  setApModal: () => {},
 };
 
 export default PopoverMenu;

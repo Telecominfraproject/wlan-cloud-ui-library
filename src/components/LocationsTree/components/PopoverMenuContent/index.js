@@ -10,6 +10,7 @@ const PopoverMenuContent = ({
   setAddModal,
   setEditModal,
   setDeleteModal,
+  setApModal,
   hide,
 }) => {
   const history = useHistory();
@@ -20,6 +21,14 @@ const PopoverMenuContent = ({
 
   return (
     <div className={styles.popOver}>
+      <Button
+        onClick={() => {
+          hide();
+          setApModal(true);
+        }}
+      >
+        Add Access Point
+      </Button>
       {locationType !== 'FLOOR' && (
         <Button
           onClick={() => {
@@ -66,6 +75,7 @@ PopoverMenuContent.propTypes = {
   setEditModal: PropTypes.func,
   setAddModal: PropTypes.func,
   setDeleteModal: PropTypes.func,
+  setApModal: PropTypes.func,
   locationType: PropTypes.string,
   locationId: PropTypes.number,
 };
@@ -76,6 +86,7 @@ PopoverMenuContent.defaultProps = {
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
+  setApModal: () => {},
 };
 
 export default PopoverMenuContent;
