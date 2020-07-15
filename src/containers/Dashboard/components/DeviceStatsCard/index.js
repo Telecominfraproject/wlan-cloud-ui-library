@@ -18,19 +18,6 @@ const DeviceStatsCard = ({ title, cardData }) => {
       className={styles.individualCard}
     >
       {Object.keys(cardData).map(d => {
-        if (d === '5GHz') {
-          return (
-            <div key={d} className={styles.row}>
-              <div>{d}</div>
-              <div>: {parseInt((cardData['5GHz (L)'] || 0) + (cardData['5GHz (U)'] || 0), 10)}</div>
-            </div>
-          );
-        }
-
-        if (d === '5GHz (L)' || d === '5GHz (U)') {
-          return '';
-        }
-
         return (
           <div key={d} className={styles.row}>
             <div>{d}</div>

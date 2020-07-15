@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Layout, Drawer, Badge } from 'antd';
-import { MenuOutlined, BellOutlined } from '@ant-design/icons';
+import { MenuOutlined, BellFilled, BellOutlined } from '@ant-design/icons';
 
 import SettingsDropdown from 'components/SettingsDropdown';
 import ThemeContext from 'contexts/ThemeContext';
@@ -23,6 +23,7 @@ const Navbar = ({
   totalAlarms,
 }) => {
   const theme = useContext(ThemeContext);
+  const location = useLocation();
 
   const selectedKeys = [];
   menuItems.forEach(item => {
@@ -66,7 +67,11 @@ const Navbar = ({
       <div className={styles.RightMenu}>
         <a href="/alarms">
           <Badge count={totalAlarms} showZero>
-            <BellOutlined style={{ fontSize: '20px' }} />
+            {location.pathname === '/alarms' ? (
+              <BellFilled className={styles.BellIconActive} />
+            ) : (
+              <BellOutlined className={styles.BellIcon} />
+            )}
           </Badge>
         </a>
         {isMobile ? (

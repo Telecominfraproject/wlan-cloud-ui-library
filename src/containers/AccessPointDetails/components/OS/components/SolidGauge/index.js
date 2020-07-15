@@ -34,7 +34,7 @@ const tooltip = {
 
 const SolidGauge = ({ data, title, label }) => {
   const dataLabels = {
-    format: `<div style="text-align:center"><span style="font-size:18px;color:white">{y} ${label}</span><br/></div>`,
+    format: `<div><span>{y} ${label}</span><br/></div>`,
     y: -50,
   };
 
