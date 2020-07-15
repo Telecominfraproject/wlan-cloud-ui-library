@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
 
@@ -51,56 +51,6 @@ const mockProps = {
 
 describe('<CaptivePortalForm />', () => {
   afterEach(cleanup);
-
-  it('changing authentication mode to Captive Portal User List should display a message on screen', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByLabelText, getByText, container } = render(<CaptivePortalFormComp />);
-
-    const authentication = getByLabelText('Authentication');
-    fireEvent.mouseDown(authentication);
-    const DOWN_ARROW = { keyCode: 40 };
-    fireEvent.keyDown(authentication, DOWN_ARROW);
-    await waitForElement(() => [getByText('Captive Portal User List')], { container });
-    fireEvent.click(getByText('Captive Portal User List'));
-
-    await waitFor(() => {
-      expect(getByText('Go to "Remember user Devices" page')).toBeVisible();
-    });
-  });
-
-  it('changing authentication mode to RADIUS should render RADIUS Card', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByLabelText, queryAllByText, getByText, container } = render(
-      <CaptivePortalFormComp />
-    );
-
-    const authentication = getByLabelText('Authentication');
-    fireEvent.mouseDown(authentication);
-    const DOWN_ARROW = { keyCode: 40 };
-    fireEvent.keyDown(authentication, DOWN_ARROW);
-    await waitForElement(() => [getByText('RADIUS')], { container });
-    fireEvent.click(getByText('RADIUS'));
-
-    await waitFor(() => {
-      expect(queryAllByText('RADIUS')[1]).toBeVisible();
-    });
-  });
 
   it('error message should be displayed when input value for Session Timeout is invalid', async () => {
     const CaptivePortalFormComp = () => {
@@ -214,29 +164,6 @@ describe('<CaptivePortalForm />', () => {
           'Add your external Splash Page URL into the field above. Save your configuration once satisfied.'
         )
       ).toBeVisible();
-    });
-  });
-
-  it('error message should be displayed when input value for Browser Title and Page Title for Splash Page content are invalid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    fireEvent.click(getByText('Splash Page Content'));
-    fireEvent.change(getByPlaceholderText('Browser title'), {
-      target: { value: null },
-    });
-    fireEvent.change(getByPlaceholderText('Page title'), {
-      target: { value: null },
-    });
-    await waitFor(() => {
-      expect(getByText('Please enter the browser title')).toBeVisible();
-      expect(getByText('Please enter the page title')).toBeVisible();
     });
   });
 

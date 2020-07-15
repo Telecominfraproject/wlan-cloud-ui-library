@@ -39,8 +39,15 @@ describe('<RadiusServer />', () => {
 
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
-      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
+      expect(getByText('Please enter a port')).toBeVisible();
       expect(getByText('Please enter a shared secret.')).toBeVisible();
+    });
+
+    fireEvent.change(getByLabelText('Port'), { target: { value: 0 } });
+    fireEvent.click(getByRole('button', { name: /submit/i }));
+
+    await waitFor(() => {
+      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
     });
   });
 

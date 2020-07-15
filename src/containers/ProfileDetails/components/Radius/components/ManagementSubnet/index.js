@@ -69,8 +69,7 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
         rules={[
           {
             required: true,
-            message:
-              'Please include only numbers in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]',
+            message: 'Please enter in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]',
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {

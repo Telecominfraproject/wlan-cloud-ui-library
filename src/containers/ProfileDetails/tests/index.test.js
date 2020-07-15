@@ -272,6 +272,7 @@ describe('<ProfileDetails />', () => {
     });
   });
 
+  /* INVALID TESTS
   it('Back button click should show confirmation modal', () => {
     const { getByText, getByRole } = render(
       <Router>
@@ -298,7 +299,7 @@ describe('<ProfileDetails />', () => {
     await waitFor(() => {
       expect(getByText('Leave Form?')).not.toBeVisible();
     });
-  });
+  }); */
 
   it('Error msg should be displayed if input field of Profile Name is empty', async () => {
     const { getByLabelText, getByText } = render(

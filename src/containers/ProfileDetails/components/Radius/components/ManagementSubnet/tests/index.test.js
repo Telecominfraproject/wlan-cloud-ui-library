@@ -56,6 +56,20 @@ describe('<ManagementSubnetModal />', () => {
       expect(getByText('Please enter subnet name')).toBeVisible();
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
       expect(
+        getByText('Please enter in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]')
+      ).toBeVisible();
+    });
+
+    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '64' } });
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /save/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(
         getByText(
           'Please include only numbers in range [1, 32] or format [0-255].[0-255].[0-255].[0-255]'
         )
@@ -65,13 +79,9 @@ describe('<ManagementSubnetModal />', () => {
 
   it('onSuccess should be called when Add Subnet Configuration modal is submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText } = render(
+    const { getByRole, getByLabelText } = render(
       <ManagementSubnetModal {...mockProps} onSuccess={submitSpy} />
     );
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
     fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
     fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
     fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
@@ -87,17 +97,14 @@ describe('<ManagementSubnetModal />', () => {
 
   it('onSuccess should be called when Edit Subnet Configuration modal is submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText } = render(
+    const { getByRole, getByLabelText } = render(
       <ManagementSubnetModal
         {...mockProps}
         title="Edit Subnet Configuration"
         onSuccess={submitSpy}
       />
     );
-    await waitFor(() => {
-      expect(getByText('Edit Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
+
     fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
     fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
     fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
@@ -113,13 +120,11 @@ describe('<ManagementSubnetModal />', () => {
 
   it('click on cancel button should hide Add Subnet Configuration modal', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText } = render(
+    const { getByRole, getByText } = render(
       <ManagementSubnetModal {...mockProps} onCancel={submitSpy} />
     );
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
+    expect(getByText('Add Subnet Configuration')).toBeVisible();
+
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
@@ -129,17 +134,15 @@ describe('<ManagementSubnetModal />', () => {
 
   it('click on cancel button should hide Edit Subnet Configuration modal', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText } = render(
+    const { getByRole, getByText } = render(
       <ManagementSubnetModal
         {...mockProps}
         title="Edit Subnet Configuration"
         onCancel={submitSpy}
       />
     );
-    await waitFor(() => {
-      expect(getByText('Edit Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
+    expect(getByText('Edit Subnet Configuration')).toBeVisible();
+
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {

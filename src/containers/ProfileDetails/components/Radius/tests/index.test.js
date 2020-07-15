@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
 
@@ -28,7 +28,7 @@ const mockProps = {
       Ottawa: {
         model_type: 'RadiusServiceRegion',
         serverMap: {
-          'Radius-Profile': [
+          mockService: [
             {
               authPort: 1812,
               ipAddress: '192.168.0.1',
@@ -40,24 +40,83 @@ const mockProps = {
         },
         regionName: 'Ottawa',
       },
+      Ottawa2: {
+        model_type: 'RadiusServiceRegion',
+        serverMap: {
+          mockService: [
+            {
+              authPort: 1812,
+              ipAddress: '192.168.0.1',
+              model_type: 'RadiusServer',
+              secret: 'testing123',
+              timeout: null,
+            },
+          ],
+        },
+        regionName: 'Ottawa2',
+      },
     },
     subnetConfiguration: {
-      proxyConfig: { floatingIpAddress: '1.1.1.1' },
-      serviceRegionName: 'Ottawa',
-      subnetAddress: '0.0.0.0',
-      subnetCidrPrefix: '0.0.0.0',
-      subnetName: '312',
+      mockSubnet: {
+        model_type: 'RadiusSubnetConfiguration',
+        probeInterval: null,
+        serviceRegionName: 'Ottawa',
+        subnetAddress: '1.1.1.1',
+        subnetCidrPrefix: 1,
+        subnetName: 'mockSubnet',
+      },
+      mockSubnet2: {
+        model_type: 'RadiusSubnetConfiguration',
+        probeInterval: null,
+        serviceRegionName: 'Ottawa',
+        subnetAddress: '1.1.1.1',
+        subnetCidrPrefix: 1,
+        subnetName: 'mockSubnet2',
+      },
     },
   },
 };
 
 describe('<RadiusForm />', () => {
-  beforeEach(() => {
-    jest.setTimeout(10000);
-  });
   afterEach(cleanup);
 
-  it('error message should be displayed when input value for Session Timeout is invalid', async () => {
+  it('should work with null serviceRegionMap', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm details={{ ...mockProps.details, serviceRegionMap: null }} form={form} />
+        </Form>
+      );
+    };
+    render(<RadiusFormComp />);
+  });
+
+  it('should work with no serviceRegionMap keys', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm details={{ ...mockProps.details, serviceRegionMap: {} }} form={form} />
+        </Form>
+      );
+    };
+    render(<RadiusFormComp />);
+  });
+
+  it('should work with null subnetConfiguration', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm details={{ ...mockProps.details, subnetConfiguration: null }} form={form} />
+        </Form>
+      );
+    };
+    render(<RadiusFormComp />);
+  });
+
+  it('RADIUS Probe Interval should show error message with invalid inputs', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -66,31 +125,27 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByLabelText, getByText } = render(<RadiusFormComp />);
-    fireEvent.change(getByLabelText('RADIUS Probe Interval'), { target: { value: null } });
+    const { getByLabelText, getByText, queryByText } = render(<RadiusFormComp />);
 
+    fireEvent.change(getByLabelText('RADIUS Probe Interval'), { target: { value: null } });
     await waitFor(() => {
       expect(getByText('Please input Radius Probe Interval')).toBeVisible();
     });
-  });
 
-  it('Add Radius Service modal should popup when Add Radius Service button is clicked', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getAllByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'Add Radius Service' }));
+    fireEvent.change(getByLabelText('RADIUS Probe Interval'), { target: { value: 2 } });
     await waitFor(() => {
-      expect(getAllByText('Add RADIUS Service', { exact: true })[0]).toBeVisible();
+      expect(getByText('Radius Probe Interval expected between 60 and 100 or 0')).toBeVisible();
+    });
+
+    fireEvent.change(getByLabelText('RADIUS Probe Interval'), { target: { value: 61 } });
+    await waitFor(() => {
+      expect(
+        queryByText('Radius Probe Interval expected between 60 and 100 or 0')
+      ).not.toBeInTheDocument();
     });
   });
 
-  it('error message should be displayed when input value for Service Name is invalid', async () => {
+  it('Add Radius Service modal should display error message when input value for Service Name is invalid', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -100,6 +155,7 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByText, getByRole, getByLabelText } = render(<RadiusFormComp />);
+
     fireEvent.click(getByRole('button', { name: 'Add Radius Service' }));
     fireEvent.change(getByLabelText('Service Name'), { target: { value: '0 0' } });
     await waitFor(() => {
@@ -109,25 +165,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('click on cancel button should hide Add Radius modal', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getAllByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'Add Radius Service' }));
-    expect(getAllByText('Add RADIUS Service', { exact: true })[0]).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /cancel/i }));
-    await waitFor(() => {
-      expect(getAllByText('Add RADIUS Service', { exact: true })[0]).not.toBeVisible();
-    });
-  });
-
-  it('Server Properties card should render when Add Radius Server button is clicked', async () => {
+  it('Add Radius Service modal should hide when click on cancel button', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -137,79 +175,65 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    fireEvent.click(getByRole('button', { name: 'Add Radius Service' }));
+    expect(getByText('Add RADIUS Service')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    await waitFor(() => {
+      expect(getByText('Add RADIUS Service')).not.toBeVisible();
+    });
+  });
+
+  it('Add Radius Service modal should hide when click on save button', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByLabelText, queryByText, getByText } = render(<RadiusFormComp />);
     fireEvent.click(getByRole('button', { name: 'Add Radius Service' }));
     fireEvent.click(getByRole('button', { name: /Add RADIUS Server/i }));
 
-    await waitFor(() => {
-      expect(getByText('Server Properties')).toBeVisible();
-    });
-  });
-
-  it('click on Remove button should remove radius service item from the list', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, queryAllByText } = render(<RadiusFormComp />);
-
-    fireEvent.click(getByRole('button', { name: /remove/i }));
+    fireEvent.change(getByLabelText('Service Name'), { target: { value: 'Test' } });
+    fireEvent.change(getByLabelText('IP'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByLabelText('Port'), { target: { value: 1812 } });
+    fireEvent.change(getByLabelText('Shared Secret'), { target: { value: 'abc' } });
+    fireEvent.click(getByRole('button', { name: /submit/i }));
 
     await waitFor(() => {
-      expect(queryAllByText('No Data')[0]).toBeVisible();
-    });
-  });
-
-  it('click on edit button should popup Edit RADIUS Service modal', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
-
-    fireEvent.click(getByRole('button', { name: /editService/i }));
-
-    await waitFor(() => {
-      expect(getByText('Edit RADIUS Service')).toBeVisible();
-      expect(getByLabelText('Service Name').closest('input')).toBeDisabled();
-    });
-  });
-
-  it('click on cancel and save button should hide Edit Radius modal', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getAllByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /editService/i }));
-    expect(getAllByText('Edit RADIUS Service', { exact: true })[0]).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /cancel/i }));
-
-    await waitFor(() => {
-      expect(getAllByText('Edit RADIUS Service', { exact: true })[0]).not.toBeVisible();
+      expect(queryByText('Server Properties')).not.toBeInTheDocument();
     });
 
-    fireEvent.click(getByRole('button', { name: /editService/i }));
-    expect(getAllByText('Edit RADIUS Service', { exact: true })[0]).toBeVisible();
     fireEvent.click(getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(getAllByText('Edit RADIUS Service', { exact: true })[0]).not.toBeVisible();
+      expect(getByText('Add RADIUS Service')).not.toBeVisible();
     });
   });
 
-  it('Add Service Zone configuration modal should popup when Add Service Zone button is clicked', async () => {
+  it('Radius Service should be removed when click on Remove button', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceItem-mockService' });
+
+    expect(listitem).toBeInTheDocument();
+    fireEvent.click(within(listitem).getByRole('button', { name: /remove/i }));
+    expect(listitem).not.toBeInTheDocument();
+  });
+
+  it('Edit Radius Service modal should hide when click on cancel button', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -219,13 +243,67 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByRole, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'Add Service Zone' }));
+
+    const listitem = getByRole('listitem', { name: 'serviceItem-mockService' });
+
+    fireEvent.click(within(listitem).getByRole('button', { name: /editService/i }));
+    expect(getByText('Edit RADIUS Service')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(getByText('Add Service Zone Configuration')).toBeVisible();
+      expect(getByText('Edit RADIUS Service')).not.toBeVisible();
     });
   });
 
-  it('error message should be visible when Zone Name have invalid value', async () => {
+  it('Edit Radius Service modal should hide when click on save buttons with multiple Services', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      serviceRegionMap: {
+        Ottawa: {
+          model_type: 'RadiusServiceRegion',
+          serverMap: {
+            mockService: [
+              {
+                authPort: 1812,
+                ipAddress: '192.168.0.1',
+                secret: 'testing123',
+                timeout: null,
+              },
+            ],
+            mockService2: [
+              {
+                authPort: 1812,
+                ipAddress: '192.168.0.1',
+                secret: 'testing123',
+                timeout: null,
+              },
+            ],
+          },
+          regionName: 'Ottawa',
+        },
+      },
+    };
+
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceItem-mockService' });
+
+    fireEvent.click(within(listitem).getByRole('button', { name: /editService/i }));
+    expect(getByText('Edit RADIUS Service')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(getByText('Edit RADIUS Service')).not.toBeVisible();
+    });
+  });
+
+  it('Add Service Zone should show error message when Zone Name has invalid value', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -234,18 +312,20 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
+
     const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
     fireEvent.click(getByRole('button', { name: 'Add Service Zone' }));
     expect(getByText('Add Service Zone Configuration')).toBeVisible();
 
     fireEvent.change(getByLabelText('Zone Name'), { target: { value: null } });
     fireEvent.click(getByRole('button', { name: /save/i }));
+
     await waitFor(() => {
       expect(getByText('Please enter service zone')).toBeVisible();
     });
   });
 
-  it('click on save and cancel button should hide Add Service Zone configuration modal', async () => {
+  it('Add Service Zone modal should hide on click save and cancel buttons', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -274,23 +354,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Edit Service Zone configuration modal should popup when edit button is clicked', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'editRadiusService' }));
-    await waitFor(() => {
-      expect(getByText('Edit Service Zone Configuration')).toBeVisible();
-    });
-  });
-
-  it('error messgae should be visible when input value is invlalid for Edit Service Zone Configuration modal', async () => {
+  it('Edit Service Zone modal should show error message when input value is invalid', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -300,10 +364,10 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'editRadiusService' }));
-    await waitFor(() => {
-      expect(getByText('Edit Service Zone Configuration')).toBeVisible();
-    });
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+
+    fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
     fireEvent.change(getByLabelText('Zone Name'), { target: { value: null } });
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
@@ -320,19 +384,45 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByRole, getByText, getAllByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: 'editRadiusService' }));
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+
+    fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
     await waitFor(() => {
-      expect(getAllByText('Edit Service Zone Configuration', { exact: true })[0]).toBeVisible();
+      expect(getByText('Edit Service Zone Configuration', { exact: true })).toBeVisible();
+    });
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    await waitFor(() => {
+      expect(getByText('Edit Service Zone Configuration')).not.toBeVisible();
+    });
+  });
+
+  it('Edit Service Zone configuration modal should hide when cancel or save button is clicked', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+
+    fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
+    await waitFor(() => {
+      expect(getByText('Edit Service Zone Configuration', { exact: true })).toBeVisible();
     });
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
       expect(getByText('Edit Service Zone Configuration')).not.toBeVisible();
     });
 
-    fireEvent.click(getByRole('button', { name: /editRadiusService/i }));
+    fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
     await waitFor(() => {
-      expect(getAllByText('Edit Service Zone Configuration', { exact: true })[0]).toBeVisible();
+      expect(getByText('Edit Service Zone Configuration', { exact: true })).toBeVisible();
     });
     fireEvent.click(getByRole('button', { name: /save/i }));
 
@@ -341,7 +431,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('delete service button should remove Radius Service from list', async () => {
+  it('Delete Service Zone button should remove Service Zone from list', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -350,30 +440,16 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByRole, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /deleteRadiusService/i }));
-    await waitFor(() => {
-      expect(getByText('No Data')).toBeVisible();
-    });
+    const { getByRole } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+    expect(listitem).toBeInTheDocument();
+    fireEvent.click(within(listitem).getByRole('button', { name: /deleteRadiusServiceZone/i }));
+
+    expect(listitem).not.toBeInTheDocument();
   });
 
-  it('Add Subnet Configuration modal should popup when Add Subnet button is clicked', async () => {
-    const RadiusFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RadiusForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByRole, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-  });
-
-  it('cancel button click should hide Add Subnet Configuration modal', async () => {
+  it('Add Subnet Configuration modal should hide when cancel button clicked', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -383,10 +459,11 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+    fireEvent.click(within(listitem).getByRole('button', { name: /add subnet/i }));
+
+    expect(getByText('Add Subnet Configuration')).toBeVisible();
     expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
@@ -395,7 +472,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Edit Subnet Configuration modal should popup when edit button from Management Subnet list is clicked', async () => {
+  it('Add Subnet Configuration modal should hide when save button clicked', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -404,21 +481,64 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByRole, getByLabelText, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
-    fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
-    fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
-    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
+    const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
+
+    const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+    fireEvent.click(within(listitem).getByRole('button', { name: /add subnet/i }));
+
+    expect(getByText('Add Subnet Configuration')).toBeVisible();
+    fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'Test' } });
+    fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '1.1.1.1' } });
+    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: 1 } });
 
     fireEvent.click(getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(getByRole('button', { name: /editSubnet/i })).toBeVisible();
+      expect(getByText('Add Subnet Configuration')).not.toBeVisible();
     });
-    fireEvent.click(getByRole('button', { name: /editSubnet/i }));
+  });
 
+  it('Edit Subnet Configuration modal should close when cancel button is clicked', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    const item = getByRole('row', { name: 'mockSubnet 1.1.1.1 edit delete' });
+
+    fireEvent.click(within(item).getByRole('button', { name: /editSubnet/i }));
     expect(getByText('Edit Subnet Configuration')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    await waitFor(() => {
+      expect(getByText('Edit Subnet Configuration')).not.toBeVisible();
+    });
+  });
+
+  it('Edit Subnet Configuration modal should close when save button is clicked', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    const item = getByRole('row', { name: 'mockSubnet 1.1.1.1 edit delete' });
+
+    fireEvent.click(within(item).getByRole('button', { name: /editSubnet/i }));
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(getByText('Edit Subnet Configuration')).not.toBeVisible();
+    });
   });
 
   it('click on delete button should remove subnet from management subnet list', async () => {
@@ -430,23 +550,14 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByRole, queryAllByText, getByLabelText, getByText } = render(<RadiusFormComp />);
-    fireEvent.click(getByRole('button', { name: /add subnet/i }));
-    await waitFor(() => {
-      expect(getByText('Add Subnet Configuration')).toBeVisible();
-    });
-    expect(getByLabelText('Zone Name').closest('input')).toBeDisabled();
-    fireEvent.change(getByLabelText('Subnet Name'), { target: { value: 'abc' } });
-    fireEvent.change(getByLabelText('Subnet IP'), { target: { value: '0.0.0.0' } });
-    fireEvent.change(getByLabelText('Subnet CIDR Mask'), { target: { value: '0.0.0.0' } });
+    const { getByRole, queryByText } = render(<RadiusFormComp />);
 
-    fireEvent.click(getByRole('button', { name: /save/i }));
+    expect(queryByText('mockSubnet')).toBeVisible();
 
-    await waitFor(() => {
-      expect(getByRole('button', { name: /deleteSubnet/i })).toBeVisible();
-    });
-    fireEvent.click(getByRole('button', { name: /deleteSubnet/i }));
+    const item = getByRole('row', { name: 'mockSubnet 1.1.1.1 edit delete' });
 
-    expect(queryAllByText('No Data')[0]).toBeVisible();
+    fireEvent.click(within(item).getByRole('button', { name: /deleteSubnet/i }));
+
+    expect(queryByText('mockSubnet')).not.toBeInTheDocument();
   });
 });

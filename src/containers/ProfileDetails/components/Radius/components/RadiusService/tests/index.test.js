@@ -67,6 +67,24 @@ describe('<RadiusServiceModal />', () => {
     });
   });
 
+  it('should hide Add RADIUS Server form when close button clicked', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole, getByText, queryByText } = render(
+      <RadiusServiceModal {...mockProps} onSuccess={submitSpy} />
+    );
+
+    fireEvent.click(getByRole('button', { name: /Add RADIUS Server/i }));
+
+    expect(getByText('Server Properties')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /close/i }));
+
+    await waitFor(() => {
+      expect(queryByText('Server Properties')).not.toBeInTheDocument();
+      expect(getByText('Add RADIUS Service')).toBeVisible();
+    });
+  });
+
   it('onSuccess should be called when Add RADIUS Service modal is submitted correctly', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText, getByLabelText } = render(

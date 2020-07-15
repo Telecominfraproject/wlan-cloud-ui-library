@@ -357,6 +357,7 @@ const RadiusForm = ({ form, details }) => {
             dataSource={services}
             renderItem={item => (
               <List.Item
+                aria-label={`serviceItem-${item.name}`}
                 extra={
                   <Button type="danger" onClick={() => handleDeleteService(item)}>
                     Remove
@@ -400,6 +401,7 @@ const RadiusForm = ({ form, details }) => {
             rowKey="name"
             renderItem={item => (
               <List.Item
+                aria-label={`serviceZoneItem-${item.name}`}
                 extra={
                   <>
                     <div className={styles.RadiusInline}>
@@ -439,13 +441,13 @@ const RadiusForm = ({ form, details }) => {
                     <>
                       <b className={styles.iconButton}>{item.name}</b>
                       <Button
-                        title="editRadiusService"
+                        title="editRadiusServiceZone"
                         onClick={() => handleEditZone(item)}
                         className={styles.iconButton}
                         icon={<EditOutlined />}
                       />
                       <Button
-                        title="deleteRadiusService"
+                        title="deleteRadiusServiceZone"
                         onClick={() => handleDeleteZone(item)}
                         className={styles.iconButton}
                         icon={<DeleteOutlined />}
