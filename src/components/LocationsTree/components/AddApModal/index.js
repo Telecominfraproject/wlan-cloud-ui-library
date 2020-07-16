@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select, Alert } from 'antd';
+import { Form, Input, Select, Alert, Spin } from 'antd';
 
-import Loading from 'components/Loading';
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
 
@@ -85,13 +84,12 @@ const AddApModal = ({
       .catch(() => {});
   };
 
-  if (loadingProfile) {
-    return <Loading />;
-  }
-
-  if (Object.keys(errorProfile).length > 0) {
-    return <Alert message="Error" description="Failed to load profiles." type="error" showIcon />;
-  }
+  const returnContent = () => {
+    if (loadingProfile) return <Spin size="large" />;
+    if (Object.keys(errorProfile).length > 0)
+      return <Alert message="Error" description="Failed to load profiles." type="error" showIcon />;
+    return content;
+  };
 
   return (
     <Modal
@@ -99,7 +97,7 @@ const AddApModal = ({
       visible={visible}
       onSuccess={handleOnSuccess}
       title={title}
-      content={content}
+      content={returnContent()}
       buttonText={buttonText}
     />
   );
