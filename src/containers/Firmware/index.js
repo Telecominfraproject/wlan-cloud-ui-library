@@ -11,6 +11,8 @@ import AssignmentModal from './components/AssignmentModal';
 import VersionModal from './components/VersionModal';
 
 const Firmware = ({ firmwareData }) => {
+  console.log(firmwareData);
+  const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const assignmentColumns = [
     {
       title: 'MODEL ID',
@@ -129,9 +131,16 @@ const Firmware = ({ firmwareData }) => {
 
   return (
     <Container>
+      <AssignmentModal
+        onCancel={() => setAddAssignmentModal(false)}
+        visible={addAssignmentModal}
+        onSubmit={() => {}}
+        title="Add Track Assignment"
+        firmwareData={firmwareData}
+      />
       <Header>
         <h1>Track Assignments</h1>
-        <Button>Add Track Assignment</Button>
+        <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
       </Header>
       <Table columns={assignmentColumns} pagination={false} />
       <Header>
