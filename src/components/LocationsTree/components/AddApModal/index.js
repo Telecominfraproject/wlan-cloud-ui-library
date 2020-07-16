@@ -89,7 +89,7 @@ const AddApModal = ({
     return <Loading />;
   }
 
-  if (!errorProfile) {
+  if (Object.keys(errorProfile).length > 0) {
     return <Alert message="Error" description="Failed to load profiles." type="error" showIcon />;
   }
 
