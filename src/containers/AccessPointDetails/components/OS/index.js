@@ -71,7 +71,7 @@ const OS = ({ data, osData, handleRefresh }) => {
       <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
         <SolidGauge data={cpu} title="Current CPU" />
         <SolidGauge data={memory} title="Current Free Memory" />
-        <SolidGauge data={temperature} title="Current CPU Temp (°C)" />
+        <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>
       <HighChartGraph osData={osData} />
     </Card>

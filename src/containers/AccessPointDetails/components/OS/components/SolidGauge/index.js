@@ -28,17 +28,16 @@ const plotOptions = {
   },
 };
 
-const dataLabels = {
-  format:
-    '<div style="text-align:center"><span style="font-size:18px;color:white">{y}%</span><br/></div>',
-  y: -50,
-};
-
 const tooltip = {
   valueSuffix: ' %',
 };
 
-const SolidGauge = ({ data, title }) => {
+const SolidGauge = ({ data, title, label }) => {
+  const dataLabels = {
+    format: `<div><span>{y} ${label}</span><br/></div>`,
+    y: -50,
+  };
+
   return (
     <div className={styles.container}>
       <HighchartsChart gauge plotOptions={plotOptions}>
@@ -86,11 +85,13 @@ const SolidGauge = ({ data, title }) => {
 SolidGauge.propTypes = {
   data: PropTypes.number,
   title: PropTypes.string,
+  label: PropTypes.string,
 };
 
 SolidGauge.defaultProps = {
   data: 0,
   title: '',
+  label: '%',
 };
 
 export default withHighcharts(SolidGauge, Highcharts);
