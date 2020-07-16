@@ -65,7 +65,7 @@ const Navbar = ({
         <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
-        <a href="/alarms">
+        <Link to="/alarms">
           <Badge count={totalAlarms} showZero>
             {location.pathname === '/alarms' ? (
               <BellFilled className={styles.BellIconActive} />
@@ -73,7 +73,7 @@ const Navbar = ({
               <BellOutlined className={styles.BellIcon} />
             )}
           </Badge>
-        </a>
+        </Link>
         {isMobile ? (
           <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
         ) : (
