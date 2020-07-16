@@ -258,10 +258,10 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
         </Item>
         <Item label="Model"> {data.model}</Item>
         <Item label="Serial Number">{data.serial} </Item>
-        <Item label="SKU"> {data.protocol.reportedSku}</Item>
-        <Item label="Country Code"> {data.protocol.countryCode}</Item>
-        <Item label="Ethernet MAC Address"> {data.protocol.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> {data.protocol.manufacturer}</Item>
+        <Item label="SKU"> {data.status.protocol.reportedSku}</Item>
+        <Item label="Country Code"> {data.status.protocol.countryCode}</Item>
+        <Item label="Ethernet MAC Address"> {data.status.protocol.reportedMacAddr}</Item>
+        <Item label="Manufacturer"> {data.status.protocol.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
 
