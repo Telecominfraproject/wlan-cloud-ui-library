@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
+import moment from 'moment';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Container from 'components/Container';
@@ -10,26 +11,59 @@ import styles from './index.module.scss';
 import AssignmentModal from './components/AssignmentModal';
 import VersionModal from './components/VersionModal';
 
-const Firmware = ({ firmwareData }) => {
+const Firmware = ({
+  firmwareData,
+  trackAssignmentData,
+  onDeleteTrackAssignment,
+  onDeleteFirmware,
+}) => {
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
   const [addVersionModal, setAddVersionModal] = useState(false);
   const [editVersionModal, setEditVersionModal] = useState(false);
   const [deleteAssignmentModal, setDeleteAssignmentModal] = useState(false);
   const [deleteVersionModal, setDeleteVersionModal] = useState(false);
+  const [taskAssignmentValues, setTaskAssignmentValues] = useState({
+    firmwareTrackId: 0,
+    firmwareVersionId: 0,
+  });
+
+  const [firmwareValues, setFirmwareValues] = useState({
+    id: 0,
+    modelId: 0,
+    versionName: '',
+    description: '',
+    commit: '',
+    releaseDate: 0,
+    filename: '',
+  });
+
+  const deleteTrackAssignment = () => {
+    const { firmwareTrackId, firmwareVersionId } = taskAssignmentValues;
+    onDeleteTrackAssignment(firmwareTrackId, firmwareVersionId);
+    setDeleteAssignmentModal(false);
+  };
+  const deleteFirmware = () => {
+    const { id } = firmwareValues;
+    onDeleteFirmware(id);
+    setDeleteVersionModal(false);
+  };
 
   const assignmentColumns = [
     {
       title: 'MODEL ID',
-      dataIndex: 'model',
+      dataIndex: 'modelId',
       key: 'modelId',
       width: 100,
     },
     {
       title: 'VERSION',
-      dataIndex: 'version',
+      dataIndex: 'firmwareVersionRecordId',
       key: 'version',
-      width: 790,
+      render: firmwareRecordId => {
+        const firmware = Object.values(firmwareData).find(i => i.id === firmwareRecordId);
+        return firmware.versionName;
+      },
     },
     {
       title: '',
@@ -43,7 +77,11 @@ const Firmware = ({ firmwareData }) => {
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
-            console.log(record);
+            setTaskAssignmentValues({
+              firmwareTrackId: record.trackRecordId,
+              firmwareVersionId: record.firmwareVersionRecordId,
+              name: record.modelId,
+            });
             setEditAssignmentModal(true);
           }}
         />
@@ -61,7 +99,11 @@ const Firmware = ({ firmwareData }) => {
           type="primary"
           icon={<DeleteFilled />}
           onClick={() => {
-            console.log(record);
+            setTaskAssignmentValues({
+              firmwareTrackId: record.trackRecordId,
+              firmwareVersionId: record.firmwareVersionRecordId,
+              name: record.modelId,
+            });
             setDeleteAssignmentModal(true);
           }}
         />
@@ -72,21 +114,21 @@ const Firmware = ({ firmwareData }) => {
   const versionColumn = [
     {
       title: 'MODEL ID',
-      dataIndex: 'model',
-      key: 'modelId',
+      dataIndex: 'modelId',
+      key: 'modelIdFirmware',
       width: 100,
     },
     {
       title: 'VERSION',
-      dataIndex: 'version',
-      key: 'version',
-      width: 100,
+      dataIndex: 'versionName',
+      key: 'versionFirmware',
+      width: 225,
     },
     {
       title: 'DESCRIPTION',
       dataIndex: 'description',
       key: 'description',
-      width: 375,
+      width: 350,
     },
     {
       title: 'COMMIT',
@@ -96,14 +138,18 @@ const Firmware = ({ firmwareData }) => {
     },
     {
       title: 'RELEASE DATE',
-      dataIndex: 'date',
+      dataIndex: 'releaseDate',
       key: 'date',
       width: 180,
+      render: time => {
+        const date = moment(time, 'x').format('DD MMM YYYY, hh:mm a');
+        return date;
+      },
     },
     {
       title: '',
       dataIndex: 'edit',
-      key: 'edit',
+      key: 'editFirmware',
       width: 60,
       render: (_, record) => (
         <Button
@@ -112,7 +158,15 @@ const Firmware = ({ firmwareData }) => {
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
-            console.log(record);
+            setFirmwareValues({
+              id: record.id,
+              modelId: record.modelId,
+              versionName: record.versionName,
+              description: record.description,
+              commit: record.commit,
+              releaseDate: record.releaseDate,
+              filename: record.filename,
+            });
             setEditVersionModal(true);
           }}
         />
@@ -121,7 +175,7 @@ const Firmware = ({ firmwareData }) => {
     {
       title: '',
       dataIndex: 'delete',
-      key: 'delete',
+      key: 'deleteFirmware',
       width: 60,
       render: (_, record) => (
         <Button
@@ -130,29 +184,19 @@ const Firmware = ({ firmwareData }) => {
           type="primary"
           icon={<DeleteFilled />}
           onClick={() => {
-            console.log(record);
+            setFirmwareValues({
+              id: record.id,
+              modelId: record.modelId,
+              versionName: record.versionName,
+              description: record.description,
+              commit: record.commit,
+              releaseDate: record.releaseDate,
+              filename: record.filename,
+            });
             setDeleteVersionModal(true);
           }}
         />
       ),
-    },
-  ];
-
-  const propDataTrack = [
-    {
-      key: 1,
-      version: 'AP20_8.0.5_b883',
-      model: 'AP20',
-    },
-  ];
-  const propDataVersion = [
-    {
-      key: 1,
-      version: 'AP20_8.0.5_b883',
-      model: 'AP20',
-      date: '2019-05-17 01:07:04 PM',
-      commit: '075667b1',
-      description: 'WaveOS 8.0.5, built by: jenkins',
     },
   ];
 
@@ -185,45 +229,70 @@ const Firmware = ({ firmwareData }) => {
         visible={editVersionModal}
         onSubmit={() => {}}
         title="Edit Firmware Version"
+        modelId={firmwareValues.modelId}
+        versionName={firmwareValues.versionName}
+        description={firmwareValues.description}
+        commit={firmwareValues.commit}
+        releaseDate={firmwareValues.releaseDate}
+        filename={firmwareValues.filename}
       />
       <Modal
         onCancel={() => setDeleteAssignmentModal(false)}
-        onSuccess={() => {}}
+        onSuccess={() => deleteTrackAssignment()}
         visible={deleteAssignmentModal}
         title="Are you sure?"
         buttonText="Delete"
         buttonType="danger"
-        content={<p>Are you sure you want to delete the track assignment: </p>}
+        content={
+          <p>
+            Are you sure you want to delete the track assignment:{' '}
+            <strong> {taskAssignmentValues.name} </strong>
+          </p>
+        }
       />
       <Modal
         onCancel={() => setDeleteVersionModal(false)}
-        onSuccess={() => {}}
+        onSuccess={() => deleteFirmware()}
         visible={deleteVersionModal}
         title="Are you sure?"
         buttonText="Delete"
         buttonType="danger"
-        content={<p>Are you sure you want to delete the version: </p>}
+        content={
+          <p>
+            Are you sure you want to delete the version:{' '}
+            <strong> {firmwareValues.versionName} </strong>
+          </p>
+        }
       />
       <Header>
         <h1>Track Assignments</h1>
         <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
       </Header>
-      <Table columns={assignmentColumns} dataSource={propDataTrack} pagination={false} />
+      <Table
+        rowKey="id"
+        columns={assignmentColumns}
+        dataSource={trackAssignmentData}
+        pagination={false}
+      />
       <Header>
         <h1>Versions</h1>
         <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
       </Header>
-      <Table columns={versionColumn} dataSource={propDataVersion} pagination={false} />
+      <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
     </Container>
   );
 };
 
 Firmware.propTypes = {
   firmwareData: PropTypes.instanceOf(Object),
+  trackAssignmentData: PropTypes.instanceOf(Object),
+  onDeleteTrackAssignment: PropTypes.func.isRequired,
+  onDeleteFirmware: PropTypes.func.isRequired,
 };
 
 Firmware.defaultProps = {
   firmwareData: {},
+  trackAssignmentData: {},
 };
 
 export default Firmware;

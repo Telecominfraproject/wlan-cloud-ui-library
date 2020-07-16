@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Form, Input, DatePicker } from 'antd';
 
 import Modal from 'components/Modal';
@@ -7,19 +8,36 @@ import styles from 'styles/index.scss';
 
 const { Item } = Form;
 
-const VersionModal = ({ onCancel, onSubmit, visible, title }) => {
+const VersionModal = ({
+  onCancel,
+  onSubmit,
+  visible,
+  title,
+  modelId,
+  versionName,
+  description,
+  commit,
+  releaseDate,
+  filename,
+}) => {
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    form.resetFields();
+    form.setFieldsValue({ modelId, versionName, description, commit, filename });
+  }, [visible]);
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
 
+  const date = new Date(parseInt(releaseDate, 10));
+
   const content = (
     <Form {...layout} form={form}>
       <Item
         label="Model ID"
-        name="model"
+        name="modelId"
         rules={[
           {
             required: true,
@@ -31,7 +49,7 @@ const VersionModal = ({ onCancel, onSubmit, visible, title }) => {
       </Item>
       <Item
         label="Version Name"
-        name="version"
+        name="versionName"
         rules={[
           {
             required: true,
@@ -43,7 +61,7 @@ const VersionModal = ({ onCancel, onSubmit, visible, title }) => {
       </Item>
       <Item
         label="Firmware URL"
-        name="url"
+        name="filename"
         rules={[
           {
             required: true,
@@ -60,7 +78,7 @@ const VersionModal = ({ onCancel, onSubmit, visible, title }) => {
         <Input className={styles.field} />
       </Item>
 
-      <Item label="Release Date" name="releaseDate">
+      <Item label="Release Date" name="releaseDate" initialValue={moment(date)}>
         <DatePicker showTime />
       </Item>
       <Item label="Description" name="description">
@@ -95,10 +113,22 @@ VersionModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
+  modelId: PropTypes.number,
+  versionName: PropTypes.string,
+  description: PropTypes.string,
+  commit: PropTypes.string,
+  releaseDate: PropTypes.number,
+  filename: PropTypes.string,
 };
 
 VersionModal.defaultProps = {
   title: '',
+  modelId: 0,
+  versionName: '',
+  description: '',
+  commit: '',
+  releaseDate: 0,
+  filename: '',
 };
 
 export default VersionModal;
