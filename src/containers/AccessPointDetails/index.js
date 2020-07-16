@@ -83,10 +83,12 @@ const AccessPointDetails = ({
             </div>
             <div>
               <strong>IP Address:</strong> &nbsp;
-              {data.status.protocol.detailsJSON.reportedIpV4Addr}
+              {data.status.protocol.detailsJSON &&
+                data.status.protocol.detailsJSON.reportedIpV4Addr}
             </div>
             <div>
-              <strong>MAC:</strong> &nbsp;{data.status.protocol.details.reportedMacAddr}
+              <strong>MAC:</strong> &nbsp;
+              {data.status.protocol.details && data.status.protocol.details.reportedMacAddr}
             </div>
           </div>
         }
