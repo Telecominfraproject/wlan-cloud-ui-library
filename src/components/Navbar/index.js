@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Layout, Drawer } from 'antd';
-import { MenuOutlined } from '@ant-design/icons';
+import { Link, useLocation } from 'react-router-dom';
+import { Layout, Drawer, Badge } from 'antd';
+import { MenuOutlined, BellFilled, BellOutlined } from '@ant-design/icons';
 
 import SettingsDropdown from 'components/SettingsDropdown';
 import ThemeContext from 'contexts/ThemeContext';
@@ -20,8 +20,10 @@ const Navbar = ({
   onMenuToggle,
   onMenuItemClick,
   onLogout,
+  totalAlarms,
 }) => {
   const theme = useContext(ThemeContext);
+  const location = useLocation();
 
   const selectedKeys = [];
   menuItems.forEach(item => {
@@ -63,6 +65,15 @@ const Navbar = ({
         <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
+        <Link to="/alarms">
+          <Badge count={totalAlarms} showZero>
+            {location.pathname === '/alarms' ? (
+              <BellFilled className={styles.BellIconActive} />
+            ) : (
+              <BellOutlined className={styles.BellIcon} />
+            )}
+          </Badge>
+        </Link>
         {isMobile ? (
           <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
         ) : (
@@ -82,6 +93,7 @@ Navbar.propTypes = {
   mobileMenuItems: PropTypes.instanceOf(Array),
   onMenuItemClick: PropTypes.func,
   onLogout: PropTypes.func,
+  totalAlarms: PropTypes.number,
 };
 
 Navbar.defaultProps = {
@@ -89,6 +101,7 @@ Navbar.defaultProps = {
   mobileMenuItems: null,
   onMenuItemClick: () => {},
   onLogout: () => {},
+  totalAlarms: 0,
 };
 
 export default Navbar;

@@ -9,7 +9,14 @@ import styles from './index.module.scss';
 
 const { Content, Footer } = Layout;
 
-const AppLayout = ({ children, menuItems, mobileMenuItems, locationState, onLogout }) => {
+const AppLayout = ({
+  children,
+  menuItems,
+  mobileMenuItems,
+  locationState,
+  onLogout,
+  totalAlarms,
+}) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -76,6 +83,7 @@ const AppLayout = ({ children, menuItems, mobileMenuItems, locationState, onLogo
         onLogout={handleLogout}
         onMenuToggle={handleMenuToggle}
         onMenuItemClick={handleMenuItemClick}
+        totalAlarms={totalAlarms}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
@@ -91,11 +99,13 @@ AppLayout.propTypes = {
   locationState: PropTypes.instanceOf(Object).isRequired,
   menuItems: PropTypes.instanceOf(Array),
   mobileMenuItems: PropTypes.instanceOf(Array),
+  totalAlarms: PropTypes.number,
 };
 
 AppLayout.defaultProps = {
   menuItems: [],
   mobileMenuItems: null,
+  totalAlarms: 0,
 };
 
 export default AppLayout;

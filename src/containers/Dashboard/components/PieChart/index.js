@@ -26,28 +26,30 @@ const PieChart = ({ chartData, title }) => {
   });
 
   return (
-    <Card title={title} headStyle={headerStyle} className={styles.pieChart}>
-      {pieData.length > 0 ? (
-        <HighchartsChart>
-          <PieSeries
-            name="Count"
-            data={pieData}
-            size={300}
-            showInLegend
-            dataLabels={{ color: '#fff' }}
-          />
+    <div className={styles.container}>
+      <Card title={title} headStyle={headerStyle} className={styles.pieChart}>
+        {pieData.length > 0 ? (
+          <HighchartsChart>
+            <PieSeries
+              name="Count"
+              data={pieData}
+              size="100%"
+              showInLegend
+              dataLabels={{ color: '#fff' }}
+            />
 
-          <Tooltip
-            borderWidth={0}
-            backgroundColor="#141414"
-            shadow
-            style={{ color: '#fff', fontSize: '12px' }}
-          />
-        </HighchartsChart>
-      ) : (
-        <h4>No Data</h4>
-      )}
-    </Card>
+            <Tooltip
+              borderWidth={0}
+              backgroundColor="#141414"
+              shadow
+              style={{ color: '#fff', fontSize: '12px' }}
+            />
+          </HighchartsChart>
+        ) : (
+          <h4>No Data</h4>
+        )}
+      </Card>
+    </div>
   );
 };
 
