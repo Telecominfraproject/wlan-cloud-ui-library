@@ -495,4 +495,16 @@ describe('<LocationTree />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     expect(setApModalSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should hide setApModal if Cancel button is clicked', () => {
+    const history = createMemoryHistory();
+
+    const { getByText } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} apModal errorProfile={{ error: 'error' }} />
+      </Router>
+    );
+    const error = getByText('Failed to load profiles.');
+    expect(error).toBeVisible();
+  });
 });
