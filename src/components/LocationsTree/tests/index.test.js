@@ -496,7 +496,7 @@ describe('<LocationTree />', () => {
     expect(setApModalSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should hide setApModal if Cancel button is clicked', () => {
+  it('should show error alert if there is an alert in querying profiles', () => {
     const history = createMemoryHistory();
 
     const { getByText } = render(
