@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select } from 'antd';
+import { Form, Select } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
@@ -8,7 +8,16 @@ import styles from 'styles/index.scss';
 const { Item } = Form;
 const { Option } = Select;
 
-const AssignmentModal = ({ onCancel, onSubmit, visible, title, firmware, model, firmwareData }) => {
+const AssignmentModal = ({
+  onCancel,
+  onSubmit,
+  visible,
+  title,
+  firmware,
+  model,
+  assignmentData,
+  firmwareData,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -33,7 +42,13 @@ const AssignmentModal = ({ onCancel, onSubmit, visible, title, firmware, model, 
           },
         ]}
       >
-        <Input className={styles.field} />
+        <Select className={styles.field} placeholder="Select Model ID">
+          {Object.keys(assignmentData).map(i => (
+            <Option key={assignmentData[i].id} value={assignmentData[i].id}>
+              {assignmentData[i].modelId}
+            </Option>
+          ))}
+        </Select>
       </Item>
 
       <Item
@@ -86,6 +101,7 @@ AssignmentModal.propTypes = {
   firmware: PropTypes.string,
   model: PropTypes.string,
   firmwareData: PropTypes.instanceOf(Object),
+  assignmentData: PropTypes.instanceOf(Object),
 };
 
 AssignmentModal.defaultProps = {
@@ -93,6 +109,7 @@ AssignmentModal.defaultProps = {
   firmware: '',
   model: '',
   firmwareData: {},
+  assignmentData: {},
 };
 
 export default AssignmentModal;
