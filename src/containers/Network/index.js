@@ -28,6 +28,8 @@ const Network = ({
   setDeleteModal,
   setApModal,
   profiles,
+  loadingProfile,
+  errorProfile,
 }) => {
   const location = useLocation();
 
@@ -56,6 +58,8 @@ const Network = ({
           setDeleteModal={setDeleteModal}
           setApModal={setApModal}
           profiles={profiles}
+          loadingProfile={loadingProfile}
+          errorProfile={errorProfile}
         />
         <div className={styles.mainContent}>
           {location.pathname === '/network/access-points' ||
@@ -94,6 +98,8 @@ Network.propTypes = {
   setEditModal: PropTypes.func.isRequired,
   setDeleteModal: PropTypes.func.isRequired,
   setApModal: PropTypes.func.isRequired,
+  loadingProfile: PropTypes.bool.isRequired,
+  errorProfile: PropTypes.instanceOf(Object),
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -105,6 +111,7 @@ Network.propTypes = {
 
 Network.defaultProps = {
   selectedLocation: null,
+  errorProfile: {},
 };
 
 export default Network;

@@ -27,6 +27,8 @@ const LocationsTree = ({
   setDeleteModal,
   setApModal,
   profiles,
+  loadingProfile,
+  errorProfile,
 }) => {
   const getLocationPath = () => {
     const locationsPath = [];
@@ -113,6 +115,8 @@ const LocationsTree = ({
         title="Add Access Point"
         buttonText="Add"
         selectedLocation={selectedLocation}
+        loadingProfile={loadingProfile}
+        errorProfile={errorProfile}
       />
 
       <EditFormModal
@@ -158,6 +162,8 @@ LocationsTree.propTypes = {
   setEditModal: PropTypes.func.isRequired,
   setDeleteModal: PropTypes.func.isRequired,
   setApModal: PropTypes.func.isRequired,
+  loadingProfile: PropTypes.bool.isRequired,
+  errorProfile: PropTypes.instanceOf(Object),
   selectedLocation: PropTypes.shape({
     id: PropTypes.number,
     lastModifiedTimestamp: PropTypes.string,
@@ -173,6 +179,7 @@ LocationsTree.defaultProps = {
   onDeleteLocation: () => {},
   onCreateEquipment: () => {},
   selectedLocation: null,
+  errorProfile: {},
 };
 
 export default LocationsTree;

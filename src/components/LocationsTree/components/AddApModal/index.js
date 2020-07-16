@@ -1,14 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Alert } from 'antd';
 
+import Loading from 'components/Loading';
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
 
 const { Item } = Form;
 const { Option } = Select;
 
-const AddApModal = ({ onCancel, onSubmit, visible, buttonText, title, profiles }) => {
+const AddApModal = ({
+  onCancel,
+  onSubmit,
+  visible,
+  buttonText,
+  title,
+  profiles,
+  loadingProfile,
+  errorProfile,
+}) => {
   const [form] = Form.useForm();
 
   const layout = {
@@ -75,6 +85,14 @@ const AddApModal = ({ onCancel, onSubmit, visible, buttonText, title, profiles }
       .catch(() => {});
   };
 
+  if (loadingProfile) {
+    return <Loading />;
+  }
+
+  if (!errorProfile) {
+    return <Alert message="Error" description="Failed to load profiles." type="error" showIcon />;
+  }
+
   return (
     <Modal
       onCancel={onCancel}
@@ -94,12 +112,15 @@ AddApModal.propTypes = {
   title: PropTypes.string,
   buttonText: PropTypes.string,
   profiles: PropTypes.instanceOf(Object),
+  errorProfile: PropTypes.instanceOf(Object),
+  loadingProfile: PropTypes.bool.isRequired,
 };
 
 AddApModal.defaultProps = {
   title: '',
   buttonText: '',
   profiles: {},
+  errorProfile: {},
 };
 
 export default AddApModal;
