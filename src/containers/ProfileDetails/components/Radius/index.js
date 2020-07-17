@@ -230,7 +230,11 @@ const RadiusForm = ({ form, details }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button title="edit" icon={<EditOutlined />} onClick={() => handleEditSubnet(record)} />
+        <Button
+          title="editSubnet"
+          icon={<EditOutlined />}
+          onClick={() => handleEditSubnet(record)}
+        />
       ),
     },
     {
@@ -238,7 +242,7 @@ const RadiusForm = ({ form, details }) => {
       width: 80,
       render: (_, record) => (
         <Button
-          title="delete"
+          title="deleteSubnet"
           type="danger"
           icon={<DeleteOutlined />}
           onClick={() => handleDeleteSubnet(record)}
@@ -353,6 +357,7 @@ const RadiusForm = ({ form, details }) => {
             dataSource={services}
             renderItem={item => (
               <List.Item
+                aria-label={`serviceItem-${item.name}`}
                 extra={
                   <Button type="danger" onClick={() => handleDeleteService(item)}>
                     Remove
@@ -361,7 +366,11 @@ const RadiusForm = ({ form, details }) => {
               >
                 <List.Item.Meta
                   avatar={
-                    <Button icon={<EditOutlined />} onClick={() => handleEditService(item)} />
+                    <Button
+                      title="editService"
+                      icon={<EditOutlined />}
+                      onClick={() => handleEditService(item)}
+                    />
                   }
                   title={item.name}
                 />
@@ -392,6 +401,7 @@ const RadiusForm = ({ form, details }) => {
             rowKey="name"
             renderItem={item => (
               <List.Item
+                aria-label={`serviceZoneItem-${item.name}`}
                 extra={
                   <>
                     <div className={styles.RadiusInline}>
@@ -431,11 +441,13 @@ const RadiusForm = ({ form, details }) => {
                     <>
                       <b className={styles.iconButton}>{item.name}</b>
                       <Button
+                        title="editRadiusServiceZone"
                         onClick={() => handleEditZone(item)}
                         className={styles.iconButton}
                         icon={<EditOutlined />}
                       />
                       <Button
+                        title="deleteRadiusServiceZone"
                         onClick={() => handleDeleteZone(item)}
                         className={styles.iconButton}
                         icon={<DeleteOutlined />}

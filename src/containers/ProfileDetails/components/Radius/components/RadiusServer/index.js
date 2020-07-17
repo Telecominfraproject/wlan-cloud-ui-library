@@ -49,11 +49,11 @@ const RadiusServer = ({ onSuccess, onCancel }) => {
           rules={[
             {
               required: true,
-              message: 'Port expected between 1 - 65535',
+              message: 'Please enter a port',
             },
-            ({ getFieldValue }) => ({
+            () => ({
               validator(_rule, value) {
-                if (!value || getFieldValue('authPort') < 65535) {
+                if (!value || (value > 0 && value < 65535)) {
                   return Promise.resolve();
                 }
                 return Promise.reject(new Error('Port expected between 1 - 65535'));
@@ -83,8 +83,20 @@ const RadiusServer = ({ onSuccess, onCancel }) => {
           <Input.Password className={styles.Field} placeholder="Enter Shared Secret" />
         </Item>
         <div className={styles.InlineEndDiv}>
-          <Button type="danger" onClick={onCancel} icon={<CloseOutlined />} />
-          <Button type="primary" icon={<CheckOutlined />} onClick={handleOnSuccess} />
+          <Button
+            data-testid="close"
+            title="close"
+            type="danger"
+            onClick={onCancel}
+            icon={<CloseOutlined />}
+          />
+          <Button
+            data-testid="submit"
+            title="submit"
+            type="primary"
+            icon={<CheckOutlined />}
+            onClick={handleOnSuccess}
+          />
         </div>
       </Card>
     </Form>

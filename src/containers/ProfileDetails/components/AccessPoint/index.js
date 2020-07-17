@@ -4,16 +4,12 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 
 import Button from 'components/Button';
-import Modal from 'components/Modal';
 
-import SSIDForm from '../SSID';
 import styles from '../index.module.scss';
 
 const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
   const { Item } = Form;
   const { Option } = Select;
-
-  const [addModal, setAddModal] = useState(false);
 
   const [vlan, setVlan] = useState(details.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(
@@ -90,7 +86,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button icon={<DeleteFilled />} onClick={() => handleRemoveSsid(record.id)} />
+        <Button
+          title="removeSsid"
+          icon={<DeleteFilled />}
+          onClick={() => handleRemoveSsid(record.id)}
+        />
       ),
     },
   ];
@@ -107,29 +107,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Modal
-        onCancel={() => setAddModal(false)}
-        visible={addModal}
-        onSuccess={() => {}}
-        title="Add Wireless Network Profile"
-        width={1200}
-        content={
-          <div>
-            <Card title="Create Profile Name">
-              <Item
-                label="Profile Name"
-                rules={[{ required: true, message: 'Please input your new profile name' }]}
-              >
-                <Input className={styles.Field} placeholder="Enter profile name" />
-              </Item>
-            </Card>
-            <SSIDForm />
-          </div>
-        }
-      />
       <Card title="LAN and Services ">
         <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
-          <Checkbox onChange={() => setVlan(!vlan)}>Use Default Management VLAN</Checkbox>
+          <Checkbox data-testid="vlanCheckbox" onChange={() => setVlan(!vlan)}>
+            Use Default Management VLAN
+          </Checkbox>
         </Item>
 
         {!vlan && (
@@ -153,6 +135,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               hasFeedback
             >
               <Input
+                data-testid="vlanInput"
                 className={styles.Field}
                 placeholder="2-4095"
                 type="number"
@@ -165,7 +148,9 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         )}
 
         <Item label="NTP" name={['ntpServer', 'auto']} valuePropName="checked">
-          <Checkbox onChange={() => setNTP(!ntp)}>Use Default Servers</Checkbox>
+          <Checkbox data-testid="ntpCheckbox" onChange={() => setNTP(!ntp)}>
+            Use Default Servers
+          </Checkbox>
         </Item>
         {!ntp && (
           <Item label=" " colon={false}>
@@ -202,7 +187,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         </Item>
         {rtls && (
           <>
-            <Item label=" " colon={false}>
+            <Item data-testid="rtlsInputFields" label=" " colon={false}>
               <Item
                 name={['rtlsSettings', 'srvHostIp']}
                 rules={[
@@ -266,7 +251,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
         </Item>
         {syslog && (
           <>
-            <Item label=" " colon={false}>
+            <Item data-testid="syslogInputFields" label=" " colon={false}>
               <div className={styles.InlineDiv}>
                 <Item
                   name={['syslogRelay', 'srvHostIp']}
@@ -317,7 +302,11 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                   },
                 ]}
               >
-                <Select className={styles.Field} placeholder="Select Syslog Mode">
+                <Select
+                  data-testid="select"
+                  className={styles.Field}
+                  placeholder="Select Syslog Mode"
+                >
                   <Option value="DEBUG">Debug (DEBUG)</Option>
                   <Option value="INFO">Info. (INFO)</Option>
                   <Option value="NOTICE">Notice (NOTICE)</Option>
@@ -359,6 +348,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
+            data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             optionFilterProp="children"

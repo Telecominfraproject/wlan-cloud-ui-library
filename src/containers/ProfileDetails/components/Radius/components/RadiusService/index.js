@@ -113,12 +113,11 @@ const RadiusServiceModal = ({ onSuccess, onCancel, visible, title, disabled, ser
   return (
     <Modal
       onCancel={onCancel}
-      onSubmit={() => {}}
+      onSuccess={handleOnSuccess}
       visible={visible}
       title={title}
       content={addServerContent}
       closable={false}
-      onSuccess={handleOnSuccess}
     />
   );
 };
