@@ -8,6 +8,7 @@ const DeviceStatsCard = ({ title, cardData }) => {
     textAlign: 'center',
     marginBottom: 10,
   };
+
   const bodyStyle = { height: 'calc(100% - 67px)' };
   return (
     <Card
@@ -16,12 +17,14 @@ const DeviceStatsCard = ({ title, cardData }) => {
       bodyStyle={bodyStyle}
       className={styles.individualCard}
     >
-      {Object.keys(cardData).map(d => (
-        <div key={d} className={styles.row}>
-          <div>{d}</div>
-          <div>: {cardData[d]}</div>
-        </div>
-      ))}
+      {Object.keys(cardData).map(d => {
+        return (
+          <div key={d} className={styles.row}>
+            <div>{d}</div>
+            <div>: {cardData[d]}</div>
+          </div>
+        );
+      })}
     </Card>
   );
 };

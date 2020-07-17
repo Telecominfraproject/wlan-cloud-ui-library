@@ -47,8 +47,6 @@ const formatFile = file => {
 };
 
 const CaptivePortalForm = ({ details, form, fileUpload }) => {
-  const [authentication, setAuthentication] = useState(details.authenticationType || 'guest');
-
   const [showTips, setShowTips] = useState(false);
 
   const [externalSplash, setExternalSplash] = useState(!!details.externalCaptivePortalURL);
@@ -66,7 +64,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [whitelistValidation, setWhitelistValidation] = useState({});
 
   const disableExternalSplashChange = () => {
-    setAuthentication('guest');
     form.setFieldsValue({
       authenticationType: 'guest',
     });
@@ -272,8 +269,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       userAcceptancePolicy: details.userAcceptancePolicy,
       successPageMarkdownText: details.successPageMarkdownText,
       redirectURL: details.redirectURL,
-      radiusServiceName: details.radiusServiceName || 'DEFAULT',
-      radiusAuthMethod: details.radiusAuthMethod || 'PAP',
       externalCaptivePortalURL: details.externalCaptivePortalURL,
       externalSplashPage: details.externalCaptivePortalURL ? 'true' : 'false',
       walledGardenWhitelist: details.walledGardenWhitelist || [],
@@ -304,24 +299,11 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
                 },
               ]}
             >
-              <Select
-                data-testid="authenticationMode"
-                className={styles.Field}
-                onChange={value => setAuthentication(value)}
-                placeholder="Select authentication mode "
-              >
+              <Select className={styles.Field} placeholder="Select authentication mode ">
                 <Option value="guest">None</Option>
-                <Option value="username">Captive Portal User List</Option>
-                <Option value="radius">RADIUS</Option>
                 {externalSplash && <Option value="external">Externally Hosted API</Option>}
               </Select>
             </Item>
-
-            {authentication === 'username' && (
-              <Item>
-                <Button> Manage Captive Portal Users</Button>
-              </Item>
-            )}
           </div>
         </Item>
 
@@ -382,37 +364,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Radio.Group>
         </Item>
       </Card>
-      {authentication === 'radius' && (
-        <Card title="RADIUS">
-          <Item
-            label="Authentication"
-            name="radiusAuthMethod"
-            rules={[
-              {
-                required: true,
-                message: 'Please select authentication type',
-              },
-            ]}
-          >
-            <Select className={styles.Field}>
-              <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
-              <Option value="PAP">Password (PAP)</Option>
-              <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
-            </Select>
-          </Item>
-          <Item
-            name="radiusServiceName"
-            label="Service"
-            rules={[
-              {
-                message: 'Please select RADIUS service',
-              },
-            ]}
-          >
-            <Input disabled className={styles.Field} placeholder="RADIUS Service" />
-          </Item>
-        </Card>
-      )}
       {externalSplash && (
         <Card title="External Splash Page">
           <Item
