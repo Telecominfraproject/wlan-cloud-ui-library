@@ -222,6 +222,54 @@ const mockProps = {
 describe('<AccessPoints />', () => {
   afterEach(cleanup);
 
+  it('should work with vlanNative is undefined', () => {
+    const mockDetails = {
+      ...mockProps,
+      details: {
+        ...mockProps.details,
+        vlanNative: undefined,
+      },
+    };
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return <AccessPoints {...mockDetails} form={form} />;
+    };
+    render(<AccessPointComp />);
+  });
+
+  it('should work with ntpServer is undefined', () => {
+    const mockDetails = {
+      ...mockProps,
+      details: {
+        ...mockProps.details,
+        ntpServer: { auto: undefined },
+      },
+    };
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return <AccessPoints {...mockDetails} form={form} />;
+    };
+    render(<AccessPointComp />);
+  });
+
+  it('should work with rtlsSettings and syslogRelay are enabled', () => {
+    const mockDetails = {
+      ...mockProps,
+      details: {
+        ...mockProps.details,
+        rtlsSettings: { enabled: true },
+        syslogRelay: { enabled: true },
+        syntheticClientEnabled: false,
+        equipmentDiscovery: true,
+      },
+    };
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return <AccessPoints {...mockDetails} form={form} />;
+    };
+    render(<AccessPointComp />);
+  });
+
   it('uncheck Use Default Management VLAN should show the input field for vlan value', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
@@ -252,6 +300,9 @@ describe('<AccessPoints />', () => {
     expect(checkbox.checked).toEqual(false);
     const vlanInput = getByTestId('vlanInput');
     expect(vlanInput).toBeInTheDOM();
+    fireEvent.change(getByPlaceholderText('2-4095'), {
+      target: { value: 2 },
+    });
     fireEvent.change(getByPlaceholderText('2-4095'), {
       target: { value: '123456' },
     });
@@ -329,6 +380,30 @@ describe('<AccessPoints />', () => {
     });
   });
 
+  it('error message should not be displayed when RTLS input fields IP Address and Port have valid values', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { queryAllByText, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+
+    const radio = queryAllByText('Enabled');
+    fireEvent.click(radio[0]);
+
+    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 5 } });
+    await waitFor(() => {
+      expect(
+        queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
+      ).not.toBeInTheDocument();
+      expect(queryByText('Port expected between 1 - 65535')).not.toBeInTheDocument();
+    });
+  });
+
   it('Syslog Enabled radio button click should show the Syslog input fields', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
@@ -372,6 +447,59 @@ describe('<AccessPoints />', () => {
     fireEvent.click(disabledRadio[1]);
   });
 
+  it('error message should not be displayed when Syslog input fields IP Address and Port have valid values', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { queryAllByText, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+
+    const radio = queryAllByText('Enabled');
+    fireEvent.click(radio[1]);
+
+    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 5 } });
+    await waitFor(() => {
+      expect(
+        queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
+      ).not.toBeInTheDocument();
+      expect(queryByText('Port expected between 1 - 65535')).not.toBeInTheDocument();
+    });
+    const disabledRadio = queryAllByText('Disabled');
+    fireEvent.click(disabledRadio[1]);
+  });
+
+  it('click on disable button should hide input fields for RTLS', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { queryAllByText, queryByText, getByPlaceholderText } = render(<AccessPointComp />);
+
+    const radio = queryAllByText('Enabled');
+    fireEvent.click(radio[0]);
+
+    await waitFor(() => {
+      expect(getByPlaceholderText('IP Address')).toBeVisible();
+      expect(getByPlaceholderText('Port')).toBeVisible();
+    });
+    const disabledRadio = queryAllByText('Disabled');
+    fireEvent.click(disabledRadio[0]);
+
+    await waitFor(() => {
+      expect(queryByText('IP Address')).not.toBeInTheDocument();
+      expect(queryByText('Port')).not.toBeInTheDocument();
+    });
+  });
+
   it('on click dropdown should show dropdown values for Syslog', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
@@ -391,6 +519,24 @@ describe('<AccessPoints />', () => {
     expect(getByText('Debug (DEBUG)')).toBeVisible();
   });
 
+  it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { container } = render(<AccessPointComp />);
+    const selectInputFiled = container.querySelector(
+      '[data-testid=ssidProfile] > .ant-select-selector span input'
+    );
+    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
+    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
+  });
+
   it('changing SSID Profile profile on Wireless Networks (SSIDs) Enabled on This Profile should update the table', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
@@ -402,11 +548,17 @@ describe('<AccessPoints />', () => {
     };
 
     const { queryAllByText, getByText, container } = render(<AccessPointComp />);
+    const selectInputFiled = container.querySelector(
+      '[data-testid=ssidProfile] > .ant-select-selector span input'
+    );
+    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
+    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
 
     const selectInput = container.querySelector('[data-testid=ssidProfile] > .ant-select-selector');
     const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectInput);
     fireEvent.keyDown(selectInput, DOWN_ARROW);
+
     await waitForElement(() => getByText('TipWlan-cloud-Enterprise'));
     fireEvent.click(getByText('TipWlan-cloud-Enterprise'));
     await waitFor(() => {

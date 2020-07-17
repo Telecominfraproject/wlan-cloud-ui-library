@@ -21,6 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 const mockProps = {
   onUpdateProfile: () => {},
+  fileUpload: () => {},
   name: 'Radius-Profile1',
   profileType: '',
   details: {
@@ -241,7 +242,7 @@ const mockProps = {
 describe('<ProfileDetails />', () => {
   afterEach(cleanup);
 
-  it('onUpdateProfile should be called when all fields are submitted correctly', async () => {
+  it('onUpdateProfile should be called when all fields are submitted correctly profileType ssid', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(
       <Router>
@@ -252,6 +253,166 @@ describe('<ProfileDetails />', () => {
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should work when profileType is captive_portal', async () => {
+    const submitSpy = jest.fn();
+    const mockData = {
+      fileUpload: () => {},
+      id: 5,
+      profileType: 'captive_portal',
+      customerId: 2,
+      name: 'Captive-portal',
+      childProfiles: [],
+      childProfileIds: [],
+      createdTimestamp: '1594830328991',
+      lastModifiedTimestamp: '1594830328991',
+      details: {
+        model_type: 'CaptivePortalConfiguration',
+        name: 'Captive-portal',
+        browserTitle: 'Access the network as Guest',
+        headerContent: 'Captive Portal',
+        userAcceptancePolicy: 'Use this network at your own risk. No warranty of any kind.',
+        successPageMarkdownText: 'Welcome to the network',
+        redirectURL: '',
+        externalCaptivePortalURL: null,
+        sessionTimeoutInMinutes: 60,
+        logoFile: null,
+        backgroundFile: null,
+        walledGardenWhitelist: [],
+        usernamePasswordFile: null,
+        authenticationType: 'guest',
+        radiusAuthMethod: 'CHAP',
+        maxUsersWithSameCredentials: 42,
+        externalPolicyFile: null,
+        backgroundPosition: 'left_top',
+        backgroundRepeat: 'no_repeat',
+        radiusServiceName: null,
+        expiryType: 'unlimited',
+        userList: [],
+        macWhiteList: [],
+        profileType: 'captive_portal',
+      },
+      __typename: 'Profile',
+    };
+    const { getByRole } = render(
+      <Router>
+        <ProfileDetails {...mockData} onUpdateProfile={submitSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('onUpdateProfile should be called when all fields are submitted correctly profileType equipment_ap', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(
+      <Router>
+        <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="equipment_ap" />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('error notification should be visible when save button is clicked with no Radius services and profileType is radius', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole, getByText } = render(
+      <Router>
+        <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="radius" />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('At least 1 RADIUS Service is required.')).toBeVisible();
+    });
+  });
+
+  it('error notification should be visible when save button is clicked with zero subnet and profileType is radius', async () => {
+    const submitSpy = jest.fn();
+    const mockDetails = {
+      ...mockProps,
+      profileType: 'radius',
+      details: {
+        ...mockProps.details,
+        serviceRegionMap: {
+          Ottawa: {
+            model_type: 'RadiusServiceRegion',
+            serverMap: {
+              'Radius-Profile': [
+                {
+                  model_type: 'RadiusServer',
+                  ipAddress: '192.168.0.1',
+                  secret: 'testing123',
+                  authPort: 1812,
+                  timeout: null,
+                },
+              ],
+            },
+            regionName: 'Ottawa',
+          },
+        },
+      },
+    };
+    const { getByRole, getByText } = render(
+      <Router>
+        <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('At least 1 Subnet is required.')).toBeVisible();
+    });
+  });
+
+  it('error notification should be visible when save button is clicked with service zones and profileType is radius', async () => {
+    const submitSpy = jest.fn();
+    const mockDetails = {
+      ...mockProps,
+      profileType: 'radius',
+      details: {
+        ...mockProps.details,
+        serviceRegionMap: {
+          Ottawa: {
+            model_type: 'RadiusServiceRegion',
+            serverMap: {
+              'Radius-Profile': [
+                {
+                  model_type: 'RadiusServer',
+                  ipAddress: '192.168.0.1',
+                  secret: 'testing123',
+                  authPort: 1812,
+                  timeout: null,
+                },
+              ],
+            },
+            regionName: 'Ottawa',
+          },
+        },
+      },
+    };
+    const { getByRole, getByText } = render(
+      <Router>
+        <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('button', { name: /deleteRadiusServiceZone/i }));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('At least 1 RADIUS Service Zone is required.')).toBeVisible();
     });
   });
 
@@ -272,26 +433,26 @@ describe('<ProfileDetails />', () => {
     });
   });
 
-  /* INVALID TESTS
-  it('Back button click should show confirmation modal', () => {
-    const { getByText, getByRole } = render(
+  it('Back button click should show confirmation modal if form is changed', () => {
+    const { getByText, getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockProps} />
       </Router>
     );
-
+    fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
+    fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test1' } });
     fireEvent.click(getByRole('button', { name: /back/i }));
-
     const paragraph = getByText('Please confirm exiting without saving this Profile form.');
     expect(paragraph).toBeVisible();
   });
 
   it('Cancel button click should hide confirmation modal', async () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockProps} />
       </Router>
     );
+    fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
     fireEvent.click(getByRole('button', { name: /back/i }));
     expect(getByText('Leave Form?')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
@@ -299,7 +460,35 @@ describe('<ProfileDetails />', () => {
     await waitFor(() => {
       expect(getByText('Leave Form?')).not.toBeVisible();
     });
-  }); */
+  });
+
+  it('URL should changes to /profiles when back button is clicked', async () => {
+    const { getByRole } = render(
+      <Router>
+        <ProfileDetails {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    await waitFor(() => {
+      expect(window.location.pathname).toEqual('/profiles');
+    });
+  });
+
+  it('Back button click on Leave Form should chnages URL to /Profiles', async () => {
+    const { getByRole, getByText, getByLabelText } = render(
+      <Router>
+        <ProfileDetails {...mockProps} />
+      </Router>
+    );
+    fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Leave Form?')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: 'Back' }));
+
+    await waitFor(() => {
+      expect(window.location.pathname).toEqual('/profiles');
+    });
+  });
 
   it('Error msg should be displayed if input field of Profile Name is empty', async () => {
     const { getByLabelText, getByText } = render(

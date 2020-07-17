@@ -82,6 +82,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
     }
 
     const isValidSize = file.size / 1024 < 400;
+
     if (!isValidSize) {
       if (showMessages) message.error('Image must smaller than 400KB!');
       return false;
@@ -95,9 +96,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       let list = [...fileList];
 
       list = list.slice(-1);
-      list = list.map(i => {
-        return { ...i, url: i.response && i.response.url };
-      });
+      list = list.map(i => ({ ...i, url: i.response && i.response.url }));
 
       return list;
     }
@@ -205,6 +204,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
         // validate as IP Range
         ipAddrs[0] = ipAddrs[0].trim();
         ipAddrs[1] = ipAddrs[1].trim();
+
         if (!validateIPv4(ipAddrs[0]) || !validateIPv4(ipAddrs[1])) {
           return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
         }
@@ -305,6 +305,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               ]}
             >
               <Select
+                data-testid="authenticationMode"
                 className={styles.Field}
                 onChange={value => setAuthentication(value)}
                 placeholder="Select authentication mode "
@@ -551,6 +552,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             <div className={styles.InlineDiv}>
               <Item name="logoFile" className={styles.Image}>
                 <Upload
+                  data-testid="logoFile"
                   accept="image/*"
                   fileList={logoFileList}
                   beforeUpload={handleFileUpload}
@@ -562,6 +564,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               </Item>
               <Item name="backgroundFile" className={styles.Image}>
                 <Upload
+                  data-testid="backgroundFile"
                   accept="image/*"
                   fileList={bgFileList}
                   beforeUpload={handleFileUpload}

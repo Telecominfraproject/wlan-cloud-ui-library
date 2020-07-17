@@ -71,11 +71,41 @@ describe('<Profile />', () => {
     expect(paragraph).toBeVisible();
   });
 
+  it('cancel button should hide delete modal', async () => {
+    const { getByText, getByRole } = render(
+      <Router>
+        <Profile {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(screen.getByTitle('delete'));
+
+    const paragraph = getByText('Are you sure you want to delete the account:');
+    expect(paragraph).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    await waitFor(() => {
+      expect(paragraph).toBeVisible();
+    });
+  });
+
   it('onDeleteProfile should be called when Delete button on modal is clicked', async () => {
+    const data = {
+      ...mockProps,
+      data: [
+        {
+          details: {},
+          id: 1,
+          name: 'Radius-Profile',
+          profileType: 'equipment_ap',
+          __typename: 'Profile',
+        },
+      ],
+    };
     const submitSpy = jest.fn();
     const { getByRole } = render(
       <Router>
-        <Profile {...mockProps} onDeleteProfile={submitSpy} />
+        <Profile {...data} onDeleteProfile={submitSpy} />
       </Router>
     );
     fireEvent.click(screen.getByTitle('delete'));
@@ -85,5 +115,46 @@ describe('<Profile />', () => {
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should work with profileType null', async () => {
+    const data = {
+      ...mockProps,
+      data: [
+        {
+          details: {},
+          id: 1,
+          name: 'Radius-Profile',
+          profileType: null,
+          __typename: 'Profile',
+        },
+      ],
+    };
+    const submitSpy = jest.fn();
+    const { queryByText } = render(
+      <Router>
+        <Profile {...data} onDeleteProfile={submitSpy} />
+      </Router>
+    );
+    expect(queryByText('Delete')).not.toBeInTheDocument();
+  });
+
+  it('Load More Button Should show when isLastPage false', () => {
+    const onLoadMore = jest.fn();
+    const submitSpy = jest.fn();
+    const data = {
+      ...mockProps,
+      isLastPage: false,
+      onLoadMore,
+    };
+
+    const { getByRole } = render(
+      <Router>
+        <Profile {...data} onDeleteProfile={submitSpy} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Load More' }));
+
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
   });
 });

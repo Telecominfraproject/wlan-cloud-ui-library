@@ -74,6 +74,148 @@ const mockProps = {
 describe('<SSIDForm />', () => {
   afterEach(cleanup);
 
+  it('should work when secureMode is null ', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      secureMode: null,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when ssid is null ', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      ssid: null,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when broadcastSsid is null ', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      broadcastSsid: null,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when appliedRadios are null ', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      appliedRadios: null,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when noLocalSubnets is true', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      noLocalSubnets: true,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when captivePortalId is 1', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      captivePortalId: 1,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when vlanId is null', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      vlanId: null,
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
+  it('should work when wepConfig is not null', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      wepConfig: {
+        wepKeys: [
+          {
+            txKeyConverted: 3434,
+          },
+        ],
+      },
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+    render(<SSIDFormComp />);
+  });
+
   it('error message should be visible when input value for Profile Name is invalid', async () => {
     const SSIDFormComp = () => {
       const [form] = Form.useForm();
@@ -97,6 +239,14 @@ describe('<SSIDForm />', () => {
       expect(
         getByText('Upstream bandwidth limit can be a number between 0 and 100.')
       ).toBeVisible();
+      fireEvent.change(getAllByPlaceholderText('0-100')[0], { target: { value: 1000 } });
+      fireEvent.change(getAllByPlaceholderText('0-100')[1], { target: { value: 1000 } });
+      expect(
+        getByText('Downstream bandwidth limit can be a number between 0 and 100.')
+      ).toBeVisible();
+      expect(
+        getByText('Upstream bandwidth limit can be a number between 0 and 100.')
+      ).toBeVisible();
     });
   });
 
@@ -110,7 +260,7 @@ describe('<SSIDForm />', () => {
       );
     };
 
-    const { getByText, getAllByText, getByPlaceholderText } = render(<SSIDFormComp />);
+    const { getByText, queryByText, getAllByText, getByPlaceholderText } = render(<SSIDFormComp />);
 
     fireEvent.click(getByText('NAT'));
     await waitFor(() => {
@@ -122,10 +272,20 @@ describe('<SSIDForm />', () => {
       expect(getByText('Use Custom VLAN')).toBeVisible();
       expect(getByText('Use Default VLAN')).toBeVisible();
     });
-    fireEvent.change(getByPlaceholderText('2-4095'), { target: { value: null } });
 
+    fireEvent.change(getByPlaceholderText('2-4095'), { target: { value: null } });
     await waitFor(() => {
       expect(getByText('Vlan expected between 1 and 4095')).toBeVisible();
+    });
+
+    fireEvent.change(getByPlaceholderText('2-4095'), { target: { value: 4096 } });
+    await waitFor(() => {
+      expect(getByText('Vlan expected between 1 and 4095')).toBeVisible();
+    });
+
+    fireEvent.change(getByPlaceholderText('2-4095'), { target: { value: 1 } });
+    await waitFor(() => {
+      expect(queryByText('Vlan expected between 1 and 4095')).not.toBeInTheDocument();
     });
   });
 
@@ -148,17 +308,12 @@ describe('<SSIDForm />', () => {
     ).toBeVisible();
     expect(getByText('WEP Key')).toBeVisible();
 
-    // const authentication = getByLabelText('Authentication');
-    // const DOWN_ARROW = { keyCode: 40 };
-    // fireEvent.keyDown(authentication, DOWN_ARROW);
-
     const node = getByLabelText('WEP Key');
     fireEvent.change(node, { target: { value: 1234567890 } });
 
     fireEvent.change(node, {
       target: { value: fireEvent.keyPress(node, { key: 1, code: 49, charCode: 49 }) },
     });
-
     // fireEvent.change(node, { target: { value: 1 } });
     await waitFor(() => {
       expect(
@@ -166,6 +321,27 @@ describe('<SSIDForm />', () => {
           'Please enter exactly 10 or 26 hexadecimal digits representing a 64-bit or 128-bit key'
         )
       ).toBeVisible();
+    });
+  });
+
+  it('input filed should remain empty if value is invalid for WEP Key input filed', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText } = render(<SSIDFormComp />);
+
+    const node = getByLabelText('WEP Key');
+
+    fireEvent.change(node, {
+      target: { value: fireEvent.keyPress(node, { key: 'a', code: 65, charCode: 65 }) },
+    });
+    await waitFor(() => {
+      expect(node.value).toBe('false');
     });
   });
 
@@ -189,6 +365,34 @@ describe('<SSIDForm />', () => {
     fireEvent.click(getByText('Open (No ecryption)'));
     await waitFor(() => {
       expect(getByText('802.11k')).toBeVisible();
+    });
+  });
+
+  it('changing Mode select option to WPA & WPA2 Personal (mixed mode) should update Roaming card', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      secureMode: 'wpa2Radius',
+    };
+
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm details={{ ...mockDetails }} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, container } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    const DOWN_ARROW = { keyCode: 40 };
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WPA & WPA2 Personal (mixed mode)'));
+    fireEvent.click(getByText('WPA & WPA2 Personal (mixed mode)'));
+    await waitFor(() => {
+      expect(getByText('Security Key')).toBeVisible();
     });
   });
 });
