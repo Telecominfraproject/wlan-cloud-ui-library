@@ -4,16 +4,12 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 
 import Button from 'components/Button';
-import Modal from 'components/Modal';
 
-import SSIDForm from '../SSID';
 import styles from '../index.module.scss';
 
 const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
   const { Item } = Form;
   const { Option } = Select;
-
-  const [addModal, setAddModal] = useState(false);
 
   const [vlan, setVlan] = useState(details.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(
@@ -111,26 +107,6 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Modal
-        onCancel={() => setAddModal(false)}
-        visible={addModal}
-        onSuccess={() => {}}
-        title="Add Wireless Network Profile"
-        width={1200}
-        content={
-          <div>
-            <Card title="Create Profile Name">
-              <Item
-                label="Profile Name"
-                rules={[{ required: true, message: 'Please input your new profile name' }]}
-              >
-                <Input className={styles.Field} placeholder="Enter profile name" />
-              </Item>
-            </Card>
-            <SSIDForm />
-          </div>
-        }
-      />
       <Card title="LAN and Services ">
         <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
           <Checkbox data-testid="vlanCheckbox" onChange={() => setVlan(!vlan)}>

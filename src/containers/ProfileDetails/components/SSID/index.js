@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import { Card, Form, Input, Tooltip, Checkbox, Radio, Select } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-import Modal from 'components/Modal';
-
-import RadiusForm from '../Radius';
 import styles from '../index.module.scss';
 import { RADIOS, ROAMING } from '../../constants/index';
 
@@ -14,7 +11,6 @@ const { Option } = Select;
 
 const SSIDForm = ({ form, details }) => {
   const [mode, setMode] = useState(details.secureMode || 'open');
-  const [radiusModal, setRadiusModal] = useState(false);
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -64,26 +60,6 @@ const SSIDForm = ({ form, details }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Modal
-        onCancel={() => setRadiusModal(false)}
-        visible={radiusModal}
-        onSuccess={() => {}}
-        title="Add Radius Profile"
-        width={1200}
-        content={
-          <div>
-            <Card title="Create Profile Name">
-              <Item
-                label="Profile Name"
-                rules={[{ required: true, message: 'Please input your new profile name' }]}
-              >
-                <Input className={styles.Field} placeholder="Enter profile name" />
-              </Item>
-            </Card>
-            <RadiusForm />
-          </div>
-        }
-      />
       <Card title="SSID">
         <Item
           label="SSID Name"

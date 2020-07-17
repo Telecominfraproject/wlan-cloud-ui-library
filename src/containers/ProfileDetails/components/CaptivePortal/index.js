@@ -560,11 +560,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
         <Panel header="Whitelist" forceRender>
           <Item
             label="Configure"
-            rules={[
-              () => ({
-                validator: validateWhitelist,
-              }),
-            ]}
+            rules={[{ validator: validateWhitelist }]}
             validateStatus={whitelistValidation.status}
             help={whitelistValidation.help}
           >
