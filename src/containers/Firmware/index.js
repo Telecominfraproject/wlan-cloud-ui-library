@@ -16,6 +16,8 @@ const Firmware = ({
   trackAssignmentData,
   onDeleteTrackAssignment,
   onDeleteFirmware,
+  onCreateFirnware,
+  onUpdateFirmware,
 }) => {
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
@@ -30,12 +32,15 @@ const Firmware = ({
 
   const [firmwareValues, setFirmwareValues] = useState({
     id: 0,
-    modelId: 0,
+    modelId: '',
     versionName: '',
     description: '',
     commit: '',
-    releaseDate: 0,
+    releaseDate: '',
     filename: '',
+    validationCode: '',
+    createdTimestamp: '',
+    lastModifiedTimestamp: '',
   });
 
   const deleteTrackAssignment = () => {
@@ -47,6 +52,71 @@ const Firmware = ({
     const { id } = firmwareValues;
     onDeleteFirmware(id);
     setDeleteVersionModal(false);
+  };
+  const createFirmware = ({
+    modelId,
+    versionName,
+    description,
+    filename,
+    commit,
+    date,
+    validationCode,
+  }) => {
+    if (date !== null) {
+      const releaseDate = date.valueOf().toString();
+      onCreateFirnware(
+        modelId,
+        versionName,
+        description,
+        filename,
+        commit,
+        releaseDate,
+        validationCode
+      );
+    } else {
+      onCreateFirnware(modelId, versionName, description, filename, commit, validationCode);
+    }
+    setAddVersionModal(false);
+  };
+
+  const updateFirmware = ({
+    modelId,
+    versionName,
+    description,
+    filename,
+    commit,
+    date,
+    validationCode,
+  }) => {
+    const { id, createdTimestamp, lastModifiedTimestamp } = firmwareValues;
+    if (date !== null) {
+      const releaseDate = date.valueOf().toString();
+      onUpdateFirmware(
+        id,
+        modelId,
+        versionName,
+        description,
+        filename,
+        commit,
+        releaseDate,
+        validationCode,
+        createdTimestamp,
+        lastModifiedTimestamp
+      );
+    } else {
+      onUpdateFirmware(
+        id,
+        modelId,
+        versionName,
+        description,
+        filename,
+        commit,
+        validationCode,
+        createdTimestamp,
+        lastModifiedTimestamp
+      );
+    }
+    setEditVersionModal(false);
   };
 
   const assignmentColumns = [
@@ -160,12 +230,15 @@ const Firmware = ({
           onClick={() => {
             setFirmwareValues({
               id: record.id,
-              modelId: record.modelId,
+              modelId: record.modelId.toString(),
               versionName: record.versionName,
               description: record.description,
               commit: record.commit,
-              releaseDate: record.releaseDate,
+              releaseDate: record.releaseDate.toString(),
               filename: record.filename,
+              validationCode: record.validationCode,
+              createdTimestamp: record.createdTimestamp,
+              lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
             setEditVersionModal(true);
           }}
@@ -192,6 +265,9 @@ const Firmware = ({
               commit: record.commit,
               releaseDate: record.releaseDate,
               filename: record.filename,
+              validationCode: record.validationCode,
+              createdTimestamp: record.createdTimestamp,
+              lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
             setDeleteVersionModal(true);
           }}
@@ -221,20 +297,21 @@ const Firmware = ({
       <VersionModal
         onCancel={() => setAddVersionModal(false)}
         visible={addVersionModal}
-        onSubmit={() => {}}
+        onSubmit={createFirmware}
         title="Add Firmware Version"
       />
       <VersionModal
         onCancel={() => setEditVersionModal(false)}
         visible={editVersionModal}
-        onSubmit={() => {}}
+        onSubmit={updateFirmware}
         title="Edit Firmware Version"
-        modelId={firmwareValues.modelId}
+        modelId={firmwareValues.modelId.toString()}
         versionName={firmwareValues.versionName}
         description={firmwareValues.description}
         commit={firmwareValues.commit}
-        releaseDate={firmwareValues.releaseDate}
+        releaseDate={firmwareValues.releaseDate.toString()}
         filename={firmwareValues.filename}
+        validationCode={firmwareValues.validationCode}
       />
       <Modal
         onCancel={() => setDeleteAssignmentModal(false)}
@@ -288,6 +365,8 @@ Firmware.propTypes = {
   trackAssignmentData: PropTypes.instanceOf(Object),
   onDeleteTrackAssignment: PropTypes.func.isRequired,
   onDeleteFirmware: PropTypes.func.isRequired,
+  onCreateFirnware: PropTypes.func.isRequired,
+  onUpdateFirmware: PropTypes.func.isRequired,
 };
 
 Firmware.defaultProps = {

@@ -19,16 +19,18 @@ const VersionModal = ({
   commit,
   releaseDate,
   filename,
+  validationCode,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ modelId, versionName, description, commit, filename });
+    form.setFieldsValue({ modelId, versionName, description, commit, filename, validationCode });
   }, [visible]);
+
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 15 },
   };
 
   const date = new Date(parseInt(releaseDate, 10));
@@ -45,7 +47,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={styles.field} />
+        <Input className={styles.field} disabled={modelId !== ''} />
       </Item>
       <Item
         label="Version Name"
@@ -71,14 +73,18 @@ const VersionModal = ({
       >
         <Input className={styles.field} />
       </Item>
-      <Item label="Validation Code (MD5)" name="validation">
+      <Item label="Validation Code (MD5)" name="validationCode">
         <Input className={styles.field} />
       </Item>
       <Item label="Commit" name="commit">
         <Input className={styles.field} />
       </Item>
 
-      <Item label="Release Date" name="releaseDate" initialValue={moment(date)}>
+      <Item
+        label="Release Date"
+        name="date"
+        initialValue={releaseDate !== null ? moment(date) : null}
+      >
         <DatePicker showTime />
       </Item>
       <Item label="Description" name="description">
@@ -113,22 +119,24 @@ VersionModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
-  modelId: PropTypes.number,
+  modelId: PropTypes.string,
   versionName: PropTypes.string,
   description: PropTypes.string,
   commit: PropTypes.string,
-  releaseDate: PropTypes.number,
+  releaseDate: PropTypes.string,
   filename: PropTypes.string,
+  validationCode: PropTypes.string,
 };
 
 VersionModal.defaultProps = {
   title: '',
-  modelId: 0,
+  modelId: '',
   versionName: '',
   description: '',
   commit: '',
-  releaseDate: 0,
+  releaseDate: null,
   filename: '',
+  validationCode: '',
 };
 
 export default VersionModal;
