@@ -23,17 +23,25 @@ const VersionModal = ({
 }) => {
   const [form] = Form.useForm();
 
+  const date = new Date(parseInt(releaseDate, 10));
+
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ modelId, versionName, description, commit, filename, validationCode });
+    form.setFieldsValue({
+      modelId,
+      versionName,
+      description,
+      commit,
+      filename,
+      validationCode,
+      date: releaseDate !== null ? moment(date) : null,
+    });
   }, [visible]);
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 15 },
   };
-
-  const date = new Date(parseInt(releaseDate, 10));
 
   const content = (
     <Form {...layout} form={form}>
@@ -80,11 +88,7 @@ const VersionModal = ({
         <Input className={styles.field} />
       </Item>
 
-      <Item
-        label="Release Date"
-        name="date"
-        initialValue={releaseDate !== null ? moment(date) : null}
-      >
+      <Item label="Release Date" name="date">
         <DatePicker showTime />
       </Item>
       <Item label="Description" name="description">
@@ -115,9 +119,9 @@ const VersionModal = ({
 };
 
 VersionModal.propTypes = {
-  onCancel: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  visible: PropTypes.bool,
+  onSubmit: PropTypes.func,
   title: PropTypes.string,
   modelId: PropTypes.string,
   versionName: PropTypes.string,
@@ -129,6 +133,9 @@ VersionModal.propTypes = {
 };
 
 VersionModal.defaultProps = {
+  onCancel: () => {},
+  visible: () => {},
+  onSubmit: () => {},
   title: '',
   modelId: '',
   versionName: '',

@@ -94,9 +94,9 @@ const AssignmentModal = ({
 };
 
 AssignmentModal.propTypes = {
-  onCancel: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  visible: PropTypes.bool,
+  onSubmit: PropTypes.func,
   title: PropTypes.string,
   firmware: PropTypes.string,
   model: PropTypes.string,
@@ -105,6 +105,9 @@ AssignmentModal.propTypes = {
 };
 
 AssignmentModal.defaultProps = {
+  onCancel: () => {},
+  visible: () => {},
+  onSubmit: () => {},
   title: '',
   firmware: '',
   model: '',

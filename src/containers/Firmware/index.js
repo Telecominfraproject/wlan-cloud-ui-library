@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table } from 'antd';
+import { Table, Alert, Spin } from 'antd';
 import moment from 'moment';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -18,6 +18,10 @@ const Firmware = ({
   onDeleteFirmware,
   onCreateFirnware,
   onUpdateFirmware,
+  firmwareError,
+  firmwareLoading,
+  trackAssignmentError,
+  trackAssignmentLoading,
 }) => {
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
@@ -30,19 +34,7 @@ const Firmware = ({
     firmwareVersionId: 0,
   });
 
-  const [firmwareValues, setFirmwareValues] = useState({
-    id: 0,
-    modelId: '',
-    versionName: '',
-    description: '',
-    commit: '',
-    releaseDate: '',
-    filename: '',
-    validationCode: '',
-    createdTimestamp: '',
-    lastModifiedTimestamp: '',
-  });
-
+  const [firmwareValues, setFirmwareValues] = useState({});
   const deleteTrackAssignment = () => {
     const { firmwareTrackId, firmwareVersionId } = taskAssignmentValues;
     onDeleteTrackAssignment(firmwareTrackId, firmwareVersionId);
@@ -62,20 +54,15 @@ const Firmware = ({
     date,
     validationCode,
   }) => {
-    if (date !== null) {
-      const releaseDate = date.valueOf().toString();
-      onCreateFirnware(
-        modelId,
-        versionName,
-        description,
-        filename,
-        commit,
-        releaseDate,
-        validationCode
-      );
-    } else {
-      onCreateFirnware(modelId, versionName, description, filename, commit, validationCode);
-    }
+    onCreateFirnware(
+      modelId,
+      versionName,
+      description,
+      filename,
+      commit,
+      date ? date.valueOf().toString() : null,
+      validationCode
+    );
     setAddVersionModal(false);
   };
 
@@ -89,33 +76,18 @@ const Firmware = ({
     validationCode,
   }) => {
     const { id, createdTimestamp, lastModifiedTimestamp } = firmwareValues;
-    if (date !== null) {
-      const releaseDate = date.valueOf().toString();
-      onUpdateFirmware(
-        id,
-        modelId,
-        versionName,
-        description,
-        filename,
-        commit,
-        releaseDate,
-        validationCode,
-        createdTimestamp,
-        lastModifiedTimestamp
-      );
-    } else {
-      onUpdateFirmware(
-        id,
-        modelId,
-        versionName,
-        description,
-        filename,
-        commit,
-        validationCode,
-        createdTimestamp,
-        lastModifiedTimestamp
-      );
-    }
+    onUpdateFirmware(
+      id,
+      modelId,
+      versionName,
+      description,
+      filename,
+      commit,
+      date ? date.valueOf().toString() : null,
+      validationCode,
+      createdTimestamp,
+      lastModifiedTimestamp
+    );
     setEditVersionModal(false);
   };
 
@@ -132,7 +104,7 @@ const Firmware = ({
       key: 'version',
       render: firmwareRecordId => {
         const firmware = Object.values(firmwareData).find(i => i.id === firmwareRecordId);
-        return firmware.versionName;
+        return firmware && firmware.versionName;
       },
     },
     {
@@ -147,11 +119,7 @@ const Firmware = ({
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
-            setTaskAssignmentValues({
-              firmwareTrackId: record.trackRecordId,
-              firmwareVersionId: record.firmwareVersionRecordId,
-              name: record.modelId,
-            });
+            setTaskAssignmentValues({ ...record });
             setEditAssignmentModal(true);
           }}
         />
@@ -169,11 +137,7 @@ const Firmware = ({
           type="primary"
           icon={<DeleteFilled />}
           onClick={() => {
-            setTaskAssignmentValues({
-              firmwareTrackId: record.trackRecordId,
-              firmwareVersionId: record.firmwareVersionRecordId,
-              name: record.modelId,
-            });
+            setTaskAssignmentValues({ ...record });
             setDeleteAssignmentModal(true);
           }}
         />
@@ -211,10 +175,7 @@ const Firmware = ({
       dataIndex: 'releaseDate',
       key: 'date',
       width: 180,
-      render: time => {
-        const date = moment(time, 'x').format('DD MMM YYYY, hh:mm a');
-        return date;
-      },
+      render: time => moment(time, 'x').format('DD MMM YYYY, hh:mm a'),
     },
     {
       title: '',
@@ -228,18 +189,7 @@ const Firmware = ({
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
-            setFirmwareValues({
-              id: record.id,
-              modelId: record.modelId.toString(),
-              versionName: record.versionName,
-              description: record.description,
-              commit: record.commit,
-              releaseDate: record.releaseDate.toString(),
-              filename: record.filename,
-              validationCode: record.validationCode,
-              createdTimestamp: record.createdTimestamp,
-              lastModifiedTimestamp: record.lastModifiedTimestamp,
-            });
+            setFirmwareValues({ ...record });
             setEditVersionModal(true);
           }}
         />
@@ -257,18 +207,7 @@ const Firmware = ({
           type="primary"
           icon={<DeleteFilled />}
           onClick={() => {
-            setFirmwareValues({
-              id: record.id,
-              modelId: record.modelId,
-              versionName: record.versionName,
-              description: record.description,
-              commit: record.commit,
-              releaseDate: record.releaseDate,
-              filename: record.filename,
-              validationCode: record.validationCode,
-              createdTimestamp: record.createdTimestamp,
-              lastModifiedTimestamp: record.lastModifiedTimestamp,
-            });
+            setFirmwareValues({ ...record });
             setDeleteVersionModal(true);
           }}
         />
@@ -291,8 +230,6 @@ const Firmware = ({
         onSubmit={() => {}}
         title="Edit Track Assignment"
         firmwareData={firmwareData}
-        firmware=""
-        model=""
       />
       <VersionModal
         onCancel={() => setAddVersionModal(false)}
@@ -305,13 +242,7 @@ const Firmware = ({
         visible={editVersionModal}
         onSubmit={updateFirmware}
         title="Edit Firmware Version"
-        modelId={firmwareValues.modelId.toString()}
-        versionName={firmwareValues.versionName}
-        description={firmwareValues.description}
-        commit={firmwareValues.commit}
-        releaseDate={firmwareValues.releaseDate.toString()}
-        filename={firmwareValues.filename}
-        validationCode={firmwareValues.validationCode}
+        {...firmwareValues}
       />
       <Modal
         onCancel={() => setDeleteAssignmentModal(false)}
@@ -323,7 +254,7 @@ const Firmware = ({
         content={
           <p>
             Are you sure you want to delete the track assignment:{' '}
-            <strong> {taskAssignmentValues.name} </strong>
+            <strong> {taskAssignmentValues.modelId} </strong>
           </p>
         }
       />
@@ -343,19 +274,45 @@ const Firmware = ({
       />
       <Header>
         <h1>Track Assignments</h1>
-        <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
+        {!trackAssignmentLoading && Object.keys(trackAssignmentError).length === 0 && (
+          <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
+        )}
       </Header>
-      <Table
-        rowKey="id"
-        columns={assignmentColumns}
-        dataSource={trackAssignmentData}
-        pagination={false}
-      />
+      {!trackAssignmentLoading && Object.keys(trackAssignmentError).length === 0 && (
+        <Table
+          rowKey="id"
+          columns={assignmentColumns}
+          dataSource={trackAssignmentData}
+          pagination={false}
+        />
+      )}
+      {trackAssignmentLoading && <Spin size="large" />}
+      {Object.keys(trackAssignmentError).length > 0 && (
+        <Alert
+          message="Error"
+          description="Failed to load Firmware Track Assignment data."
+          type="error"
+          showIcon
+        />
+      )}
       <Header>
         <h1>Versions</h1>
-        <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
+        {!firmwareLoading && Object.keys(firmwareError).length === 0 && (
+          <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
+        )}
       </Header>
-      <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
+      {!firmwareLoading && Object.keys(firmwareError).length === 0 && (
+        <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
+      )}
+      {firmwareLoading && <Spin size="large" />}
+      {Object.keys(firmwareError).length > 0 && (
+        <Alert
+          message="Error"
+          description="Failed to load Firmware Version data."
+          type="error"
+          showIcon
+        />
+      )}
     </Container>
   );
 };
@@ -367,11 +324,19 @@ Firmware.propTypes = {
   onDeleteFirmware: PropTypes.func.isRequired,
   onCreateFirnware: PropTypes.func.isRequired,
   onUpdateFirmware: PropTypes.func.isRequired,
+  firmwareError: PropTypes.instanceOf(Object),
+  firmwareLoading: PropTypes.bool,
+  trackAssignmentError: PropTypes.instanceOf(Object),
+  trackAssignmentLoading: PropTypes.bool,
 };
 
 Firmware.defaultProps = {
   firmwareData: {},
   trackAssignmentData: {},
+  firmwareError: {},
+  firmwareLoading: true,
+  trackAssignmentError: {},
+  trackAssignmentLoading: true,
 };
 
 export default Firmware;
