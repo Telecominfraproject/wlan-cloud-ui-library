@@ -804,14 +804,14 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getByText, getAllByTestId } = render(<CaptivePortalFormComp />);
+    const { getAllByText, getAllByTestId } = render(<CaptivePortalFormComp />);
 
     const gifFile = new File(['(⌐□_□)'], 'testImg.gif', {
       type: 'image/gif',
     });
 
     fireEvent.change(getAllByTestId('backgroundFile')[0], { target: { files: [gifFile] } });
-    expect(getByText('You can only upload JPG/PNG file!')).toBeVisible();
+    expect(getAllByText('You can only upload JPG/PNG file!')[1]).toBeVisible();
   });
 
   it('uploading a background image in png format should add image on screen', () => {
