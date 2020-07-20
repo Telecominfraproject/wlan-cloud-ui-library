@@ -33,8 +33,8 @@ const Firmware = ({
     firmwareTrackId: 0,
     firmwareVersionId: 0,
   });
-
   const [firmwareValues, setFirmwareValues] = useState({});
+
   const deleteTrackAssignment = () => {
     const { firmwareTrackId, firmwareVersionId } = taskAssignmentValues;
     onDeleteTrackAssignment(firmwareTrackId, firmwareVersionId);
@@ -60,7 +60,7 @@ const Firmware = ({
       description,
       filename,
       commit,
-      date ? date.valueOf().toString() : null,
+      date ? date.valueOf().toString() : undefined,
       validationCode
     );
     setAddVersionModal(false);
@@ -109,12 +109,12 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: 'edit',
-      key: 'edit',
+      dataIndex: '',
+      key: 'editAssignment',
       width: 60,
       render: (_, record) => (
         <Button
-          title="edit"
+          title="editAssignment"
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -127,12 +127,12 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: 'delete',
-      key: 'delete',
+      dataIndex: '',
+      key: 'deleteAssignment',
       width: 60,
       render: (_, record) => (
         <Button
-          title="delete"
+          title="deleteAssignment"
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
@@ -179,12 +179,12 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: 'edit',
+      dataIndex: '',
       key: 'editFirmware',
       width: 60,
       render: (_, record) => (
         <Button
-          title="edit"
+          title="editFirmware"
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -197,12 +197,12 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: 'delete',
+      dataIndex: '',
       key: 'deleteFirmware',
       width: 60,
       render: (_, record) => (
         <Button
-          title="delete"
+          title="deleteFirmware"
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
@@ -280,15 +280,16 @@ const Firmware = ({
       </Header>
       {!trackAssignmentLoading && Object.keys(trackAssignmentError).length === 0 && (
         <Table
-          rowKey="id"
+          rowKey="modelId"
           columns={assignmentColumns}
           dataSource={trackAssignmentData}
           pagination={false}
         />
       )}
-      {trackAssignmentLoading && <Spin size="large" />}
+      {trackAssignmentLoading && <Spin size="large" data-testid="trackAssignmentSpinner" />}
       {Object.keys(trackAssignmentError).length > 0 && (
         <Alert
+          data-testid="trackAssignmentError"
           message="Error"
           description="Failed to load Firmware Track Assignment data."
           type="error"
@@ -304,9 +305,10 @@ const Firmware = ({
       {!firmwareLoading && Object.keys(firmwareError).length === 0 && (
         <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
       )}
-      {firmwareLoading && <Spin size="large" />}
+      {firmwareLoading && <Spin size="large" data-testid="firmwareSpinner" />}
       {Object.keys(firmwareError).length > 0 && (
         <Alert
+          data-testid="firmwareError"
           message="Error"
           description="Failed to load Firmware Version data."
           type="error"
