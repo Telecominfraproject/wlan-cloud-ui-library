@@ -34,7 +34,7 @@ const AssignmentModal = ({
     <Form {...layout} form={form}>
       <Item
         label="Model ID"
-        name="model"
+        name="modelId"
         rules={[
           {
             required: true,
@@ -53,7 +53,7 @@ const AssignmentModal = ({
 
       <Item
         label="Firmware Version"
-        name="version"
+        name="firmwareVersionRecordId"
         rules={[
           {
             required: true,

@@ -26,6 +26,7 @@ const mockProps = {
   onDeleteTrackAssignment: () => {},
   trackAssignmentLoading: false,
   firmwareLoading: false,
+  firmwareTrackLoading: false,
   trackAssignmentError: {},
   firmwareError: {},
   firmwareData: [

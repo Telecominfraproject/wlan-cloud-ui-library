@@ -14,6 +14,8 @@ import VersionModal from './components/VersionModal';
 const Firmware = ({
   firmwareData,
   trackAssignmentData,
+  onCreateTrackAssignment,
+  onUpdateTrackAssignment,
   onDeleteTrackAssignment,
   onDeleteFirmware,
   onCreateFirnware,
@@ -22,6 +24,8 @@ const Firmware = ({
   firmwareLoading,
   trackAssignmentError,
   trackAssignmentLoading,
+  firmwareTrackLoading,
+  firmwareTrackError,
 }) => {
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
@@ -29,22 +33,31 @@ const Firmware = ({
   const [editVersionModal, setEditVersionModal] = useState(false);
   const [deleteAssignmentModal, setDeleteAssignmentModal] = useState(false);
   const [deleteVersionModal, setDeleteVersionModal] = useState(false);
-  const [taskAssignmentValues, setTaskAssignmentValues] = useState({
-    firmwareTrackId: 0,
-    firmwareVersionId: 0,
-  });
+  const [taskAssignmentValues, setTaskAssignmentValues] = useState({});
   const [firmwareValues, setFirmwareValues] = useState({});
+
+  const createTrackAssignment = ({ firmwareVersionRecordId, modelId }) => {
+    onCreateTrackAssignment(firmwareVersionRecordId, modelId);
+    setAddAssignmentModal(false);
+  };
+
+  const createUpdateAssignment = ({ firmwareVersionRecordId, modelId }) => {
+    const { createdTimestamp, lastModifiedTimestamp } = taskAssignmentValues;
+    onUpdateTrackAssignment(
+      firmwareVersionRecordId,
+      modelId,
+      createdTimestamp,
+      lastModifiedTimestamp
+    );
+    setEditAssignmentModal(false);
+  };
 
   const deleteTrackAssignment = () => {
     const { firmwareTrackId, firmwareVersionId } = taskAssignmentValues;
     onDeleteTrackAssignment(firmwareTrackId, firmwareVersionId);
     setDeleteAssignmentModal(false);
   };
-  const deleteFirmware = () => {
-    const { id } = firmwareValues;
-    onDeleteFirmware(id);
-    setDeleteVersionModal(false);
-  };
+
   const createFirmware = ({
     modelId,
     versionName,
@@ -89,6 +102,12 @@ const Firmware = ({
       lastModifiedTimestamp
     );
     setEditVersionModal(false);
+  };
+
+  const deleteFirmware = () => {
+    const { id } = firmwareValues;
+    onDeleteFirmware(id);
+    setDeleteVersionModal(false);
   };
 
   const assignmentColumns = [
@@ -215,19 +234,27 @@ const Firmware = ({
     },
   ];
 
+  const trackAssignmentReady =
+    !trackAssignmentLoading &&
+    !firmwareTrackLoading &&
+    Object.keys(trackAssignmentError).length === 0 &&
+    Object.keys(firmwareTrackError).length === 0;
+
+  const firmwareReady = !firmwareLoading && Object.keys(firmwareError).length === 0;
+
   return (
     <Container>
       <AssignmentModal
         onCancel={() => setAddAssignmentModal(false)}
         visible={addAssignmentModal}
-        onSubmit={() => {}}
+        onSubmit={createTrackAssignment}
         title="Add Track Assignment"
         firmwareData={firmwareData}
       />
       <AssignmentModal
         onCancel={() => setEditAssignmentModal(false)}
         visible={editAssignmentModal}
-        onSubmit={() => {}}
+        onSubmit={createUpdateAssignment}
         title="Edit Track Assignment"
         firmwareData={firmwareData}
       />
@@ -274,11 +301,11 @@ const Firmware = ({
       />
       <Header>
         <h1>Track Assignments</h1>
-        {!trackAssignmentLoading && Object.keys(trackAssignmentError).length === 0 && (
+        {trackAssignmentReady && (
           <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
         )}
       </Header>
-      {!trackAssignmentLoading && Object.keys(trackAssignmentError).length === 0 && (
+      {trackAssignmentReady && (
         <Table
           rowKey="modelId"
           columns={assignmentColumns}
@@ -286,8 +313,11 @@ const Firmware = ({
           pagination={false}
         />
       )}
-      {trackAssignmentLoading && <Spin size="large" data-testid="trackAssignmentSpinner" />}
-      {Object.keys(trackAssignmentError).length > 0 && (
+      {(trackAssignmentLoading || firmwareTrackLoading) && (
+        <Spin size="large" data-testid="trackAssignmentSpinner" />
+      )}
+      {(Object.keys(trackAssignmentError).length > 0 ||
+        Object.keys(firmwareTrackError).length > 0) && (
         <Alert
           data-testid="trackAssignmentError"
           message="Error"
@@ -298,11 +328,9 @@ const Firmware = ({
       )}
       <Header>
         <h1>Versions</h1>
-        {!firmwareLoading && Object.keys(firmwareError).length === 0 && (
-          <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
-        )}
+        {firmwareReady && <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>}
       </Header>
-      {!firmwareLoading && Object.keys(firmwareError).length === 0 && (
+      {firmwareReady && (
         <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
       )}
       {firmwareLoading && <Spin size="large" data-testid="firmwareSpinner" />}
@@ -323,6 +351,8 @@ Firmware.propTypes = {
   firmwareData: PropTypes.instanceOf(Object),
   trackAssignmentData: PropTypes.instanceOf(Object),
   onDeleteTrackAssignment: PropTypes.func.isRequired,
+  onCreateTrackAssignment: PropTypes.func.isRequired,
+  onUpdateTrackAssignment: PropTypes.func.isRequired,
   onDeleteFirmware: PropTypes.func.isRequired,
   onCreateFirnware: PropTypes.func.isRequired,
   onUpdateFirmware: PropTypes.func.isRequired,
@@ -330,6 +360,8 @@ Firmware.propTypes = {
   firmwareLoading: PropTypes.bool,
   trackAssignmentError: PropTypes.instanceOf(Object),
   trackAssignmentLoading: PropTypes.bool,
+  firmwareTrackLoading: PropTypes.bool,
+  firmwareTrackError: PropTypes.instanceOf(Object),
 };
 
 Firmware.defaultProps = {
@@ -339,6 +371,8 @@ Firmware.defaultProps = {
   firmwareLoading: true,
   trackAssignmentError: {},
   trackAssignmentLoading: true,
+  firmwareTrackError: {},
+  firmwareTrackLoading: true,
 };
 
 export default Firmware;
