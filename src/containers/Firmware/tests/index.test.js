@@ -27,6 +27,7 @@ const mockProps = {
   trackAssignmentLoading: false,
   firmwareLoading: false,
   firmwareTrackLoading: false,
+  firmwareModelLoading: false,
   trackAssignmentError: {},
   firmwareError: {},
   firmwareData: [

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Select } from 'antd';
+import { Form, Select, Spin } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
@@ -13,21 +13,28 @@ const AssignmentModal = ({
   onSubmit,
   visible,
   title,
-  firmware,
-  model,
-  assignmentData,
-  firmwareData,
+  firmwareVersionRecordId,
+  modelId,
+  filteredModels,
+  handleSearchFirmware,
+  firmwareVersionData,
+  firmwareVersionLoading,
 }) => {
   const [form] = Form.useForm();
-
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ model, firmware });
+    form.setFieldsValue({ modelId, firmwareVersionRecordId });
+    handleSearchFirmware(modelId);
   }, [visible]);
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
+  };
+
+  const onModelChange = value => {
+    handleSearchFirmware(value);
+    form.setFieldsValue({ firmwareVersionRecordId: '' });
   };
 
   const content = (
@@ -42,10 +49,15 @@ const AssignmentModal = ({
           },
         ]}
       >
-        <Select className={styles.field} placeholder="Select Model ID">
-          {Object.keys(assignmentData).map(i => (
-            <Option key={assignmentData[i].id} value={assignmentData[i].id}>
-              {assignmentData[i].modelId}
+        <Select
+          className={styles.field}
+          placeholder="Select Model ID"
+          onChange={onModelChange}
+          disabled={modelId !== ' '}
+        >
+          {Object.keys(filteredModels).map(i => (
+            <Option key={filteredModels[i]} value={filteredModels[i]}>
+              {filteredModels[i]}
             </Option>
           ))}
         </Select>
@@ -61,13 +73,17 @@ const AssignmentModal = ({
           },
         ]}
       >
-        <Select className={styles.field} placeholder="Select Firmware Version">
-          {Object.keys(firmwareData).map(i => (
-            <Option key={firmwareData[i].id} value={firmwareData[i].id}>
-              {firmwareData[i].versionName}
-            </Option>
-          ))}
-        </Select>
+        {firmwareVersionLoading ? (
+          <Spin size="large" />
+        ) : (
+          <Select className={styles.field} placeholder="Select Firmware Version">
+            {Object.keys(firmwareVersionData).map(i => (
+              <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
+                {firmwareVersionData[i].versionName}
+              </Option>
+            ))}
+          </Select>
+        )}
       </Item>
     </Form>
   );
@@ -98,21 +114,25 @@ AssignmentModal.propTypes = {
   visible: PropTypes.bool,
   onSubmit: PropTypes.func,
   title: PropTypes.string,
-  firmware: PropTypes.string,
-  model: PropTypes.string,
-  firmwareData: PropTypes.instanceOf(Object),
-  assignmentData: PropTypes.instanceOf(Object),
+  firmwareVersionRecordId: PropTypes.string,
+  modelId: PropTypes.string,
+  filteredModels: PropTypes.instanceOf(Object),
+  handleSearchFirmware: PropTypes.func,
+  firmwareVersionData: PropTypes.instanceOf(Object),
+  firmwareVersionLoading: PropTypes.bool,
 };
 
 AssignmentModal.defaultProps = {
   onCancel: () => {},
   visible: () => {},
   onSubmit: () => {},
+  handleSearchFirmware: () => {},
   title: '',
-  firmware: '',
-  model: '',
-  firmwareData: {},
-  assignmentData: {},
+  firmwareVersionRecordId: '',
+  modelId: ' ',
+  filteredModels: {},
+  firmwareVersionData: {},
+  firmwareVersionLoading: false,
 };
 
 export default AssignmentModal;
