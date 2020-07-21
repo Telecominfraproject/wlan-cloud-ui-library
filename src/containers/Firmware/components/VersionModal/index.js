@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Form, Input, DatePicker } from 'antd';
 
 import Modal from 'components/Modal';
-import styles from 'styles/index.scss';
+import globalStyles from 'styles/index.scss';
 
 const { Item } = Form;
 
@@ -55,7 +55,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={styles.field} disabled={modelId !== ''} />
+        <Input className={globalStyles.field} disabled={modelId !== ''} />
       </Item>
       <Item
         label="Version Name"
@@ -67,7 +67,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={styles.field} />
+        <Input className={globalStyles.field} />
       </Item>
       <Item
         label="Firmware URL"
@@ -79,20 +79,20 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={styles.field} />
+        <Input className={globalStyles.field} />
       </Item>
       <Item label="Validation Code (MD5)" name="validationCode">
-        <Input className={styles.field} />
+        <Input className={globalStyles.field} />
       </Item>
       <Item label="Commit" name="commit">
-        <Input className={styles.field} />
+        <Input className={globalStyles.field} />
       </Item>
 
       <Item label="Release Date" name="date">
         <DatePicker showTime />
       </Item>
       <Item label="Description" name="description">
-        <Input.TextArea rows={3} className={styles.field} />
+        <Input.TextArea rows={3} className={globalStyles.field} />
       </Item>
     </Form>
   );

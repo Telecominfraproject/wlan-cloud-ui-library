@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Form, Select, Spin } from 'antd';
 
 import Modal from 'components/Modal';
-import styles from 'styles/index.scss';
+import globalStyles from 'styles/index.scss';
+import styles from '../../index.module.scss';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -50,10 +51,10 @@ const AssignmentModal = ({
         ]}
       >
         <Select
-          className={styles.field}
+          className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
-          disabled={modelId !== ' '}
+          disabled={modelId !== ' ' || filteredModels.length === 0}
         >
           {Object.keys(filteredModels).map(i => (
             <Option key={filteredModels[i]} value={filteredModels[i]}>
@@ -76,7 +77,11 @@ const AssignmentModal = ({
         {firmwareVersionLoading ? (
           <Spin size="large" />
         ) : (
-          <Select className={styles.field} placeholder="Select Firmware Version">
+          <Select
+            className={globalStyles.field}
+            placeholder="Select Firmware Version"
+            disabled={filteredModels.length === 0}
+          >
             {Object.keys(firmwareVersionData).map(i => (
               <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
                 {firmwareVersionData[i].versionName}
@@ -85,6 +90,10 @@ const AssignmentModal = ({
           </Select>
         )}
       </Item>
+
+      {filteredModels.length === 0 && (
+        <div className={styles.Disclaimer}>All Model Ids Are in Use</div>
+      )}
     </Form>
   );
 

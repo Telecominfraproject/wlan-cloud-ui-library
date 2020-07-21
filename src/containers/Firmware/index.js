@@ -87,7 +87,7 @@ const Firmware = ({
       description,
       filename,
       commit,
-      date ? date.valueOf().toString() : undefined,
+      date ? date.valueOf().toString() : null,
       validationCode
     );
     setAddVersionModal(false);
@@ -233,18 +233,23 @@ const Firmware = ({
       dataIndex: '',
       key: 'deleteFirmware',
       width: 60,
-      render: (_, record) => (
-        <Button
-          title="deleteFirmware"
-          className={styles.InfoButton}
-          type="primary"
-          icon={<DeleteFilled />}
-          onClick={() => {
-            setFirmwareValues({ ...record });
-            setDeleteVersionModal(true);
-          }}
-        />
-      ),
+      render: (_, record) => {
+        const found = Object.values(trackAssignmentData).some(
+          i => Object.values(record).indexOf(i.modelId) > 0
+        );
+        return !found ? (
+          <Button
+            title="deleteFirmware"
+            className={styles.InfoButton}
+            type="primary"
+            icon={<DeleteFilled />}
+            onClick={() => {
+              setFirmwareValues({ ...record });
+              setDeleteVersionModal(true);
+            }}
+          />
+        ) : null;
+      },
     },
   ];
 
