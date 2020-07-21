@@ -5,30 +5,45 @@
     flex: 1;
     margin: 0 auto;
   }
+
   .infoWrapper {
     display: flex;
     justify-content: space-between;
   }
 }
 
+.lineChartWrap {
+  display: flex;
+  justify-content: space-between;
+}
+
 .pieChartWrap {
   display: flex;
   justify-content: space-between;
 }
+
 @media screen and (max-width: 1200px) {
   .infoWrapper {
     flex-direction: column;
   }
+
+  .lineChartWrap {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
   .pieChartWrap {
     flex-wrap: wrap;
     flex-direction: column;
   }
 }
+
 @media screen and (max-width: 767px) {
   .mainInfoWrap {
     padding: 30px;
   }
 }
+
 @media screen and (max-width: 575px) {
   .mainInfoWrap {
     padding: 30px 20px;
