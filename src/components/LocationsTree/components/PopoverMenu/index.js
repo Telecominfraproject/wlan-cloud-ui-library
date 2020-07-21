@@ -55,7 +55,7 @@ PopoverMenu.propTypes = {
 
 PopoverMenu.defaultProps = {
   locationType: null,
-  locationId: 0,
+  locationId: '0',
   setEditModal: () => {},
   setAddModal: () => {},
   setDeleteModal: () => {},
