@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Select, Spin } from 'antd';
 
@@ -22,6 +22,7 @@ const AssignmentModal = ({
   firmwareVersionLoading,
 }) => {
   const [form] = Form.useForm();
+  const [model, setModel] = useState('');
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue({ modelId, firmwareVersionRecordId });
@@ -35,6 +36,7 @@ const AssignmentModal = ({
 
   const onModelChange = value => {
     handleSearchFirmware(value);
+    setModel(value);
     form.setFieldsValue({ firmwareVersionRecordId: '' });
   };
 
@@ -54,7 +56,7 @@ const AssignmentModal = ({
           className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
-          disabled={modelId !== ' ' || filteredModels.length === 0}
+          disabled={form.getFieldValue(modelId) === '' || filteredModels.length === 0}
         >
           {Object.keys(filteredModels).map(i => (
             <Option key={filteredModels[i]} value={filteredModels[i]}>
@@ -80,7 +82,7 @@ const AssignmentModal = ({
           <Select
             className={globalStyles.field}
             placeholder="Select Firmware Version"
-            disabled={filteredModels.length === 0}
+            disabled={model === '' || filteredModels.length === 0}
           >
             {Object.keys(firmwareVersionData).map(i => (
               <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
@@ -138,7 +140,7 @@ AssignmentModal.defaultProps = {
   handleSearchFirmware: () => {},
   title: '',
   firmwareVersionRecordId: '',
-  modelId: ' ',
+  modelId: '',
   filteredModels: {},
   firmwareVersionData: {},
   firmwareVersionLoading: false,

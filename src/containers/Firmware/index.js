@@ -147,7 +147,7 @@ const Firmware = ({
       width: 60,
       render: (_, record) => (
         <Button
-          title="editAssignment"
+          title={`edit-track-${record.modelId}`}
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -165,7 +165,7 @@ const Firmware = ({
       width: 60,
       render: (_, record) => (
         <Button
-          title="deleteAssignment"
+          title={`delete-track-${record.modelId}`}
           className={styles.InfoButton}
           type="primary"
           icon={<DeleteFilled />}
@@ -217,7 +217,7 @@ const Firmware = ({
       width: 60,
       render: (_, record) => (
         <Button
-          title="editFirmware"
+          title={`edit-firmware-${record.modelId}`}
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -239,7 +239,7 @@ const Firmware = ({
         );
         return !found ? (
           <Button
-            title="deleteFirmware"
+            title={`delete-firmware-${record.modelId}`}
             className={styles.InfoButton}
             type="primary"
             icon={<DeleteFilled />}
