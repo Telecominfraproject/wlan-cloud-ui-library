@@ -22,11 +22,12 @@ const AssignmentModal = ({
   firmwareVersionLoading,
 }) => {
   const [form] = Form.useForm();
-  const [model, setModel] = useState('');
+  const [model, setModel] = useState();
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue({ modelId, firmwareVersionRecordId });
     handleSearchFirmware(modelId);
+    setModel(modelId);
   }, [visible]);
 
   const layout = {
@@ -56,7 +57,7 @@ const AssignmentModal = ({
           className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
-          disabled={form.getFieldValue(modelId) === '' || filteredModels.length === 0}
+          disabled={modelId !== '' || filteredModels.length === 0}
         >
           {Object.keys(filteredModels).map(i => (
             <Option key={filteredModels[i]} value={filteredModels[i]}>
