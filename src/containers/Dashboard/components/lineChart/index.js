@@ -1,20 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Card } from 'antd';
 import {
-  HighchartsChart,
   Chart,
-  withHighcharts,
-  XAxis,
-  YAxis,
+  HighchartsChart,
   Legend,
   SplineSeries,
   Tooltip,
+  XAxis,
+  YAxis,
+  withHighcharts,
 } from 'react-jsx-highcharts';
+import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
+import PropTypes from 'prop-types';
+import React from 'react';
 import styles from './index.module.scss';
 
-const LineChart = ({ lineChartXAxis, lineChartYAxis, title }) => {
+const LineChart = ({ lineChartData, title }) => {
   const dateTimeLabelFormats = {
     millisecond: '%l:%M:%S%P',
     second: '%l:%M:%S%P',
@@ -29,16 +29,13 @@ const LineChart = ({ lineChartXAxis, lineChartYAxis, title }) => {
   return (
     <div className={styles.container}>
       <Card title={title} className={styles.LineChart}>
-        <HighchartsChart>
+        <HighchartsChart
+          time={{
+            useUTC: false,
+          }}
+        >
           <Chart type="spline" zoomType="x" backgroundColor="#141414" />
-
-          <XAxis
-            tickPixelInterval={90}
-            dateTimeLabelFormats={dateTimeLabelFormats}
-            offset={20}
-            type="datetime"
-            categories={lineChartXAxis}
-          >
+          <XAxis tickPixelInterval={90} dateTimeLabelFormats={dateTimeLabelFormats} type="datetime">
             <XAxis.Title>Time</XAxis.Title>
           </XAxis>
 
@@ -47,12 +44,11 @@ const LineChart = ({ lineChartXAxis, lineChartYAxis, title }) => {
             <Legend.Title />
           </Legend>
           <YAxis minorGridLineWidth={0} gridLineWidth={0} alternateGridColor={null}>
-            {/* <YAxis.Title>Values</YAxis.Title> */}
-            {Array.isArray(lineChartYAxis?.value) ? (
-              <SplineSeries name={lineChartYAxis.name} data={lineChartYAxis.value} />
+            {Array.isArray(lineChartData?.value) ? (
+              <SplineSeries name={lineChartData.name} data={lineChartData.value} />
             ) : (
-              Object.keys(lineChartYAxis).map(key => (
-                <SplineSeries name={lineChartYAxis[key].name} data={lineChartYAxis[key].value} />
+              Object.keys(lineChartData).map(key => (
+                <SplineSeries name={lineChartData[key].name} data={lineChartData[key].value} />
               ))
             )}
           </YAxis>
@@ -63,14 +59,12 @@ const LineChart = ({ lineChartXAxis, lineChartYAxis, title }) => {
 };
 
 LineChart.propTypes = {
-  lineChartXAxis: PropTypes.instanceOf(Array),
-  lineChartYAxis: PropTypes.instanceOf(Object),
+  lineChartData: PropTypes.instanceOf(Object),
   title: PropTypes.string,
 };
 
 LineChart.defaultProps = {
-  lineChartXAxis: [],
-  lineChartYAxis: {},
+  lineChartData: {},
   title: '',
 };
 export default withHighcharts(LineChart, Highcharts);

@@ -1,18 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import DeviceStatsCard from './components/DeviceStatsCard';
 import LineChart from './components/lineChart';
 import PieChart from './components/PieChart';
 import styles from './index.module.scss';
 
-const Dashboard = ({
-  pieChartTitle,
-  statsArr,
-  pieChartData,
-  lineChartYAxis,
-  lineChartXAxis,
-  lineChartTitle,
-}) => {
+const Dashboard = ({ pieChartTitle, statsArr, pieChartData, lineChartData, lineChartTitle }) => {
   const titles = ['AP Vendors', 'Client Vendors'];
   return (
     <div className={styles.mainInfoWrap}>
@@ -30,14 +23,8 @@ const Dashboard = ({
             })}
         </div>
         <div className={styles.lineChartWrap}>
-          {Object.keys(lineChartYAxis).map((key, index) => {
-            return (
-              <LineChart
-                lineChartXAxis={lineChartXAxis}
-                lineChartYAxis={lineChartYAxis[key]}
-                title={lineChartTitle[index]}
-              />
-            );
+          {Object.keys(lineChartData).map((key, index) => {
+            return <LineChart lineChartData={lineChartData[key]} title={lineChartTitle[index]} />;
           })}
         </div>
         <div className={styles.pieChartWrap}>
@@ -54,8 +41,7 @@ Dashboard.propTypes = {
   pieChartTitle: PropTypes.instanceOf(Array).isRequired,
   statsArr: PropTypes.instanceOf(Array).isRequired,
   pieChartData: PropTypes.instanceOf(Array).isRequired,
-  lineChartYAxis: PropTypes.instanceOf(Array).isRequired,
-  lineChartXAxis: PropTypes.instanceOf(Array).isRequired,
+  lineChartData: PropTypes.instanceOf(Array).isRequired,
   lineChartTitle: PropTypes.instanceOf(Array).isRequired,
 };
 
