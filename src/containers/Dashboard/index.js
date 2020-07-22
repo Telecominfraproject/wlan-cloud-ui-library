@@ -7,12 +7,11 @@ import PieChart from './components/PieChart';
 import styles from './index.module.scss';
 
 const Dashboard = ({
-  statsArr,
+  statsCardDetails: { statsArr, statsCardTitle },
   pieChartDetails: { pieChartsData, pieChartTitle },
   lineChartDetails: { lineChartsData, lineChartTitle },
   lineChartLoading,
 }) => {
-  const titles = ['AP Vendors', 'Client Vendors'];
   return (
     <div className={styles.mainInfoWrap}>
       <div className={styles.rightInfoWrap}>
@@ -20,8 +19,8 @@ const Dashboard = ({
           {statsArr?.map((data, index) => {
             return (
               <DeviceStatsCard
-                key={pieChartTitle[index]}
-                title={pieChartTitle[index]}
+                key={statsCardTitle[index]}
+                title={statsCardTitle[index]}
                 cardData={data}
               />
             );
@@ -39,8 +38,10 @@ const Dashboard = ({
           )}
         </div>
         <div className={styles.chartWrap}>
-          {pieChartsData.map((data, index) => {
-            return <PieChart key={titles[index]} chartData={data} title={titles[index]} />;
+          {pieChartsData?.map((data, index) => {
+            return (
+              <PieChart key={pieChartTitle[index]} chartData={data} title={pieChartTitle[index]} />
+            );
           })}
         </div>
       </div>
@@ -49,15 +50,15 @@ const Dashboard = ({
 };
 
 Dashboard.propTypes = {
+  statsCardDetails: PropTypes.instanceOf(Object),
   pieChartDetails: PropTypes.instanceOf(Object),
-  statsArr: PropTypes.instanceOf(Array),
   lineChartDetails: PropTypes.instanceOf(Object),
   lineChartLoading: PropTypes.bool,
 };
 
 Dashboard.defaultProps = {
+  statsCardDetails: {},
   pieChartDetails: {},
-  statsArr: [],
   lineChartDetails: {},
   lineChartLoading: true,
 };
