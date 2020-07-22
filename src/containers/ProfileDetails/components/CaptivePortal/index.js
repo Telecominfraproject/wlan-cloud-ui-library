@@ -557,7 +557,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       </Collapse>
 
       <Collapse expandIconPosition="right">
-        <Panel header="Whitelist" forceRender>
+        <Panel header="Allow List" forceRender>
           <Item
             label="Configure"
             rules={[{ validator: validateWhitelist }]}
