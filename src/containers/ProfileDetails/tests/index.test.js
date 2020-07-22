@@ -280,7 +280,7 @@ describe('<ProfileDetails />', () => {
         sessionTimeoutInMinutes: 60,
         logoFile: null,
         backgroundFile: null,
-        walledGardenWhitelist: [],
+        walledGardenAllowlist: [],
         usernamePasswordFile: null,
         authenticationType: 'guest',
         radiusAuthMethod: 'CHAP',
