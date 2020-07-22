@@ -59,7 +59,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
     (details.backgroundFile && [formatFile(details.backgroundFile)]) || []
   );
 
-  const [whitelist, setWhitelist] = useState(details.walledGardenWhitelist || []);
+  const [whitelist, setWhitelist] = useState(details.walledGardenAllowlist || []);
   const [whitelistSearch, setWhitelistSearch] = useState();
   const [whitelistValidation, setWhitelistValidation] = useState({});
 
@@ -271,7 +271,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       redirectURL: details.redirectURL,
       externalCaptivePortalURL: details.externalCaptivePortalURL,
       externalSplashPage: details.externalCaptivePortalURL ? 'true' : 'false',
-      walledGardenWhitelist: details.walledGardenWhitelist || [],
+      walledGardenAllowlist: details.walledGardenAllowlist || [],
       logoFile: details.logoFile && formatFile(details.logoFile),
       backgroundFile: details.backgroundFile && formatFile(details.backgroundFile),
       backgroundRepeat: details.backgroundRepeat || 'no_repeat',
@@ -281,7 +281,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      walledGardenWhitelist: whitelist,
+      walledGardenAllowlist: whitelist,
     });
   }, [whitelist]);
 
@@ -592,7 +592,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             />
           )}
 
-          <Item name="walledGardenWhitelist" hidden>
+          <Item name="walledGardenAllowlist" hidden>
             <Input />
           </Item>
         </Panel>
