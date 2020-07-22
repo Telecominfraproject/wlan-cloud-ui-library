@@ -55,6 +55,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       render: (_, record) => {
         return record.profileType === 'ssid' || record.profileType === 'equipment_ap' ? (
           <Button
+            title="delete"
             icon={<DeleteFilled />}
             onClick={() => {
               setDeleteModal(true);
@@ -93,7 +94,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
             <Link to="/addprofile">
               <Button className={styles.AddProfile}> Add Profile </Button>
             </Link>
-            <Button icon={<ReloadOutlined />} onClick={onReload} />
+            <Button icon={<ReloadOutlined />} onClick={onReload} title="reload" />
           </div>
         </Header>
         <Table
