@@ -30,6 +30,7 @@ const mockProps = {
   firmwareLoading: false,
   firmwareTrackLoading: false,
   firmwareModelLoading: false,
+  firmwareVersionLoading: false,
   trackAssignmentError: {},
   firmwareError: {},
   firmwareData: [
@@ -85,6 +86,7 @@ const mockProps = {
       __typename: 'FirmwareTrackAssignment',
     },
   ],
+  firmwareModelData: ['ea8300-ca', 'ap2220', 'ecw5211', 'ea8300', 'ecw5410'],
 
   firmwareVersionData: [
     {
@@ -102,8 +104,6 @@ const mockProps = {
       __typename: 'Firmware',
     },
   ],
-
-  firmwareModelData: ['ea8300-ca', 'ap2220', 'ecw5211', 'ea8300', 'ecw5410'],
 };
 const MISSING_MODEL = 'Please input your Model ID';
 const MISSING_VERSION = 'Please input your Version Name';
@@ -244,8 +244,8 @@ describe('<Firmware />', () => {
 
     const firmware = getByLabelText('Firmware Version');
     fireEvent.keyDown(firmware, DOWN_ARROW);
-    await waitForElement(() => getByText('ea8300-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ea8300-2020-06-25-ce03472'));
+    await waitForElement(() => getAllByText('ea8300-2020-06-25-ce03472')[2]);
+    fireEvent.click(getAllByText('ea8300-2020-06-25-ce03472')[2]);
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 

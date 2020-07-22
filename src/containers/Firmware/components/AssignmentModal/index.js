@@ -144,7 +144,7 @@ AssignmentModal.defaultProps = {
   modelId: '',
   filteredModels: {},
   firmwareVersionData: {},
-  firmwareVersionLoading: false,
+  firmwareVersionLoading: true,
 };
 
 export default AssignmentModal;
