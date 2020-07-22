@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Select, Spin } from 'antd';
+import { Form, Select, Spin, Alert } from 'antd';
 
 import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
@@ -20,6 +20,10 @@ const AssignmentModal = ({
   handleSearchFirmware,
   firmwareVersionData,
   firmwareVersionLoading,
+  firmwareModelError,
+  firmwareModelLoading,
+  firmwareTrackError,
+  firmwareTrackLoading,
 }) => {
   const [form] = Form.useForm();
   const [model, setModel] = useState();
@@ -32,7 +36,7 @@ const AssignmentModal = ({
 
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 14 },
   };
 
   const onModelChange = value => {
@@ -57,7 +61,7 @@ const AssignmentModal = ({
           className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
-          disabled={model !== '' || filteredModels.length === 0}
+          disabled={modelId || filteredModels.length === 0}
         >
           {Object.keys(filteredModels).map(i => (
             <Option key={filteredModels[i]} value={filteredModels[i]}>
@@ -78,12 +82,12 @@ const AssignmentModal = ({
         ]}
       >
         {firmwareVersionLoading ? (
-          <Spin size="large" />
+          <Spin className={styles.spinner} size="large" />
         ) : (
           <Select
             className={globalStyles.field}
             placeholder="Select Firmware Version"
-            disabled={model === '' && filteredModels.length === 0}
+            disabled={title === 'Add Track Assignment' && !model}
           >
             {Object.keys(firmwareVersionData).map(i => (
               <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
@@ -94,7 +98,7 @@ const AssignmentModal = ({
         )}
       </Item>
 
-      {filteredModels.length === 0 && model === '' && (
+      {filteredModels.length === 0 && !model && (
         <div className={styles.Disclaimer}>All Model Ids Are in Use</div>
       )}
     </Form>
@@ -110,13 +114,39 @@ const AssignmentModal = ({
       .catch(() => {});
   };
 
+  const returnContent = () => {
+    if (firmwareModelLoading || firmwareTrackLoading)
+      return <Spin data-testid="firmwareLoading" className={styles.spinner} size="large" />;
+    if (firmwareModelError)
+      return (
+        <Alert
+          data-testid="firmwareModelError"
+          message="Error"
+          description="Failed to Firmware Model data."
+          type="error"
+          showIcon
+        />
+      );
+    if (firmwareTrackError)
+      return (
+        <Alert
+          data-testid="firmwareTrackError"
+          message="Error"
+          description="Failed to Firmware Track Assignment data."
+          type="error"
+          showIcon
+        />
+      );
+    return content;
+  };
+
   return (
     <Modal
       onCancel={onCancel}
       visible={visible}
       onSuccess={handleOnSuccess}
       title={title}
-      content={content}
+      content={returnContent()}
     />
   );
 };
@@ -132,6 +162,10 @@ AssignmentModal.propTypes = {
   handleSearchFirmware: PropTypes.func,
   firmwareVersionData: PropTypes.instanceOf(Object),
   firmwareVersionLoading: PropTypes.bool,
+  firmwareModelError: PropTypes.instanceOf(Object),
+  firmwareModelLoading: PropTypes.bool,
+  firmwareTrackError: PropTypes.instanceOf(Object),
+  firmwareTrackLoading: PropTypes.bool,
 };
 
 AssignmentModal.defaultProps = {
@@ -144,7 +178,11 @@ AssignmentModal.defaultProps = {
   modelId: '',
   filteredModels: {},
   firmwareVersionData: {},
+  firmwareModelError: null,
+  firmwareTrackError: null,
+  firmwareModelLoading: false,
   firmwareVersionLoading: true,
+  firmwareTrackLoading: true,
 };
 
 export default AssignmentModal;

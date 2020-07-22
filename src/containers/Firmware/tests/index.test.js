@@ -31,8 +31,10 @@ const mockProps = {
   firmwareTrackLoading: false,
   firmwareModelLoading: false,
   firmwareVersionLoading: false,
-  trackAssignmentError: {},
-  firmwareError: {},
+  trackAssignmentError: null,
+  firmwareTrackError: null,
+  firmwareModelError: null,
+  firmwareError: null,
   firmwareData: [
     {
       id: '1',
@@ -125,15 +127,17 @@ describe('<Firmware />', () => {
   it('Edit Track Assignment button press should show Edit Track Assignment modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /edit-track-ap2220/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `edit-track-${mockProps.firmwareData[0].modelId}` })
+    );
     expect(getByText('Edit Track Assignment')).toBeVisible();
   });
 
   it('Delete Track Assignment button press should show Delete Track Assignment modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /delete-track-ap2220/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
+    );
     const paragraph = getByText('Are you sure you want to delete the track assignment:');
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.trackAssignmentData[0].modelId)).toBeVisible();
@@ -156,7 +160,9 @@ describe('<Firmware />', () => {
   it('cancel button click should hide Edit Track Assignment Modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /edit-track-ap2220/i }));
+    fireEvent.click(
+      getByRole('button', { name: `edit-track-${mockProps.firmwareData[0].modelId}` })
+    );
 
     expect(getByText('Edit Track Assignment')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
@@ -168,8 +174,9 @@ describe('<Firmware />', () => {
 
   it('cancel button click should hide Delete Track Assignment Modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /delete-track-ap2220/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
+    );
     const paragraph = getByText('Are you sure you want to delete the track assignment:');
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.trackAssignmentData[0].modelId)).toBeVisible();
@@ -216,8 +223,8 @@ describe('<Firmware />', () => {
 
     const model = getByLabelText('Model ID');
     fireEvent.keyDown(model, DOWN_ARROW);
-    await waitForElement(() => getAllByText('ea8300-ca')[2]);
-    fireEvent.click(getAllByText('ea8300-ca')[2]);
+    await waitForElement(() => getAllByText(mockProps.firmwareData[2].modelId)[2]);
+    fireEvent.click(getAllByText(mockProps.firmwareData[2].modelId)[2]);
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -239,13 +246,13 @@ describe('<Firmware />', () => {
 
     const model = getByLabelText('Model ID');
     fireEvent.keyDown(model, DOWN_ARROW);
-    await waitForElement(() => getAllByText('ea8300-ca')[2]);
-    fireEvent.click(getAllByText('ea8300-ca')[2]);
+    await waitForElement(() => getAllByText(mockProps.firmwareData[2].modelId)[2]);
+    fireEvent.click(getAllByText(mockProps.firmwareData[2].modelId)[2]);
 
     const firmware = getByLabelText('Firmware Version');
     fireEvent.keyDown(firmware, DOWN_ARROW);
-    await waitForElement(() => getAllByText('ea8300-2020-06-25-ce03472')[2]);
-    fireEvent.click(getAllByText('ea8300-2020-06-25-ce03472')[2]);
+    await waitForElement(() => getAllByText(mockProps.firmwareVersionData[0].versionName)[2]);
+    fireEvent.click(getAllByText(mockProps.firmwareVersionData[0].versionName)[2]);
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -257,8 +264,9 @@ describe('<Firmware />', () => {
   it('onUpdateTrackAssignment should be called on Edit Track Assignment Modal when form is complete', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<Firmware {...mockProps} onUpdateTrackAssignment={submitSpy} />);
-    fireEvent.click(getByRole('button', { name: /edit-track-ap2220/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `edit-track-${mockProps.firmwareData[0].modelId}` })
+    );
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -277,15 +285,18 @@ describe('<Firmware />', () => {
   it('Edit Firmware Version button press should show Edit Firmware Version modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /edit-firmware-ea8300-ca/i }));
+    fireEvent.click(
+      getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
 
     expect(getByText('Edit Firmware Version')).toBeVisible();
   });
 
   it('Delete Firmware Version button press should show Delete Firmware Version modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /delete-firmware-ea8300-ca/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
     const paragraph = getByText('Are you sure you want to delete the version:');
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.firmwareData[2].versionName)).toBeVisible();
@@ -308,8 +319,9 @@ describe('<Firmware />', () => {
   it('cancel button click should hide Edit Firmware Version Modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /edit-firmware-ea8300-ca/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
     expect(getByText('Edit Firmware Version')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
@@ -320,8 +332,9 @@ describe('<Firmware />', () => {
 
   it('cancel button click should hide Delete Firmware Version Modal', async () => {
     const { getByRole, getByText } = render(<Firmware {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /delete-firmware-ea8300-ca/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
     const paragraph = getByText('Are you sure you want to delete the version:');
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.firmwareData[2].versionName)).toBeVisible();
@@ -400,8 +413,9 @@ describe('<Firmware />', () => {
       <Firmware {...mockProps} onUpdateFirmware={submitSpy} />
     );
 
-    fireEvent.click(getByRole('button', { name: /edit-firmware-ea8300-ca/i }));
-
+    fireEvent.click(
+      getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
     expect(getByText('Edit Firmware Version')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -414,7 +428,9 @@ describe('<Firmware />', () => {
   it('onDeleteFirmware should be called when modal is submitted', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<Firmware {...mockProps} onDeleteFirmware={submitSpy} />);
-    fireEvent.click(getByRole('button', { name: /delete-firmware-ea8300-ca/i }));
+    fireEvent.click(
+      getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
+    );
     expect(getByRole('button', { name: 'Delete' }));
     fireEvent.click(getByRole('button', { name: 'Delete' }));
 
@@ -426,7 +442,9 @@ describe('<Firmware />', () => {
   it('onDeleteTrackAssignment should be called when modal is submitted', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<Firmware {...mockProps} onDeleteTrackAssignment={submitSpy} />);
-    fireEvent.click(getByRole('button', { name: /delete-track-ap2220/i }));
+    fireEvent.click(
+      getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
+    );
     expect(getByRole('button', { name: 'Delete' }));
     fireEvent.click(getByRole('button', { name: 'Delete' }));
 
@@ -444,9 +462,7 @@ describe('<Firmware />', () => {
   });
 
   it('trackAssignmentError should show error alert', async () => {
-    const { getByTestId } = render(
-      <Firmware {...mockProps} trackAssignmentError={{ error: 'error' }} />
-    );
+    const { getByTestId } = render(<Firmware {...mockProps} trackAssignmentError />);
 
     await waitFor(() => {
       expect(getByTestId('trackAssignmentError')).toBeInTheDocument();
@@ -462,10 +478,50 @@ describe('<Firmware />', () => {
   });
 
   it('firmwareError should show error alert', async () => {
-    const { getByTestId } = render(<Firmware {...mockProps} firmwareError={{ error: 'error' }} />);
+    const { getByTestId } = render(<Firmware {...mockProps} firmwareError />);
 
     await waitFor(() => {
       expect(getByTestId('firmwareError')).toBeInTheDocument();
+    });
+  });
+
+  it('Loading spinner should be visible if firmwareModelLoading is true for Add Track Assignment', async () => {
+    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareModelLoading />);
+
+    fireEvent.click(getByRole('button', { name: /add track assignment/i }));
+
+    await waitFor(() => {
+      expect(getByTestId('firmwareLoading')).toBeInTheDocument();
+    });
+  });
+
+  it('Loading spinner should be visible if firmwareTrackLoading is true for Add Track Assignment', async () => {
+    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareTrackLoading />);
+
+    fireEvent.click(getByRole('button', { name: /add track assignment/i }));
+
+    await waitFor(() => {
+      expect(getByTestId('firmwareLoading')).toBeInTheDocument();
+    });
+  });
+
+  it('Alert error should be visible if firmwareModelError has errors for Add Track Assignment', async () => {
+    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareModelError />);
+
+    fireEvent.click(getByRole('button', { name: /add track assignment/i }));
+
+    await waitFor(() => {
+      expect(getByTestId('firmwareModelError')).toBeInTheDocument();
+    });
+  });
+
+  it('Alert error should be visible if firmwareModelError has errors for Add Track Assignment', async () => {
+    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareTrackError />);
+
+    fireEvent.click(getByRole('button', { name: /add track assignment/i }));
+
+    await waitFor(() => {
+      expect(getByTestId('firmwareTrackError')).toBeInTheDocument();
     });
   });
 });

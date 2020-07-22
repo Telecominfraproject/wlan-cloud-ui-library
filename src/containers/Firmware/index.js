@@ -41,13 +41,10 @@ const Firmware = ({
   const [deleteVersionModal, setDeleteVersionModal] = useState(false);
   const [traskAssignmentValues, setTaskAssignmentValues] = useState({});
   const [firmwareValues, setFirmwareValues] = useState({});
-  const [filteredModels, setFilteredModels] = useState({});
 
-  useMemo(() => {
+  const filteredModels = useMemo(() => {
     const usedModels = Object.keys(trackAssignmentData).map(i => trackAssignmentData[i].modelId);
-    setFilteredModels(
-      Object.values(firmwareModelData).filter(model => !usedModels.includes(model))
-    );
+    return Object.values(firmwareModelData).filter(model => !usedModels.includes(model));
   }, [firmwareModelData, trackAssignmentData]);
 
   const createTrackAssignment = ({ firmwareVersionRecordId, modelId }) => {
@@ -208,7 +205,8 @@ const Firmware = ({
       dataIndex: 'releaseDate',
       key: 'date',
       width: 180,
-      render: time => moment(time, 'x').format('DD MMM YYYY, hh:mm a'),
+      render: time =>
+        parseInt(time, 10) ? moment(time, 'x').format('DD MMM YYYY, hh:mm a') : null,
     },
     {
       title: '',
@@ -253,15 +251,8 @@ const Firmware = ({
     },
   ];
 
-  const trackAssignmentReady =
-    !trackAssignmentLoading &&
-    !firmwareTrackLoading &&
-    !firmwareModelLoading &&
-    Object.keys(trackAssignmentError).length === 0 &&
-    Object.keys(firmwareTrackError).length === 0 &&
-    Object.keys(firmwareModelError).length === 0;
-
-  const firmwareReady = !firmwareLoading && Object.keys(firmwareError).length === 0;
+  const trackAssignmentReady = !trackAssignmentLoading && !trackAssignmentError;
+  const firmwareReady = !firmwareLoading && !firmwareError;
 
   return (
     <Container>
@@ -274,6 +265,10 @@ const Firmware = ({
         handleSearchFirmware={handleSearchFirmware}
         firmwareVersionData={firmwareVersionData}
         firmwareVersionLoading={firmwareVersionLoading}
+        firmwareTrackError={firmwareTrackError}
+        firmwareModelError={firmwareModelError}
+        firmwareTrackLoading={firmwareTrackLoading}
+        firmwareModelLoading={firmwareModelLoading}
       />
       <AssignmentModal
         onCancel={() => setEditAssignmentModal(false)}
@@ -286,6 +281,10 @@ const Firmware = ({
         firmwareVersionLoading={firmwareVersionLoading}
         modelId={traskAssignmentValues.modelId}
         firmwareVersionRecordId={traskAssignmentValues.firmwareVersionRecordId}
+        firmwareTrackError={firmwareTrackError}
+        firmwareModelError={firmwareModelError}
+        firmwareTrackLoading={firmwareTrackLoading}
+        firmwareModelLoading={firmwareModelLoading}
       />
       <VersionModal
         onCancel={() => setAddVersionModal(false)}
@@ -302,7 +301,7 @@ const Firmware = ({
       />
       <Modal
         onCancel={() => setDeleteAssignmentModal(false)}
-        onSuccess={() => deleteTrackAssignment()}
+        onSuccess={deleteTrackAssignment}
         visible={deleteAssignmentModal}
         title="Are you sure?"
         buttonText="Delete"
@@ -316,7 +315,7 @@ const Firmware = ({
       />
       <Modal
         onCancel={() => setDeleteVersionModal(false)}
-        onSuccess={() => deleteFirmware()}
+        onSuccess={deleteFirmware}
         visible={deleteVersionModal}
         title="Are you sure?"
         buttonText="Delete"
@@ -342,12 +341,10 @@ const Firmware = ({
           pagination={false}
         />
       )}
-      {(trackAssignmentLoading || firmwareTrackLoading || firmwareModelLoading) && (
-        <Spin size="large" data-testid="trackAssignmentSpinner" />
+      {trackAssignmentLoading && (
+        <Spin className={styles.spinner} size="large" data-testid="trackAssignmentSpinner" />
       )}
-      {(Object.keys(trackAssignmentError).length > 0 ||
-        Object.keys(firmwareTrackError).length > 0 ||
-        Object.keys(firmwareModelError).length) > 0 && (
+      {trackAssignmentError && (
         <Alert
           data-testid="trackAssignmentError"
           message="Error"
@@ -363,8 +360,10 @@ const Firmware = ({
       {firmwareReady && (
         <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
       )}
-      {firmwareLoading && <Spin size="large" data-testid="firmwareSpinner" />}
-      {Object.keys(firmwareError).length > 0 && (
+      {firmwareLoading && (
+        <Spin className={styles.spinner} size="large" data-testid="firmwareSpinner" />
+      )}
+      {firmwareError && (
         <Alert
           data-testid="firmwareError"
           message="Error"
@@ -403,17 +402,17 @@ Firmware.propTypes = {
 Firmware.defaultProps = {
   firmwareData: {},
   trackAssignmentData: {},
-  firmwareError: {},
-  trackAssignmentError: {},
-  firmwareTrackError: {},
+  firmwareError: null,
+  trackAssignmentError: null,
+  firmwareTrackError: null,
   firmwareModelData: {},
   firmwareVersionData: {},
-  firmwareModelError: {},
+  firmwareModelError: null,
   firmwareLoading: true,
   trackAssignmentLoading: true,
   firmwareTrackLoading: true,
   firmwareVersionLoading: true,
-  firmwareModelLoading: true,
+  firmwareModelLoading: false,
 };
 
 export default Firmware;

@@ -23,8 +23,6 @@ const VersionModal = ({
 }) => {
   const [form] = Form.useForm();
 
-  const date = new Date(parseInt(releaseDate, 10));
-
   useEffect(() => {
     form.resetFields();
     form.setFieldsValue({
@@ -34,7 +32,7 @@ const VersionModal = ({
       commit,
       filename,
       validationCode,
-      date: releaseDate !== null ? moment(date) : null,
+      date: parseInt(releaseDate, 10) ? moment(parseInt(releaseDate, 10)) : null,
     });
   }, [visible]);
 
@@ -55,7 +53,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={globalStyles.field} disabled={modelId !== ''} />
+        <Input className={globalStyles.field} disabled={modelId} />
       </Item>
       <Item
         label="Version Name"
