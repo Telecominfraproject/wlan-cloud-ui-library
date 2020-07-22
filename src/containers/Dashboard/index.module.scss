@@ -12,14 +12,14 @@
   }
 }
 
-.lineChartWrap {
+.chartWrap {
   display: flex;
   justify-content: space-between;
 }
 
-.pieChartWrap {
+.loadingWrap {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 @media screen and (max-width: 1200px) {
@@ -27,12 +27,7 @@
     flex-direction: column;
   }
 
-  .lineChartWrap {
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-
-  .pieChartWrap {
+  .chartWrap {
     flex-wrap: wrap;
     flex-direction: column;
   }
