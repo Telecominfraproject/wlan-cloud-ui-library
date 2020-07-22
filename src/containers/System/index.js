@@ -14,7 +14,11 @@ const System = ({ children }) => {
       {(location.pathname === '/system/manufacturer' ||
         location.pathname === '/system/firmware') && (
         <Container>
-          <Tabs>
+          <Tabs
+            defaultActiveKey={
+              location.pathname === '/system/manufacturer' ? 'manufacturer' : 'firmware'
+            }
+          >
             <TabPane
               tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
               key="manufacturer"
