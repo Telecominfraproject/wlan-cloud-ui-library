@@ -57,7 +57,7 @@ const AssignmentModal = ({
           className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
-          disabled={modelId !== '' || filteredModels.length === 0}
+          disabled={model !== '' || filteredModels.length === 0}
         >
           {Object.keys(filteredModels).map(i => (
             <Option key={filteredModels[i]} value={filteredModels[i]}>
@@ -83,7 +83,7 @@ const AssignmentModal = ({
           <Select
             className={globalStyles.field}
             placeholder="Select Firmware Version"
-            disabled={model === '' || filteredModels.length === 0}
+            disabled={model === '' && filteredModels.length === 0}
           >
             {Object.keys(firmwareVersionData).map(i => (
               <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
@@ -94,7 +94,7 @@ const AssignmentModal = ({
         )}
       </Item>
 
-      {filteredModels.length === 0 && (
+      {filteredModels.length === 0 && model === '' && (
         <div className={styles.Disclaimer}>All Model Ids Are in Use</div>
       )}
     </Form>
