@@ -99,7 +99,6 @@ const LocationsTree = ({
         onCheck={onCheck}
         treeData={locations}
         defaultExpandAll
-        checkStrictly
       />
       <AddFormModal
         locationPath={getLocationPath()}
