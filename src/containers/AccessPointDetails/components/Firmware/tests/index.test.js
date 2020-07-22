@@ -48,8 +48,8 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
 
@@ -65,8 +65,8 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
     expect(getByText('Confirm')).toBeVisible();
@@ -90,8 +90,8 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
 
