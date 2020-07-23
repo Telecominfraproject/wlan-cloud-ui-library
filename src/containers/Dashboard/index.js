@@ -6,42 +6,28 @@ import LineChart from './components/lineChart';
 import PieChart from './components/PieChart';
 import styles from './index.module.scss';
 
-const Dashboard = ({
-  statsCardDetails: { statsArr, statsCardTitle },
-  pieChartDetails: { pieChartsData, pieChartTitle },
-  lineChartDetails: { lineChartsData, lineChartTitle },
-  lineChartLoading,
-}) => {
+const Dashboard = ({ statsCardDetails, pieChartDetails, lineChartDetails, lineChartLoading }) => {
   return (
     <div className={styles.mainInfoWrap}>
       <div className={styles.rightInfoWrap}>
         <div className={styles.infoWrapper}>
-          {statsArr?.map((data, index) => {
-            return (
-              <DeviceStatsCard
-                key={statsCardTitle[index]}
-                title={statsCardTitle[index]}
-                cardData={data}
-              />
-            );
+          {statsCardDetails?.map(({ title, ...data }) => {
+            return <DeviceStatsCard key={title} title={title} cardData={data} />;
           })}
         </div>
         <div className={lineChartLoading ? styles.loadingWrap : styles.chartWrap}>
           {lineChartLoading ? (
             <Loading />
           ) : (
-            Object.keys(lineChartsData).map((key, index) => {
-              return (
-                <LineChart lineChartData={lineChartsData[key]} title={lineChartTitle[index]} />
-              );
+            Object.keys(lineChartDetails).map(key => {
+              const { title, ...data } = lineChartDetails[key];
+              return <LineChart lineChartData={data} title={title} />;
             })
           )}
         </div>
         <div className={styles.chartWrap}>
-          {pieChartsData?.map((data, index) => {
-            return (
-              <PieChart key={pieChartTitle[index]} chartData={data} title={pieChartTitle[index]} />
-            );
+          {pieChartDetails?.map(({ title, ...data }) => {
+            return <PieChart key={title} chartData={data} title={title} />;
           })}
         </div>
       </div>

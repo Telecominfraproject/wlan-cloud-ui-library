@@ -40,6 +40,7 @@ const LineChart = ({ lineChartData, title }) => {
             dateTimeLabelFormats={dateTimeLabelFormats}
             type="datetime"
           />
+
           <Tooltip split={false} shared useHTML />
           <Legend>
             <Legend.Title />
