@@ -20,7 +20,7 @@ const System = ({ children }) => {
         location.pathname === '/system/firmware' ||
         location.pathname === '/system/autoprovision') && (
         <Container>
-          <Tabs defaultActiveKey={setActiveKey}>
+          <Tabs defaultActiveKey={setActiveKey()}>
             <TabPane
               tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
               key="manufacturer"

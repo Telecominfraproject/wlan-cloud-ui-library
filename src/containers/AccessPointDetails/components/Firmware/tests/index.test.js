@@ -48,8 +48,8 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
 
@@ -65,8 +65,8 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
     expect(getByText('Confirm')).toBeVisible();
@@ -75,6 +75,32 @@ describe('<Firmware />', () => {
 
     await waitFor(() => {
       expect(getByText('Confirm')).not.toBeVisible();
+    });
+  });
+
+  it('reboot button should show the reboot model', async () => {
+    const submitSpy = jest.fn();
+    const { getByText, getByRole } = render(
+      <Firmware firmware={firmware} onUpdateEquipmentFirmware={submitSpy} />
+    );
+
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
+
+    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+
+    expect(getByText('Confirm')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalled();
     });
   });
 });
