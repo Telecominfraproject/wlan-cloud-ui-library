@@ -97,6 +97,7 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
+        setIsFormDirty(false);
       })
       .catch(() => {});
   };

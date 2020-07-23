@@ -45,7 +45,7 @@ const mockProps = {
     userAcceptancePolicy: 'Use this network at your own risk. No warranty of any kind.',
     userList: [],
     usernamePasswordFile: null,
-    walledGardenWhitelist: ['1.1.1.1'],
+    walledGardenAllowlist: ['1.1.1.1'],
   },
 };
 
@@ -598,7 +598,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible when new item is added and whitelist have already 32 items in the list', async () => {
     for (let i = 0; i < 40; i += 1) {
-      mockProps.details.walledGardenWhitelist.push(`${i}.${i}.${i}.${i}`);
+      mockProps.details.walledGardenAllowlist.push(`${i}.${i}.${i}.${i}`);
     }
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
@@ -623,14 +623,14 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if combine length of characters of all items exceeds 2,000 characters ', async () => {
-    mockProps.details.walledGardenWhitelist = [];
+    mockProps.details.walledGardenAllowlist = [];
 
     for (let i = 0; i < 20; i += 1) {
       let value;
       for (let j = 0; j < 100; j += 1) {
         value += `${j} `;
       }
-      mockProps.details.walledGardenWhitelist.push(value);
+      mockProps.details.walledGardenAllowlist.push(value);
     }
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
@@ -657,7 +657,7 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('click on add button should add item to the whitelist', async () => {
-    mockProps.details.walledGardenWhitelist = [];
+    mockProps.details.walledGardenAllowlist = [];
 
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
