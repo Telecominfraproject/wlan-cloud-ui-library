@@ -12,20 +12,19 @@ import {
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
+
 import styles from './index.module.scss';
 
 const dateTimeLabelFormats = {
-  millisecond: '%l:%M:%S%P',
-  second: '%l:%M:%S%P',
-  minute: '%l:%M:%S%P',
-  hour: '%l:%M:%S%P',
-  day: '%a. %l:%M:%S%P',
+  minute: '%l:%M%P',
+  hour: '%l:%M%P',
+  day: '%a. %l:%M%P',
   week: '',
   month: '',
   year: '',
 };
 
-const LineChart = ({ lineChartData, title }) => {
+const LineChart = ({ title, data, options }) => {
   return (
     <div className={styles.container}>
       <Card title={title} className={styles.LineChart}>
@@ -41,18 +40,29 @@ const LineChart = ({ lineChartData, title }) => {
             type="datetime"
           />
 
-          <Tooltip split={false} shared useHTML />
+          <Tooltip
+            split={false}
+            shared
+            useHTML
+            xDateFormat="%b %e %Y %l:%M%P"
+            pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
+          />
           <Legend>
             <Legend.Title />
           </Legend>
-          <YAxis minorGridLineWidth={0} gridLineWidth={0} alternateGridColor={null}>
-            {Array.isArray(lineChartData?.value) ? (
-              <SplineSeries name={lineChartData.key} data={lineChartData.value} />
+          <YAxis
+            minorGridLineWidth={0}
+            gridLineWidth={0}
+            alternateGridColor={null}
+            labels={{
+              formatter: options.formatter ? options.formatter : null,
+            }}
+          >
+            {Array.isArray(data?.value) ? (
+              <SplineSeries name={data.key} data={data.value} />
             ) : (
-              Object.keys(lineChartData).map(key => {
-                return (
-                  <SplineSeries name={lineChartData[key].key} data={lineChartData[key].value} />
-                );
+              Object.keys(data).map(key => {
+                return <SplineSeries name={data[key].key} data={data[key].value} />;
               })
             )}
           </YAxis>
@@ -63,12 +73,14 @@ const LineChart = ({ lineChartData, title }) => {
 };
 
 LineChart.propTypes = {
-  lineChartData: PropTypes.instanceOf(Object),
   title: PropTypes.string,
+  data: PropTypes.instanceOf(Object),
+  options: PropTypes.instanceOf(Object),
 };
 
 LineChart.defaultProps = {
-  lineChartData: {},
   title: '',
+  data: {},
+  options: {},
 };
 export default withHighcharts(LineChart, Highcharts);
