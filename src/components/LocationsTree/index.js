@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tree } from 'antd';
 
 import Modal from 'components/Modal';
+import Button from 'components/Button';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
 import EditFormModal from './components/EditFormModal';
@@ -14,6 +15,7 @@ const LocationsTree = ({
   selectedLocation,
   onSelect,
   onCheck,
+  onAddRootLocation,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
@@ -30,6 +32,7 @@ const LocationsTree = ({
   loadingProfile,
   errorProfile,
 }) => {
+  const [addRootLocationModal, setAddRootLocationModal] = useState(false);
   const getLocationPath = () => {
     const locationsPath = [];
 
@@ -87,8 +90,22 @@ const LocationsTree = ({
     onCreateEquipment(inventoryId, locationId, name, profileId);
   };
 
+  const hanldeAddRootLocationSuccess = ({ location }) => {
+    onAddRootLocation(location, 0, 'SITE');
+    setAddRootLocationModal(false);
+  };
+
   return (
     <div className={styles.sideTree}>
+      <div className={styles.addButton}>
+        <Button
+          onClick={() => {
+            setAddRootLocationModal(true);
+          }}
+        >
+          Add Location
+        </Button>
+      </div>
       <Tree
         data-testid="locationTree"
         checkable
@@ -99,6 +116,12 @@ const LocationsTree = ({
         onCheck={onCheck}
         treeData={locations}
         defaultExpandAll
+      />
+      <AddFormModal
+        visible={addRootLocationModal}
+        onSubmit={hanldeAddRootLocationSuccess}
+        onCancel={() => setAddRootLocationModal(false)}
+        title="Add New Location"
       />
       <AddFormModal
         locationPath={getLocationPath()}
@@ -118,7 +141,6 @@ const LocationsTree = ({
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
       />
-
       <EditFormModal
         visible={editModal}
         onSubmit={editLocation}
@@ -150,6 +172,7 @@ LocationsTree.propTypes = {
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   profiles: PropTypes.instanceOf(Array).isRequired,
+  onAddRootLocation: PropTypes.func,
   onAddLocation: PropTypes.func,
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
@@ -174,6 +197,7 @@ LocationsTree.propTypes = {
 };
 
 LocationsTree.defaultProps = {
+  onAddRootLocation: () => {},
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},

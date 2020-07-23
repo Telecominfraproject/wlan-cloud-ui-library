@@ -4,9 +4,11 @@
   padding-top: 15px;
   height: 100%;
   position: fixed;
+
   @media only screen and (max-width: 660px) {
     width: 190px;
   }
+
   @media only screen and (max-width: 480px) {
     width: 160px;
   }
@@ -19,5 +21,11 @@
       flex: auto;
       display: block;
     }
+  }
+
+  .addButton {
+    display: flex;
+    justify-content: center;
+    padding: 0px 0px 10px 0px;
   }
 }
