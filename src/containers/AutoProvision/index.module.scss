@@ -1,0 +1,31 @@
+.Content {
+  :global(.ant-card) {
+    margin-top: 10px;
+    border: 1px solid #434343;
+    border-radius: 5px;
+  }
+}
+
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
+
+.ButtonDiv {
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+.Header {
+  display: flex;
+  justify-content: flex-start;
+  & > div {
+    margin-left: auto;
+  }
+}
+
+.Toggle {
+  margin-left: 20px;
+  margin-top: 7px;
+}
