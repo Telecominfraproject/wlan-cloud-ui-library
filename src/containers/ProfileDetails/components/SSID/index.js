@@ -42,7 +42,7 @@ const SSIDForm = ({ form, details }) => {
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
       broadcastSSID: details.broadcastSsid === 'enabled' ? 'showSSID' : 'hideSSID',
-      appliedRadios: details.appliedRadios || ['is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+      appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal:
@@ -164,6 +164,7 @@ const SSIDForm = ({ form, details }) => {
         <Item name="appliedRadios" label="Use On">
           <Checkbox.Group>
             <Checkbox value="is2dot4GHz">2.4 GHz</Checkbox>
+            <Checkbox value="is5GHz">5 GHz</Checkbox>
             <Checkbox value="is5GHzU">5 GHzU</Checkbox>
             <Checkbox value="is5GHzL">5 GHzL</Checkbox>
           </Checkbox.Group>

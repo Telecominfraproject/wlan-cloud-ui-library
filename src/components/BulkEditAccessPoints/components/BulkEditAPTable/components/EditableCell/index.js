@@ -84,7 +84,7 @@ EditableCell.propTypes = {
   children: PropTypes.node.isRequired,
   dataIndex: PropTypes.string,
   record: PropTypes.shape({
-    key: PropTypes.number,
+    key: PropTypes.string,
     name: PropTypes.string,
     cellSize: PropTypes.instanceOf(Array),
     channel: PropTypes.instanceOf(Array),

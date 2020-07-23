@@ -5,6 +5,7 @@ import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
+import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
 
 import styles from './index.module.scss';
@@ -80,7 +81,9 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
   return (
     <Container>
       <div className={styles.Manufacturer}>
-        <h1>Device Manufacturers</h1>
+        <Header>
+          <h1>Device Manufacturers</h1>
+        </Header>
         <Form form={form} {...layout}>
           <Card title="Upload Manufacturer OUI Data">
             <Alert

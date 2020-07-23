@@ -166,11 +166,11 @@ LocationsTree.propTypes = {
   loadingProfile: PropTypes.bool.isRequired,
   errorProfile: PropTypes.instanceOf(Object),
   selectedLocation: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     lastModifiedTimestamp: PropTypes.string,
     locationType: PropTypes.string,
     name: PropTypes.string,
-    parentId: PropTypes.number,
+    parentId: PropTypes.string,
   }),
 };
 
