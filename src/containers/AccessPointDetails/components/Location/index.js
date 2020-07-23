@@ -69,11 +69,11 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     form
       .validateFields()
       .then(newValues => {
-        if ('floor' in newValues) {
+        if (newValues?.floor) {
           locationId = newValues.floor;
-        } else if ('building' in newValues) {
+        } else if (newValues?.building) {
           locationId = newValues.building;
-        } else if ('city' in newValues) {
+        } else if (newValues?.city) {
           locationId = newValues.city;
         }
 
