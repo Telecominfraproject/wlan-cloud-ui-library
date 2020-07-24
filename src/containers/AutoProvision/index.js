@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Card, Form, Select, Switch, Table } from 'antd';
+import React, { useState, useMemo, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Card, Form, Select, Switch, Table, Spin, Alert } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import Container from 'components/Container';
@@ -11,9 +12,19 @@ import styles from './index.module.scss';
 const { Item } = Form;
 const { Option } = Select;
 
-const AutoProvision = () => {
+const AutoProvision = ({
+  data,
+  dataLocation,
+  dataProfile,
+  loadingLoaction,
+  loadingProfile,
+  errorLocation,
+  errorProfile,
+  onUpdateEquipment,
+}) => {
+  const status = (data && data.details && data.details.autoProvisioning) || {};
   const [form] = Form.useForm();
-  const [toggle, setToggle] = useState(false);
+  const [enabled, setEnabled] = useState(status.enabled || false);
   const [activeModel, setActiveModel] = useState({});
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -24,11 +35,66 @@ const AutoProvision = () => {
     wrapperCol: { span: 12 },
   };
 
+  useEffect(() => {
+    form.setFieldsValue({
+      enabled,
+      locationId: status.locationId ? status.locationId.toString() : '',
+    });
+  }, [data]);
+
+  const tableData = useMemo(() => {
+    const arr = [];
+    Object.keys(status.equipmentProfileIdPerModel).forEach(item => {
+      arr.push({
+        model: item,
+        profileId: status.equipmentProfileIdPerModel[item],
+      });
+    });
+    return arr;
+  }, [data]);
+
+  const usedModels = useMemo(() => {
+    return Object.keys(status.equipmentProfileIdPerModel);
+  }, [data]);
+
+  const { id, email, name, createdTimestamp, lastModifiedTimestamp } = data;
+
+  const addModel = ({ modelId, profileId }) => {
+    const formattedData = { ...data.details };
+    Object.assign(formattedData.autoProvisioning.equipmentProfileIdPerModel, {
+      [modelId]: profileId,
+    });
+    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setAddModal(false);
+  };
+
+  const editModel = ({ modelId, profileId }) => {
+    const formattedData = { ...data.details };
+    const { model } = activeModel;
+    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[model];
+    Object.assign(formattedData.autoProvisioning.equipmentProfileIdPerModel, {
+      [modelId]: profileId,
+    });
+    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setEditModal(false);
+  };
+
+  const deleteModel = () => {
+    const formattedData = { ...data.details };
+    const { model } = activeModel;
+    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[model];
+    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setDeleteModal(false);
+  };
+
   const onSubmit = () => {
+    const formattedData = { ...data.details };
     form
       .validateFields()
       .then(values => {
-        console.log(values);
+        formattedData.autoProvisioning.enabled = values.enabled;
+        formattedData.autoProvisioning.locationId = values.locationId;
+        onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
       })
       .catch(() => {});
   };
@@ -42,7 +108,7 @@ const AutoProvision = () => {
     },
     {
       title: 'PROFILE ID',
-      dataIndex: 'ProfileId',
+      dataIndex: 'profileId',
       key: 'profileId',
       width: 700,
     },
@@ -53,7 +119,7 @@ const AutoProvision = () => {
       width: 60,
       render: (_, record) => (
         <Button
-          title="edit-model"
+          title={`edit-model-${record.model}`}
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -69,28 +135,26 @@ const AutoProvision = () => {
       dataIndex: '',
       key: 'deleteModel',
       width: 60,
-      render: (_, record) => (
-        <Button
-          title="delete-model"
-          className={styles.InfoButton}
-          type="primary"
-          icon={<DeleteFilled />}
-          onClick={() => {
-            setActiveModel({ ...record });
-            setDeleteModal(true);
-          }}
-        />
-      ),
+      render: (_, record) => {
+        return record.model !== 'default' ? (
+          <Button
+            title={`delete-model-${record.model}`}
+            icon={<DeleteFilled />}
+            onClick={() => {
+              setActiveModel({ ...record });
+              setDeleteModal(true);
+            }}
+          />
+        ) : null;
+      },
     },
   ];
-
-  const data = [{ model: 'default', ProfileId: 'profileid' }];
 
   return (
     <Container>
       <Modal
         onCancel={() => setDeleteModal(false)}
-        onSuccess={() => {}}
+        onSuccess={deleteModel}
         visible={deleteModal}
         title="Are you sure?"
         buttonText="Delete"
@@ -104,25 +168,33 @@ const AutoProvision = () => {
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
-        onSubmit={() => {}}
+        onSubmit={addModel}
         title="Add Model"
+        profiles={dataProfile}
+        loadingProfile={loadingProfile}
+        errorProfile={errorProfile}
+        usedModels={usedModels}
       />
 
       <FormModal
         onCancel={() => setEditModal(false)}
         visible={editModal}
-        onSubmit={() => {}}
+        onSubmit={editModel}
         title="Edit Model"
+        profiles={dataProfile}
         {...activeModel}
+        loadingProfile={loadingProfile}
+        errorProfile={errorProfile}
+        usedModels={usedModels}
       />
       <Form {...layout} form={form}>
         <div className={styles.Header}>
           <h1>Auto Provisioning</h1>
-          <Item name="toggle" valuePropName="checked" noStyle>
+          <Item name="enabled" valuePropName="checked" noStyle>
             <Switch
               className={styles.Toggle}
-              checked={toggle}
-              onChange={() => setToggle(!toggle)}
+              defaultChecked={enabled}
+              onChange={() => setEnabled(!enabled)}
               checkedChildren="Enabled"
               unCheckedChildren="Disabled"
             />
@@ -134,25 +206,38 @@ const AutoProvision = () => {
           </div>
         </div>
 
-        {toggle && (
+        {enabled && (
           <div className={styles.Content}>
             <Card title="Location">
-              <Item
-                label="Auto Provisioning Location"
-                name="locationId"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your Auto Provision Location',
-                  },
-                ]}
-              >
-                <Select className={globalStyles.field} placeholder="Select Location">
-                  <Option key="default" value="default">
-                    Default
-                  </Option>
-                </Select>
-              </Item>
+              {loadingLoaction && <Spin className={styles.spinner} size="large" />}
+              {errorLocation && (
+                <Alert
+                  message="Error"
+                  description="Failed to load location."
+                  type="error"
+                  showIcon
+                />
+              )}
+              {!loadingLoaction && !errorLocation && (
+                <Item
+                  label="Auto Provisioning Location"
+                  name="locationId"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your Auto Provision Location',
+                    },
+                  ]}
+                >
+                  <Select className={globalStyles.field} placeholder="Select Location">
+                    {Object.keys(dataLocation).map(i => (
+                      <Option key={dataLocation[i].id} value={dataLocation[i].id}>
+                        {dataLocation[i].name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Item>
+              )}
             </Card>
 
             <Card title="Equipment Profiles">
@@ -160,7 +245,7 @@ const AutoProvision = () => {
                 <div className={styles.ButtonDiv}>
                   <Button onClick={() => setAddModal(true)}>Add Model</Button>
                 </div>
-                <Table rowKey="ProfileId" columns={columns} dataSource={data} pagination={false} />
+                <Table rowKey="model" columns={columns} dataSource={tableData} pagination={false} />
               </div>
             </Card>
           </div>
@@ -168,6 +253,27 @@ const AutoProvision = () => {
       </Form>
     </Container>
   );
+};
+
+AutoProvision.propTypes = {
+  data: PropTypes.instanceOf(Object),
+  dataLocation: PropTypes.instanceOf(Object),
+  dataProfile: PropTypes.instanceOf(Object),
+  loadingLoaction: PropTypes.bool,
+  loadingProfile: PropTypes.bool,
+  errorLocation: PropTypes.instanceOf(Object),
+  errorProfile: PropTypes.instanceOf(Object),
+  onUpdateEquipment: PropTypes.func.isRequired,
+};
+
+AutoProvision.defaultProps = {
+  data: {},
+  dataLocation: {},
+  dataProfile: {},
+  loadingLoaction: true,
+  loadingProfile: true,
+  errorLocation: null,
+  errorProfile: null,
 };
 
 export default AutoProvision;

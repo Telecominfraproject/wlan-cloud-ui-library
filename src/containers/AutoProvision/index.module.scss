@@ -20,6 +20,7 @@
 .Header {
   display: flex;
   justify-content: flex-start;
+  margin-top: 25px;
   & > div {
     margin-left: auto;
   }
@@ -28,4 +29,10 @@
 .Toggle {
   margin-left: 20px;
   margin-top: 7px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
