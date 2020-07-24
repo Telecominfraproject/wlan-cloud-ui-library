@@ -47,7 +47,7 @@ const FormModal = ({
         rules={[
           {
             required: true,
-            message: 'Please enter Model Identification',
+            message: 'Please enter Model.',
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
@@ -72,7 +72,7 @@ const FormModal = ({
         rules={[
           {
             required: true,
-            message: 'Please select Access Point Profile',
+            message: 'Please select Access Point Profile.',
           },
         ]}
       >
