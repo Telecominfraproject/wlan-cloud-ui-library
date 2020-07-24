@@ -1,0 +1,15 @@
+.LineChart {
+  flex: 1;
+  text-align: center;
+  border: 0;
+  margin: 5px;
+}
+
+.LineChart > div rect {
+  fill: #141414;
+}
+
+.container {
+  width: 100%;
+  overflow: auto;
+}

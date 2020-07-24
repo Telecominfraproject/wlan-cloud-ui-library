@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
@@ -69,11 +69,11 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     form
       .validateFields()
       .then(newValues => {
-        if ('floor' in newValues) {
+        if (newValues?.floor) {
           locationId = newValues.floor;
-        } else if ('building' in newValues) {
+        } else if (newValues?.building) {
           locationId = newValues.building;
-        } else if ('city' in newValues) {
+        } else if (newValues?.city) {
           locationId = newValues.city;
         }
 
@@ -96,28 +96,27 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   const handleOnChangeCity = value => {
-    form.setFieldsValue({ city: value, building: null, floor: null });
     setCity(locations.find(i => i.id === value));
     setBuilding(null);
     setFloor(null);
   };
 
   const handleOnChangeBuilding = value => {
-    form.setFieldsValue({ building: value, floor: null });
     setBuilding(city.children.find(i => i.id === value));
     setFloor(null);
   };
 
   const handleOnChangeFloor = value => {
-    form.setFieldsValue({ floor: value });
     setFloor(building.children.find(i => i.id === value));
   };
 
-  form.setFieldsValue({
-    city: city.id,
-    building: building && building.id,
-    floor: floor && floor.id,
-  });
+  useEffect(() => {
+    form.setFieldsValue({
+      city: city?.id,
+      building: building?.id,
+      floor: floor?.id,
+    });
+  }, [city, building, floor]);
 
   return (
     <Form {...layout} form={form}>
@@ -159,6 +158,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
               className={styles.Field}
               placeholder="Select Location Building..."
               onChange={handleOnChangeBuilding}
+              allowClear
             >
               {Object.keys(city.children).map(i => (
                 <Option key={city.children[i].id} value={city.children[i].id}>
@@ -174,6 +174,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
               className={styles.Field}
               placeholder="Select Location Floor..."
               onChange={handleOnChangeFloor}
+              allowClear
             >
               {Object.keys(building.children).map(i => (
                 <Option key={building.children[i].id} value={building.children[i].id}>
