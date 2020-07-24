@@ -20,7 +20,7 @@ const AutoProvision = ({
   loadingProfile,
   errorLocation,
   errorProfile,
-  onUpdateEquipment,
+  onUpdateCustomer,
 }) => {
   const status = (data && data.details && data.details.autoProvisioning) || {};
   const [form] = Form.useForm();
@@ -59,31 +59,28 @@ const AutoProvision = ({
 
   const { id, email, name, createdTimestamp, lastModifiedTimestamp } = data;
 
-  const addModel = ({ modelId, profileId }) => {
+  const addModel = ({ model, profileId }) => {
     const formattedData = { ...data.details };
-    Object.assign(formattedData.autoProvisioning.equipmentProfileIdPerModel, {
-      [modelId]: profileId,
-    });
-    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    formattedData.autoProvisioning.equipmentProfileIdPerModel[model] = profileId;
+
+    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
     setAddModal(false);
   };
 
-  const editModel = ({ modelId, profileId }) => {
+  const editModel = ({ model, profileId }) => {
     const formattedData = { ...data.details };
-    const { model } = activeModel;
-    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[model];
-    Object.assign(formattedData.autoProvisioning.equipmentProfileIdPerModel, {
-      [modelId]: profileId,
-    });
-    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[activeModel.model];
+    formattedData.autoProvisioning.equipmentProfileIdPerModel[model] = profileId;
+
+    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
     setEditModal(false);
   };
 
   const deleteModel = () => {
     const formattedData = { ...data.details };
-    const { model } = activeModel;
-    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[model];
-    onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[activeModel.model];
+
+    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
     setDeleteModal(false);
   };
 
@@ -94,7 +91,7 @@ const AutoProvision = ({
       .then(values => {
         formattedData.autoProvisioning.enabled = values.enabled;
         formattedData.autoProvisioning.locationId = values.locationId;
-        onUpdateEquipment(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+        onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
       })
       .catch(() => {});
   };
@@ -189,7 +186,7 @@ const AutoProvision = ({
       />
       <Form {...layout} form={form}>
         <div className={styles.Header}>
-          <h1>Auto Provisioning</h1>
+          <h1>Auto-Provisioning</h1>
           <Item name="enabled" valuePropName="checked" noStyle>
             <Switch
               className={styles.Toggle}
@@ -257,23 +254,24 @@ const AutoProvision = ({
 
 AutoProvision.propTypes = {
   data: PropTypes.instanceOf(Object),
-  dataLocation: PropTypes.instanceOf(Object),
-  dataProfile: PropTypes.instanceOf(Object),
+  dataLocation: PropTypes.instanceOf(Array),
+  dataProfile: PropTypes.instanceOf(Array),
   loadingLoaction: PropTypes.bool,
   loadingProfile: PropTypes.bool,
   errorLocation: PropTypes.instanceOf(Object),
   errorProfile: PropTypes.instanceOf(Object),
-  onUpdateEquipment: PropTypes.func.isRequired,
+  onUpdateCustomer: PropTypes.func,
 };
 
 AutoProvision.defaultProps = {
   data: {},
-  dataLocation: {},
-  dataProfile: {},
+  dataLocation: [],
+  dataProfile: [],
   loadingLoaction: true,
   loadingProfile: true,
   errorLocation: null,
   errorProfile: null,
+  onUpdateCustomer: () => {},
 };
 
 export default AutoProvision;

@@ -10,9 +10,9 @@ const System = ({ children }) => {
   const location = useLocation();
 
   const setActiveKey = () => {
-    if (location.pathname === '/system/manufacturer') return 'manufacturer';
+    if (location.pathname === '/system/autoprovision') return 'autoprovision';
     if (location.pathname === '/system/firmware') return 'firmware';
-    return 'autoprovision';
+    return 'manufacturer';
   };
   return (
     <>
@@ -27,7 +27,7 @@ const System = ({ children }) => {
             />
             <TabPane tab={<Link to="/system/firmware">Firmware</Link>} key="firmware" />
             <TabPane
-              tab={<Link to="/system/autoprovision">Auto Provisioning</Link>}
+              tab={<Link to="/system/autoprovision">Auto-Provisioning</Link>}
               key="autoprovision"
             />
           </Tabs>

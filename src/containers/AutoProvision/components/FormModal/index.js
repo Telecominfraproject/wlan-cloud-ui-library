@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
@@ -23,7 +23,9 @@ const FormModal = ({
 }) => {
   const [form] = Form.useForm();
 
-  const filteredModels = usedModels.filter(value => value !== model);
+  const filteredModels = useMemo(() => {
+    return usedModels.filter(value => value !== model);
+  }, [model, usedModels]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -32,7 +34,7 @@ const FormModal = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      modelId: model,
+      model,
       profileId: profileId ? profileId.toString() : null,
     });
   }, [visible]);
@@ -40,8 +42,8 @@ const FormModal = ({
   const content = (
     <Form {...layout} form={form}>
       <Item
-        label="Model ID"
-        name="modelId"
+        label="Model"
+        name="model"
         rules={[
           {
             required: true,
@@ -49,19 +51,17 @@ const FormModal = ({
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
-              if (!value || filteredModels.indexOf(getFieldValue('modelId')) === -1) {
+              if (!value || filteredModels.indexOf(getFieldValue('model')) === -1) {
                 return Promise.resolve();
               }
-              return Promise.reject(
-                new Error('Model identification already used. Please choose a new identification.')
-              );
+              return Promise.reject(new Error('Model already used. Please enter a new model.'));
             },
           }),
         ]}
       >
         <Input
           className={globalStyles.field}
-          placeholder="Enter Model Identification"
+          placeholder="Enter Model"
           disabled={model === 'default'}
         />
       </Item>
@@ -77,9 +77,9 @@ const FormModal = ({
         ]}
       >
         <Select className={globalStyles.field} placeholder="Select Access Point Profile">
-          {Object.keys(profiles).map(i => (
-            <Option key={profiles[i].id} value={profiles[i].id}>
-              {profiles[i].name}
+          {profiles.map(i => (
+            <Option key={i.id} value={i.id}>
+              {i.name}
             </Option>
           ))}
         </Select>
@@ -98,9 +98,18 @@ const FormModal = ({
   };
 
   const returnContent = () => {
-    if (loadingProfile) return <Spin className={styles.spinner} size="large" />;
+    if (loadingProfile)
+      return <Spin className={styles.spinner} data-testid="loadingProfile" size="large" />;
     if (errorProfile)
-      return <Alert message="Error" description="Failed to load profiles." type="error" showIcon />;
+      return (
+        <Alert
+          data-testid="errorProfile"
+          message="Error"
+          description="Failed to load profiles."
+          type="error"
+          showIcon
+        />
+      );
     return content;
   };
 
@@ -123,10 +132,10 @@ FormModal.propTypes = {
   model: PropTypes.string,
   profileId: PropTypes.number,
   buttonText: PropTypes.string,
-  profiles: PropTypes.instanceOf(Object),
+  profiles: PropTypes.instanceOf(Array),
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool,
-  usedModels: PropTypes.instanceOf(Object),
+  usedModels: PropTypes.instanceOf(Array),
 };
 
 FormModal.defaultProps = {
@@ -137,10 +146,10 @@ FormModal.defaultProps = {
   buttonText: '',
   model: '',
   profileId: null,
-  profiles: {},
+  profiles: [],
   errorProfile: null,
   loadingProfile: true,
-  usedModels: {},
+  usedModels: [],
 };
 
 export default FormModal;
