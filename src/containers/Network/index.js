@@ -14,7 +14,6 @@ const Network = ({
   onCheck,
   activeTab,
   children,
-  onAddRootLocation,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
@@ -45,7 +44,6 @@ const Network = ({
           onSelect={onSelect}
           onCheck={onCheck}
           checkedLocations={checkedLocations}
-          onAddRootLocation={onAddRootLocation}
           onAddLocation={onAddLocation}
           onEditLocation={onEditLocation}
           onDeleteLocation={onDeleteLocation}
@@ -88,7 +86,6 @@ Network.propTypes = {
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   onSelect: PropTypes.func.isRequired,
   onCheck: PropTypes.func.isRequired,
-  onAddRootLocation: PropTypes.func.isRequired,
   onAddLocation: PropTypes.func.isRequired,
   onEditLocation: PropTypes.func.isRequired,
   onDeleteLocation: PropTypes.func.isRequired,

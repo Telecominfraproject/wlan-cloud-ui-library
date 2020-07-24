@@ -15,7 +15,6 @@ const LocationsTree = ({
   selectedLocation,
   onSelect,
   onCheck,
-  onAddRootLocation,
   onAddLocation,
   onEditLocation,
   onDeleteLocation,
@@ -32,8 +31,12 @@ const LocationsTree = ({
   loadingProfile,
   errorProfile,
 }) => {
-  const [addRootLocationModal, setAddRootLocationModal] = useState(false);
+  const [addRootLocation, setAddRootLocation] = useState(false);
+
   const getLocationPath = () => {
+    if (addRootLocation) {
+      return [];
+    }
     const locationsPath = [];
 
     const treeRecurse = (parentNodeId, node) => {
@@ -52,7 +55,6 @@ const LocationsTree = ({
         }
         return parent;
       }
-
       return null;
     };
 
@@ -65,13 +67,18 @@ const LocationsTree = ({
   };
 
   const addLocation = ({ location }) => {
-    const { id, locationType } = selectedLocation;
-    if (locationType === 'COUNTRY') {
-      onAddLocation(location, id, 'SITE');
-    } else if (locationType === 'SITE') {
-      onAddLocation(location, id, 'BUILDING');
-    } else if (locationType === 'BUILDING') {
-      onAddLocation(location, id, 'FLOOR');
+    if (selectedLocation && !addRootLocation) {
+      const { id, locationType } = selectedLocation;
+      if (locationType === 'COUNTRY') {
+        onAddLocation(location, id, 'SITE');
+      } else if (locationType === 'SITE') {
+        onAddLocation(location, id, 'BUILDING');
+      } else if (locationType === 'BUILDING') {
+        onAddLocation(location, id, 'FLOOR');
+      }
+    } else {
+      onAddLocation(location, 0, 'SITE');
+      setAddRootLocation(false);
     }
   };
 
@@ -90,9 +97,9 @@ const LocationsTree = ({
     onCreateEquipment(inventoryId, locationId, name, profileId);
   };
 
-  const hanldeAddRootLocationSuccess = ({ location }) => {
-    onAddRootLocation(location, 0, 'SITE');
-    setAddRootLocationModal(false);
+  const handleOnCancel = () => {
+    setAddModal(false);
+    setAddRootLocation(false);
   };
 
   return (
@@ -100,7 +107,8 @@ const LocationsTree = ({
       <div className={styles.addButton}>
         <Button
           onClick={() => {
-            setAddRootLocationModal(true);
+            setAddRootLocation(true);
+            setAddModal(true);
           }}
         >
           Add Location
@@ -118,16 +126,10 @@ const LocationsTree = ({
         defaultExpandAll
       />
       <AddFormModal
-        visible={addRootLocationModal}
-        onSubmit={hanldeAddRootLocationSuccess}
-        onCancel={() => setAddRootLocationModal(false)}
-        title="Add New Location"
-      />
-      <AddFormModal
         locationPath={getLocationPath()}
         visible={addModal}
         onSubmit={addLocation}
-        onCancel={() => setAddModal(false)}
+        onCancel={handleOnCancel}
         title="Add Location"
       />
       <AddApModal
@@ -172,7 +174,6 @@ LocationsTree.propTypes = {
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   profiles: PropTypes.instanceOf(Array).isRequired,
-  onAddRootLocation: PropTypes.func,
   onAddLocation: PropTypes.func,
   onEditLocation: PropTypes.func,
   onDeleteLocation: PropTypes.func,
@@ -197,7 +198,6 @@ LocationsTree.propTypes = {
 };
 
 LocationsTree.defaultProps = {
-  onAddRootLocation: () => {},
   onAddLocation: () => {},
   onEditLocation: () => {},
   onDeleteLocation: () => {},
