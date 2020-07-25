@@ -3,7 +3,7 @@ import { each } from 'lodash';
 
 import ChartFunctions from 'utils/ChartFunctions';
 
-const DATA_INTERVAL_DEFAULT = 15000;
+const DATA_INTERVAL_DEFAULT = 60000;
 const TIMEZONE_OFFSET = new Date().getTimezoneOffset() * 60000;
 
 const formatBytes = (bytes, decimals = 2) => {

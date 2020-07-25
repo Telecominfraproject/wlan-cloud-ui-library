@@ -29,46 +29,44 @@ const ClientDeviceDetails = ({
     radioType,
     signal,
     manufacturer,
-    equipment: { name } = {},
-    details: {
-      assocTimestamp,
-      dhcpDetails: {
-        dhcpServerIp,
-        primaryDns,
-        secondaryDns,
-        gatewayIp,
-        subnetMask,
-        leaseTimeInSeconds,
-        leaseStartTimestamp,
-      } = {},
-      metricDetails: {
-        rxBytes,
-        txBytes,
-        rxMbps,
-        txMbps,
-        rxRateKbps,
-        txRateKbps,
-        totalRxPackets,
-        totalTxPackets,
-      } = {},
-    } = {},
+    equipment,
+    details,
   } = data;
+  const {
+    dhcpServerIp,
+    primaryDns,
+    secondaryDns,
+    gatewayIp,
+    subnetMask,
+    leaseTimeInSeconds,
+    leaseStartTimestamp,
+  } = details?.dhcpDetails || {};
+  const {
+    rxBytes,
+    txBytes,
+    rxMbps,
+    txMbps,
+    rxRateKbps,
+    txRateKbps,
+    totalRxPackets,
+    totalTxPackets,
+  } = details?.metricDetails || {};
 
   const getGeneralStats = () => ({
     Status: '',
-    'Associated On': moment(assocTimestamp).format('llll'),
-    'Access Point': name,
+    'Associated On': moment(details?.assocTimestamp).format('llll'),
+    'Access Point': equipment?.name,
     SSID: ssid,
     'Radio Band': radioType,
     'Signal Strength': `${signal} dBm`,
-    'Tx Rate': `${Math.round(txRateKbps)} Mbps`,
-    'Rx Rate': `${Math.round(rxRateKbps)} Mbps`,
+    'Tx Rate': `${Math.round(txMbps)} Mbps`,
+    'Rx Rate': `${Math.round(rxMbps)} Mbps`,
   });
 
   const getTrafficStats = () => ({
     'Data Transferred': formatBytes(txBytes + rxBytes),
-    'Tx Throughput': `${Math.round(txMbps)} bps`,
-    'Rx Throughput': `${Math.round(rxMbps)} bps`,
+    'Tx Throughput': `${Math.round(txRateKbps)} Kbps`,
+    'Rx Throughput': `${Math.round(rxRateKbps)} Kbps`,
     'Total Tx Packets': totalTxPackets,
     'Total Rx Packets': totalRxPackets,
   });
@@ -107,7 +105,7 @@ const ClientDeviceDetails = ({
         <DeviceStatsCard title="Traffic" cardData={getTrafficStats()} />
         <DeviceStatsCard title="IP LAN" cardData={getIpStats()} />
       </div>
-      <Card title="History">
+      <Card title="History (1 hour)">
         {metricsError ? (
           <Alert message="Error" description="Failed to load History." type="error" showIcon />
         ) : (
