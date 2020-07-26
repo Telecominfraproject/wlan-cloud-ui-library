@@ -24,7 +24,7 @@ const AutoProvision = ({
   errorProfile,
   onUpdateCustomer,
 }) => {
-  const status = (data && data.details && data.details.autoProvisioning) || {};
+  const status = data?.details?.autoProvisioning || {};
   const [form] = Form.useForm();
   const [enabled, setEnabled] = useState(status.enabled || false);
   const [equipmentProfileIdPerModel, setEquipmentProfileIdPerModel] = useState(
@@ -39,13 +39,6 @@ const AutoProvision = ({
     labelCol: { span: 4 },
     wrapperCol: { span: 12 },
   };
-
-  useEffect(() => {
-    form.setFieldsValue({
-      enabled,
-      locationId: status.locationId ? status.locationId.toString() : '',
-    });
-  }, [data]);
 
   const profilesById = useMemo(() => {
     const map = {};
@@ -164,6 +157,13 @@ const AutoProvision = ({
       },
     },
   ];
+
+  useEffect(() => {
+    form.setFieldsValue({
+      enabled,
+      locationId: status.locationId ? status.locationId.toString() : '',
+    });
+  }, [data]);
 
   return (
     <Container>
