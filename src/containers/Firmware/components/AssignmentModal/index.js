@@ -87,7 +87,7 @@ const AssignmentModal = ({
           <Select
             className={globalStyles.field}
             placeholder="Select Firmware Version"
-            disabled={title === 'Add Track Assignment' && !model}
+            disabled={title === 'Add Model Target Version' && !model}
           >
             {Object.keys(firmwareVersionData).map(i => (
               <Option key={firmwareVersionData[i].id} value={firmwareVersionData[i].id}>
@@ -132,7 +132,7 @@ const AssignmentModal = ({
         <Alert
           data-testid="firmwareTrackError"
           message="Error"
-          description="Failed to Firmware Track Assignment data."
+          description="Failed to Model Target Version data."
           type="error"
           showIcon
         />
@@ -158,9 +158,9 @@ AssignmentModal.propTypes = {
   title: PropTypes.string,
   firmwareVersionRecordId: PropTypes.string,
   modelId: PropTypes.string,
-  filteredModels: PropTypes.instanceOf(Object),
+  filteredModels: PropTypes.instanceOf(Array),
   handleSearchFirmware: PropTypes.func,
-  firmwareVersionData: PropTypes.instanceOf(Object),
+  firmwareVersionData: PropTypes.instanceOf(Array),
   firmwareVersionLoading: PropTypes.bool,
   firmwareModelError: PropTypes.instanceOf(Object),
   firmwareModelLoading: PropTypes.bool,
@@ -176,8 +176,8 @@ AssignmentModal.defaultProps = {
   title: '',
   firmwareVersionRecordId: '',
   modelId: '',
-  filteredModels: {},
-  firmwareVersionData: {},
+  filteredModels: [],
+  firmwareVersionData: [],
   firmwareModelError: null,
   firmwareTrackError: null,
   firmwareModelLoading: false,
