@@ -2,10 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select, Switch, Table, Spin, Alert } from 'antd';
 import { FormOutlined, DeleteFilled } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
+
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
@@ -25,6 +27,9 @@ const AutoProvision = ({
   const status = (data && data.details && data.details.autoProvisioning) || {};
   const [form] = Form.useForm();
   const [enabled, setEnabled] = useState(status.enabled || false);
+  const [equipmentProfileIdPerModel, setEquipmentProfileIdPerModel] = useState(
+    data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {}
+  );
   const [activeModel, setActiveModel] = useState({});
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -42,16 +47,23 @@ const AutoProvision = ({
     });
   }, [data]);
 
-  const tableData = useMemo(() => {
-    const arr = [];
-    Object.keys(status.equipmentProfileIdPerModel).forEach(item => {
-      arr.push({
-        model: item,
-        profileId: status.equipmentProfileIdPerModel[item],
-      });
+  const profilesById = useMemo(() => {
+    const map = {};
+    dataProfile.forEach(i => {
+      map[i.id] = i;
     });
-    return arr;
-  }, [data]);
+
+    return map;
+  }, [dataProfile]);
+
+  const tableData = useMemo(() => {
+    return Object.keys(equipmentProfileIdPerModel).map(item => {
+      return {
+        model: item,
+        profileId: equipmentProfileIdPerModel[item],
+      };
+    });
+  }, [equipmentProfileIdPerModel]);
 
   const usedModels = useMemo(() => {
     return Object.keys(status.equipmentProfileIdPerModel);
@@ -60,27 +72,29 @@ const AutoProvision = ({
   const { id, email, name, createdTimestamp, lastModifiedTimestamp } = data;
 
   const addModel = ({ model, profileId }) => {
-    const formattedData = { ...data.details };
-    formattedData.autoProvisioning.equipmentProfileIdPerModel[model] = profileId;
+    const formattedData = { ...equipmentProfileIdPerModel };
+    formattedData[model] = profileId;
 
-    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setEquipmentProfileIdPerModel(formattedData);
     setAddModal(false);
   };
 
   const editModel = ({ model, profileId }) => {
-    const formattedData = { ...data.details };
-    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[activeModel.model];
-    formattedData.autoProvisioning.equipmentProfileIdPerModel[model] = profileId;
+    const formattedData = { ...equipmentProfileIdPerModel };
+    if (activeModel.model !== model) {
+      delete formattedData[activeModel.model];
+    }
+    formattedData[model] = profileId;
 
-    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setEquipmentProfileIdPerModel(formattedData);
     setEditModal(false);
   };
 
   const deleteModel = () => {
-    const formattedData = { ...data.details };
-    delete formattedData.autoProvisioning.equipmentProfileIdPerModel[activeModel.model];
+    const formattedData = { ...equipmentProfileIdPerModel };
+    delete formattedData[activeModel.model];
 
-    onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
+    setEquipmentProfileIdPerModel(formattedData);
     setDeleteModal(false);
   };
 
@@ -91,6 +105,7 @@ const AutoProvision = ({
       .then(values => {
         formattedData.autoProvisioning.enabled = values.enabled;
         formattedData.autoProvisioning.locationId = values.locationId;
+        formattedData.autoProvisioning.equipmentProfileIdPerModel = equipmentProfileIdPerModel;
         onUpdateCustomer(id, email, name, formattedData, createdTimestamp, lastModifiedTimestamp);
       })
       .catch(() => {});
@@ -104,10 +119,11 @@ const AutoProvision = ({
       width: 100,
     },
     {
-      title: 'PROFILE ID',
+      title: 'PROFILE',
       dataIndex: 'profileId',
       key: 'profileId',
       width: 700,
+      render: i => profilesById[i]?.name || i,
     },
     {
       title: '',
@@ -136,6 +152,8 @@ const AutoProvision = ({
         return record.model !== 'default' ? (
           <Button
             title={`delete-model-${record.model}`}
+            className={styles.InfoButton}
+            type="danger"
             icon={<DeleteFilled />}
             onClick={() => {
               setActiveModel({ ...record });
@@ -205,7 +223,7 @@ const AutoProvision = ({
 
         {enabled && (
           <div className={styles.Content}>
-            <Card title="Location">
+            <Card title="Target Location">
               {loadingLoaction && <Spin className={styles.spinner} size="large" />}
               {errorLocation && (
                 <Alert
@@ -217,7 +235,7 @@ const AutoProvision = ({
               )}
               {!loadingLoaction && !errorLocation && (
                 <Item
-                  label="Auto Provisioning Location"
+                  label="Auto-Provisioning Location"
                   name="locationId"
                   rules={[
                     {
@@ -227,9 +245,9 @@ const AutoProvision = ({
                   ]}
                 >
                   <Select className={globalStyles.field} placeholder="Select Location">
-                    {Object.keys(dataLocation).map(i => (
-                      <Option key={dataLocation[i].id} value={dataLocation[i].id}>
-                        {dataLocation[i].name}
+                    {dataLocation.map(i => (
+                      <Option key={i.id} value={i.id}>
+                        {i.name}
                       </Option>
                     ))}
                   </Select>
@@ -237,11 +255,11 @@ const AutoProvision = ({
               )}
             </Card>
 
-            <Card title="Equipment Profiles">
+            <Card
+              title="Target Equipment Profiles"
+              extra={<Button onClick={() => setAddModal(true)}>Add Model</Button>}
+            >
               <div className={styles.Content}>
-                <div className={styles.ButtonDiv}>
-                  <Button onClick={() => setAddModal(true)}>Add Model</Button>
-                </div>
                 <Table rowKey="model" columns={columns} dataSource={tableData} pagination={false} />
               </div>
             </Card>
