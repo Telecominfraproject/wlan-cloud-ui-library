@@ -241,7 +241,7 @@ describe('<AutoProvision />', () => {
 
     fireEvent.click(getByRole('switch'));
 
-    const location = getByLabelText('Auto Provisioning Location');
+    const location = getByLabelText('Auto-Provisioning Location');
     fireEvent.keyDown(location, DOWN_ARROW);
     await waitForElement(() => getByText(mockProps.dataLocation[1].name));
     fireEvent.click(getByText(mockProps.dataLocation[1].name));
@@ -339,12 +339,8 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('onUpdateCustomer should not be called if add model form is incomplete', async () => {
-    const submitSpy = jest.fn();
-    const { getByRole, getByText, getAllByRole } = render(
-      <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
-    );
-
+  it('Errors should show if add model form is incomplete', async () => {
+    const { getByRole, getByText, getAllByRole } = render(<AutoProvision {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /add model/i }));
 
     expect(getByText('Add Model', { selector: 'div' })).toBeVisible();
@@ -352,16 +348,14 @@ describe('<AutoProvision />', () => {
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
 
     await waitFor(() => {
-      expect(submitSpy).toHaveBeenCalledTimes(0);
       expect(getByText(MISSING_MODEL)).toBeVisible();
       expect(getByText(MISSING_PROFILE)).toBeVisible();
     });
   });
 
-  it('onUpdateCustomer should not be called if add model form contains invalid model id', async () => {
-    const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText, getAllByRole } = render(
-      <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
+  it('Existing model error should show if add model form contains invalid model id', async () => {
+    const { getByRole, getByText, getByLabelText, getAllByRole, getAllByText } = render(
+      <AutoProvision {...mockProps} />
     );
 
     fireEvent.click(getByRole('button', { name: /add model/i }));
@@ -372,20 +366,19 @@ describe('<AutoProvision />', () => {
 
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.dataProfile[0].name));
-    fireEvent.click(getByText(mockProps.dataProfile[0].name));
+    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
+    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
 
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
 
     await waitFor(() => {
-      expect(submitSpy).toHaveBeenCalledTimes(0);
       expect(getByText(INVALID_MODEL)).toBeVisible();
     });
   });
 
   it('onUpdateCustomer should be called if add model form is valid', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText, getAllByRole } = render(
+    const { getByRole, getByText, getByLabelText, getAllByRole, getAllByText } = render(
       <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
     );
 
@@ -397,10 +390,12 @@ describe('<AutoProvision />', () => {
 
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.dataProfile[0].name));
-    fireEvent.click(getByText(mockProps.dataProfile[0].name));
+    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
+    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
 
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
+
+    fireEvent.click(getAllByRole('button', { name: 'Save' })[0]);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -422,15 +417,40 @@ describe('<AutoProvision />', () => {
 
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
 
+    fireEvent.click(getAllByRole('button', { name: 'Save' })[0]);
+
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
   });
 
-  it('onUpdateCustomer should not be called if edit model form is invalid', async () => {
+  it('onUpdateCustomer should be called if edit model form is updated and user saves', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText, getAllByRole, getByLabelText } = render(
       <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
+    );
+
+    fireEvent.click(
+      getByRole('button', {
+        name: `edit-model-${models[2]}`,
+      })
+    );
+    expect(getByText('Edit Model')).toBeVisible();
+
+    fireEvent.change(getByLabelText('Model'), { target: { value: 'test' } });
+
+    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
+
+    fireEvent.click(getAllByRole('button', { name: 'Save' })[0]);
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('Missing model error should show if edit model form has missing model', async () => {
+    const { getByRole, getByText, getAllByRole, getByLabelText, getAllByText } = render(
+      <AutoProvision {...mockProps} />
     );
 
     fireEvent.click(
@@ -443,21 +463,19 @@ describe('<AutoProvision />', () => {
     fireEvent.change(getByLabelText('Model'), { target: { value: '' } });
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.dataProfile[0].name));
-    fireEvent.click(getByText(mockProps.dataProfile[0].name));
+    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
+    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
 
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
 
     await waitFor(() => {
-      expect(submitSpy).toHaveBeenCalledTimes(0);
       expect(getByText(MISSING_MODEL)).toBeVisible();
     });
   });
 
-  it('onUpdateCustomer should not be called if edit model form contains invalid model id', async () => {
-    const submitSpy = jest.fn();
-    const { getByRole, getByText, getAllByRole, getByLabelText } = render(
-      <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
+  it('Invalid model error should show if edit model form contains invalid model id', async () => {
+    const { getByRole, getByText, getAllByRole, getByLabelText, getAllByText } = render(
+      <AutoProvision {...mockProps} />
     );
 
     fireEvent.click(
@@ -470,22 +488,22 @@ describe('<AutoProvision />', () => {
     fireEvent.change(getByLabelText('Model'), { target: { value: 'default' } });
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.dataProfile[0].name));
-    fireEvent.click(getByText(mockProps.dataProfile[0].name));
+    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
+    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
 
     fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
 
     await waitFor(() => {
-      expect(submitSpy).toHaveBeenCalledTimes(0);
       expect(getByText(INVALID_MODEL)).toBeVisible();
     });
   });
 
-  it('onUpdateCustomer should be called when modal is submitted', async () => {
+  it('onUpdateCustomer should be called when delete modal is submitted and user saves', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText } = render(
       <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
     );
+
     fireEvent.click(
       getByRole('button', {
         name: `delete-model-${models[1]}`,
@@ -497,6 +515,8 @@ describe('<AutoProvision />', () => {
     expect(within(paragraph).getByText(models[1])).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Delete' }));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
