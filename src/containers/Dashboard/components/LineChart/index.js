@@ -12,7 +12,7 @@ import {
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
-import Timer from 'containers/AccessPointDetails/components/OS/components/Timer';
+import Timer from 'components/Timer';
 
 import { COLORS } from 'utils/charts';
 import styles from './index.module.scss';

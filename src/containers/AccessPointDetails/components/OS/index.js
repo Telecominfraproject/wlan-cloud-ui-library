@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Card, Alert } from 'antd';
 import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
 
+import Timer from 'components/Timer';
 import SolidGauge from './components/SolidGauge';
 import HighChartGraph from './components/HighChartGraph';
-import Timer from './components/Timer';
 
 import styles from '../../index.module.scss';
 
