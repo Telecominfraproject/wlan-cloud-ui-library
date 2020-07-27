@@ -132,7 +132,7 @@ VersionModal.propTypes = {
 
 VersionModal.defaultProps = {
   onCancel: () => {},
-  visible: () => {},
+  visible: false,
   onSubmit: () => {},
   title: '',
   modelId: '',

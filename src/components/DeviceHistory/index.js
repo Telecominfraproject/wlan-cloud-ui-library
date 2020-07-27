@@ -21,11 +21,11 @@ addHighchartsMore(Highcharts);
 const TIMEZONE_OFFSET = new Date().getTimezoneOffset() * 60000;
 
 const dateTimeLabelFormats = {
-  millisecond: '%l:%M:%S%P',
-  second: '%l:%M:%S%P',
-  minute: '%l:%M:%S%P',
-  hour: '%l:%M:%S%P',
-  day: '%a. %l:%M:%S%P',
+  millisecond: '%l:%M%P',
+  second: '%l:%M%P',
+  minute: '%l:%M%P',
+  hour: '%l:%M%P',
+  day: '%a. %l:%M%P',
   week: '',
   month: '',
   year: '',
@@ -50,7 +50,7 @@ function tooltipFormatter() {
   const html = [];
 
   if (this.points && this.points.length) {
-    html.push(moment.utc(this.points[0].x).format('MMM D, YYYY h:mm:ss A'));
+    html.push(moment.utc(this.points[0].x).format('MMM D, YYYY h:mm A'));
     html.push('<br /><span style="color: transparent">.</span><br />');
 
     for (let i = 0; i < this.points.length; i += 1) {
@@ -162,12 +162,11 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         Loading...
       </Loading>
 
-      <Tooltip shared xDateFormat="%b %e %Y %l:%M:%S%P" formatter={tooltipFormatter} />
+      <Tooltip shared xDateFormat="%b %e %Y %l:%M%P" formatter={tooltipFormatter} />
 
       <XAxis
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
-        offset={20}
         type="datetime"
         showEmpty
         plotLines={[
@@ -181,7 +180,7 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         ]}
       />
 
-      {renderMetrics(0, 'rssi', metrics.rssi, config.rssi.data, -90, -40)}
+      {renderMetrics(0, 'rssi', metrics.rssi, config.rssi.data, -100, -40)}
       {renderMetrics(1, 'rxBytes', metrics.rxBytes, config.rxBytes.data, 0, 500)}
       {renderMetrics(2, 'txBytes', metrics.txBytes, config.txBytes.data, 0, 500)}
     </HighchartsStockChart>

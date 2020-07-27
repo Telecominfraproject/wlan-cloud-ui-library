@@ -260,7 +260,7 @@ const Firmware = ({
         onCancel={() => setAddAssignmentModal(false)}
         visible={addAssignmentModal}
         onSubmit={createTrackAssignment}
-        title="Add Track Assignment"
+        title="Add Model Target Version"
         filteredModels={filteredModels}
         handleSearchFirmware={handleSearchFirmware}
         firmwareVersionData={firmwareVersionData}
@@ -274,7 +274,7 @@ const Firmware = ({
         onCancel={() => setEditAssignmentModal(false)}
         visible={editAssignmentModal}
         onSubmit={createUpdateAssignment}
-        title="Edit Track Assignment"
+        title="Edit Model Target Version"
         filteredModels={filteredModels}
         handleSearchFirmware={handleSearchFirmware}
         firmwareVersionData={firmwareVersionData}
@@ -308,7 +308,7 @@ const Firmware = ({
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the track assignment:{' '}
+            Are you sure you want to delete the model target version:{' '}
             <strong> {traskAssignmentValues.modelId} </strong>
           </p>
         }
@@ -328,9 +328,9 @@ const Firmware = ({
         }
       />
       <Header>
-        <h1>Track Assignments</h1>
+        <h1>Model Target Version</h1>
         {trackAssignmentReady && (
-          <Button onClick={() => setAddAssignmentModal(true)}> Add Track Assignment</Button>
+          <Button onClick={() => setAddAssignmentModal(true)}> Add Model Target Version</Button>
         )}
       </Header>
       {trackAssignmentReady && (
@@ -348,13 +348,13 @@ const Firmware = ({
         <Alert
           data-testid="trackAssignmentError"
           message="Error"
-          description="Failed to load Firmware Track Assignment data."
+          description="Failed to load Model Target Version data."
           type="error"
           showIcon
         />
       )}
       <Header>
-        <h1>Versions</h1>
+        <h1>All Versions</h1>
         {firmwareReady && <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>}
       </Header>
       {firmwareReady && (
@@ -377,10 +377,10 @@ const Firmware = ({
 };
 
 Firmware.propTypes = {
-  firmwareData: PropTypes.instanceOf(Object),
-  trackAssignmentData: PropTypes.instanceOf(Object),
-  firmwareModelData: PropTypes.instanceOf(Object),
-  firmwareVersionData: PropTypes.instanceOf(Object),
+  firmwareData: PropTypes.instanceOf(Array),
+  trackAssignmentData: PropTypes.instanceOf(Array),
+  firmwareModelData: PropTypes.instanceOf(Array),
+  firmwareVersionData: PropTypes.instanceOf(Array),
   trackAssignmentError: PropTypes.instanceOf(Object),
   firmwareTrackError: PropTypes.instanceOf(Object),
   firmwareModelError: PropTypes.instanceOf(Object),
@@ -400,13 +400,13 @@ Firmware.propTypes = {
 };
 
 Firmware.defaultProps = {
-  firmwareData: {},
-  trackAssignmentData: {},
+  firmwareData: [],
+  trackAssignmentData: [],
   firmwareError: null,
   trackAssignmentError: null,
   firmwareTrackError: null,
-  firmwareModelData: {},
-  firmwareVersionData: {},
+  firmwareModelData: [],
+  firmwareVersionData: [],
   firmwareModelError: null,
   firmwareLoading: true,
   trackAssignmentLoading: true,
