@@ -48,7 +48,7 @@ const BlockedList = ({ data, onUpdateClient }) => {
       render: (_, record) => {
         return record.model !== 'default' ? (
           <Button
-            title={`delete-model-${record.model}`}
+            title={`delete-mac-${record.macAddress}`}
             className={styles.InfoButton}
             type="danger"
             icon={<DeleteFilled />}
