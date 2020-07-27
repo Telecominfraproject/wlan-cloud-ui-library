@@ -32,7 +32,7 @@ const Timer = ({ handleRefresh, refreshAfter }) => {
         <Progress
           type="circle"
           width={25}
-          percent={(1 - percent / refreshAfter || 60) * 100}
+          percent={(1 - percent / (refreshAfter || 60)) * 100}
           showInfo={false}
         />
         {date}
