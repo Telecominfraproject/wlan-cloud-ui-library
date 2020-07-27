@@ -30,12 +30,10 @@ const Network = ({
   profiles,
   loadingProfile,
   errorProfile,
+  onReload,
 }) => {
   const location = useLocation();
 
-  const onReload = () => {
-    // console.log('Reload Button Clicked');
-  };
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -66,7 +64,11 @@ const Network = ({
           location.pathname === '/network/client-devices' ? (
             <div className={styles.headerContent}>
               <ToggleButton activeTab={activeTab} />
-              <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
+              <Button
+                onClick={() => onReload(location.pathname)}
+                title="reload"
+                icon={<ReloadOutlined />}
+              />
             </div>
           ) : (
             ''
@@ -107,6 +109,7 @@ Network.propTypes = {
     name: PropTypes.string,
     parentId: PropTypes.string,
   }),
+  onReload: PropTypes.func.isRequired,
 };
 
 Network.defaultProps = {

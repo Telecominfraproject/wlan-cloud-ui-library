@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Tree } from 'antd';
+
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
 import EditFormModal from './components/EditFormModal';
 import AddApModal from './components/AddApModal';
-import PopoverMenu from './components/PopoverMenu';
 
 const LocationsTree = ({
   locations,
@@ -30,12 +30,7 @@ const LocationsTree = ({
   loadingProfile,
   errorProfile,
 }) => {
-  const [addRootLocation, setAddRootLocation] = useState(false);
-
   const getLocationPath = () => {
-    if (addRootLocation) {
-      return [];
-    }
     const locationsPath = [];
 
     const treeRecurse = (parentNodeId, node) => {
@@ -54,6 +49,7 @@ const LocationsTree = ({
         }
         return parent;
       }
+
       return null;
     };
 
@@ -66,18 +62,13 @@ const LocationsTree = ({
   };
 
   const addLocation = ({ location }) => {
-    if (selectedLocation && !addRootLocation) {
-      const { id, locationType } = selectedLocation;
-      if (locationType === 'COUNTRY') {
-        onAddLocation(location, id, 'SITE');
-      } else if (locationType === 'SITE') {
-        onAddLocation(location, id, 'BUILDING');
-      } else if (locationType === 'BUILDING') {
-        onAddLocation(location, id, 'FLOOR');
-      }
-    } else {
-      onAddLocation(location, 0, 'SITE');
-      setAddRootLocation(false);
+    const { id, locationType } = selectedLocation;
+    if (locationType === 'COUNTRY') {
+      onAddLocation(location, id, 'SITE');
+    } else if (locationType === 'SITE') {
+      onAddLocation(location, id, 'BUILDING');
+    } else if (locationType === 'BUILDING') {
+      onAddLocation(location, id, 'FLOOR');
     }
   };
 
@@ -96,11 +87,6 @@ const LocationsTree = ({
     onCreateEquipment(inventoryId, locationId, name, profileId);
   };
 
-  const handleOnCancel = () => {
-    setAddModal(false);
-    setAddRootLocation(false);
-  };
-
   return (
     <div className={styles.sideTree}>
       <Tree
@@ -115,21 +101,11 @@ const LocationsTree = ({
         defaultExpandAll
         checkStrictly
       />
-
-      <PopoverMenu
-        setAddModal={() => {
-          setAddRootLocation(true);
-          setAddModal(true);
-        }}
-      >
-        <div className={styles.emptDiv} />
-      </PopoverMenu>
-
       <AddFormModal
         locationPath={getLocationPath()}
         visible={addModal}
         onSubmit={addLocation}
-        onCancel={handleOnCancel}
+        onCancel={() => setAddModal(false)}
         title="Add Location"
       />
       <AddApModal
@@ -143,6 +119,7 @@ const LocationsTree = ({
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
       />
+
       <EditFormModal
         visible={editModal}
         onSubmit={editLocation}
