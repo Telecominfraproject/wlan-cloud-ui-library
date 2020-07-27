@@ -5,7 +5,7 @@ import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { formatBytes } from 'utils/bytes';
+import { formatBytes, formatBitsPerSecond } from 'utils/bytes';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
 
@@ -29,46 +29,44 @@ const ClientDeviceDetails = ({
     radioType,
     signal,
     manufacturer,
-    equipment: { name } = {},
-    details: {
-      assocTimestamp,
-      dhcpDetails: {
-        dhcpServerIp,
-        primaryDns,
-        secondaryDns,
-        gatewayIp,
-        subnetMask,
-        leaseTimeInSeconds,
-        leaseStartTimestamp,
-      } = {},
-      metricDetails: {
-        rxBytes,
-        txBytes,
-        rxMbps,
-        txMbps,
-        rxRateKbps,
-        txRateKbps,
-        totalRxPackets,
-        totalTxPackets,
-      } = {},
-    } = {},
+    equipment,
+    details,
   } = data;
+  const {
+    dhcpServerIp,
+    primaryDns,
+    secondaryDns,
+    gatewayIp,
+    subnetMask,
+    leaseTimeInSeconds,
+    leaseStartTimestamp,
+  } = details?.dhcpDetails || {};
+  const {
+    rxBytes,
+    txBytes,
+    rxMbps,
+    txMbps,
+    rxRateKbps,
+    txRateKbps,
+    totalRxPackets,
+    totalTxPackets,
+  } = details?.metricDetails || {};
 
   const getGeneralStats = () => ({
     Status: '',
-    'Associated On': moment(assocTimestamp).format('llll'),
-    'Access Point': name,
+    'Associated On': moment(details?.assocTimestamp).format('llll'),
+    'Access Point': equipment?.name,
     SSID: ssid,
     'Radio Band': radioType,
     'Signal Strength': `${signal} dBm`,
-    'Tx Rate': `${Math.round(txRateKbps)} Mbps`,
-    'Rx Rate': `${Math.round(rxRateKbps)} Mbps`,
+    'Tx Rate': `${formatBitsPerSecond(txRateKbps * 1000)}`,
+    'Rx Rate': `${formatBitsPerSecond(rxRateKbps * 1000)}`,
   });
 
   const getTrafficStats = () => ({
     'Data Transferred': formatBytes(txBytes + rxBytes),
-    'Tx Throughput': `${Math.round(txMbps)} bps`,
-    'Rx Throughput': `${Math.round(rxMbps)} bps`,
+    'Tx Throughput': `${formatBitsPerSecond(txMbps * 1000000)}`,
+    'Rx Throughput': `${formatBitsPerSecond(rxMbps * 1000000)}`,
     'Total Tx Packets': totalTxPackets,
     'Total Rx Packets': totalRxPackets,
   });
@@ -80,7 +78,7 @@ const ClientDeviceDetails = ({
     'Secondary DNS': secondaryDns,
     'Gateway ': gatewayIp,
     'Subnet Mask': subnetMask,
-    'IP Lease Time': `${leaseTimeInSeconds} seconds`,
+    'IP Lease Time': leaseTimeInSeconds && `${leaseTimeInSeconds} seconds`,
     'IP Lease Start': moment(leaseStartTimestamp).format('llll'),
   });
 
@@ -107,7 +105,7 @@ const ClientDeviceDetails = ({
         <DeviceStatsCard title="Traffic" cardData={getTrafficStats()} />
         <DeviceStatsCard title="IP LAN" cardData={getIpStats()} />
       </div>
-      <Card title="History">
+      <Card title="History (1 hour)">
         {metricsError ? (
           <Alert message="Error" description="Failed to load History." type="error" showIcon />
         ) : (

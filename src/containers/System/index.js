@@ -9,21 +9,27 @@ const { TabPane } = Tabs;
 const System = ({ children }) => {
   const location = useLocation();
 
+  const setActiveKey = () => {
+    if (location.pathname === '/system/autoprovision') return 'autoprovision';
+    if (location.pathname === '/system/firmware') return 'firmware';
+    return 'manufacturer';
+  };
   return (
     <>
       {(location.pathname === '/system/manufacturer' ||
-        location.pathname === '/system/firmware') && (
+        location.pathname === '/system/firmware' ||
+        location.pathname === '/system/autoprovision') && (
         <Container>
-          <Tabs
-            defaultActiveKey={
-              location.pathname === '/system/manufacturer' ? 'manufacturer' : 'firmware'
-            }
-          >
+          <Tabs defaultActiveKey={setActiveKey()}>
             <TabPane
               tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
               key="manufacturer"
             />
             <TabPane tab={<Link to="/system/firmware">Firmware</Link>} key="firmware" />
+            <TabPane
+              tab={<Link to="/system/autoprovision">Auto-Provisioning</Link>}
+              key="autoprovision"
+            />
           </Tabs>
         </Container>
       )}
