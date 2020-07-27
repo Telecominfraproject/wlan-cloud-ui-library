@@ -12,13 +12,15 @@ const System = ({ children }) => {
   const setActiveKey = () => {
     if (location.pathname === '/system/autoprovision') return 'autoprovision';
     if (location.pathname === '/system/firmware') return 'firmware';
+    if (location.pathname === '/system/blockedlist') return 'blockedlist';
     return 'manufacturer';
   };
   return (
     <>
       {(location.pathname === '/system/manufacturer' ||
         location.pathname === '/system/firmware' ||
-        location.pathname === '/system/autoprovision') && (
+        location.pathname === '/system/autoprovision' ||
+        location.pathname === '/system/blockedlist') && (
         <Container>
           <Tabs defaultActiveKey={setActiveKey()}>
             <TabPane
@@ -29,6 +31,10 @@ const System = ({ children }) => {
             <TabPane
               tab={<Link to="/system/autoprovision">Auto-Provisioning</Link>}
               key="autoprovision"
+            />
+            <TabPane
+              tab={<Link to="/system/blockedlist">Client Blocked List</Link>}
+              key="blockedlist"
             />
           </Tabs>
         </Container>
