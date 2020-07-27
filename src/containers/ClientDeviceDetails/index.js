@@ -5,7 +5,7 @@ import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { formatBytes } from 'utils/bytes';
+import { formatBytes, formatBitsPerSecond } from 'utils/bytes';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
 
@@ -59,14 +59,14 @@ const ClientDeviceDetails = ({
     SSID: ssid,
     'Radio Band': radioType,
     'Signal Strength': `${signal} dBm`,
-    'Tx Rate': `${Math.round(txMbps)} Mbps`,
-    'Rx Rate': `${Math.round(rxMbps)} Mbps`,
+    'Tx Rate': `${formatBitsPerSecond(txRateKbps * 1000)}`,
+    'Rx Rate': `${formatBitsPerSecond(rxRateKbps * 1000)}`,
   });
 
   const getTrafficStats = () => ({
     'Data Transferred': formatBytes(txBytes + rxBytes),
-    'Tx Throughput': `${Math.round(txRateKbps)} Kbps`,
-    'Rx Throughput': `${Math.round(rxRateKbps)} Kbps`,
+    'Tx Throughput': `${formatBitsPerSecond(txMbps * 1000000)}`,
+    'Rx Throughput': `${formatBitsPerSecond(rxMbps * 1000000)}`,
     'Total Tx Packets': totalTxPackets,
     'Total Rx Packets': totalRxPackets,
   });
@@ -78,7 +78,7 @@ const ClientDeviceDetails = ({
     'Secondary DNS': secondaryDns,
     'Gateway ': gatewayIp,
     'Subnet Mask': subnetMask,
-    'IP Lease Time': `${leaseTimeInSeconds} seconds`,
+    'IP Lease Time': leaseTimeInSeconds && `${leaseTimeInSeconds} seconds`,
     'IP Lease Start': moment(leaseStartTimestamp).format('llll'),
   });
 
