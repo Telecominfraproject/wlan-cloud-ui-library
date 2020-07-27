@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Tree } from 'antd';
-
 import Modal from 'components/Modal';
-import Button from 'components/Button';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
 import EditFormModal from './components/EditFormModal';
 import AddApModal from './components/AddApModal';
+import PopoverMenu from './components/PopoverMenu';
 
 const LocationsTree = ({
   locations,
@@ -104,16 +103,6 @@ const LocationsTree = ({
 
   return (
     <div className={styles.sideTree}>
-      <div className={styles.addButton}>
-        <Button
-          onClick={() => {
-            setAddRootLocation(true);
-            setAddModal(true);
-          }}
-        >
-          Add Location
-        </Button>
-      </div>
       <Tree
         data-testid="locationTree"
         checkable
@@ -126,6 +115,16 @@ const LocationsTree = ({
         defaultExpandAll
         checkStrictly
       />
+
+      <PopoverMenu
+        setAddModal={() => {
+          setAddRootLocation(true);
+          setAddModal(true);
+        }}
+      >
+        <div className={styles.emptDiv} />
+      </PopoverMenu>
+
       <AddFormModal
         locationPath={getLocationPath()}
         visible={addModal}
