@@ -34,8 +34,9 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
             message: 'Please enter a valid MAC Address.',
           },
         ]}
+        hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="MAC Address" />
+        <Input className={globalStyles.field} placeholder="Enter MAC Address" s />
       </Item>
     </Form>
   );
