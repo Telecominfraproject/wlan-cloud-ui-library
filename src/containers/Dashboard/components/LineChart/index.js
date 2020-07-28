@@ -12,6 +12,7 @@ import {
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
+import Timer from 'components/Timer';
 
 import { COLORS } from 'utils/charts';
 import styles from './index.module.scss';
@@ -25,10 +26,19 @@ const dateTimeLabelFormats = {
   year: '',
 };
 
+const headerStyle = {
+  textAlign: 'left',
+};
+
 const LineChart = ({ title, data, options }) => {
   return (
     <div className={styles.container}>
-      <Card title={title} className={styles.LineChart}>
+      <Card
+        title={title}
+        headStyle={headerStyle}
+        className={styles.LineChart}
+        extra={<Timer refreshAfter={300} />}
+      >
         <HighchartsChart
           time={{
             useUTC: false,
