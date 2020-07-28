@@ -19,21 +19,6 @@ const PopoverMenuContent = ({
     history.push(`/network/access-points/bulk-edit/${locationId}`);
   };
 
-  if (!locationType) {
-    return (
-      <div className={styles.popOver}>
-        <Button
-          onClick={() => {
-            hide();
-            setAddModal(true);
-          }}
-        >
-          Add Location
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <div className={styles.popOver}>
       <Button
