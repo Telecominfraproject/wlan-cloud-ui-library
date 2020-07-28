@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 import Container from 'components/Container';
@@ -8,13 +8,19 @@ const { TabPane } = Tabs;
 
 const System = ({ children }) => {
   const location = useLocation();
+  const history = useHistory();
 
   const setActiveKey = () => {
-    if (location.pathname === '/system/autoprovision') return 'autoprovision';
-    if (location.pathname === '/system/firmware') return 'firmware';
-    if (location.pathname === '/system/blockedlist') return 'blockedlist';
-    return 'manufacturer';
+    if (location.pathname === '/system/autoprovision') return 'system/autoprovision';
+    if (location.pathname === '/system/firmware') return '/system/firmware';
+    if (location.pathname === '/system/blockedlist') return '/system/blockedlist';
+    return '/system/manufacturer';
   };
+
+  const onTabChange = value => {
+    history.push(value);
+  };
+
   return (
     <>
       {(location.pathname === '/system/manufacturer' ||
@@ -22,20 +28,11 @@ const System = ({ children }) => {
         location.pathname === '/system/autoprovision' ||
         location.pathname === '/system/blockedlist') && (
         <Container>
-          <Tabs defaultActiveKey={setActiveKey()}>
-            <TabPane
-              tab={<Link to="/system/manufacturer">Device Manufacturer</Link>}
-              key="manufacturer"
-            />
-            <TabPane tab={<Link to="/system/firmware">Firmware</Link>} key="firmware" />
-            <TabPane
-              tab={<Link to="/system/autoprovision">Auto-Provisioning</Link>}
-              key="autoprovision"
-            />
-            <TabPane
-              tab={<Link to="/system/blockedlist">Client Blocked List</Link>}
-              key="blockedlist"
-            />
+          <Tabs defaultActiveKey={setActiveKey()} onChange={onTabChange}>
+            <TabPane tab="Device Manufacturer" key="/system/manufacturer" />
+            <TabPane tab="Firmware" key="/system/firmware" />
+            <TabPane tab="Auto-Provisioning" key="/system/autoprovision" />
+            <TabPane tab="Client Blocked List" key="/system/blockedlist" />
           </Tabs>
         </Container>
       )}
