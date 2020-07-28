@@ -45,20 +45,18 @@ const BlockedList = ({ data, onUpdateClient }) => {
       dataIndex: '',
       key: 'deleteModel',
       width: 60,
-      render: (_, record) => {
-        return record.model !== 'default' ? (
-          <Button
-            title={`delete-mac-${record.macAddress}`}
-            className={styles.InfoButton}
-            type="danger"
-            icon={<DeleteFilled />}
-            onClick={() => {
-              setActiveMac({ ...record });
-              setDeleteModal(true);
-            }}
-          />
-        ) : null;
-      },
+      render: (_, record) => (
+        <Button
+          title={`delete-mac-${record.macAddress}`}
+          className={styles.InfoButton}
+          type="danger"
+          icon={<DeleteFilled />}
+          onClick={() => {
+            setActiveMac({ ...record });
+            setDeleteModal(true);
+          }}
+        />
+      ),
     },
   ];
 

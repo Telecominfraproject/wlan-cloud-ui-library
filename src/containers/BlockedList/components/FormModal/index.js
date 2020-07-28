@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
@@ -14,10 +14,6 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
   };
-
-  useEffect(() => {
-    form.setFieldsValue({});
-  }, [visible]);
 
   const content = (
     <Form {...layout} form={form}>
@@ -36,7 +32,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter MAC Address" s />
+        <Input className={globalStyles.field} placeholder="Enter MAC Address" />
       </Item>
     </Form>
   );
