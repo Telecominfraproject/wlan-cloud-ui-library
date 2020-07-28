@@ -73,7 +73,7 @@ describe('<BulkEditAccessPoints />', () => {
     expect(getByRole('button', { name: 'Load More' })).toBeVisible();
   });
 
-  it('onLoadMore should be called when ', async () => {
+  it('onLoadMore should be called when Load More button is clicked', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(
       <Router>

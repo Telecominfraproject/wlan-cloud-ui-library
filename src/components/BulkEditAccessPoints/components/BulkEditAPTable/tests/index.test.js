@@ -53,7 +53,7 @@ describe('<BulkEditAPTableComp />', () => {
     render(<BulkEditAPTableComp />);
   });
 
-  it('Should work with default props', async () => {
+  it('Should work when a single table cell is edited multiple times', async () => {
     const BulkEditAPTableComp = () => {
       return <BulkEditAPTable {...mockProps} />;
     };
