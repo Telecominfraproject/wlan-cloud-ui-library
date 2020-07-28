@@ -25,6 +25,10 @@ const mockProps = {
   onSaveChanges: () => {},
   onLoadMore: () => {},
   isLastPage: true,
+  breadcrumbPath: [
+    { id: 2, name: 'Menlo Park' },
+    { id: 8, name: 'Ottawa' },
+  ],
 };
 describe('<BulkEditAccessPoints />', () => {
   afterEach(cleanup);
