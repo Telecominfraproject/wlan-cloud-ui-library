@@ -1,10 +1,6 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { ReloadOutlined } from '@ant-design/icons';
-import Button from 'components/Button';
 import LocationsTree from 'components/LocationsTree';
-import ToggleButton from 'components/ToggleButton';
 import styles from './index.module.scss';
 
 const Network = ({
@@ -12,7 +8,6 @@ const Network = ({
   checkedLocations,
   onSelect,
   onCheck,
-  activeTab,
   children,
   onAddLocation,
   onEditLocation,
@@ -30,10 +25,7 @@ const Network = ({
   profiles,
   loadingProfile,
   errorProfile,
-  onReload,
 }) => {
-  const location = useLocation();
-
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -59,22 +51,7 @@ const Network = ({
           loadingProfile={loadingProfile}
           errorProfile={errorProfile}
         />
-        <div className={styles.mainContent}>
-          {location.pathname === '/network/access-points' ||
-          location.pathname === '/network/client-devices' ? (
-            <div className={styles.headerContent}>
-              <ToggleButton activeTab={activeTab} />
-              <Button
-                onClick={() => onReload(location.pathname)}
-                title="reload"
-                icon={<ReloadOutlined />}
-              />
-            </div>
-          ) : (
-            ''
-          )}
-          {children}
-        </div>
+        <div className={styles.mainContent}>{children}</div>
       </div>
     </div>
   );
@@ -82,7 +59,6 @@ const Network = ({
 
 Network.propTypes = {
   children: PropTypes.node.isRequired,
-  activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   profiles: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,
@@ -109,7 +85,6 @@ Network.propTypes = {
     name: PropTypes.string,
     parentId: PropTypes.string,
   }),
-  onReload: PropTypes.func.isRequired,
 };
 
 Network.defaultProps = {
