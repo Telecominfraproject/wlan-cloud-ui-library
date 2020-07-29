@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Loading from 'components/Loading';
-
 import DeviceStatsCard from './components/DeviceStatsCard';
-import LineChart from './components/LineChart';
+import LineChart from './components/LineChart/index';
 import PieChart from './components/PieChart';
 import styles from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart,
   HighchartsChart,
@@ -12,8 +12,8 @@ import {
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
-import Timer from 'components/Timer';
 
+import Timer from 'components/Timer';
 import { COLORS } from 'utils/charts';
 import styles from './index.module.scss';
 
@@ -31,6 +31,35 @@ const headerStyle = {
 };
 
 const LineChart = ({ title, data, options }) => {
+  const [chartData, setChartData] = useState();
+
+  useEffect(() => {
+    if (Array.isArray(data?.value)) {
+      if (!chartData?.length) {
+        setChartData(data.value);
+        return;
+      }
+      const shllowData = chartData?.slice(0);
+      shllowData.push(...data.more);
+      setChartData(shllowData);
+      return;
+    }
+    if (!chartData) {
+      setChartData(data);
+      return;
+    }
+    const result = {};
+    Object.keys(chartData).forEach(key => {
+      const shallowData = chartData[key].value.slice(0);
+      shallowData.push(...data[key].more);
+      result[key] = {
+        ...data[key],
+        value: shallowData,
+      };
+      setChartData(result);
+    });
+  }, [data]);
+
   return (
     <div className={styles.container}>
       <Card
@@ -71,11 +100,12 @@ const LineChart = ({ title, data, options }) => {
             }}
           >
             {Array.isArray(data?.value) ? (
-              <SplineSeries name={data.key} data={data.value} />
+              <SplineSeries name={data.key} data={chartData} />
             ) : (
-              Object.keys(data).map(key => {
-                return <SplineSeries name={data[key].key} data={data[key].value} />;
-              })
+              chartData &&
+              Object.keys(chartData).map(key => (
+                <SplineSeries name={chartData[key].key} data={chartData[key].value} />
+              ))
             )}
           </YAxis>
         </HighchartsChart>
