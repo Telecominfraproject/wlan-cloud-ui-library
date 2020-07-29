@@ -46,8 +46,6 @@ const mockProps = {
       __typename: 'Client',
     },
   ],
-  onUpdateClient: () => {},
-  onGetClients: () => {},
 };
 
 describe('<AutoProvision />', () => {
@@ -63,28 +61,6 @@ describe('<AutoProvision />', () => {
     fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
     expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
-  });
-
-  it('Invalid MAC address show show on invalid Client input', async () => {
-    const submitSpy = jest.fn();
-
-    const { getByRole, getByText, getByLabelText } = render(
-      <Router>
-        <BlockedList {...mockProps} onGetClients={submitSpy} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('button', { name: 'Add Client' }));
-
-    expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
-
-    fireEvent.change(getByLabelText('MAC Address'), { target: { value: 'test' } });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(submitSpy).toBeCalledTimes(0);
-      expect(getByText('Please enter a valid MAC Address.')).toBeVisible();
-    });
   });
 
   it('onUpdateClient should be called on valid MAC Address input', async () => {
@@ -194,5 +170,32 @@ describe('<AutoProvision />', () => {
       expect(submitSpy).toBeCalledTimes(1);
       expect(paragraph).not.toBeVisible();
     });
+  });
+
+  it('onGetClients default prop is passed', async () => {
+    const { getByRole, getByLabelText } = render(
+      <Router>
+        <BlockedList />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('button', { name: 'Add Client' }));
+    fireEvent.change(getByLabelText('MAC Address'), { target: { value: '00:0a:95:9d:68:11' } });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+  });
+
+  it('onUpdateClient default prop is passed', async () => {
+    const { getByRole } = render(
+      <Router>
+        <BlockedList {...mockProps} />
+      </Router>
+    );
+
+    fireEvent.click(
+      getByRole('button', {
+        name: `delete-mac-${mockProps.data[0].macAddress}`,
+      })
+    );
+    fireEvent.click(getByRole('button', { name: /Remove/i }));
   });
 });
