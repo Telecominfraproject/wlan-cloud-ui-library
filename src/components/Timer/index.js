@@ -42,11 +42,12 @@ const Timer = ({ handleRefresh, refreshAfter }) => {
 };
 
 Timer.propTypes = {
-  handleRefresh: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   refreshAfter: PropTypes.number,
 };
 
 Timer.defaultProps = {
+  handleRefresh: () => {},
   refreshAfter: 60,
 };
 
