@@ -11,14 +11,14 @@ const System = ({ children }) => {
   const history = useHistory();
 
   const getActiveKey = () => {
-    if (location.pathname === '/system/autoprovision') return 'system/autoprovision';
-    if (location.pathname === '/system/firmware') return '/system/firmware';
-    if (location.pathname === '/system/blockedlist') return '/system/blockedlist';
-    return '/system/manufacturer';
+    if (location.pathname === '/system/autoprovision') return 'autoprovision';
+    if (location.pathname === '/system/firmware') return 'firmware';
+    if (location.pathname === '/system/blockedlist') return 'blockedlist';
+    return 'manufacturer';
   };
 
-  const onTabChange = value => {
-    history.push(value);
+  const onTabChange = key => {
+    history.push(`/system/${key}`);
   };
 
   return (
@@ -29,10 +29,10 @@ const System = ({ children }) => {
         location.pathname === '/system/blockedlist') && (
         <Container>
           <Tabs defaultActiveKey={getActiveKey()} onChange={onTabChange}>
-            <TabPane tab="Device Manufacturer" key="/system/manufacturer" />
-            <TabPane tab="Firmware" key="/system/firmware" />
-            <TabPane tab="Auto-Provisioning" key="/system/autoprovision" />
-            <TabPane tab="Client Blocked List" key="/system/blockedlist" />
+            <TabPane tab="Device Manufacturer" key="manufacturer" />
+            <TabPane tab="Firmware" key="firmware" />
+            <TabPane tab="Auto-Provisioning" key="autoprovision" />
+            <TabPane tab="Client Blocked List" key="blockedlist" />
           </Tabs>
         </Container>
       )}

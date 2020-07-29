@@ -68,7 +68,7 @@ const Network = ({
               <ToggleButton activeTab={activeTab} />
               {location.pathname === '/network/client-devices' && (
                 <Link to="/system/blockedlist" className={styles.BlockedListButton}>
-                  <Button> Blocked List</Button>
+                  <Button>Blocked List</Button>
                 </Link>
               )}
               <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />

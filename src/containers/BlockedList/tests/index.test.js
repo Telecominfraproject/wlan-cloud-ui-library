@@ -48,7 +48,7 @@ const mockProps = {
   ],
 };
 
-describe('<AutoProvision />', () => {
+describe('<BlockedList />', () => {
   afterEach(cleanup);
 
   it('Add MAC button press should show Add Client modal', async () => {
@@ -63,12 +63,12 @@ describe('<AutoProvision />', () => {
     expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
   });
 
-  it('onUpdateClient should be called on valid MAC Address input', async () => {
+  it('onAddClient should be called on valid MAC Address input', async () => {
     const submitSpy = jest.fn();
 
     const { getByRole, getByText, getByLabelText } = render(
       <Router>
-        <BlockedList {...mockProps} onGetClients={submitSpy} />
+        <BlockedList {...mockProps} onAddClient={submitSpy} />
       </Router>
     );
 
@@ -172,7 +172,7 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('onGetClients default prop is passed', async () => {
+  it('onAddClient default prop is passed', async () => {
     const { getByRole, getByLabelText } = render(
       <Router>
         <BlockedList />

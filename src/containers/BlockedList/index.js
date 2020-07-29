@@ -11,20 +11,28 @@ import FormModal from './components/FormModal';
 
 import styles from './index.module.scss';
 
-const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
+const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
   const [addModal, setAddModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
 
   const addClient = async ({ macAddress }) => {
-    onGetClients(macAddress);
+    onAddClient(macAddress);
     setAddModal(false);
   };
 
   const deleteClient = () => {
     const formattedDetails = { ...activeMac.details };
-    formattedDetails.blocklistDetails.enabled = false;
-    onUpdateClient(activeMac.macAddress, formattedDetails);
+
+    const hasDetailsProperty = Object.prototype.hasOwnProperty.call(
+      formattedDetails,
+      'blocklistDetails'
+    );
+
+    if (hasDetailsProperty) {
+      formattedDetails.blocklistDetails.enabled = false;
+      onUpdateClient(activeMac.macAddress, formattedDetails);
+    }
     setDeleteModal(false);
   };
 
@@ -34,7 +42,7 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
       dataIndex: 'macAddress',
       width: 900,
       render: value => (
-        <Link className={styles.Link} to="/network/client-devices">
+        <Link className={styles.Link} to={`/network/client-devices/${value}`}>
           {value}
         </Link>
       ),
@@ -96,13 +104,13 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
 BlockedList.propTypes = {
   data: Proptypes.instanceOf(Array),
   onUpdateClient: Proptypes.func,
-  onGetClients: Proptypes.func,
+  onAddClient: Proptypes.func,
 };
 
 BlockedList.defaultProps = {
   data: [],
   onUpdateClient: () => {},
-  onGetClients: () => {},
+  onAddClient: () => {},
 };
 
 export default BlockedList;
