@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from 'tests/utils';
 import BlockedList from '..';
 
@@ -46,31 +47,36 @@ const mockProps = {
     },
   ],
   onUpdateClient: () => {},
+  onGetClients: () => {},
 };
 
 describe('<AutoProvision />', () => {
   afterEach(cleanup);
 
-  it('Add MAC button press should show Add MAC modal', async () => {
-    const { getByRole, getByText } = render(<BlockedList {...mockProps} />);
+  it('Add MAC button press should show Add Client modal', async () => {
+    const { getByRole, getByText } = render(
+      <Router>
+        <BlockedList {...mockProps} />
+      </Router>
+    );
 
-    fireEvent.click(getByRole('button', { name: 'Add MAC' }));
+    fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
-    const paragraph = getByText('Add Blocklist');
-    expect(paragraph).toBeVisible();
+    expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
   });
 
-  it('Invalid MAC address show show on invalid MAC input', async () => {
+  it('Invalid MAC address show show on invalid Client input', async () => {
     const submitSpy = jest.fn();
 
     const { getByRole, getByText, getByLabelText } = render(
-      <BlockedList {...mockProps} onUpdateClient={submitSpy} />
+      <Router>
+        <BlockedList {...mockProps} onGetClients={submitSpy} />
+      </Router>
     );
 
-    fireEvent.click(getByRole('button', { name: 'Add MAC' }));
+    fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
-    const paragraph = getByText('Add Blocklist');
-    expect(paragraph).toBeVisible();
+    expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('MAC Address'), { target: { value: 'test' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -85,13 +91,14 @@ describe('<AutoProvision />', () => {
     const submitSpy = jest.fn();
 
     const { getByRole, getByText, getByLabelText } = render(
-      <BlockedList {...mockProps} onUpdateClient={submitSpy} />
+      <Router>
+        <BlockedList {...mockProps} onGetClients={submitSpy} />
+      </Router>
     );
 
-    fireEvent.click(getByRole('button', { name: 'Add MAC' }));
+    fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
-    const paragraph = getByText('Add Blocklist');
-    expect(paragraph).toBeVisible();
+    expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('MAC Address'), { target: { value: '00:0a:95:9d:68:11' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -101,12 +108,16 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('Cancel button press should hide ADD MAC modal', async () => {
-    const { getByRole, getByText } = render(<BlockedList {...mockProps} />);
+  it('Cancel button press should hide ADD Client modal', async () => {
+    const { getByRole, getByText } = render(
+      <Router>
+        <BlockedList {...mockProps} />
+      </Router>
+    );
 
-    fireEvent.click(getByRole('button', { name: 'Add MAC' }));
+    fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
-    const paragraph = getByText('Add Blocklist');
+    const paragraph = getByText('Add Client', { selector: 'div' });
     expect(paragraph).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
@@ -115,8 +126,13 @@ describe('<AutoProvision />', () => {
       expect(paragraph).not.toBeVisible();
     });
   });
+
   it('Delete button press should show Delete MAC modal', async () => {
-    const { getByRole, getByText } = render(<BlockedList {...mockProps} />);
+    const { getByRole, getByText } = render(
+      <Router>
+        <BlockedList {...mockProps} />
+      </Router>
+    );
 
     fireEvent.click(
       getByRole('button', {
@@ -124,13 +140,17 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the MAC Address:');
+    const paragraph = getByText(/Are you sure you want to remove the Client:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.data[0].macAddress)).toBeVisible();
   });
 
   it('Cancel button press should hide Delete MAC modal', async () => {
-    const { getByRole, getByText } = render(<BlockedList {...mockProps} />);
+    const { getByRole, getByText } = render(
+      <Router>
+        <BlockedList {...mockProps} />
+      </Router>
+    );
 
     fireEvent.click(
       getByRole('button', {
@@ -138,7 +158,7 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the MAC Address:');
+    const paragraph = getByText(/Are you sure you want to remove the Client:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.data[0].macAddress)).toBeVisible();
 
@@ -152,7 +172,9 @@ describe('<AutoProvision />', () => {
   it('Delete button press on Delete MAC Modal should call onUpdateClient', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText } = render(
-      <BlockedList {...mockProps} onUpdateClient={submitSpy} />
+      <Router>
+        <BlockedList {...mockProps} onUpdateClient={submitSpy} />
+      </Router>
     );
 
     fireEvent.click(
@@ -161,11 +183,12 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the MAC Address:');
+    const paragraph = getByText(/Are you sure you want to remove the Client:/i);
     expect(paragraph).toBeVisible();
+
     expect(within(paragraph).getByText(mockProps.data[0].macAddress)).toBeVisible();
 
-    fireEvent.click(getByRole('button', { name: 'Delete' }));
+    fireEvent.click(getByRole('button', { name: 'Remove' }));
 
     await waitFor(() => {
       expect(submitSpy).toBeCalledTimes(1);

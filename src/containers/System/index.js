@@ -10,7 +10,7 @@ const System = ({ children }) => {
   const location = useLocation();
   const history = useHistory();
 
-  const setActiveKey = () => {
+  const getActiveKey = () => {
     if (location.pathname === '/system/autoprovision') return 'system/autoprovision';
     if (location.pathname === '/system/firmware') return '/system/firmware';
     if (location.pathname === '/system/blockedlist') return '/system/blockedlist';
@@ -28,7 +28,7 @@ const System = ({ children }) => {
         location.pathname === '/system/autoprovision' ||
         location.pathname === '/system/blockedlist') && (
         <Container>
-          <Tabs defaultActiveKey={setActiveKey()} onChange={onTabChange}>
+          <Tabs defaultActiveKey={getActiveKey()} onChange={onTabChange}>
             <TabPane tab="Device Manufacturer" key="/system/manufacturer" />
             <TabPane tab="Firmware" key="/system/firmware" />
             <TabPane tab="Auto-Provisioning" key="/system/autoprovision" />

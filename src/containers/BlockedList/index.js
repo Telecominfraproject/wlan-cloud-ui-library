@@ -32,7 +32,6 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
     {
       title: 'MAC ADDRESS',
       dataIndex: 'macAddress',
-      key: 'mac',
       width: 900,
       render: value => (
         <Link className={styles.Link} to="/network/client-devices">
@@ -41,8 +40,6 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
       ),
     },
     {
-      title: '',
-      dataIndex: '',
       key: 'deleteMac',
       width: 60,
       render: (_, record) => (
@@ -67,12 +64,12 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
         onSuccess={deleteClient}
         visible={deleteModal}
         title="Are you sure?"
-        buttonText="Delete"
+        buttonText="Remove"
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the MAC Address:{' '}
-            <strong> {activeMac.macAddress} </strong>
+            Are you sure you want to remove the Client: <strong> {activeMac.macAddress} </strong>
+            from the Blocked List?
           </p>
         }
       />
@@ -80,13 +77,13 @@ const BlockedList = ({ data, onUpdateClient, onGetClients }) => {
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addClient}
-        title="Add Blocklist"
+        title="Add Client"
       />
       <div className={styles.BlockedList}>
         <Header>
           <h1>Client Blocked List</h1>
           <Button type="primary" onClick={() => setAddModal(true)}>
-            Add MAC
+            Add Client
           </Button>
         </Header>
 
