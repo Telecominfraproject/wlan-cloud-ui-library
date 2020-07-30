@@ -24,15 +24,13 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
   const deleteClient = () => {
     const formattedDetails = { ...activeMac.details };
 
-    const hasDetailsProperty = Object.prototype.hasOwnProperty.call(
-      formattedDetails,
-      'blocklistDetails'
-    );
-
-    if (hasDetailsProperty) {
-      formattedDetails.blocklistDetails.enabled = false;
-      onUpdateClient(activeMac.macAddress, formattedDetails);
+    if (!formattedDetails.blocklistDetails) {
+      formattedDetails.blocklistDetails = {};
     }
+
+    formattedDetails.blocklistDetails.enabled = false;
+    onUpdateClient(activeMac.macAddress, formattedDetails);
+
     setDeleteModal(false);
   };
 
