@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
@@ -66,6 +66,11 @@ const Network = ({
           location.pathname === '/network/client-devices' ? (
             <div className={styles.headerContent}>
               <ToggleButton activeTab={activeTab} />
+              {location.pathname === '/network/client-devices' && (
+                <Link to="/system/blockedlist" className={styles.BlockedListButton}>
+                  <Button>Blocked List</Button>
+                </Link>
+              )}
               <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
             </div>
           ) : (

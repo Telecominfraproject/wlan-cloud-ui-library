@@ -1,0 +1,11 @@
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
+
+.Link {
+  color: #fff;
+  &:hover {
+    text-decoration: underline;
+  }
+}
