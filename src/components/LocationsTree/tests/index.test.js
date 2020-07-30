@@ -191,13 +191,6 @@ const mockProps = {
   editModal: false,
   addModal: false,
   apModal: false,
-  onAddLocation: () => {},
-  onEditLocation: () => {},
-  onDeleteLocation: () => {},
-  setAddModal: () => {},
-  setEditModal: () => {},
-  setDeleteModal: () => {},
-  setApModal: () => {},
 };
 
 const DOWN_ARROW = { keyCode: 40 };
@@ -269,7 +262,16 @@ describe('<LocationTree />', () => {
       expect(onDeleteLocationSpy).toHaveBeenCalledTimes(1);
     });
   });
+  it('should work default function if Delete button is clicked', async () => {
+    const history = createMemoryHistory();
 
+    const { getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} deleteModal locationPath={locationPath} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+  });
   it('should call setAddModal if Cancel button is clicked', () => {
     const history = createMemoryHistory();
     const setAddModalSpy = jest.fn();
@@ -324,6 +326,67 @@ describe('<LocationTree />', () => {
 
     await waitFor(() => {
       expect(onAddLocationSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+  it('should work with Default Function on submit, if form is valid type BUILDING', async () => {
+    const history = createMemoryHistory();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} addModal selectedLocation={selectedLocation} />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+  });
+  it('should not call onAddLocation on submit and if form input is valid null ', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={null}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onAddLocationSpy).not.toHaveBeenCalled();
+    });
+  });
+  it('should  not call onAddLocation on submit, if form input is not valid Type', async () => {
+    const history = createMemoryHistory();
+    const onAddLocationSpy = jest.fn();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree
+          {...mockProps}
+          addModal
+          selectedLocation={{
+            id: 7,
+            parentId: 2,
+            locationType: 'Test',
+            lastModifiedTimestamp: 1591804177219,
+          }}
+          onAddLocation={onAddLocationSpy}
+        />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('New Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitFor(() => {
+      expect(onAddLocationSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -452,6 +515,18 @@ describe('<LocationTree />', () => {
     });
   });
 
+  it('should work with default function on submit, if form input is valid', async () => {
+    const history = createMemoryHistory();
+
+    const { getByLabelText, getByRole } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} editModal selectedLocation={selectedLocation} />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('Location Name'), { target: { value: 'Floor 1' } });
+    fireEvent.click(getByRole('button', { name: /save/i }));
+  });
   it('should call onCreateEquipment on submit, if form input is valid', async () => {
     const history = createMemoryHistory();
     const onCreateEquipment = jest.fn();
@@ -482,7 +557,26 @@ describe('<LocationTree />', () => {
       expect(onCreateEquipment).toHaveBeenCalledTimes(1);
     });
   });
+  it('should work with default function on submit, if form input is valid', async () => {
+    const history = createMemoryHistory();
 
+    const { getByLabelText, getByRole, getByText } = render(
+      <Router history={history}>
+        <LocationTree {...mockProps} apModal selectedLocation={selectedLocation} />
+      </Router>
+    );
+
+    fireEvent.change(getByLabelText('Asset ID'), { target: { value: 'test' } });
+    fireEvent.change(getByLabelText('Name'), { target: { value: 'test' } });
+
+    const profile = getByLabelText('Profile');
+    fireEvent.keyDown(profile, DOWN_ARROW);
+    await waitForElement(() => getByText('ApProfile-3-radios'));
+
+    fireEvent.click(getByText('ApProfile-3-radios'));
+
+    fireEvent.click(getByRole('button', { name: /add/i }));
+  });
   it('should hide setApModal if Cancel button is clicked', () => {
     const history = createMemoryHistory();
     const setApModalSpy = jest.fn();
