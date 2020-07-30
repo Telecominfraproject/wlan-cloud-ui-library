@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, screen } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import VersionModal from '..';
 
