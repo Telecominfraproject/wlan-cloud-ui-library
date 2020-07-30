@@ -18,7 +18,7 @@ const Firmware = ({
   onUpdateTrackAssignment,
   onDeleteTrackAssignment,
   onDeleteFirmware,
-  onCreateFirnware,
+  onCreateFirmware,
   onUpdateFirmware,
   firmwareError,
   firmwareLoading,
@@ -78,7 +78,7 @@ const Firmware = ({
     date,
     validationCode,
   }) => {
-    onCreateFirnware(
+    onCreateFirmware(
       modelId,
       versionName,
       description,
@@ -390,7 +390,7 @@ Firmware.propTypes = {
   onUpdateTrackAssignment: PropTypes.func.isRequired,
   handleSearchFirmware: PropTypes.func.isRequired,
   onDeleteFirmware: PropTypes.func.isRequired,
-  onCreateFirnware: PropTypes.func.isRequired,
+  onCreateFirmware: PropTypes.func.isRequired,
   onUpdateFirmware: PropTypes.func.isRequired,
   firmwareLoading: PropTypes.bool,
   trackAssignmentLoading: PropTypes.bool,

@@ -59,7 +59,7 @@ const AutoProvision = ({
   }, [equipmentProfileIdPerModel]);
 
   const usedModels = useMemo(() => {
-    return Object.keys(status.equipmentProfileIdPerModel);
+    return Object.keys(status.equipmentProfileIdPerModel || {});
   }, [data]);
 
   const { id, email, name, createdTimestamp, lastModifiedTimestamp } = data;
@@ -224,9 +224,12 @@ const AutoProvision = ({
         {enabled && (
           <div className={styles.Content}>
             <Card title="Target Location">
-              {loadingLoaction && <Spin className={styles.spinner} size="large" />}
+              {loadingLoaction && (
+                <Spin data-testid="loadingLoaction" className={styles.spinner} size="large" />
+              )}
               {errorLocation && (
                 <Alert
+                  data-testid="errorLocation"
                   message="Error"
                   description="Failed to load location."
                   type="error"

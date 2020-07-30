@@ -550,4 +550,24 @@ describe('<AutoProvision />', () => {
       expect(getByTestId('loadingProfile')).toBeInTheDocument();
     });
   });
+
+  it('Loading spinner should be visible if loadingLoaction', async () => {
+    const { getByTestId } = render(<AutoProvision {...mockProps} loadingLoaction />);
+
+    await waitFor(() => {
+      expect(getByTestId('loadingLoaction')).toBeInTheDocument();
+    });
+  });
+
+  it('Alert error should be visible if errorLocation has errors', async () => {
+    const { getByTestId } = render(<AutoProvision {...mockProps} errorLocation />);
+
+    await waitFor(() => {
+      expect(getByTestId('errorLocation')).toBeInTheDocument();
+    });
+  });
+
+  it('null check', async () => {
+    render(<AutoProvision />);
+  });
 });
