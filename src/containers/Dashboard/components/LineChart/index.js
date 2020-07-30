@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Chart,
   HighchartsChart,
@@ -9,12 +8,13 @@ import {
   YAxis,
   withHighcharts,
 } from 'react-jsx-highcharts';
+import React, { useEffect, useState } from 'react';
+
+import { COLORS } from 'utils/charts';
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
-
 import Timer from 'components/Timer';
-import { COLORS } from 'utils/charts';
 import styles from './index.module.scss';
 
 const dateTimeLabelFormats = {
@@ -35,31 +35,42 @@ const LineChart = ({ title, data, options }) => {
 
   useEffect(() => {
     if (Array.isArray(data?.value)) {
-      if (!chartData?.length) {
-        setChartData(data.value);
+      if (data?.more) {
+        const shllowData = chartData?.slice(0);
+        shllowData.push(...data.more);
+        setChartData(shllowData);
         return;
       }
-      const shllowData = chartData?.slice(0);
-      shllowData.push(...data.more);
-      setChartData(shllowData);
+      setChartData(data.value);
       return;
     }
-    if (!chartData) {
+    if (!chartData && Object.keys(data).length) {
       setChartData(data);
-      return;
-    }
-    const result = {};
-    Object.keys(chartData).forEach(key => {
-      const shallowData = chartData[key].value.slice(0);
-      shallowData.push(...data[key].more);
-      result[key] = {
-        ...data[key],
-        value: shallowData,
-      };
-      setChartData(result);
-    });
-  }, [data]);
+    } else if (chartData && Object.keys(chartData).length) {
+      const result = {};
 
+      Object.keys(data).forEach(key => {
+        if (!chartData[key]) {
+          result[key] = {
+            key,
+            value: data[key].more,
+          };
+        } else {
+          const shallowData = chartData[key].value.slice(0);
+          if (data[key].more) {
+            shallowData.push(...data[key].more);
+            result[key] = {
+              ...data[key],
+              value: shallowData,
+            };
+          }
+        }
+      });
+      if (Object.keys(result).length) {
+        setChartData(result);
+      }
+    }
+  }, [data]);
   return (
     <div className={styles.container}>
       <Card
