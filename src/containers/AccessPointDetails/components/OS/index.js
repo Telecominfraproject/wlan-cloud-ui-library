@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert } from 'antd';
-import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
+import { LineChartOutlined } from '@ant-design/icons';
 
 import SolidGauge from './components/SolidGauge';
 import HighChartGraph from './components/HighChartGraph';
@@ -57,12 +57,6 @@ const OS = ({ data, osData, handleRefresh }) => {
         <Alert
           icon={<LineChartOutlined />}
           message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
-          type="info"
-          showIcon
-        />
-        <Alert
-          icon={<InfoCircleOutlined />}
-          message={`CAMI crashes since boot: ${osPerformance.numCamiCrashes}`}
           type="info"
           showIcon
         />
