@@ -53,15 +53,12 @@ const OS = ({ data, osData, handleRefresh }) => {
 
   return (
     <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
-      <div className={styles.InlineBetweenDiv}>
-        <Alert
-          icon={<LineChartOutlined />}
-          message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
-          type="info"
-          showIcon
-        />
-      </div>
-
+      <Alert
+        icon={<LineChartOutlined />}
+        message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
+        type="info"
+        showIcon
+      />
       <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
         <SolidGauge data={cpu} title="Current CPU" />
         <SolidGauge data={memory} title="Current Free Memory" />
