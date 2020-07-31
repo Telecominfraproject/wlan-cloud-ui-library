@@ -895,7 +895,11 @@ export const defaultProps = {
         },
         __typename: 'Status',
       },
-      clientDetails: null,
+      clientDetails: {
+        detailsJSON: {
+          numClientsPerRadio: 0,
+        },
+      },
       osPerformance: {
         detailsJSON: {
           model_type: 'OperatingSystemPerformance',

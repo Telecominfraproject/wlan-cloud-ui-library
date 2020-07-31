@@ -42,9 +42,11 @@ const AutoProvision = ({
 
   const profilesById = useMemo(() => {
     const map = {};
-    dataProfile.forEach(i => {
-      map[i.id] = i;
-    });
+    if (dataProfile.length) {
+      dataProfile.forEach(i => {
+        map[i.id] = i;
+      });
+    }
 
     return map;
   }, [dataProfile]);

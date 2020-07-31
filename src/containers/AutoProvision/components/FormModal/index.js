@@ -77,11 +77,12 @@ const FormModal = ({
         ]}
       >
         <Select className={globalStyles.field} placeholder="Select Access Point Profile">
-          {profiles.map(i => (
-            <Option key={i.id} value={i.id}>
-              {i.name}
-            </Option>
-          ))}
+          {profiles.length &&
+            profiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
         </Select>
       </Item>
     </Form>
@@ -131,7 +132,6 @@ FormModal.propTypes = {
   title: PropTypes.string,
   model: PropTypes.string,
   profileId: PropTypes.number,
-  buttonText: PropTypes.string,
   profiles: PropTypes.instanceOf(Array),
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool,
@@ -143,7 +143,6 @@ FormModal.defaultProps = {
   visible: false,
   onSubmit: () => {},
   title: '',
-  buttonText: '',
   model: '',
   profileId: null,
   profiles: [],

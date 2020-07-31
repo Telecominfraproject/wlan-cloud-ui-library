@@ -317,7 +317,7 @@ describe('<Firmware />', () => {
 
   it('onCreateFirmware should be called when form is complete', async () => {
     const submitSpy = jest.fn();
-    const { getByText, getByRole, getByLabelText, getAllByText } = render(
+    const { getByText, getByRole, getByLabelText, getByTestId } = render(
       <Firmware {...mockProps} onCreateFirmware={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /add version/i }));
@@ -326,10 +326,8 @@ describe('<Firmware />', () => {
     fireEvent.change(getByLabelText('Model ID'), { target: { value: 'test id' } });
     fireEvent.change(getByLabelText('Version Name'), { target: { value: 'test name' } });
     fireEvent.change(getByLabelText('Firmware URL'), { target: { value: 'www.test.com' } });
-    fireEvent.mouseDown(getByLabelText('Release Date'));
-    await waitFor(() => expect(getAllByText('20')[0]).toBeInTheDocument());
-    fireEvent.click(getAllByText('20')[0]);
-    fireEvent.mouseDown(getByText('Ok'));
+    fireEvent.mouseDown(getByTestId('datePicker'));
+    fireEvent.click(getByText('Now'));
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -339,7 +337,7 @@ describe('<Firmware />', () => {
 
   it('onUpdateFirmware should be saved with existing firmware data', async () => {
     const submitSpy = jest.fn();
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole, getByTestId } = render(
       <Firmware {...mockProps} onUpdateFirmware={submitSpy} />
     );
 
@@ -347,7 +345,8 @@ describe('<Firmware />', () => {
       getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[0].modelId}` })
     );
     expect(getByText('Edit Firmware Version')).toBeVisible();
-
+    fireEvent.mouseDown(getByTestId('datePicker'));
+    fireEvent.click(getByText('Now'));
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {

@@ -195,12 +195,8 @@ const mockProps = {
   loadingProfile: false,
   errorLocation: null,
   errorProfile: null,
-  onUpdateCustomer: () => {},
 };
 
-const MISSING_MODEL = 'Please enter Model.';
-const MISSING_PROFILE = 'Please select Access Point Profile.';
-const INVALID_MODEL = 'Model already used. Please enter a new model.';
 const DOWN_ARROW = { keyCode: 40 };
 
 const models = ['default', 'ECW5410', 'TIP_AP', 'ECW5211', 'AP2220', 'EA8300'];
@@ -219,6 +215,28 @@ describe('<AutoProvision />', () => {
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('onUpdateCustomer default props test', async () => {
+    const { getByRole } = render(<AutoProvision {...mockProps} />);
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+  });
+
+  it('onUpdateCustomer catch condition default props test', async () => {
+    const { getByRole } = render(<AutoProvision {...mockProps} />);
+
+    fireEvent.click(getByRole('switch'));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+  });
+
+  it('onUpdateCustomer catch condition default props test', async () => {
+    const { getByRole } = render(<AutoProvision {...mockProps} dataProfile={{}} />);
+
+    fireEvent.click(getByRole('switch'));
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
   });
 
   it('onUpdateCustomer should be called if auto provision toggle is set to disabled and user saves', async () => {
@@ -339,43 +357,6 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('Errors should show if add model form is incomplete', async () => {
-    const { getByRole, getByText, getAllByRole } = render(<AutoProvision {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /add model/i }));
-
-    expect(getByText('Add Model', { selector: 'div' })).toBeVisible();
-
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
-
-    await waitFor(() => {
-      expect(getByText(MISSING_MODEL)).toBeVisible();
-      expect(getByText(MISSING_PROFILE)).toBeVisible();
-    });
-  });
-
-  it('Existing model error should show if add model form contains invalid model id', async () => {
-    const { getByRole, getByText, getByLabelText, getAllByRole, getAllByText } = render(
-      <AutoProvision {...mockProps} />
-    );
-
-    fireEvent.click(getByRole('button', { name: /add model/i }));
-
-    expect(getByText('Add Model', { selector: 'div' })).toBeVisible();
-
-    fireEvent.change(getByLabelText('Model'), { target: { value: 'default' } });
-
-    const profile = getByLabelText('Profile');
-    fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
-    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
-
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
-
-    await waitFor(() => {
-      expect(getByText(INVALID_MODEL)).toBeVisible();
-    });
-  });
-
   it('onUpdateCustomer should be called if add model form is valid', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText, getByLabelText, getAllByRole, getAllByText } = render(
@@ -448,56 +429,6 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('Missing model error should show if edit model form has missing model', async () => {
-    const { getByRole, getByText, getAllByRole, getByLabelText, getAllByText } = render(
-      <AutoProvision {...mockProps} />
-    );
-
-    fireEvent.click(
-      getByRole('button', {
-        name: `edit-model-${models[1]}`,
-      })
-    );
-    expect(getByText('Edit Model')).toBeVisible();
-
-    fireEvent.change(getByLabelText('Model'), { target: { value: '' } });
-    const profile = getByLabelText('Profile');
-    fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
-    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
-
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
-
-    await waitFor(() => {
-      expect(getByText(MISSING_MODEL)).toBeVisible();
-    });
-  });
-
-  it('Invalid model error should show if edit model form contains invalid model id', async () => {
-    const { getByRole, getByText, getAllByRole, getByLabelText, getAllByText } = render(
-      <AutoProvision {...mockProps} />
-    );
-
-    fireEvent.click(
-      getByRole('button', {
-        name: `edit-model-${models[1]}`,
-      })
-    );
-    expect(getByText('Edit Model')).toBeVisible();
-
-    fireEvent.change(getByLabelText('Model'), { target: { value: 'default' } });
-    const profile = getByLabelText('Profile');
-    fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
-    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
-
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
-
-    await waitFor(() => {
-      expect(getByText(INVALID_MODEL)).toBeVisible();
-    });
-  });
-
   it('onUpdateCustomer should be called when delete modal is submitted and user saves', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByText } = render(
@@ -520,34 +451,6 @@ describe('<AutoProvision />', () => {
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('Alert error should be visible if errorProfile has errors for Form modal', async () => {
-    const { getByRole, getByTestId, getByText } = render(
-      <AutoProvision {...mockProps} errorProfile />
-    );
-
-    fireEvent.click(getByRole('button', { name: /add model/i }));
-
-    expect(getByText('Add Model', { selector: 'div' })).toBeVisible();
-
-    await waitFor(() => {
-      expect(getByTestId('errorProfile')).toBeInTheDocument();
-    });
-  });
-
-  it('Loading spinner should be visible if loadingProfile is true for Form modal', async () => {
-    const { getByRole, getByTestId, getByText } = render(
-      <AutoProvision {...mockProps} loadingProfile />
-    );
-
-    fireEvent.click(getByRole('button', { name: /add model/i }));
-
-    expect(getByText('Add Model', { selector: 'div' })).toBeVisible();
-
-    await waitFor(() => {
-      expect(getByTestId('loadingProfile')).toBeInTheDocument();
     });
   });
 
