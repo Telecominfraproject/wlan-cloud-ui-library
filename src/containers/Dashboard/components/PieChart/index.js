@@ -9,7 +9,6 @@ import styles from './index.module.scss';
 
 const headerStyle = {
   textAlign: 'center',
-  border: 0,
 };
 
 const PieChart = ({ chartData, title }) => {
