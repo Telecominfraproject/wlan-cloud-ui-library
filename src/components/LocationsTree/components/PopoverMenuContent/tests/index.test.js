@@ -9,10 +9,7 @@ import PopoverMenuContent from '..';
 
 const mockProps = {
   locationData: {},
-  setAddModal: () => {},
-  setEditModal: () => {},
-  setDeleteModal: () => {},
-  setApModal: () => {},
+
   hide: () => {},
 };
 
@@ -28,6 +25,13 @@ describe('<PopoverMenuContent />', () => {
     expect(submitSpy).toHaveBeenCalled();
   });
 
+  it('should work with default function when Add Location is clicked', () => {
+    const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
+    fireEvent.click(getByRole('button', { name: /add location/i }));
+    const modal = screen.getByText('Add Location');
+    expect(modal).toBeVisible();
+  });
+
   it('should open Edit Location Form Modal when Edit Location is clicked', () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<PopoverMenuContent {...mockProps} setEditModal={submitSpy} />);
@@ -35,6 +39,13 @@ describe('<PopoverMenuContent />', () => {
     const modal = screen.getByText('Edit Location');
     expect(modal).toBeVisible();
     expect(submitSpy).toHaveBeenCalled();
+  });
+
+  it('should work with default function when Edit Location is clicked', () => {
+    const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
+    fireEvent.click(getByRole('button', { name: /edit location/i }));
+    const modal = screen.getByText('Edit Location');
+    expect(modal).toBeVisible();
   });
 
   it('should open Delete Location Modal when Delete Location is clicked', () => {
@@ -46,6 +57,13 @@ describe('<PopoverMenuContent />', () => {
     expect(submitSpy).toHaveBeenCalled();
   });
 
+  it('should work with default function when Delete Location is clicked', () => {
+    const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
+    fireEvent.click(getByRole('button', { name: /delete location/i }));
+    const modal = screen.getByText('Delete Location');
+    expect(modal).toBeVisible();
+  });
+
   it('should open Add AP Modal when Add Access Point is clicked', () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<PopoverMenuContent {...mockProps} setApModal={submitSpy} />);
@@ -53,6 +71,13 @@ describe('<PopoverMenuContent />', () => {
     const modal = screen.getByText('Add Access Point');
     expect(modal).toBeVisible();
     expect(submitSpy).toHaveBeenCalled();
+  });
+
+  it('should work with default function when Add Access Point is clicked', () => {
+    const { getByRole } = render(<PopoverMenuContent {...mockProps} />);
+    fireEvent.click(getByRole('button', { name: /add access point/i }));
+    const modal = screen.getByText('Add Access Point');
+    expect(modal).toBeVisible();
   });
 
   it('should open bulk edit aps page when button is clicked', () => {
