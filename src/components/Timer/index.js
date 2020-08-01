@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import { Progress, Tooltip } from 'antd';
 import moment from 'moment';
 
+import styles from './index.scss';
+
+const DATE_FORMAT = 'MMMM DD YYYY, hh:mm A';
+
 const Timer = ({ handleRefresh, refreshAfter }) => {
-  const [date, setDate] = useState(moment().format('DD MMMM YYYY, hh:mm:ss A'));
+  const [date, setDate] = useState(moment().format(DATE_FORMAT));
   const [percent, setPercent] = useState(refreshAfter);
 
   useEffect(() => {
@@ -13,7 +17,7 @@ const Timer = ({ handleRefresh, refreshAfter }) => {
       if (!unMounted) {
         if (percent === 1) {
           setPercent(refreshAfter);
-          setDate(moment().format('DD MMMM YYYY, hh:mm:ss A'));
+          setDate(moment().format(DATE_FORMAT));
           if (handleRefresh) handleRefresh();
         } else {
           setPercent(percent - 1);
@@ -28,7 +32,7 @@ const Timer = ({ handleRefresh, refreshAfter }) => {
 
   return (
     <>
-      <Tooltip title={`Refreshes in approx: ${percent} seconds...`}>
+      <Tooltip className={styles.Timer} title={`Refreshes in approx: ${percent} seconds...`}>
         <Progress
           type="circle"
           width={25}
@@ -42,11 +46,12 @@ const Timer = ({ handleRefresh, refreshAfter }) => {
 };
 
 Timer.propTypes = {
-  handleRefresh: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func,
   refreshAfter: PropTypes.number,
 };
 
 Timer.defaultProps = {
+  handleRefresh: () => {},
   refreshAfter: 60,
 };
 

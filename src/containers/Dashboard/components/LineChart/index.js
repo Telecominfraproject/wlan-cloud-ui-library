@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Chart,
   HighchartsChart,
@@ -9,12 +8,13 @@ import {
   YAxis,
   withHighcharts,
 } from 'react-jsx-highcharts';
+import React from 'react';
+
+import { COLORS } from 'utils/charts';
 import { Card } from 'antd';
 import Highcharts from 'highcharts/highstock';
 import PropTypes from 'prop-types';
 import Timer from 'components/Timer';
-
-import { COLORS } from 'utils/charts';
 import styles from './index.module.scss';
 
 const dateTimeLabelFormats = {
@@ -73,9 +73,10 @@ const LineChart = ({ title, data, options }) => {
             {Array.isArray(data?.value) ? (
               <SplineSeries name={data.key} data={data.value} />
             ) : (
-              Object.keys(data).map(key => {
-                return <SplineSeries name={data[key].key} data={data[key].value} />;
-              })
+              data &&
+              Object.keys(data).map(key => (
+                <SplineSeries key={key} name={data[key].key} data={data[key].value} />
+              ))
             )}
           </YAxis>
         </HighchartsChart>
