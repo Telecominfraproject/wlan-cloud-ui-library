@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
+import Users from './components/Users';
 import styles from '../index.module.scss';
 
 const { Item } = Form;
@@ -48,6 +49,8 @@ const formatFile = file => {
 
 const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [showTips, setShowTips] = useState(false);
+
+  const [authentication, setAuthentication] = useState(details.authenticationType);
 
   const [externalSplash, setExternalSplash] = useState(!!details.externalCaptivePortalURL);
   const [isLoginText, setContentText] = useState(false);
@@ -299,8 +302,14 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
                 },
               ]}
             >
-              <Select className={styles.Field} placeholder="Select authentication mode ">
+              <Select
+                className={styles.Field}
+                placeholder="Select authentication mode"
+                onChange={value => setAuthentication(value)}
+              >
                 <Option value="guest">None</Option>
+                <Option value="radius">RADIUS</Option>
+                <Option value="username">Captive Portal User List</Option>
                 {externalSplash && <Option value="external">Externally Hosted API</Option>}
               </Select>
             </Item>
@@ -364,6 +373,43 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Radio.Group>
         </Item>
       </Card>
+
+      {authentication === 'username' && <Users />}
+
+      {authentication === 'radius' && (
+        <Card title="RADIUS">
+          <Item
+            name={['radius', 'authentication']}
+            label="Authentication"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a RADIUS authentication mode',
+              },
+            ]}
+          >
+            <Select className={styles.Field} placeholder="Select authentication mode">
+              <Option value="chap">Challenge-Handshake (CHAP)</Option>
+              <Option value="pap">Password (PAP)</Option>
+              <Option value="eap/mschap">EAP/MSCHAP v2</Option>
+            </Select>
+          </Item>
+          <Item
+            name={['radius', 'service']}
+            label="Service"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a RADIUS service',
+              },
+            ]}
+          >
+            <Select className={styles.Field} placeholder="Radius Services">
+              <Option value="default">Default</Option>
+            </Select>
+          </Item>
+        </Card>
+      )}
       {externalSplash && (
         <Card title="External Splash Page">
           <Item
@@ -489,13 +535,13 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               <Tooltip title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB">
                 <div className={styles.InlineDiv}>
                   Logo
-                  <InfoCircleOutlined style={{ marginLeft: '6px' }} />
+                  <InfoCircleOutlined style={{ marginLeft: '6px', marginTop: '4px' }} />
                 </div>
               </Tooltip>
               <Tooltip title="Max file size of 400KB">
                 <div className={styles.InlineDiv}>
                   Background
-                  <InfoCircleOutlined style={{ marginLeft: '6px' }} />
+                  <InfoCircleOutlined style={{ marginLeft: '6px', marginTop: '4px' }} />
                 </div>
               </Tooltip>
             </div>
