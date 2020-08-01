@@ -39,12 +39,20 @@ const NetworkTableContainer = ({
 };
 
 NetworkTableContainer.propTypes = {
-  activeTab: PropTypes.string.isRequired,
-  reloadTable: PropTypes.func.isRequired,
   tableColumns: PropTypes.instanceOf(Array).isRequired,
-  tableData: PropTypes.instanceOf(Array).isRequired,
-  onLoadMore: PropTypes.func.isRequired,
-  isLastPage: PropTypes.bool.isRequired,
+  activeTab: PropTypes.string,
+  tableData: PropTypes.instanceOf(Array),
+  reloadTable: PropTypes.func,
+  onLoadMore: PropTypes.func,
+  isLastPage: PropTypes.bool,
+};
+
+NetworkTableContainer.defaultProps = {
+  tableData: [],
+  activeTab: '/network/access-points',
+  reloadTable: () => {},
+  onLoadMore: () => {},
+  isLastPage: true,
 };
 
 export default NetworkTableContainer;
