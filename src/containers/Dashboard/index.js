@@ -7,7 +7,13 @@ import LineChart from './components/LineChart/index';
 import PieChart from './components/PieChart';
 import styles from './index.module.scss';
 
-const Dashboard = ({ statsCardDetails, pieChartDetails, lineChartDetails, lineChartLoading }) => {
+const Dashboard = ({
+  statsCardDetails,
+  pieChartDetails,
+  lineChartConfig,
+  lineChartData,
+  lineChartLoading,
+}) => {
   return (
     <div className={styles.mainInfoWrap}>
       <div className={styles.rightInfoWrap}>
@@ -20,9 +26,9 @@ const Dashboard = ({ statsCardDetails, pieChartDetails, lineChartDetails, lineCh
           {lineChartLoading ? (
             <Loading />
           ) : (
-            Object.keys(lineChartDetails).map(key => {
-              const { title, data, ...options } = lineChartDetails[key];
-              return <LineChart data={data} title={title} options={options} />;
+            lineChartConfig.map(i => {
+              const { key, title, options } = i;
+              return <LineChart data={lineChartData[key]} title={title} options={options} />;
             })
           )}
         </div>
@@ -39,14 +45,16 @@ const Dashboard = ({ statsCardDetails, pieChartDetails, lineChartDetails, lineCh
 Dashboard.propTypes = {
   statsCardDetails: PropTypes.instanceOf(Object),
   pieChartDetails: PropTypes.instanceOf(Object),
-  lineChartDetails: PropTypes.instanceOf(Object),
+  lineChartConfig: PropTypes.instanceOf(Array),
+  lineChartData: PropTypes.instanceOf(Object),
   lineChartLoading: PropTypes.bool,
 };
 
 Dashboard.defaultProps = {
   statsCardDetails: {},
   pieChartDetails: {},
-  lineChartDetails: {},
+  lineChartConfig: {},
+  lineChartData: [],
   lineChartLoading: true,
 };
 export default Dashboard;
