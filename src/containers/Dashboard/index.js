@@ -28,7 +28,9 @@ const Dashboard = ({
           ) : (
             lineChartConfig.map(i => {
               const { key, title, options } = i;
-              return <LineChart data={lineChartData[key]} title={title} options={options} />;
+              return (
+                <LineChart key={key} data={lineChartData[key]} title={title} options={options} />
+              );
             })
           )}
         </div>
