@@ -51,7 +51,7 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
     return 'default';
   };
 
-  const status = (data && data.status && data.status.firmware) || {};
+  const status = data?.status?.firmware?.detailsJSON || {};
 
   return (
     <>
@@ -64,16 +64,14 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
       />
       <Form {...layout} form={form}>
         <Card title="Firmware">
-          <Item label="Active Version" name="activeSwVersion">
+          <Item label="Active Version">
             <div className={styles.InlineBetweenDiv}>
               {status.activeSwVersion}
               <Tag color={alertColor(status.upgradeState)}>{alertText(status.upgradeState)}</Tag>
             </div>
           </Item>
 
-          <Item label="Inactive Version" name="alternateSwVersion">
-            {status.alternateSwVersion}
-          </Item>
+          <Item label="Inactive Version">{status.alternateSwVersion}</Item>
         </Card>
         <Card title="Upgrade">
           <Item label="Target Version">
