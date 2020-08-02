@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Card, Form, Input, Tag, Select } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Modal from 'components/Modal';
+
 import styles from '../../index.module.scss';
 
 const { Option } = Select;
@@ -65,10 +67,10 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
       <Form {...layout} form={form}>
         <Card title="Firmware">
           <Item label="Active Version">
-            <div className={styles.InlineBetweenDiv}>
-              {status.activeSwVersion}
-              <Tag color={alertColor(status.upgradeState)}>{alertText(status.upgradeState)}</Tag>
-            </div>
+            {status.activeSwVersion}
+            <Tag className={styles.UpgradeState} color={alertColor(status.upgradeState)}>
+              {alertText(status.upgradeState)}
+            </Tag>
           </Item>
 
           <Item label="Inactive Version">{status.alternateSwVersion}</Item>
@@ -92,10 +94,7 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
               <Item noStyle>
                 <Button
                   icon={<DownloadOutlined />}
-                  disabled={
-                    !version ||
-                    version.id === (data.status && data.status.firmware && data.status.firmware.id)
-                  }
+                  disabled={!version || version.id === data?.status?.firmware?.id}
                   onClick={() => setRebootModal(true)}
                 >
                   Download, Flash, and Reboot
