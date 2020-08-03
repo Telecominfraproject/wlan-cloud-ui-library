@@ -105,7 +105,7 @@ const ClientDeviceDetails = ({
         <DeviceStatsCard title="Traffic" cardData={getTrafficStats()} />
         <DeviceStatsCard title="IP LAN" cardData={getIpStats()} />
       </div>
-      <Card title="History (1 hour)">
+      <Card title="History (4 hours)">
         {metricsError ? (
           <Alert message="Error" description="Failed to load History." type="error" showIcon />
         ) : (
@@ -131,7 +131,7 @@ ClientDeviceDetails.defaultProps = {
   metricsLoading: true,
   metricsError: null,
   metricsData: [],
-  historyDate: moment(),
+  historyDate: {},
 };
 
 export default ClientDeviceDetails;
