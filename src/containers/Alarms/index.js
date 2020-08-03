@@ -61,10 +61,12 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                 description={
                   <div>
                     <div>{item.details.message}</div>
-                    <Link to={`/network/access-points/${item.equipment.id}`}>
-                      <WifiOutlined className={styles.WifiIcon} />
-                      {item.equipment.name}
-                    </Link>
+                    {item.equipment && (
+                      <Link to={`/network/access-points/${item.equipment.id}`}>
+                        <WifiOutlined className={styles.WifiIcon} />
+                        {item.equipment.name}
+                      </Link>
+                    )}
                   </div>
                 }
               />
