@@ -177,8 +177,8 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         time={{
           useUTC: false,
         }}
-        max={historyDate?.toTime.valueOf() - TIMEZONE_OFFSET}
-        min={historyDate?.fromTime.valueOf() - TIMEZONE_OFFSET}
+        max={historyDate?.toTime?.valueOf() - TIMEZONE_OFFSET}
+        min={historyDate?.fromTime?.valueOf() - TIMEZONE_OFFSET}
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
         type="datetime"
@@ -209,7 +209,10 @@ DeviceHistoryChart.propTypes = {
 
 DeviceHistoryChart.defaultProps = {
   data: {},
-  historyDate: {},
+  historyDate: {
+    toTime: moment(),
+    fromTime: moment(),
+  },
   loading: false,
 };
 

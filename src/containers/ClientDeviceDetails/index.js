@@ -131,7 +131,10 @@ ClientDeviceDetails.defaultProps = {
   metricsLoading: true,
   metricsError: null,
   metricsData: [],
-  historyDate: {},
+  historyDate: {
+    toTime: moment(),
+    fromTime: moment(),
+  },
 };
 
 export default ClientDeviceDetails;
