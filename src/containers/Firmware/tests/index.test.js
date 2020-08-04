@@ -20,7 +20,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 const mockProps = {
-  onCreateFirnware: () => {},
+  onCreateFirmware: () => {},
   onUpdateFirmware: () => {},
   onDeleteFirmware: () => {},
   onCreateTrackAssignment: () => {},
@@ -44,7 +44,6 @@ const mockProps = {
       filename:
         'https://tip-read:tip-read@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ap2220/ap2220-2020-06-25-ce03472.tar.gz',
       commit: 'ce03472',
-      releaseDate: '1595344806125',
       validationCode: 'c69370aa5b6622d91a0fba3a5441f31c',
       createdTimestamp: '1595344806128',
       lastModifiedTimestamp: '1595344806128',
@@ -72,10 +71,23 @@ const mockProps = {
       filename:
         'https://tip-read:tip-read@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ea8300/ea8300-2020-06-25-ce03472.tar.gz',
       commit: 'ce03472',
-      releaseDate: '1595344806128',
+      releaseDate: '',
       validationCode: 'b209deb9847bdf40a31e45edf2e5a8d7',
       createdTimestamp: '1595344806128',
       lastModifiedTimestamp: '1595344806128',
+      __typename: 'Firmware',
+    },
+    {
+      id: '5',
+      modelId: 'ecw5410',
+      description: '',
+      filename:
+        'https://tip-read:tip-read@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ecw5410/ecw5410-2020-06-25-ce03472.tar.gz',
+      commit: 'ce03472',
+      releaseDate: '1596045666546',
+      validationCode: '2940ca34eeab85be18f3a4b79f4da6d9',
+      createdTimestamp: '1596045666546',
+      lastModifiedTimestamp: '1596045666546',
       __typename: 'Firmware',
     },
   ],
@@ -83,6 +95,13 @@ const mockProps = {
     {
       modelId: 'ap2220',
       firmwareVersionRecordId: '1',
+      trackRecordId: '1',
+      lastModifiedTimestamp: '1595350590424',
+      __typename: 'FirmwareTrackAssignment',
+    },
+    {
+      modelId: 'ecw5410',
+      firmwareVersionRecordId: '5',
       trackRecordId: '1',
       lastModifiedTimestamp: '1595350590424',
       __typename: 'FirmwareTrackAssignment',
@@ -107,10 +126,7 @@ const mockProps = {
     },
   ],
 };
-const MISSING_MODEL = 'Please input your Model ID';
-const MISSING_VERSION = 'Please input your Version Name';
-const MISSING_URL = 'Please input your Firmware URL';
-const MISSING_FIRMWARE = 'Please select your firmware version';
+
 const DOWN_ARROW = { keyCode: 40 };
 
 describe('<Firmware />', () => {
@@ -185,53 +201,6 @@ describe('<Firmware />', () => {
 
     await waitFor(() => {
       expect(paragraph).not.toBeVisible();
-    });
-  });
-
-  it('onCreateTrackAssignment should not be called on Add Model Target Version Modal when form is incomplete', async () => {
-    const submitSpy = jest.fn();
-    const { getByRole, getByText } = render(
-      <Firmware {...mockProps} onCreateTrackAssignment={submitSpy} />
-    );
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    expect(getByText('Add Model Target Version', { selector: 'div' })).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(submitSpy).toHaveBeenCalledTimes(0);
-      expect(getByText(MISSING_MODEL)).toBeVisible();
-      expect(getByText(MISSING_FIRMWARE)).toBeVisible();
-    });
-  });
-
-  it('onCreateTrackAssignment should not be called on Add Model Target Version Modal when firmware is empty', async () => {
-    const submitSpy = jest.fn();
-    const searchSpy = jest.fn();
-
-    const { getByRole, getByText, getAllByText, getByLabelText } = render(
-      <Firmware
-        {...mockProps}
-        onCreateTrackAssignment={submitSpy}
-        handleSearchFirmware={searchSpy}
-      />
-    );
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    expect(getByText('Add Model Target Version', { selector: 'div' })).toBeVisible();
-
-    const model = getByLabelText('Model ID');
-    fireEvent.keyDown(model, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.firmwareData[2].modelId)[2]);
-    fireEvent.click(getAllByText(mockProps.firmwareData[2].modelId)[2]);
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalled();
-      expect(submitSpy).toHaveBeenCalledTimes(0);
-      expect(getByText(MISSING_FIRMWARE)).toBeVisible();
     });
   });
 
@@ -346,28 +315,10 @@ describe('<Firmware />', () => {
     });
   });
 
-  it('onCreateFirmware should not be called when form is invalid', async () => {
+  it('onCreateFirmware should be called when form is complete', async () => {
     const submitSpy = jest.fn();
-    const { getByText, getByRole } = render(
-      <Firmware {...mockProps} onCreateFirnware={submitSpy} />
-    );
-    fireEvent.click(getByRole('button', { name: /add version/i }));
-    expect(getByText('Add Firmware Version')).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText(MISSING_MODEL)).toBeVisible();
-      expect(getByText(MISSING_VERSION)).toBeVisible();
-      expect(getByText(MISSING_URL)).toBeVisible();
-      expect(submitSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  it('onCreateUser should be called when form is complete', async () => {
-    const submitSpy = jest.fn();
-    const { getByText, getByRole, getByLabelText } = render(
-      <Firmware {...mockProps} onCreateFirnware={submitSpy} />
+    const { getByText, getByRole, getByLabelText, getByTestId } = render(
+      <Firmware {...mockProps} onCreateFirmware={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /add version/i }));
     expect(getByText('Add Firmware Version')).toBeVisible();
@@ -375,53 +326,31 @@ describe('<Firmware />', () => {
     fireEvent.change(getByLabelText('Model ID'), { target: { value: 'test id' } });
     fireEvent.change(getByLabelText('Version Name'), { target: { value: 'test name' } });
     fireEvent.change(getByLabelText('Firmware URL'), { target: { value: 'www.test.com' } });
-
+    fireEvent.mouseDown(getByTestId('datePicker'));
+    fireEvent.click(getByText('Now'));
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(submitSpy).not.toHaveBeenCalled();
-    });
-  });
-
-  it('onUpdateFirmware should not be called when form is invalid', async () => {
-    const submitSpy = jest.fn();
-    const { getByText, getByRole, getByLabelText } = render(
-      <Firmware {...mockProps} onUpdateFirmware={submitSpy} />
-    );
-
-    fireEvent.click(getByRole('button', { name: /edit-firmware-ea8300-ca/i }));
-
-    expect(getByText('Edit Firmware Version')).toBeVisible();
-
-    fireEvent.change(getByLabelText('Model ID'), { target: { value: '' } });
-    fireEvent.change(getByLabelText('Version Name'), { target: { value: '' } });
-    fireEvent.change(getByLabelText('Firmware URL'), { target: { value: '' } });
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText(MISSING_MODEL)).toBeVisible();
-      expect(getByText(MISSING_VERSION)).toBeVisible();
-      expect(getByText(MISSING_URL)).toBeVisible();
-      expect(submitSpy).not.toHaveBeenCalled();
+      expect(submitSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   it('onUpdateFirmware should be saved with existing firmware data', async () => {
     const submitSpy = jest.fn();
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole, getByTestId } = render(
       <Firmware {...mockProps} onUpdateFirmware={submitSpy} />
     );
 
     fireEvent.click(
-      getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[2].modelId}` })
+      getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[0].modelId}` })
     );
     expect(getByText('Edit Firmware Version')).toBeVisible();
-
+    fireEvent.mouseDown(getByTestId('datePicker'));
+    fireEvent.click(getByText('Now'));
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(submitSpy).not.toHaveBeenCalled();
+      expect(submitSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -482,46 +411,6 @@ describe('<Firmware />', () => {
 
     await waitFor(() => {
       expect(getByTestId('firmwareError')).toBeInTheDocument();
-    });
-  });
-
-  it('Loading spinner should be visible if firmwareModelLoading is true for Add Model Target Version', async () => {
-    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareModelLoading />);
-
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    await waitFor(() => {
-      expect(getByTestId('firmwareLoading')).toBeInTheDocument();
-    });
-  });
-
-  it('Loading spinner should be visible if firmwareTrackLoading is true for Add Model Target Version', async () => {
-    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareTrackLoading />);
-
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    await waitFor(() => {
-      expect(getByTestId('firmwareLoading')).toBeInTheDocument();
-    });
-  });
-
-  it('Alert error should be visible if firmwareModelError has errors for Add Model Target Version', async () => {
-    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareModelError />);
-
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    await waitFor(() => {
-      expect(getByTestId('firmwareModelError')).toBeInTheDocument();
-    });
-  });
-
-  it('Alert error should be visible if firmwareModelError has errors for Add Model Target Version', async () => {
-    const { getByRole, getByTestId } = render(<Firmware {...mockProps} firmwareTrackError />);
-
-    fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
-
-    await waitFor(() => {
-      expect(getByTestId('firmwareTrackError')).toBeInTheDocument();
     });
   });
 });

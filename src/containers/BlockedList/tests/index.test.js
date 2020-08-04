@@ -45,6 +45,13 @@ const mockProps = {
       },
       __typename: 'Client',
     },
+    {
+      customerId: '2',
+      macAddress: '00:0a:95:9d:68:15',
+      createdTimestamp: '0',
+      lastModifiedTimestamp: '1595891230273',
+      __typename: 'Client',
+    },
   ],
 };
 
@@ -194,6 +201,22 @@ describe('<BlockedList />', () => {
     fireEvent.click(
       getByRole('button', {
         name: `delete-mac-${mockProps.data[0].macAddress}`,
+      })
+    );
+    fireEvent.click(getByRole('button', { name: /Remove/i }));
+  });
+
+  it('onUpdateClient formatted details check', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(
+      <Router>
+        <BlockedList {...mockProps} onUpdateClient={submitSpy} />
+      </Router>
+    );
+
+    fireEvent.click(
+      getByRole('button', {
+        name: `delete-mac-${mockProps.data[1].macAddress}`,
       })
     );
     fireEvent.click(getByRole('button', { name: /Remove/i }));

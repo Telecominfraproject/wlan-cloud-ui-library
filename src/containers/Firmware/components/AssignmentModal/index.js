@@ -82,7 +82,7 @@ const AssignmentModal = ({
         ]}
       >
         {firmwareVersionLoading ? (
-          <Spin className={styles.spinner} size="large" />
+          <Spin data-testid="firmwareVersionLoading" daclassName={styles.spinner} size="large" />
         ) : (
           <Select
             className={globalStyles.field}
@@ -170,7 +170,7 @@ AssignmentModal.propTypes = {
 
 AssignmentModal.defaultProps = {
   onCancel: () => {},
-  visible: () => {},
+  visible: false,
   onSubmit: () => {},
   handleSearchFirmware: () => {},
   title: '',
