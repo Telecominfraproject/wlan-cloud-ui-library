@@ -1,10 +1,6 @@
 import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { ReloadOutlined } from '@ant-design/icons';
-import Button from 'components/Button';
 import LocationsTree from 'components/LocationsTree';
-import ToggleButton from 'components/ToggleButton';
 import styles from './index.module.scss';
 
 const Network = ({
@@ -12,7 +8,6 @@ const Network = ({
   checkedLocations,
   onSelect,
   onCheck,
-  activeTab,
   children,
   onAddLocation,
   onEditLocation,
@@ -31,11 +26,6 @@ const Network = ({
   loadingProfile,
   errorProfile,
 }) => {
-  const location = useLocation();
-
-  const onReload = () => {
-    // console.log('Reload Button Clicked');
-  };
   return (
     <div className={styles.clientDevices}>
       <div className={styles.mainWrapper}>
@@ -61,23 +51,7 @@ const Network = ({
           loadingProfile={loadingProfile}
           errorProfile={errorProfile}
         />
-        <div className={styles.mainContent}>
-          {location.pathname === '/network/access-points' ||
-          location.pathname === '/network/client-devices' ? (
-            <div className={styles.headerContent}>
-              <ToggleButton activeTab={activeTab} />
-              {location.pathname === '/network/client-devices' && (
-                <Link to="/system/blockedlist" className={styles.BlockedListButton}>
-                  <Button>Blocked List</Button>
-                </Link>
-              )}
-              <Button onClick={onReload} title="reload" icon={<ReloadOutlined />} />
-            </div>
-          ) : (
-            ''
-          )}
-          {children}
-        </div>
+        <div className={styles.mainContent}>{children}</div>
       </div>
     </div>
   );
@@ -85,7 +59,6 @@ const Network = ({
 
 Network.propTypes = {
   children: PropTypes.node.isRequired,
-  activeTab: PropTypes.string.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   profiles: PropTypes.instanceOf(Array).isRequired,
   checkedLocations: PropTypes.instanceOf(Array).isRequired,

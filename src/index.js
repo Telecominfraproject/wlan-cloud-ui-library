@@ -18,13 +18,15 @@ export { default as AutoProvision } from 'containers/AutoProvision';
 export { default as BlockedList } from 'containers/BlockedList';
 
 export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
+export { default as NetworkTableContainer } from 'containers/NetworkTableContainer';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';
-
 export { default as Loading } from 'components/Loading';
 export { default as DeviceHistory } from 'components/DeviceHistory';
 export { default as PopoverMenu } from 'components/LocationsTree/components/PopoverMenu';
 export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints';
+export { default as Button } from 'components/Button';
+export { default as ToggleButton } from 'components/ToggleButton';
