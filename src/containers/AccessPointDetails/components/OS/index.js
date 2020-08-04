@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert } from 'antd';
-import { InfoCircleOutlined, LineChartOutlined } from '@ant-design/icons';
+import { LineChartOutlined } from '@ant-design/icons';
 
+import Timer from 'components/Timer';
 import SolidGauge from './components/SolidGauge';
 import HighChartGraph from './components/HighChartGraph';
-import Timer from './components/Timer';
 
 import styles from '../../index.module.scss';
 
@@ -53,21 +53,12 @@ const OS = ({ data, osData, handleRefresh }) => {
 
   return (
     <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
-      <div className={styles.InlineBetweenDiv}>
-        <Alert
-          icon={<LineChartOutlined />}
-          message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
-          type="info"
-          showIcon
-        />
-        <Alert
-          icon={<InfoCircleOutlined />}
-          message={`CAMI crashes since boot: ${osPerformance.numCamiCrashes}`}
-          type="info"
-          showIcon
-        />
-      </div>
-
+      <Alert
+        icon={<LineChartOutlined />}
+        message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
+        type="info"
+        showIcon
+      />
       <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
         <SolidGauge data={cpu} title="Current CPU" />
         <SolidGauge data={memory} title="Current Free Memory" />
