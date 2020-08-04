@@ -17,16 +17,15 @@ const NetworkTableContainer = ({
   tableData,
   onLoadMore,
   isLastPage,
-  onLoading,
-  onError,
-  errorDescription,
+  loading,
+  error,
 }) => {
   const renderContent = () => {
-    if (onLoading) {
+    if (loading) {
       return <Loading />;
     }
-    if (onError) {
-      return <Alert message="Error" description={errorDescription} type="error" showIcon />;
+    if (error) {
+      return <Alert message="Error" description={error} type="error" showIcon />;
     }
     return (
       <NetworkTable
@@ -62,9 +61,8 @@ NetworkTableContainer.propTypes = {
   reloadTable: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
-  onLoading: PropTypes.bool,
-  onError: PropTypes.bool,
-  errorDescription: PropTypes.string,
+  loading: PropTypes.bool,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 NetworkTableContainer.defaultProps = {
@@ -73,9 +71,8 @@ NetworkTableContainer.defaultProps = {
   reloadTable: () => {},
   onLoadMore: () => {},
   isLastPage: true,
-  onLoading: false,
-  onError: false,
-  errorDescription: '',
+  loading: false,
+  error: null,
 };
 
 export default NetworkTableContainer;
