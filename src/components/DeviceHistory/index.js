@@ -14,8 +14,6 @@ import {
 } from 'react-jsx-highstock';
 import addHighchartsMore from 'highcharts/highcharts-more';
 
-import { deviceHistoryChartModel } from './models';
-
 addHighchartsMore(Highcharts);
 
 const TIMEZONE_OFFSET = new Date().getTimezoneOffset() * 60000;
@@ -74,14 +72,20 @@ function tooltipFormatter() {
 }
 
 const DeviceHistoryChart = ({ loading, data, historyDate }) => {
-  const config = useMemo(
-    () =>
-      deviceHistoryChartModel(data, {
-        fromDateMoment: historyDate.subtract(4, 'hours'),
-        toDateMoment: historyDate.add(4, 'hours'),
-      }),
-    [data, historyDate]
-  );
+  const config = useMemo(() => {
+    const rssi = { id: 'rssi', data: [] };
+    const rx = { id: 'rx', data: [] };
+    const tx = { id: 'tx', data: [] };
+
+    data.forEach(i => {
+      const timestamp = parseInt(i.createdTimestamp, 10);
+      rssi.data.push([timestamp, i.rssi]);
+      rx.data.push([timestamp, i.detailsJSON.averageRxRate]);
+      tx.data.push([timestamp, i.detailsJSON.averageTxRate]);
+    });
+
+    return { rssi, rx, tx };
+  }, [data]);
 
   const renderMetrics = (i, id, label, series, min, max) => {
     const top = i * metricsHeight + i * metricsPadding + 5; // the 5 is the top margin
@@ -127,6 +131,8 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
           threshold={null}
           fillColor={fillColor}
           lineWidth={1}
+          gapSize={120000}
+          gapUnit="value"
           states={{
             hover: {
               lineWidthPlus: 0,
@@ -151,6 +157,9 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         height={350}
         spacingTop={0}
         spacingBottom={0}
+        time={{
+          useUTC: false,
+        }}
       />
       <Loading
         isLoading={loading}
@@ -162,9 +171,14 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         Loading...
       </Loading>
 
-      <Tooltip shared xDateFormat="%b %e %Y %l:%M%P" formatter={tooltipFormatter} />
+      <Tooltip shared formatter={tooltipFormatter} />
 
       <XAxis
+        time={{
+          useUTC: false,
+        }}
+        max={historyDate?.toTime?.valueOf() - TIMEZONE_OFFSET}
+        min={historyDate?.fromTime?.valueOf() - TIMEZONE_OFFSET}
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
         type="datetime"
@@ -181,8 +195,8 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
       />
 
       {renderMetrics(0, 'rssi', metrics.rssi, config.rssi.data, -100, -40)}
-      {renderMetrics(1, 'rxBytes', metrics.rxBytes, config.rxBytes.data, 0, 500)}
-      {renderMetrics(2, 'txBytes', metrics.txBytes, config.txBytes.data, 0, 500)}
+      {renderMetrics(1, 'rxBytes', metrics.rxBytes, config.rx.data, 0, 1000)}
+      {renderMetrics(2, 'txBytes', metrics.txBytes, config.tx.data, 0, 1000)}
     </HighchartsStockChart>
   );
 };
@@ -195,7 +209,10 @@ DeviceHistoryChart.propTypes = {
 
 DeviceHistoryChart.defaultProps = {
   data: {},
-  historyDate: {},
+  historyDate: {
+    toTime: moment(),
+    fromTime: moment(),
+  },
   loading: false,
 };
 
