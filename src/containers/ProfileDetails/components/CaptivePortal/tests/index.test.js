@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
 
@@ -48,6 +48,8 @@ const mockProps = {
     walledGardenAllowlist: ['1.1.1.1'],
   },
 };
+
+const DOWN_ARROW = { keyCode: 40 };
 
 describe('<CaptivePortalForm />', () => {
   afterEach(cleanup);
@@ -924,6 +926,48 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(queryByText(/testImg\.png/)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Changing the authentication setting to Captive Portal User List should show the user list card', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    await waitFor(() => {
+      expect(getByText('User List')).toBeInTheDocument();
+    });
+  });
+
+  it('Changing the authentication setting to Radius should show the Radius card', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
+
+    await waitFor(() => {
+      expect(getByLabelText('Service')).toBeInTheDocument();
     });
   });
 });

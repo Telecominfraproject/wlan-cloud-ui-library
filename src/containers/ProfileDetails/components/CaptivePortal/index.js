@@ -14,9 +14,10 @@ import {
   List,
 } from 'antd';
 import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
+
 import Button from 'components/Button';
-import Users from './components/Users';
 import styles from '../index.module.scss';
+import Users from './components/Users';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -291,29 +292,26 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card title="General Settings ">
-        <Item label="Authentication">
-          <div className={styles.InlineDiv}>
-            <Item
-              name="authenticationType"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please select an authentication mode',
-                },
-              ]}
-            >
-              <Select
-                className={styles.Field}
-                placeholder="Select authentication mode"
-                onChange={value => setAuthentication(value)}
-              >
-                <Option value="guest">None</Option>
-                <Option value="radius">RADIUS</Option>
-                <Option value="username">Captive Portal User List</Option>
-                {externalSplash && <Option value="external">Externally Hosted API</Option>}
-              </Select>
-            </Item>
-          </div>
+        <Item
+          label="Authentication"
+          name="authenticationType"
+          rules={[
+            {
+              required: true,
+              message: 'Please select an authentication mode',
+            },
+          ]}
+        >
+          <Select
+            className={styles.Field}
+            placeholder="Select authentication mode"
+            onChange={value => setAuthentication(value)}
+          >
+            <Option value="guest">None</Option>
+            <Option value="radius">RADIUS</Option>
+            <Option value="username">Captive Portal User List</Option>
+            {externalSplash && <Option value="external">Externally Hosted API</Option>}
+          </Select>
         </Item>
 
         <Item
@@ -374,7 +372,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
         </Item>
       </Card>
 
-      {authentication === 'username' && <Users />}
+      {authentication === 'username' && <Users userList={details.userList} />}
 
       {authentication === 'radius' && (
         <Card title="RADIUS">
