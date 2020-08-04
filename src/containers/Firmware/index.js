@@ -84,7 +84,7 @@ const Firmware = ({
       description,
       filename,
       commit,
-      date ? date.valueOf().toString() : null,
+      date?.valueOf()?.toString(),
       validationCode
     );
     setAddVersionModal(false);
@@ -107,7 +107,7 @@ const Firmware = ({
       description,
       filename,
       commit,
-      date ? date.valueOf().toString() : null,
+      date?.valueOf()?.toString(),
       validationCode,
       createdTimestamp,
       lastModifiedTimestamp

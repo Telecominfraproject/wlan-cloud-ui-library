@@ -77,12 +77,11 @@ const FormModal = ({
         ]}
       >
         <Select className={globalStyles.field} placeholder="Select Access Point Profile">
-          {profiles.length &&
-            profiles.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
+          {profiles.map(i => (
+            <Option key={i.id} value={i.id}>
+              {i.name}
+            </Option>
+          ))}
         </Select>
       </Item>
     </Form>

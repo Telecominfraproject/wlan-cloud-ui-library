@@ -232,7 +232,7 @@ describe('<AutoProvision />', () => {
   });
 
   it('onUpdateCustomer catch condition default props test', async () => {
-    const { getByRole } = render(<AutoProvision {...mockProps} dataProfile={{}} />);
+    const { getByRole } = render(<AutoProvision {...mockProps} dataProfile={[]} />);
 
     fireEvent.click(getByRole('switch'));
 
