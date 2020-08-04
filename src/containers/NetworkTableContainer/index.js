@@ -12,7 +12,7 @@ import styles from './index.module.scss';
 
 const NetworkTableContainer = ({
   activeTab,
-  reloadTable,
+  onRefresh,
   tableColumns,
   tableData,
   onLoadMore,
@@ -47,7 +47,7 @@ const NetworkTableContainer = ({
             <Button>Blocked List</Button>
           </Link>
         )}
-        <Button onClick={reloadTable} title="reload" icon={<ReloadOutlined />} />
+        <Button onClick={onRefresh} title="reload" icon={<ReloadOutlined />} />
       </div>
       {renderContent()}
     </>
@@ -58,7 +58,7 @@ NetworkTableContainer.propTypes = {
   tableColumns: PropTypes.instanceOf(Array).isRequired,
   activeTab: PropTypes.string,
   tableData: PropTypes.instanceOf(Array),
-  reloadTable: PropTypes.func,
+  onRefresh: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
   loading: PropTypes.bool,
@@ -68,7 +68,7 @@ NetworkTableContainer.propTypes = {
 NetworkTableContainer.defaultProps = {
   tableData: [],
   activeTab: '/network/access-points',
-  reloadTable: () => {},
+  onRefresh: () => {},
   onLoadMore: () => {},
   isLastPage: true,
   loading: false,
