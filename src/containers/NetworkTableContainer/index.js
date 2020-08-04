@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { Alert } from 'antd';
 
 import Button from 'components/Button';
+import Loading from 'components/Loading';
 import ToggleButton from 'components/ToggleButton';
 import NetworkTable from 'components/NetworkTable';
 import styles from './index.module.scss';
@@ -15,7 +17,27 @@ const NetworkTableContainer = ({
   tableData,
   onLoadMore,
   isLastPage,
+  onLoading,
+  onError,
+  errorDescription,
 }) => {
+  const renderContent = () => {
+    if (onLoading) {
+      return <Loading />;
+    }
+    if (onError) {
+      return <Alert message="Error" description={errorDescription} type="error" showIcon />;
+    }
+    return (
+      <NetworkTable
+        tableColumns={tableColumns}
+        tableData={tableData}
+        onLoadMore={onLoadMore}
+        isLastPage={isLastPage}
+      />
+    );
+  };
+
   return (
     <>
       <div className={styles.headerBtnContent}>
@@ -28,12 +50,7 @@ const NetworkTableContainer = ({
         )}
         <Button onClick={reloadTable} title="reload" icon={<ReloadOutlined />} />
       </div>
-      <NetworkTable
-        tableColumns={tableColumns}
-        tableData={tableData}
-        onLoadMore={onLoadMore}
-        isLastPage={isLastPage}
-      />
+      {renderContent()}
     </>
   );
 };
@@ -45,6 +62,9 @@ NetworkTableContainer.propTypes = {
   reloadTable: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
+  onLoading: PropTypes.bool,
+  onError: PropTypes.bool,
+  errorDescription: PropTypes.string,
 };
 
 NetworkTableContainer.defaultProps = {
@@ -53,6 +73,9 @@ NetworkTableContainer.defaultProps = {
   reloadTable: () => {},
   onLoadMore: () => {},
   isLastPage: true,
+  onLoading: false,
+  onError: false,
+  errorDescription: '',
 };
 
 export default NetworkTableContainer;
