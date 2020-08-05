@@ -32,6 +32,7 @@ const ProfileDetails = ({
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  radiusProfiles,
   fileUpload,
 }) => {
   const history = useHistory();
@@ -154,7 +155,12 @@ const ProfileDetails = ({
           />
         )}
         {profileType === 'captive_portal' && (
-          <CaptivePortalForm form={form} details={details} fileUpload={fileUpload} />
+          <CaptivePortalForm
+            form={form}
+            details={details}
+            radiusProfiles={radiusProfiles}
+            fileUpload={fileUpload}
+          />
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
       </Form>
@@ -169,6 +175,7 @@ ProfileDetails.propTypes = {
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
+  radiusProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
 };
 
@@ -177,6 +184,7 @@ ProfileDetails.defaultProps = {
   profileType: null,
   details: {},
   ssidProfiles: [],
+  radiusProfiles: [],
   childProfileIds: [],
 };
 

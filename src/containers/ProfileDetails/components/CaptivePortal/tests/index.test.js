@@ -47,6 +47,53 @@ const mockProps = {
     usernamePasswordFile: null,
     walledGardenAllowlist: ['1.1.1.1'],
   },
+  radiusProfiles: [
+    {
+      id: '1',
+      name: 'Radius-Profile',
+      profileType: 'radius',
+      details: {
+        model_type: 'RadiusProfile',
+        subnetConfiguration: {
+          test: {
+            model_type: 'RadiusSubnetConfiguration',
+            subnetAddress: '111.111.111.11',
+            subnetCidrPrefix: 9,
+            subnetName: 'test',
+            proxyConfig: {
+              model_type: 'RadiusProxyConfiguration',
+              floatingIpAddress: '222.222.222.22',
+              floatingIfCidrPrefix: null,
+              floatingIfGwAddress: null,
+              floatingIfVlan: null,
+              sharedSecret: null,
+            },
+            probeInterval: null,
+            serviceRegionName: 'Ottawa',
+          },
+        },
+        serviceRegionMap: {
+          Ottawa: {
+            model_type: 'RadiusServiceRegion',
+            serverMap: {
+              'Radius-Profile': [
+                {
+                  model_type: 'RadiusServer',
+                  ipAddress: '192.168.0.1',
+                  secret: 'testing123',
+                  authPort: 1812,
+                  timeout: null,
+                },
+              ],
+            },
+            regionName: 'Ottawa',
+          },
+        },
+        profileType: 'radius',
+      },
+      __typename: 'Profile',
+    },
+  ],
 };
 
 const DOWN_ARROW = { keyCode: 40 };
@@ -969,5 +1016,35 @@ describe('<CaptivePortalForm />', () => {
     await waitFor(() => {
       expect(getByLabelText('Service')).toBeInTheDocument();
     });
+  });
+
+  it('Radius card should show radius profiles and authentication modes', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getAllByLabelText, getByText, getAllByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getAllByLabelText('Authentication')[0];
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
+
+    const radiusAuthentication = getAllByLabelText('Authentication')[1];
+    fireEvent.keyDown(radiusAuthentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Password (PAP)'));
+    fireEvent.click(getByText('Password (PAP)'));
+
+    const radiusService = getAllByLabelText('Service')[0];
+    fireEvent.keyDown(radiusService, DOWN_ARROW);
+    await waitForElement(() => getAllByText(mockProps.radiusProfiles[0].name)[0]);
+    fireEvent.click(getAllByText(mockProps.radiusProfiles[0].name)[0]);
+
+    expect(getAllByText('Password (PAP)')[0]).toBeInTheDocument();
+    expect(getAllByText(mockProps.radiusProfiles[0].name)[0]).toBeInTheDocument();
   });
 });

@@ -48,7 +48,7 @@ const formatFile = file => {
   };
 };
 
-const CaptivePortalForm = ({ details, form, fileUpload }) => {
+const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
   const [showTips, setShowTips] = useState(false);
 
   const [authentication, setAuthentication] = useState(details.authenticationType);
@@ -280,6 +280,8 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       backgroundFile: details.backgroundFile && formatFile(details.backgroundFile),
       backgroundRepeat: details.backgroundRepeat || 'no_repeat',
       backgroundPosition: details.backgroundPosition || 'left_top',
+      radiusAuthMethod: details.radiusAuthMethod,
+      radiusServiceName: details.radiusServiceName,
     });
   }, [form, details]);
 
@@ -377,7 +379,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       {authentication === 'radius' && (
         <Card title="RADIUS">
           <Item
-            name={['radius', 'authentication']}
+            name="radiusAuthMethod"
             label="Authentication"
             rules={[
               {
@@ -386,14 +388,14 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               },
             ]}
           >
-            <Select className={styles.Field} placeholder="Select authentication mode">
-              <Option value="chap">Challenge-Handshake (CHAP)</Option>
-              <Option value="pap">Password (PAP)</Option>
-              <Option value="eap/mschap">EAP/MSCHAP v2</Option>
+            <Select className={styles.Field} placeholder="Select RADIUS authentication mode">
+              <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
+              <Option value="PAP">Password (PAP)</Option>
+              <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
             </Select>
           </Item>
           <Item
-            name={['radius', 'service']}
+            name="radiusServiceName"
             label="Service"
             rules={[
               {
@@ -402,8 +404,12 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
               },
             ]}
           >
-            <Select className={styles.Field} placeholder="Radius Services">
-              <Option value="default">Default</Option>
+            <Select className={styles.Field} placeholder="RADIUS Services">
+              {Object.keys(radiusProfiles).map(profile => (
+                <Option key={radiusProfiles[profile].id} value={radiusProfiles[profile].name}>
+                  {radiusProfiles[profile].name}
+                </Option>
+              ))}
             </Select>
           </Item>
         </Card>
@@ -648,12 +654,14 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 CaptivePortalForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
   form: null,
   details: {},
+  radiusProfiles: [],
   fileUpload: () => {},
 };
 
