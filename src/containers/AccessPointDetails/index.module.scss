@@ -32,10 +32,6 @@
     background: #141414;
   }
 
-  :global(.ant-progress) {
-    margin-right: 5px;
-  }
-
   :global(.ant-form-item) {
     flex: 1;
   }
@@ -100,5 +96,9 @@
   .spanStyle {
     flex: 1;
     margin-left: 10px;
+  }
+
+  .UpgradeState {
+    margin-left: 20px;
   }
 }

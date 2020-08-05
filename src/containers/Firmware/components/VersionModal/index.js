@@ -87,7 +87,7 @@ const VersionModal = ({
       </Item>
 
       <Item label="Release Date" name="date">
-        <DatePicker showTime />
+        <DatePicker data-testid="datePicker" showTime />
       </Item>
       <Item label="Description" name="description">
         <Input.TextArea rows={3} className={globalStyles.field} />
