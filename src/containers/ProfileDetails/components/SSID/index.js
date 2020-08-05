@@ -288,6 +288,7 @@ const SSIDForm = ({ form, details }) => {
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wep">WEP</Option>
+            <Option value="wpa3">WPA3</Option>
           </Select>
         </Item>
 
@@ -304,7 +305,7 @@ const SSIDForm = ({ form, details }) => {
           <Item label="RADIUS Service">{details.radiusServiceName}</Item>
         )}
 
-        {(mode === 'wpa' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK') && (
+        {(mode === 'wpaPSK' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK' || mode === 'wpa3') && (
           <Item
             label="Security Key"
             name="keyStr"
@@ -445,7 +446,7 @@ const SSIDForm = ({ form, details }) => {
         </Item>
       </Card>
 
-      {mode !== 'wpaPersonal' && mode !== 'wep' && (
+      {mode !== 'wpaPSK' && mode !== 'wep' && (
         <Card title="Roaming">
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
