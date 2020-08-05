@@ -305,7 +305,7 @@ const SSIDForm = ({ form, details }) => {
           <Item label="RADIUS Service">{details.radiusServiceName}</Item>
         )}
 
-        {(mode === 'wpaPSK' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK' || mode === 'wpa3') && (
+        {(mode === 'wpa' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK' || mode === 'wpa3') && (
           <Item
             label="Security Key"
             name="keyStr"
@@ -446,7 +446,7 @@ const SSIDForm = ({ form, details }) => {
         </Item>
       </Card>
 
-      {mode !== 'wpaPSK' && mode !== 'wep' && (
+      {mode !== 'wpaPersonal' && mode !== 'wep' && (
         <Card title="Roaming">
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
