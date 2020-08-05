@@ -287,8 +287,9 @@ const SSIDForm = ({ form, details }) => {
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
+            <Option value="wpa3PSK">WPA3 Personal</Option>
+            <Option value="wpa3Radius">WPA3 Enterprise</Option>
             <Option value="wep">WEP</Option>
-            <Option value="wpa3">WPA3</Option>
           </Select>
         </Item>
 
@@ -301,11 +302,12 @@ const SSIDForm = ({ form, details }) => {
           </Item>
         )}
 
-        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && details.radiusServiceName && (
-          <Item label="RADIUS Service">{details.radiusServiceName}</Item>
-        )}
+        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius' || mode === 'wpa3Radius') &&
+          details.radiusServiceName && (
+            <Item label="RADIUS Service">{details.radiusServiceName}</Item>
+          )}
 
-        {(mode === 'wpa' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK' || mode === 'wpa3') && (
+        {(mode === 'wpa' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK' || mode === 'wpa3PSK') && (
           <Item
             label="Security Key"
             name="keyStr"
