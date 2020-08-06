@@ -39,4 +39,20 @@ describe('<HighChartGraph />', () => {
   it('Render HighChartGraph', async () => {
     render(<HighChartGraph osData={osData} />);
   });
+
+  it('should work with deatils object null', async () => {
+    const data = {
+      loading: false,
+      data: [{ details: null }],
+    };
+    render(<HighChartGraph osData={data} />);
+  });
+
+  it('should work with deatils object null', async () => {
+    render(<HighChartGraph osData={osData} />);
+  });
+
+  it('should work with loading true', async () => {
+    render(<HighChartGraph osData={{ loading: true }} />);
+  });
 });

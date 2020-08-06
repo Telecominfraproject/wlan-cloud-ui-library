@@ -294,4 +294,9 @@ describe('<Accounts />', () => {
 
     expect(submitSpy).toHaveBeenCalledTimes(1);
   });
+  it('onLoadMore should be called with default prop', async () => {
+    const { getByRole } = render(<Accounts {...mockProps} isLastPage={false} />);
+
+    fireEvent.click(getByRole('button', { name: 'Load More' }));
+  });
 });
