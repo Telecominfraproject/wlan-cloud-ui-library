@@ -36,7 +36,26 @@ const mockProps = {
       userMacAddresses: [],
       lastModifiedTimestamp: 0,
     },
+    {
+      model_type: 'TimedAccessUserRecord',
+      username: 'test2',
+      password: 'test2',
+      activationTime: null,
+      expirationTime: null,
+      numDevices: 0,
+      userDetails: {
+        model_type: 'TimedAccessUserDetails',
+        firstName: 'test2',
+        lastName: 'test2',
+        passwordNeedsReset: false,
+      },
+      userMacAddresses: [],
+      lastModifiedTimestamp: 0,
+    },
   ],
+  handleAddUser: () => {},
+  handleUpdateUser: () => {},
+  handleDeleteUser: () => {},
 };
 
 describe('<Users />', () => {
@@ -106,7 +125,11 @@ describe('<Users />', () => {
   });
 
   it('Correct form submission on Add User Modal', async () => {
-    const { getByRole, getByText, getByLabelText } = render(<Users {...mockProps} />);
+    const submitSpy = jest.fn();
+
+    const { getByRole, getByText, getByLabelText } = render(
+      <Users {...mockProps} handleAddUser={submitSpy} />
+    );
 
     fireEvent.click(getByRole('button', { name: /add user/i }));
 
@@ -119,27 +142,36 @@ describe('<Users />', () => {
     fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
     fireEvent.click(getByRole('button', { name: `Save` }));
     await waitFor(() => {
+      expect(submitSpy).toBeCalledTimes(1);
       expect(paragraph).not.toBeVisible();
     });
   });
 
   it('Correct form submission on Edit User Modal', async () => {
-    const { getByRole, getByText, getByLabelText } = render(<Users {...mockProps} />);
+    const submitSpy = jest.fn();
+
+    const { getByRole, getByText, getByLabelText } = render(
+      <Users {...mockProps} handleUpdateUser={submitSpy} />
+    );
 
     fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[0].username}` }));
     const paragraph = getByText('Edit User');
     expect(paragraph).toBeVisible();
 
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
+    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
 
     fireEvent.click(getByRole('button', { name: `Save` }));
     await waitFor(() => {
+      expect(submitSpy).toBeCalledTimes(1);
       expect(paragraph).not.toBeVisible();
     });
   });
 
   it('Delete button on Delete Modal should delete user', async () => {
-    const { getByRole, getByText } = render(<Users {...mockProps} />);
+    const submitSpy = jest.fn();
+    const { getByRole, getByText } = render(<Users {...mockProps} handleDeleteUser={submitSpy} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
     const paragraph = getByText('Are you sure you want to delete the user:');
@@ -148,6 +180,7 @@ describe('<Users />', () => {
 
     fireEvent.click(getByRole('button', { name: 'Delete' }));
     await waitFor(() => {
+      expect(submitSpy).toBeCalledTimes(1);
       expect(paragraph).not.toBeVisible();
     });
   });

@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Input,
-  Radio,
-  Select,
-  Tooltip,
-  Upload,
-  Alert,
-  Collapse,
-  message,
-  List,
-} from 'antd';
-import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
+import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, List } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
+
 import styles from '../index.module.scss';
 import Users from './components/Users';
 
@@ -264,6 +254,17 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
 
   const handleDeleteWhitelist = item => setWhitelist(whitelist.filter(i => i !== item));
 
+  const handleAddUser = newUser => {
+    details.userList.push(newUser);
+  };
+  const handleUpdateUser = (index, newUser) => {
+    details.userList.splice(index, 1, newUser);
+  };
+
+  const handleDeleteUser = index => {
+    details.userList.splice(index);
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       authenticationType: details.authenticationType,
@@ -307,7 +308,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
           <Select
             className={styles.Field}
             placeholder="Select authentication mode"
-            onChange={value => setAuthentication(value)}
+            onChange={setAuthentication}
           >
             <Option value="guest">None</Option>
             <Option value="radius">RADIUS</Option>
@@ -342,11 +343,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             type="number"
             min={1}
             max={1440}
-            addonBefore={
-              <Tooltip title="Timeout range is 1 - 1440 (one day max) ">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
+            addonBefore={<Tooltip title="Timeout range is 1 - 1440 (one day max) " />}
             addonAfter="Minutes"
           />
         </Item>
@@ -374,7 +371,14 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
         </Item>
       </Card>
 
-      {authentication === 'username' && <Users userList={details.userList} />}
+      {authentication === 'username' && (
+        <Users
+          userList={details.userList}
+          handleAddUser={handleAddUser}
+          handleUpdateUser={handleUpdateUser}
+          handleDeleteUser={handleDeleteUser}
+        />
+      )}
 
       {authentication === 'radius' && (
         <Card title="RADIUS">
@@ -405,9 +409,9 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             ]}
           >
             <Select className={styles.Field} placeholder="RADIUS Services">
-              {Object.keys(radiusProfiles).map(profile => (
-                <Option key={radiusProfiles[profile].id} value={radiusProfiles[profile].name}>
-                  {radiusProfiles[profile].name}
+              {radiusProfiles.map(profile => (
+                <Option key={profile.id} value={profile.name}>
+                  {profile.name}
                 </Option>
               ))}
             </Select>
@@ -536,18 +540,11 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
         <Panel header="Splash Page Images" forceRender>
           <Item label="Configure">
             <div className={styles.InlineDiv}>
-              <Tooltip title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB">
-                <div className={styles.InlineDiv}>
-                  Logo
-                  <InfoCircleOutlined style={{ marginLeft: '6px', marginTop: '4px' }} />
-                </div>
-              </Tooltip>
-              <Tooltip title="Max file size of 400KB">
-                <div className={styles.InlineDiv}>
-                  Background
-                  <InfoCircleOutlined style={{ marginLeft: '6px', marginTop: '4px' }} />
-                </div>
-              </Tooltip>
+              <Tooltip
+                title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB"
+                text="Logo"
+              />
+              <Tooltip title="Max file size of 400KB" text="Background" />
             </div>
 
             <div className={styles.InlineDiv}>

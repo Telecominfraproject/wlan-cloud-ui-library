@@ -71,29 +71,11 @@ const FormModal = ({
         <Input.Password visibilityToggle className={styles.field} />
       </Item>
 
-      <Item
-        label="First Name"
-        name="firstName"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your first name.',
-          },
-        ]}
-      >
+      <Item label="First Name" name="firstName">
         <Input className={styles.field} />
       </Item>
 
-      <Item
-        label="Last Name"
-        name="lastName"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your last name.',
-          },
-        ]}
-      >
+      <Item label="Last Name" name="lastName">
         <Input className={styles.field} />
       </Item>
     </Form>

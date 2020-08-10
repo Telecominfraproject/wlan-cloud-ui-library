@@ -43,7 +43,26 @@ const mockProps = {
     sessionTimeoutInMinutes: 60,
     successPageMarkdownText: 'Welcome to the network',
     userAcceptancePolicy: 'Use this network at your own risk. No warranty of any kind.',
-    userList: [],
+    userList: [
+      [
+        {
+          model_type: 'TimedAccessUserRecord',
+          username: 'test',
+          password: 'test',
+          activationTime: null,
+          expirationTime: null,
+          numDevices: 0,
+          userDetails: {
+            model_type: 'TimedAccessUserDetails',
+            firstName: 'test',
+            lastName: 'test',
+            passwordNeedsReset: false,
+          },
+          userMacAddresses: [],
+          lastModifiedTimestamp: 0,
+        },
+      ],
+    ],
     usernamePasswordFile: null,
     walledGardenAllowlist: ['1.1.1.1'],
   },
@@ -300,7 +319,7 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(container.querySelector('.ant-input-wrapper.ant-input-group > span span')).toHaveClass(
-        'anticon anticon-info-circle ant-tooltip-open'
+        'ant-tooltip-open Tooltip'
       );
     });
   });
@@ -994,6 +1013,102 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(getByText('User List')).toBeInTheDocument();
+    });
+  });
+
+  it('User should be shown in user list table after being added', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getAllByText, getByRole } = render(
+      <CaptivePortalFormComp />
+    );
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(getByRole('button', { name: /add user/i }));
+
+    const paragraph = getByText('Add User', { selector: 'div' });
+    expect(paragraph).toBeVisible();
+
+    fireEvent.change(getByLabelText('Username'), { target: { value: 'username' } });
+    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
+    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
+    fireEvent.click(getByRole('button', { name: `Save` }));
+
+    await waitFor(() => {
+      expect(getAllByText('Username')[0]).toBeInTheDocument();
+    });
+  });
+
+  it('Updated user should be shown in user list table after being updated', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getAllByText, getByRole } = render(
+      <CaptivePortalFormComp />
+    );
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+    );
+
+    fireEvent.change(getByLabelText('Username'), { target: { value: 'username1' } });
+    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
+    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
+    fireEvent.click(getByRole('button', { name: `Save` }));
+
+    await waitFor(() => {
+      expect(getAllByText('username1')[0]).toBeInTheDocument();
+    });
+  });
+
+  it('Deleted user should not be shown in user list table after being deleted', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    const button = getByRole('button', {
+      name: `delete-${mockProps.details.userList[0].username}`,
+    });
+
+    fireEvent.click(button);
+
+    fireEvent.click(getByRole('button', { name: `Delete` }));
+
+    await waitFor(() => {
+      expect(button).not.toBeInTheDocument();
     });
   });
 

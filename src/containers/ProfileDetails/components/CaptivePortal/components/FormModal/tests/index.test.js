@@ -25,8 +25,6 @@ const mockProps = {
 
 const MISSING_USERNAME = 'Please input your username.';
 const MISSING_PASSWORD = 'Please input your password.';
-const MISSING_FIRSTNAME = 'Please input your first name.';
-const MISSING_LASTNAME = 'Please input your last name.';
 const INVALID_USERNAME = 'Username already used. Please enter a new username.';
 
 describe('<FormModal />', () => {
@@ -43,8 +41,6 @@ describe('<FormModal />', () => {
       expect(submitSpy).toHaveBeenCalledTimes(0);
       expect(getByText(MISSING_USERNAME)).toBeVisible();
       expect(getByText(MISSING_PASSWORD)).toBeVisible();
-      expect(getByText(MISSING_FIRSTNAME)).toBeVisible();
-      expect(getByText(MISSING_LASTNAME)).toBeVisible();
     });
   });
 

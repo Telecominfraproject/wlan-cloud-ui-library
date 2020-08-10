@@ -7,7 +7,7 @@ import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import FormModal from '../FormModal';
 import styles from '../../../index.module.scss';
 
-const Users = ({ userList }) => {
+const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) => {
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -72,7 +72,7 @@ const Users = ({ userList }) => {
       },
     };
     setTableData(users => [...users, newUser]);
-    userList.push(newUser);
+    handleAddUser(newUser);
     setAddModal(false);
   };
 
@@ -88,17 +88,18 @@ const Users = ({ userList }) => {
     setTableData(users =>
       users.map(user => (user.username === activeUser.username ? newUser : user))
     );
-    userList.splice(
+
+    handleUpdateUser(
       tableData.findIndex(user => user.username === activeUser.username),
-      1,
       newUser
     );
+
     setEditModal(false);
   };
 
   const deleteUser = () => {
     setTableData(users => users.filter(user => user.username !== activeUser.username));
-    userList.splice(tableData.findIndex(user => user.username === activeUser.username));
+    handleDeleteUser(tableData.findIndex(user => user.username === activeUser.username));
     setDeleteModal(false);
   };
 
@@ -138,10 +139,7 @@ const Users = ({ userList }) => {
         title="Add User"
         usedUserNames={usedUserNames}
       />
-      <Card title="User List">
-        <div className={styles.InlineEndDiv}>
-          <Button onClick={() => setAddModal(true)}> Add User</Button>
-        </div>
+      <Card title="User List" extra={<Button onClick={() => setAddModal(true)}> Add User</Button>}>
         <Table rowKey="username" columns={columns} dataSource={tableData} pagination={false} />
       </Card>
     </>
@@ -150,10 +148,16 @@ const Users = ({ userList }) => {
 
 Users.propTypes = {
   userList: PropTypes.instanceOf(Array),
+  handleAddUser: PropTypes.func,
+  handleUpdateUser: PropTypes.func,
+  handleDeleteUser: PropTypes.func,
 };
 
 Users.defaultProps = {
   userList: [],
+  handleAddUser: () => {},
+  handleUpdateUser: () => {},
+  handleDeleteUser: () => {},
 };
 
 export default Users;
