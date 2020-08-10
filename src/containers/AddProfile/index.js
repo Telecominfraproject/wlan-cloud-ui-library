@@ -9,12 +9,17 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 
-import { formatSsidProfileForm, formatApProfileForm } from 'utils/profiles';
+import {
+  formatSsidProfileForm,
+  formatApProfileForm,
+  formatBonjourGatewayForm,
+} from 'utils/profiles';
 
 import styles from './index.module.scss';
 
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
+import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 
 const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
   const layout = {
@@ -43,6 +48,11 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
       if (profileType === 'equipment_ap') {
         formattedData.model_type = 'ApNetworkConfiguration';
         formattedData = Object.assign(formattedData, formatApProfileForm(values));
+      }
+
+      if (profileType === 'bonjour') {
+        formattedData.model_type = 'BonjourGatewayProfile';
+        formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
       }
 
       onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
@@ -77,7 +87,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           </div>
         </Header>
 
-        <Form {...layout} form={form}>
+        <Form {...layout} form={form} initialValues={{ bonjourServices: [''] }}>
           <Card title="Profile Settings">
             <Item
               label="Type"
@@ -96,6 +106,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
+                <Option value="bonjour">Bonjour Gateway</Option>
               </Select>
             </Item>
             <Item
@@ -111,6 +122,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           {profileType === 'equipment_ap' && (
             <AccessPointForm form={form} ssidProfiles={ssidProfiles} />
           )}
+          {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
         </Form>
       </div>
     </Container>

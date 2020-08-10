@@ -16,12 +16,14 @@ import {
   formatApProfileForm,
   formatRadiusForm,
   formatCaptiveForm,
+  formatBonjourGatewayForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
 import RadiusForm from './components/Radius';
 import CaptivePortalForm from './components/CaptivePortal';
+import BonjourGatewayForm from './components/BonjourGateway';
 
 import styles from './index.module.scss';
 
@@ -96,6 +98,12 @@ const ProfileDetails = ({
         if (profileType === 'captive_portal') {
           formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
+
+        if (profileType === 'bonjour') {
+          formattedData.model_type = 'BonjourGatewayProfile';
+          formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
+
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -157,6 +165,7 @@ const ProfileDetails = ({
           <CaptivePortalForm form={form} details={details} fileUpload={fileUpload} />
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
+        {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
       </Form>
     </Container>
   );
