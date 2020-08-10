@@ -62,7 +62,7 @@ const BonjourGateway = ({ form, details }) => {
                   )}
 
                   <Col flex="1 1 350px">
-                    <Item noStyle name={[field.name, 'vlanIdConfiguration']} initialValue="default">
+                    <Item noStyle name={[field.name, 'vlanIdConfiguration']} initialValue="custom">
                       <Radio.Group size="small">
                         <Radio value="custom">Use Custom VLAN</Radio>
                         <Radio value="default">Use Default VLAN</Radio>
@@ -149,7 +149,7 @@ const BonjourGateway = ({ form, details }) => {
                                 message: 'Please select your predefined services.',
                               },
                             ]}
-                            wrapperCol={{ span: 30 }}
+                            wrapperCol={{ span: 50 }}
                             preserve={false}
                           >
                             <Select
@@ -221,7 +221,7 @@ const BonjourGateway = ({ form, details }) => {
                             </Select>
                           </Item>
                         ) : (
-                          <Item wrapperCol={{ span: 30 }}>
+                          <Item wrapperCol={{ span: 50 }}>
                             <Select
                               className={globalStyles.field}
                               disabled
@@ -233,7 +233,7 @@ const BonjourGateway = ({ form, details }) => {
                     </Item>
                   </Col>
 
-                  <Col>
+                  <Col flex="120px">
                     <Item>
                       <Button
                         className={styles.DeleteButton}
