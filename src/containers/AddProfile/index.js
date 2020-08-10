@@ -98,12 +98,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           </div>
         </Header>
 
-        <Form
-          {...layout}
-          form={form}
-          onValuesChange={handleOnFormChange}
-          initialValues={{ bonjourServices: [''] }}
-        >
+        <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
           <Card title="Profile Settings">
             <Item
               label="Type"

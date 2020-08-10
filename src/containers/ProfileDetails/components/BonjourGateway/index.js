@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card, Input, Col, Tooltip, Select, Radio } from 'antd';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -11,9 +11,24 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const BonjourGateway = ({ form, details }) => {
+  const bonjourServices = useMemo(() => {
+    const arr = [];
+    if (details?.bonjourServices?.length) {
+      details.bonjourServices.forEach(i => {
+        arr.push({
+          vlanId: i.vlanId,
+          supportAllServices: i.supportAllServices.toString(),
+          serviceNames: i.serviceNames,
+        });
+      });
+    }
+    return arr;
+  }, [details]);
+
   useEffect(() => {
     form.setFieldsValue({
       profileDescription: details.profileDescription,
+      bonjourServices: bonjourServices.length ? [...bonjourServices] : [''],
     });
   }, [form, details]);
 
@@ -149,7 +164,7 @@ const BonjourGateway = ({ form, details }) => {
                                 message: 'Please select your predefined services.',
                               },
                             ]}
-                            wrapperCol={{ span: 50 }}
+                            wrapperCol={{ span: 35 }}
                             preserve={false}
                           >
                             <Select
@@ -221,7 +236,7 @@ const BonjourGateway = ({ form, details }) => {
                             </Select>
                           </Item>
                         ) : (
-                          <Item wrapperCol={{ span: 50 }}>
+                          <Item wrapperCol={{ span: 35 }}>
                             <Select
                               className={globalStyles.field}
                               disabled
@@ -233,7 +248,7 @@ const BonjourGateway = ({ form, details }) => {
                     </Item>
                   </Col>
 
-                  <Col flex="120px">
+                  <Col flex="100px">
                     <Item>
                       <Button
                         className={styles.DeleteButton}
