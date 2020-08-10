@@ -17,6 +17,7 @@ const BonjourGateway = ({ form, details }) => {
       details.bonjourServices.forEach(i => {
         arr.push({
           vlanId: i.vlanId,
+          vlanIdConfiguration: i.vlanId ? 'custom' : 'default',
           supportAllServices: i.supportAllServices.toString(),
           serviceNames: i.serviceNames,
         });
@@ -77,7 +78,7 @@ const BonjourGateway = ({ form, details }) => {
                   )}
 
                   <Col flex="1 1 350px">
-                    <Item noStyle name={[field.name, 'vlanIdConfiguration']} initialValue="custom">
+                    <Item noStyle name={[field.name, 'vlanIdConfiguration']} initialValue="default">
                       <Radio.Group size="small">
                         <Radio value="custom">Use Custom VLAN</Radio>
                         <Radio value="default">Use Default VLAN</Radio>
