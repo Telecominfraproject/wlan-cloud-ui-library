@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card, Input, Col, Tooltip, Select, Radio } from 'antd';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -11,6 +11,10 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const BonjourGateway = ({ form, details }) => {
+  const [vlanIndex, setVlanIndex] = useState(
+    details?.bonjourServices?.findIndex(i => i.vlanId === null)
+  );
+
   const bonjourServices = useMemo(() => {
     const arr = [];
     if (details?.bonjourServices?.length) {
@@ -31,7 +35,21 @@ const BonjourGateway = ({ form, details }) => {
       profileDescription: details.profileDescription,
       bonjourServices: bonjourServices.length ? [...bonjourServices] : [''],
     });
-  }, [form, details]);
+  }, [form]);
+
+  const onRadioChange = index => {
+    if (form.getFieldValue(['bonjourServices', index, 'vlanIdConfiguration']) === 'default') {
+      setVlanIndex(index);
+    } else {
+      setVlanIndex(-1);
+    }
+  };
+
+  const onRadioDelete = index => {
+    if (form.getFieldValue(['bonjourServices', index, 'vlanIdConfiguration']) === 'default') {
+      setVlanIndex(-1);
+    }
+  };
 
   return (
     <div className={styles.ProfileDetails}>
@@ -65,7 +83,7 @@ const BonjourGateway = ({ form, details }) => {
               }
             >
               {fields.map(field => (
-                <div className={styles.FlexDiv} key={field.key}>
+                <div className={styles.FlexDiv} key={field.name}>
                   {fields[0] === field && (
                     <>
                       <Col flex="1 1 350px">
@@ -78,12 +96,20 @@ const BonjourGateway = ({ form, details }) => {
                   )}
 
                   <Col flex="1 1 350px">
-                    <Item noStyle name={[field.name, 'vlanIdConfiguration']} initialValue="default">
-                      <Radio.Group size="small">
-                        <Radio value="custom">Use Custom VLAN</Radio>
-                        <Radio value="default">Use Default VLAN</Radio>
-                      </Radio.Group>
-                    </Item>
+                    {fields[vlanIndex] === field || vlanIndex === -1 || vlanIndex === undefined ? (
+                      <Item
+                        noStyle
+                        name={[field.name, 'vlanIdConfiguration']}
+                        initialValue="custom"
+                      >
+                        <Radio.Group size="small" onChange={() => onRadioChange(field.name)}>
+                          <Radio value="custom">Use Custom VLAN</Radio>
+                          <Radio value="default">Use Default VLAN</Radio>
+                        </Radio.Group>
+                      </Item>
+                    ) : (
+                      <div>Use Custom VLAN</div>
+                    )}
 
                     <Item noStyle shouldUpdate>
                       {({ getFieldValue }) => {
@@ -91,7 +117,7 @@ const BonjourGateway = ({ form, details }) => {
                           'bonjourServices',
                           field.name,
                           'vlanIdConfiguration',
-                        ]) === 'custom' ? (
+                        ]) !== 'default' ? (
                           <Item
                             name={[field.name, 'vlanId']}
                             preserve={false}
@@ -120,7 +146,7 @@ const BonjourGateway = ({ form, details }) => {
                                     !value ||
                                     (currentId <= 4095 &&
                                       currentId > 1 &&
-                                      ids.indexOf(currentId) === -1)
+                                      ids.indexOf(parseInt(currentId, 10)) === -1)
                                   ) {
                                     return Promise.resolve();
                                   }
@@ -131,12 +157,12 @@ const BonjourGateway = ({ form, details }) => {
                               }),
                             ]}
                             hasFeedback
-                            wrapperCol={{ span: 25 }}
+                            wrapperCol={{ span: 35 }}
                           >
                             <Input placeholder="2-4095" className={globalStyles.field} />
                           </Item>
                         ) : (
-                          <Item wrapperCol={{ span: 25 }}>
+                          <Item wrapperCol={{ span: 35 }}>
                             <Input className={globalStyles.field} disabled placeholder="Default" />
                           </Item>
                         );
@@ -144,7 +170,7 @@ const BonjourGateway = ({ form, details }) => {
                     </Item>
                   </Col>
                   <Col flex="1 1 600px">
-                    <Item noStyle name={[field.name, 'supportAllServices']} initialValue="true">
+                    <Item noStyle name={[field.name, 'supportAllServices']} initialValue="false">
                       <Radio.Group size="small">
                         <Radio value="false">Selected Services</Radio>
                         <Radio value="true">All Services</Radio>
@@ -249,13 +275,14 @@ const BonjourGateway = ({ form, details }) => {
                     </Item>
                   </Col>
 
-                  <Col flex="100px">
+                  <Col flex="118px">
                     <Item>
                       <Button
                         className={styles.DeleteButton}
                         type="danger"
                         disabled={fields.length === 1}
                         onClick={() => {
+                          onRadioDelete(field.name);
                           remove(field.name);
                         }}
                       >
