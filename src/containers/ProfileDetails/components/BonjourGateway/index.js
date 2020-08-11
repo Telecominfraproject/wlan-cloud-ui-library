@@ -128,14 +128,16 @@ const BonjourGateway = ({ form, details }) => {
                               },
                               () => ({
                                 validator(_rule, value) {
-                                  const currentId = getFieldValue([
-                                    'bonjourServices',
-                                    field.name,
-                                    'vlanId',
-                                  ]);
+                                  const currentId = parseInt(
+                                    getFieldValue(['bonjourServices', field.name, 'vlanId']),
+                                    10
+                                  );
 
                                   const ids = fields.map(i =>
-                                    getFieldValue(['bonjourServices', i.name, 'vlanId'])
+                                    parseInt(
+                                      getFieldValue(['bonjourServices', i.name, 'vlanId']),
+                                      10
+                                    )
                                   );
 
                                   const index = ids.findIndex(id => id === currentId);
