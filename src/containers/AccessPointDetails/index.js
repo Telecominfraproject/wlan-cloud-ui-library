@@ -120,7 +120,7 @@ const AccessPointDetails = ({
 
 AccessPointDetails.propTypes = {
   data: PropTypes.instanceOf(Object),
-  profiles: PropTypes.instanceOf(Object),
+  profiles: PropTypes.instanceOf(Array),
   firmware: PropTypes.instanceOf(Object),
   osData: PropTypes.instanceOf(Object),
   handleRefresh: PropTypes.func.isRequired,
@@ -132,7 +132,7 @@ AccessPointDetails.propTypes = {
 AccessPointDetails.defaultProps = {
   data: {},
   firmware: {},
-  profiles: {},
+  profiles: [],
   osData: {},
 };
 
