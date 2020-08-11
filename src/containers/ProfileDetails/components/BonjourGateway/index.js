@@ -146,7 +146,7 @@ const BonjourGateway = ({ form, details }) => {
                                     !value ||
                                     (currentId <= 4095 &&
                                       currentId > 1 &&
-                                      ids.indexOf(parseInt(currentId, 10)) === -1)
+                                      ids.indexOf(currentId) === -1)
                                   ) {
                                     return Promise.resolve();
                                   }
