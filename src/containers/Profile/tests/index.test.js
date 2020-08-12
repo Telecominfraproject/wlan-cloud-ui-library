@@ -21,10 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 const mockProps = {
-  onReload: () => {},
-  onLoadMore: () => {},
   isLastPage: true,
-  onDeleteProfile: () => {},
   data: [
     { details: {}, id: 1, name: 'Radius-Profile', profileType: 'ssid', __typename: 'Profile' },
   ],
@@ -45,6 +42,15 @@ describe('<Profile />', () => {
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('onReload default prop test', async () => {
+    const { getByRole } = render(
+      <Router>
+        <Profile {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /reload/i }));
   });
 
   it('URL should changes to /addprofile when Add Profile button is clicked', () => {
@@ -117,6 +123,29 @@ describe('<Profile />', () => {
     });
   });
 
+  it('onDeleteProfile default prop test', async () => {
+    const data = {
+      ...mockProps,
+      data: [
+        {
+          details: {},
+          id: 1,
+          name: 'Radius-Profile',
+          profileType: 'equipment_ap',
+          __typename: 'Profile',
+        },
+      ],
+    };
+    const { getByRole } = render(
+      <Router>
+        <Profile {...data} />
+      </Router>
+    );
+    fireEvent.click(screen.getByTitle('delete'));
+    expect(getByRole('button', { name: 'Delete' }));
+    fireEvent.click(getByRole('button', { name: 'Delete' }));
+  });
+
   it('should work with profileType null', async () => {
     const data = {
       ...mockProps,
@@ -156,5 +185,18 @@ describe('<Profile />', () => {
     fireEvent.click(getByRole('button', { name: 'Load More' }));
 
     expect(onLoadMore).toHaveBeenCalledTimes(1);
+  });
+
+  it('onLoadMore default prop test', async () => {
+    const data = {
+      ...mockProps,
+      isLastPage: false,
+    };
+    const { getByRole } = render(
+      <Router>
+        <Profile {...data} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Load More' }));
   });
 });

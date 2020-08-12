@@ -118,7 +118,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
 
 Profile.propTypes = {
   data: PropTypes.instanceOf(Array),
-  onDeleteProfile: PropTypes.func.isRequired,
+  onDeleteProfile: PropTypes.func,
   onReload: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
@@ -128,6 +128,7 @@ Profile.defaultProps = {
   data: [],
   onReload: () => {},
   onLoadMore: () => {},
+  onDeleteProfile: () => {},
   isLastPage: true,
 };
 

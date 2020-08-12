@@ -23,7 +23,7 @@ const BonjourGateway = ({ form, details }) => {
           vlanId: i.vlanId,
           vlanIdConfiguration: i.vlanId ? 'custom' : 'default',
           supportAllServices: i.supportAllServices.toString(),
-          serviceNames: i.serviceNames,
+          serviceNames: i.serviceNames?.filter(service => service != null),
         });
       });
     }
@@ -86,7 +86,7 @@ const BonjourGateway = ({ form, details }) => {
                 <div className={styles.FlexDiv} key={field.name}>
                   {fields[0] === field && (
                     <>
-                      <Col flex="1 1 350px">
+                      <Col flex="1 1 330px">
                         <strong>Unique VLANs</strong>
                       </Col>
                       <Col flex="1 1 700px">
@@ -103,8 +103,12 @@ const BonjourGateway = ({ form, details }) => {
                         initialValue="custom"
                       >
                         <Radio.Group size="small" onChange={() => onRadioChange(field.name)}>
-                          <Radio value="custom">Use Custom VLAN</Radio>
-                          <Radio value="default">Use Default VLAN</Radio>
+                          <Radio value="custom" data-testid={`vlanCustomConfig${field.name}`}>
+                            Use Custom VLAN
+                          </Radio>
+                          <Radio value="default" data-testid={`vlanDefaultConfig${field.name}`}>
+                            Use Default VLAN
+                          </Radio>
                         </Radio.Group>
                       </Item>
                     ) : (
@@ -161,7 +165,11 @@ const BonjourGateway = ({ form, details }) => {
                             hasFeedback
                             wrapperCol={{ span: 35 }}
                           >
-                            <Input placeholder="2-4095" className={globalStyles.field} />
+                            <Input
+                              placeholder="2-4095"
+                              className={globalStyles.field}
+                              data-testid={`vlanInput${field.name}`}
+                            />
                           </Item>
                         ) : (
                           <Item wrapperCol={{ span: 35 }}>
@@ -200,7 +208,10 @@ const BonjourGateway = ({ form, details }) => {
                               className={globalStyles.field}
                               placeholder="Select predefined services (check to select all)"
                               mode="multiple"
+                              allowClear
+                              showArrow
                               listHeight={350}
+                              data-testid={`serviceSelect${field.name}`}
                             >
                               <Option key="AFP" value="AFP">
                                 <Tooltip title="Apple File Sharing">
@@ -283,6 +294,7 @@ const BonjourGateway = ({ form, details }) => {
                         className={styles.DeleteButton}
                         type="danger"
                         disabled={fields.length === 1}
+                        data-testid={`removeButton${field.name}`}
                         onClick={() => {
                           onRadioDelete(field.name);
                           remove(field.name);
