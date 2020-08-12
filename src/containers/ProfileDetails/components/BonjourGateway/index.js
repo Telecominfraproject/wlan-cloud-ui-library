@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Input, Col, Tooltip, Select, Radio } from 'antd';
+import { Form, Card, Input, Col, Tooltip, Select, Radio, Row } from 'antd';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
@@ -11,43 +11,35 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const BonjourGateway = ({ form, details }) => {
-  const [vlanIndex, setVlanIndex] = useState(
-    details?.bonjourServices?.findIndex(i => i.vlanId === null)
+  const [defaultVlanSelected, setDefaultVlanSelected] = useState(
+    details?.bonjourServices?.findIndex(i => i.vlanId === null) >= 0
   );
-
-  const bonjourServices = useMemo(() => {
-    const arr = [];
-    if (details?.bonjourServices?.length) {
-      details.bonjourServices.forEach(i => {
-        arr.push({
-          vlanId: i.vlanId,
-          vlanIdConfiguration: i.vlanId ? 'custom' : 'default',
-          supportAllServices: i.supportAllServices.toString(),
-          serviceNames: i.serviceNames?.filter(service => service != null),
-        });
-      });
-    }
-    return arr;
-  }, [details]);
 
   useEffect(() => {
     form.setFieldsValue({
       profileDescription: details.profileDescription,
-      bonjourServices: bonjourServices.length ? [...bonjourServices] : [''],
+      bonjourServices: details?.bonjourServices?.map(i => {
+        return {
+          vlanId: i.vlanId,
+          vlanIdConfiguration: i.vlanId ? 'custom' : 'default',
+          supportAllServices: i.supportAllServices.toString(),
+          serviceNames: i.serviceNames?.filter(service => service != null),
+        };
+      }) || [''],
     });
-  }, [form]);
+  }, [details]);
 
   const onRadioChange = index => {
     if (form.getFieldValue(['bonjourServices', index, 'vlanIdConfiguration']) === 'default') {
-      setVlanIndex(index);
+      setDefaultVlanSelected(true);
     } else {
-      setVlanIndex(-1);
+      setDefaultVlanSelected(false);
     }
   };
 
   const onRadioDelete = index => {
     if (form.getFieldValue(['bonjourServices', index, 'vlanIdConfiguration']) === 'default') {
-      setVlanIndex(-1);
+      setDefaultVlanSelected(false);
     }
   };
 
@@ -65,7 +57,7 @@ const BonjourGateway = ({ form, details }) => {
               title="VLANs and Services"
               extra={
                 <>
-                  {fields.length === 5 && (
+                  {fields.length >= 5 && (
                     <Tooltip className={styles.ToolTip} title="Maximum 5 VLAN services">
                       <InfoCircleOutlined />
                     </Tooltip>
@@ -75,28 +67,26 @@ const BonjourGateway = ({ form, details }) => {
                     onClick={() => {
                       add();
                     }}
-                    disabled={fields.length === 5}
+                    disabled={fields.length >= 5}
                   >
                     <PlusOutlined /> Add Service Set
                   </Button>
                 </>
               }
             >
+              <Row>
+                <Col flex="1 1 330px">
+                  <strong>Unique VLANs</strong>
+                </Col>
+                <Col flex="1 1 700px">
+                  <strong>Services</strong>
+                </Col>
+              </Row>
               {fields.map(field => (
                 <div className={styles.FlexDiv} key={field.name}>
-                  {fields[0] === field && (
-                    <>
-                      <Col flex="1 1 330px">
-                        <strong>Unique VLANs</strong>
-                      </Col>
-                      <Col flex="1 1 700px">
-                        <strong>Services</strong>
-                      </Col>
-                    </>
-                  )}
-
                   <Col flex="1 1 350px">
-                    {fields[vlanIndex] === field || vlanIndex === -1 || vlanIndex === undefined ? (
+                    {form.getFieldValue(['bonjourServices', field.name, 'vlanIdConfiguration']) ===
+                      'default' || !defaultVlanSelected ? (
                       <Item
                         noStyle
                         name={[field.name, 'vlanIdConfiguration']}
@@ -144,15 +134,11 @@ const BonjourGateway = ({ form, details }) => {
                                     )
                                   );
 
-                                  const index = ids.findIndex(id => id === currentId);
-
-                                  ids.splice(index, 1);
+                                  const occurence = ids.filter(item => item === currentId).length;
 
                                   if (
                                     !value ||
-                                    (currentId <= 4095 &&
-                                      currentId > 1 &&
-                                      ids.indexOf(currentId) === -1)
+                                    (currentId <= 4095 && currentId > 1 && occurence <= 1)
                                   ) {
                                     return Promise.resolve();
                                   }
