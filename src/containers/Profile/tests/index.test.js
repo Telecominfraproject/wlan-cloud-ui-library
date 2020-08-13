@@ -30,6 +30,15 @@ const mockProps = {
 describe('<Profile />', () => {
   afterEach(cleanup);
 
+  it('should call default onReload if reload button is clicked and no onReload function is', async () => {
+    const { getByRole } = render(
+      <Router>
+        <Profile {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /reload/i }));
+  });
+
   it('should call onReload if reload button is clicked', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(
@@ -187,14 +196,16 @@ describe('<Profile />', () => {
     expect(onLoadMore).toHaveBeenCalledTimes(1);
   });
 
-  it('onLoadMore default prop test', async () => {
+  it('Load More Button Should show when isLastPage false and call with Default Prop', () => {
+    const submitSpy = jest.fn();
     const data = {
       ...mockProps,
       isLastPage: false,
     };
+
     const { getByRole } = render(
       <Router>
-        <Profile {...data} />
+        <Profile {...data} onDeleteProfile={submitSpy} />
       </Router>
     );
     fireEvent.click(getByRole('button', { name: 'Load More' }));
