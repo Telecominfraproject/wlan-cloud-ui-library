@@ -7,7 +7,7 @@ import styles from '../../index.module.scss';
 const { Option } = Select;
 const { Item } = Form;
 
-const Location = ({ locations, data, onUpdateEquipment }) => {
+const Location = ({ locations, data, onUpdateEquipment, handleOnFormChange, handleOnFormSave }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
@@ -51,6 +51,8 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
 
   const handleOnSave = () => {
+    handleOnFormSave();
+
     const {
       id,
       equipmentType,
@@ -119,7 +121,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   }, [city, building, floor]);
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -193,10 +195,14 @@ Location.propTypes = {
   data: PropTypes.instanceOf(Object),
   locations: PropTypes.instanceOf(Array).isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
+  handleOnFormChange: PropTypes.func,
+  handleOnFormSave: PropTypes.func,
 };
 
 Location.defaultProps = {
   data: {},
+  handleOnFormChange: () => {},
+  handleOnFormSave: () => {},
 };
 
 export default Location;

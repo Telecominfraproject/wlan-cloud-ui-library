@@ -13,7 +13,13 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Item } = Form;
 
-const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
+const Firmware = ({
+  firmware,
+  data,
+  onUpdateEquipmentFirmware,
+  handleOnFormChange,
+  handleOnFormSave,
+}) => {
   const [form] = Form.useForm();
 
   const [version, setVersion] = useState(null);
@@ -35,6 +41,7 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
   const handleUpdateFirmware = () => {
     onUpdateEquipmentFirmware(data.id, version.id);
     setRebootModal(false);
+    handleOnFormSave();
   };
 
   const alertText = (value = '') => {
@@ -64,7 +71,7 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
         title="Confirm"
         content={<p>Confirm downloading, flashing, rebooting? </p>}
       />
-      <Form {...layout} form={form}>
+      <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
         <Card title="Firmware">
           <Item label="Active Version">
             {status.activeSwVersion}
@@ -78,7 +85,7 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware }) => {
         <Card title="Upgrade">
           <Item label="Target Version">
             <div className={styles.InlineDiv}>
-              <Item>
+              <Item name="targetVersion">
                 <Select
                   className={styles.Field}
                   onChange={handleOnChangeVersion}
@@ -130,11 +137,15 @@ Firmware.propTypes = {
   data: PropTypes.instanceOf(Object),
   firmware: PropTypes.instanceOf(Object),
   onUpdateEquipmentFirmware: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
+  handleOnFormSave: PropTypes.func,
 };
 
 Firmware.defaultProps = {
   data: {},
   firmware: {},
   onUpdateEquipmentFirmware: () => {},
+  handleOnFormChange: () => {},
+  handleOnFormSave: () => {},
 };
 export default Firmware;

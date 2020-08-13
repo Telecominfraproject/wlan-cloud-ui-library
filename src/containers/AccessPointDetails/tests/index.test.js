@@ -1,10 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent } from '@testing-library/react';
+import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
-import { defaultProps } from './constants';
+import { defaultProps, firmware } from './constants';
 import AccessPointDetails from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -20,6 +20,8 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+const DOWN_ARROW = { keyCode: 40 };
 
 describe('<AccessPointDetails />', () => {
   afterEach(() => {
@@ -104,6 +106,206 @@ describe('<AccessPointDetails />', () => {
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('Confirm leave form Modal should appear if General tab form is changed', () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByPlaceholderText, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test' },
+    });
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test-name' },
+    });
+  });
+
+  it('Confirm leave form Modal should appear if Location tab form is changed', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByLabelText, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[1].name));
+    fireEvent.click(getByText(defaultProps.locations[1].name));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[0].name));
+    fireEvent.click(getByText(defaultProps.locations[0].name));
+  });
+
+  it('Confirm leave form Modal should appear if Firmware tab form is changed', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} firmware={firmware} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /firmware/i }));
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText(firmware[2].versionName));
+    fireEvent.click(getByText(firmware[2].versionName));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText(firmware[3].versionName));
+    fireEvent.click(getByText(firmware[3].versionName));
+  });
+
+  it('URL should change if General tab form is saved and User clicks back', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByPlaceholderText, getByText, getAllByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test-name' },
+    });
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    fireEvent.click(getAllByRole('button', { name: /back/i })[0]);
+
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('URL should change if Location tab form is saved and User clicks back', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByLabelText, getByText, getAllByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[1].name));
+    fireEvent.click(getByText(defaultProps.locations[1].name));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    fireEvent.click(getAllByRole('button', { name: /back/i })[0]);
+
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('URL should change if Firmware tab form is completed and User clicks back', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByText, getAllByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} firmware={firmware} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /firmware/i }));
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText(firmware[2].versionName));
+    fireEvent.click(getByText(firmware[2].versionName));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+
+    expect(getByText('Confirm')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    fireEvent.click(getAllByRole('button', { name: /back/i })[0]);
+
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('URL should change if Location tab form is unsaved and User clicks back', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByLabelText, getByText, getAllByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+
+    const city = getByLabelText('City');
+    fireEvent.keyDown(city, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[1].name));
+    fireEvent.click(getByText(defaultProps.locations[1].name));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getAllByRole('button', { name: /back/i })[1]);
+
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('URL should change if Firmware tab form is unsaved and User clicks back', async () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByText, getAllByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} firmware={firmware} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /firmware/i }));
+    const paragraph = getByText('Upgrade');
+    expect(paragraph).toBeVisible();
+
+    const targetVersion = getByRole('combobox');
+
+    fireEvent.keyDown(targetVersion, DOWN_ARROW);
+    await waitForElement(() => getByText(firmware[2].versionName));
+    fireEvent.click(getByText(firmware[2].versionName));
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
+
+    fireEvent.click(getAllByRole('button', { name: /back/i })[1]);
+
     expect(window.location.pathname).toEqual('/network/access-points');
   });
 });
