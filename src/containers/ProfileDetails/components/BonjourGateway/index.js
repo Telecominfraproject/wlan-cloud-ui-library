@@ -85,8 +85,10 @@ const BonjourGateway = ({ form, details }) => {
               {fields.map(field => (
                 <div className={styles.FlexDiv} key={field.name}>
                   <Col flex="1 1 350px">
-                    {form.getFieldValue(['bonjourServices', field.name, 'vlanIdConfiguration']) ===
-                      'default' || !defaultVlanSelected ? (
+                    {form.getFieldValue(['bonjourServices', field.name, 'vlanIdConfiguration']) !==
+                      'default' && defaultVlanSelected ? (
+                      <div>Use Custom VLAN</div>
+                    ) : (
                       <Item
                         noStyle
                         name={[field.name, 'vlanIdConfiguration']}
@@ -101,8 +103,6 @@ const BonjourGateway = ({ form, details }) => {
                           </Radio>
                         </Radio.Group>
                       </Item>
-                    ) : (
-                      <div>Use Custom VLAN</div>
                     )}
 
                     <Item noStyle shouldUpdate>
