@@ -74,7 +74,7 @@ const BonjourGateway = ({ form, details }) => {
                 </>
               }
             >
-              <Row>
+              <Row className={styles.BonjourServices}>
                 <Col flex="1 1 330px">
                   <strong>Unique VLANs</strong>
                 </Col>
@@ -87,14 +87,18 @@ const BonjourGateway = ({ form, details }) => {
                   <Col flex="1 1 350px">
                     {form.getFieldValue(['bonjourServices', field.name, 'vlanIdConfiguration']) !==
                       'default' && defaultVlanSelected ? (
-                      <div>Use Custom VLAN</div>
+                      <div className={styles.BonjourServices}>Use Custom VLAN</div>
                     ) : (
                       <Item
                         noStyle
                         name={[field.name, 'vlanIdConfiguration']}
                         initialValue="custom"
                       >
-                        <Radio.Group size="small" onChange={() => onRadioChange(field.name)}>
+                        <Radio.Group
+                          className={styles.BonjourServices}
+                          size="small"
+                          onChange={() => onRadioChange(field.name)}
+                        >
                           <Radio value="custom" data-testid={`vlanCustomConfig${field.name}`}>
                             Use Custom VLAN
                           </Radio>
@@ -122,10 +126,7 @@ const BonjourGateway = ({ form, details }) => {
                               },
                               () => ({
                                 validator(_rule, value) {
-                                  const currentId = parseInt(
-                                    getFieldValue(['bonjourServices', field.name, 'vlanId']),
-                                    10
-                                  );
+                                  const currentId = parseInt(value, 10);
 
                                   const ids = fields.map(i =>
                                     parseInt(
@@ -167,7 +168,7 @@ const BonjourGateway = ({ form, details }) => {
                   </Col>
                   <Col flex="1 1 600px">
                     <Item noStyle name={[field.name, 'supportAllServices']} initialValue="false">
-                      <Radio.Group size="small">
+                      <Radio.Group size="small" className={styles.BonjourServices}>
                         <Radio value="false">Selected Services</Radio>
                         <Radio value="true">All Services</Radio>
                       </Radio.Group>
