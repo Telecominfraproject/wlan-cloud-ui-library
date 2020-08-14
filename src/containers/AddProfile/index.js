@@ -53,27 +53,30 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
   };
 
   const handleOnSave = () => {
-    form.validateFields().then(values => {
-      let formattedData = { ...values };
+    form
+      .validateFields()
+      .then(values => {
+        let formattedData = { ...values };
 
-      if (profileType === 'ssid') {
-        formattedData.model_type = 'SsidConfiguration';
-        formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
-      }
+        if (profileType === 'ssid') {
+          formattedData.model_type = 'SsidConfiguration';
+          formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
+        }
 
-      if (profileType === 'equipment_ap') {
-        formattedData.model_type = 'ApNetworkConfiguration';
-        formattedData = Object.assign(formattedData, formatApProfileForm(values));
-      }
+        if (profileType === 'equipment_ap') {
+          formattedData.model_type = 'ApNetworkConfiguration';
+          formattedData = Object.assign(formattedData, formatApProfileForm(values));
+        }
 
-      if (profileType === 'bonjour') {
-        formattedData.model_type = 'BonjourGatewayProfile';
-        formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
-      }
+        if (profileType === 'bonjour') {
+          formattedData.model_type = 'BonjourGatewayProfile';
+          formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
 
-      onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
-      setIsFormDirty(false);
-    });
+        onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
+        setIsFormDirty(false);
+      })
+      .catch(() => {});
   };
 
   return (
