@@ -22,7 +22,11 @@ const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
         onRow={record => {
           return {
             onClick: () => {
-              history.push(`${url}/${record.id}`);
+              history.push(
+                url === '/network/client-devices'
+                  ? `${url}/${record.id}`
+                  : `${url}/${record.id}/general`
+              );
             },
           };
         }}

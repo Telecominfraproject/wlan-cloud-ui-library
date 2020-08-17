@@ -98,15 +98,58 @@ describe('<AccessPointDetails />', () => {
     const paragraph = getByText('Upgrade');
     expect(paragraph).toBeVisible();
   });
-  it('URL changes to /network/access-points on clicking the back button', () => {
+
+  it('Confirm change tab form Modal should appear if tab form is changed without saving', () => {
     const history = createMemoryHistory();
-    const { getByRole } = render(
+    const { getByRole, getByPlaceholderText, getByText } = render(
       <Router history={history}>
         <AccessPointDetails {...defaultProps} />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual('/network/access-points');
+
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test' },
+    });
+    fireEvent.click(getByRole('tab', { name: /status/i }));
+    expect(
+      getByText('Please confirm changing page without saving the current form.')
+    ).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+
+    expect(paragraph).toBeVisible();
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test' },
+    });
+  });
+
+  it('Tab should change if user clicks Change on change tab modal ', () => {
+    const history = createMemoryHistory();
+    const { getByRole, getByPlaceholderText, getByText } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const generalParagraph = getByText('Identity');
+    expect(generalParagraph).toBeVisible();
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test' },
+    });
+    fireEvent.click(getByRole('tab', { name: /status/i }));
+    expect(
+      getByText('Please confirm changing page without saving the current form.')
+    ).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /change/i }));
+
+    const statusParagraph = getByText('Noise Floor');
+    expect(statusParagraph).toBeVisible();
   });
 
   it('Confirm leave form Modal should appear if General tab form is changed', () => {
@@ -117,16 +160,13 @@ describe('<AccessPointDetails />', () => {
       </Router>
     );
 
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+
     fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
       target: { value: 'test' },
     });
     fireEvent.click(getByRole('button', { name: /back/i }));
     expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /cancel/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
-      target: { value: 'test-name' },
-    });
   });
 
   it('Confirm leave form Modal should appear if Location tab form is changed', async () => {
@@ -189,6 +229,8 @@ describe('<AccessPointDetails />', () => {
       </Router>
     );
 
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+
     fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
       target: { value: 'test-name' },
     });
@@ -196,7 +238,7 @@ describe('<AccessPointDetails />', () => {
     expect(getByText('Please confirm exiting without saving this Access Point.')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /save/i }));
-    fireEvent.click(getAllByRole('button', { name: /back/i })[0]);
+    fireEvent.click(getAllByRole('button', { name: /back/i })[1]);
 
     expect(window.location.pathname).toEqual('/network/access-points');
   });
@@ -306,6 +348,18 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getAllByRole('button', { name: /back/i })[1]);
 
+    expect(window.location.pathname).toEqual('/network/access-points');
+  });
+
+  it('URL changes to /network/access-points on clicking the back button', () => {
+    const history = createMemoryHistory();
+    const { getByRole } = render(
+      <Router history={history}>
+        <AccessPointDetails {...defaultProps} />
+      </Router>
+    );
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
     expect(window.location.pathname).toEqual('/network/access-points');
   });
 });

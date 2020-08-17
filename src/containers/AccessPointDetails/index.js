@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
@@ -26,14 +26,17 @@ const AccessPointDetails = ({
   onUpdateEquipment,
   onUpdateEquipmentFirmware,
 }) => {
-  const [tab, setTab] = useState('general');
-  const [isGeneralFormDirty, setIsGeneralFormDirty] = useState(false);
-  const [isLocationFormDirty, setIsLocationFormDirty] = useState(false);
-  const [isFirmwareFormDirty, setIsFirmwareFormDirty] = useState(false);
+  const { id, tab } = useParams();
+  const history = useHistory();
+  const location = useLocation();
+
+  const [isFormDirty, setIsFormDirty] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState(false);
 
-  const history = useHistory();
+  const [confirmTabModal, setConfirmTabModal] = useState(false);
+
+  const [redirectURL, setRedirectURL] = useState();
 
   const tabList = [
     {
@@ -58,50 +61,51 @@ const AccessPointDetails = ({
     },
   ];
 
-  const handleGeneralFormChange = () => {
-    if (!isGeneralFormDirty) {
-      setIsGeneralFormDirty(true);
+  const handleFormChange = () => {
+    if (!isFormDirty) {
+      setIsFormDirty(true);
     }
   };
 
-  const handleLocationFormChange = () => {
-    if (!isLocationFormDirty) {
-      setIsLocationFormDirty(true);
-    }
-  };
-
-  const handleFirmwareFormChange = () => {
-    if (!isFirmwareFormDirty) {
-      setIsFirmwareFormDirty(true);
-    }
-  };
-
-  const handleGeneralFormSave = () => {
-    setIsGeneralFormDirty(false);
-  };
-
-  const handleLocationFormSave = () => {
-    setIsLocationFormDirty(false);
-  };
-
-  const handleFirmwareFormSave = () => {
-    setIsFirmwareFormDirty(false);
+  const handleFormSave = () => {
+    setIsFormDirty(false);
   };
 
   const handleOnBack = () => {
-    if (isGeneralFormDirty || isLocationFormDirty || isFirmwareFormDirty) {
+    if (isFormDirty) {
       setConfirmModal(true);
     } else {
       history.push(`/network/access-points`);
     }
   };
 
-  const breadCrumbs = getLocationPath(data.locationId, locations).map(location => (
-    <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
+  const handleTabChange = key => {
+    if (isFormDirty) {
+      setConfirmTabModal(true);
+      setRedirectURL(`/network/access-points/${id}/${key}`);
+    } else {
+      history.push(`/network/access-points/${id}/${key}`);
+    }
+  };
+
+  const breadCrumbs = getLocationPath(data.locationId, locations).map(item => (
+    <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
   ));
 
   return (
     <div className={styles.AccessPointDetails}>
+      <Modal
+        onCancel={() => setConfirmTabModal(false)}
+        onSuccess={() => {
+          history.push(redirectURL);
+          setConfirmTabModal(false);
+          setIsFormDirty(false);
+        }}
+        visible={confirmTabModal}
+        buttonText="Change"
+        title="Leave Page?"
+        content={<p>Please confirm changing page without saving the current form. </p>}
+      />
       <Modal
         onCancel={() => setConfirmModal(false)}
         onSuccess={() => history.push(`/network/access-points`)}
@@ -145,39 +149,40 @@ const AccessPointDetails = ({
           </div>
         }
         tabList={tabList}
-        onTabChange={key => {
-          setTab(key);
-        }}
+        onTabChange={handleTabChange}
+        activeTabKey={tab}
         bodyStyle={{ marginBottom: '-48px' }}
       />
 
-      {tab === 'general' && (
+      {location.pathname === `/network/access-points/${id}/general` && (
         <General
           data={data}
           onUpdateEquipment={onUpdateEquipment}
           profiles={profiles}
-          handleOnFormChange={handleGeneralFormChange}
-          handleOnFormSave={handleGeneralFormSave}
+          handleOnFormChange={handleFormChange}
+          handleOnFormSave={handleFormSave}
         />
       )}
-      {tab === 'status' && <Status data={data} />}
-      {tab === 'location' && (
+      {location.pathname === `/network/access-points/${id}/status` && <Status data={data} />}
+      {location.pathname === `/network/access-points/${id}/location` && (
         <Location
           data={data}
           locations={locations}
           onUpdateEquipment={onUpdateEquipment}
-          handleOnFormChange={handleLocationFormChange}
-          handleOnFormSave={handleLocationFormSave}
+          handleOnFormChange={handleFormChange}
+          handleOnFormSave={handleFormSave}
         />
       )}
-      {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
-      {tab === 'firmware' && (
+      {location.pathname === `/network/access-points/${id}/os` && (
+        <OS data={data} osData={osData} handleRefresh={handleRefresh} />
+      )}
+      {location.pathname === `/network/access-points/${id}/firmware` && (
         <Firmware
           firmware={firmware}
           data={data}
           onUpdateEquipmentFirmware={onUpdateEquipmentFirmware}
-          handleOnFormChange={handleFirmwareFormChange}
-          handleOnFormSave={handleFirmwareFormSave}
+          handleOnFormChange={handleFormChange}
+          handleOnFormSave={handleFormSave}
         />
       )}
     </div>
