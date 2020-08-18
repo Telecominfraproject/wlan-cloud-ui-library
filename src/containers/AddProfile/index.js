@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Form, Input, Card, Select } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 
@@ -9,65 +9,89 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 
-import { formatSsidProfileForm, formatApProfileForm } from 'utils/profiles';
+import {
+  formatSsidProfileForm,
+  formatApProfileForm,
+  formatBonjourGatewayForm,
+} from 'utils/profiles';
 
 import styles from './index.module.scss';
 
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
+import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
+
+const { Item } = Form;
+const { Option } = Select;
 
 const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
+  const [form] = Form.useForm();
+  const history = useHistory();
+
+  const [profileType, setType] = useState('');
+  const [name, setName] = useState('');
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 12 },
   };
 
-  const [form] = Form.useForm();
-  const { Item } = Form;
-  const { Option } = Select;
+  const handleOnFormChange = () => {
+    if (!isFormDirty) {
+      setIsFormDirty(true);
+    }
+  };
 
-  const [profileType, setType] = useState('');
-  const [name, setName] = useState('');
-  const [confirmModal, setConfirmModal] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const handleOnBack = () => {
+    if (isFormDirty) {
+      setConfirmModal(true);
+    } else {
+      history.push(`/profiles`);
+    }
+  };
 
   const handleOnSave = () => {
-    form.validateFields().then(values => {
-      let formattedData = { ...values };
+    form
+      .validateFields()
+      .then(values => {
+        let formattedData = { ...values };
 
-      if (profileType === 'ssid') {
-        formattedData.model_type = 'SsidConfiguration';
-        formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
-      }
+        if (profileType === 'ssid') {
+          formattedData.model_type = 'SsidConfiguration';
+          formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
+        }
 
-      if (profileType === 'equipment_ap') {
-        formattedData.model_type = 'ApNetworkConfiguration';
-        formattedData = Object.assign(formattedData, formatApProfileForm(values));
-      }
+        if (profileType === 'equipment_ap') {
+          formattedData.model_type = 'ApNetworkConfiguration';
+          formattedData = Object.assign(formattedData, formatApProfileForm(values));
+        }
 
-      onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
-    });
+        if (profileType === 'bonjour') {
+          formattedData.model_type = 'BonjourGatewayProfile';
+          formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
+
+        onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
+        setIsFormDirty(false);
+      })
+      .catch(() => {});
   };
 
   return (
     <Container>
       <div className={styles.AddProfile}>
-        {redirect && <Redirect to="/profiles" />}
-
         <Modal
           onCancel={() => setConfirmModal(false)}
-          onSuccess={() => setRedirect(true)}
+          onSuccess={() => history.push(`/profiles`)}
           visible={confirmModal}
           buttonText="Back"
           title="Leave Form?"
           content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
         />
         <Header>
-          <Button
-            className={styles.backButton}
-            icon={<LeftOutlined />}
-            onClick={() => setConfirmModal(true)}
-          >
+          <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
             BACK
           </Button>
           <div>
@@ -77,7 +101,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           </div>
         </Header>
 
-        <Form {...layout} form={form}>
+        <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
           <Card title="Profile Settings">
             <Item
               label="Type"
@@ -96,6 +120,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
+                <Option value="bonjour">Bonjour Gateway</Option>
               </Select>
             </Item>
             <Item
@@ -111,6 +136,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           {profileType === 'equipment_ap' && (
             <AccessPointForm form={form} ssidProfiles={ssidProfiles} />
           )}
+          {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
         </Form>
       </div>
     </Container>

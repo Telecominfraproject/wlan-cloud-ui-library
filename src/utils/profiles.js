@@ -62,6 +62,16 @@ export const formatApProfileForm = values => {
   return formattedData;
 };
 
+export const formatBonjourGatewayForm = values => {
+  const formattedData = { ...values };
+
+  values.bonjourServices.forEach((i, index) => {
+    formattedData.bonjourServices[index].supportAllServices = isBool(i.supportAllServices);
+  });
+
+  return formattedData;
+};
+
 export const formatRadiusForm = values => {
   const formattedData = { ...values, serviceRegionMap: {} };
 

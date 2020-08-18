@@ -171,7 +171,7 @@ describe('<AssignmentModal />', () => {
     const { getByText } = render(<AssignmentModal {...mockProps} filteredModels={[]} />);
 
     await waitFor(() => {
-      expect(getByText('All Model Ids Are in Use')).toBeInTheDocument();
+      expect(getByText('All Model IDs are in use.')).toBeVisible();
     });
   });
   it('Loading spinner should be visible if firmwareVersionLoading is true for Add Model Target Version', async () => {
