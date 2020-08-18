@@ -29,28 +29,24 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
     {
       title: 'NAME',
       dataIndex: 'name',
-      key: 'name',
       width: 250,
       render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.name}</Link>,
     },
     {
       title: 'TYPE',
       dataIndex: 'profileType',
-      key: 'type',
       width: 250,
       render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.profileType}</Link>,
     },
     {
       title: 'ACCESS POINTS',
-      dataIndex: '__typename',
-      key: 'access',
+      dataIndex: 'equipmentCount',
       width: 700,
-      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.__typename}</Link>,
+      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.equipmentCount}</Link>,
     },
     {
       title: '',
       dataIndex: 'delete',
-      key: 'delete',
       width: 80,
       render: (_, record) => {
         return record.profileType === 'ssid' || record.profileType === 'equipment_ap' ? (
