@@ -75,7 +75,8 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
             validator(_rule, value) {
               if (
                 !value ||
-                getFieldValue('subnetCidrPrefix') <= 32 ||
+                (getFieldValue('subnetCidrPrefix') >= 1 &&
+                  getFieldValue('subnetCidrPrefix') <= 32) ||
                 ipPattern.test(getFieldValue('subnetCidrPrefix'))
               ) {
                 return Promise.resolve();
