@@ -440,13 +440,17 @@ describe('<RadiusForm />', () => {
         </Form>
       );
     };
-    const { getByRole } = render(<RadiusFormComp />);
+    const { getByRole, queryByText } = render(<RadiusFormComp />);
 
     const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
+    expect(queryByText('mockSubnet')).toBeVisible();
+
     expect(listitem).toBeInTheDocument();
     fireEvent.click(within(listitem).getByRole('button', { name: /deleteRadiusServiceZone/i }));
 
-    expect(listitem).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText('mockSubnet')).not.toBeInTheDocument();
+    });
   });
 
   it('Add Subnet Configuration modal should hide when cancel button clicked', async () => {
