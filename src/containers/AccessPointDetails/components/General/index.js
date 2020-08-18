@@ -40,19 +40,13 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
     wrapperCol: { span: 14 },
   };
 
-  const [profileId, setProfileId] = useState(data.profileId);
-  const [index, setIndex] = useState(
-    Object.values(profiles).findIndex(o => {
-      return o.id === data.profileId;
-    })
-  );
+  const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
   const handleProfileChange = value => {
-    setProfileId(value);
-    const i = Object.values(profiles).findIndex(o => {
+    const i = profiles.find(o => {
       return o.id === value;
     });
-    setIndex(i);
+    setSelectedProfile(i);
   };
 
   const {
@@ -134,7 +128,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
           equipmentType,
           inventoryId,
           customerId,
-          profileId,
+          selectedProfile?.id,
           locationId,
           values.access,
           latitude,
@@ -282,9 +276,9 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
             onChange={handleProfileChange}
             placeholder="Select access point profile..."
           >
-            {Object.keys(profiles).map(i => (
-              <Option key={profiles[i].id} value={profiles[i].id}>
-                {profiles[i].name}
+            {profiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
               </Option>
             ))}
           </Select>
@@ -295,7 +289,7 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
             <Table
               rowKey="id"
               scroll={{ x: true }}
-              dataSource={profiles[index].childProfiles}
+              dataSource={selectedProfile?.childProfiles}
               columns={columns}
               pagination={false}
             />
@@ -474,13 +468,13 @@ const General = ({ data, profiles, onUpdateEquipment }) => {
 
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
-  profiles: PropTypes.instanceOf(Object),
+  profiles: PropTypes.instanceOf(Array),
   onUpdateEquipment: PropTypes.func.isRequired,
 };
 
 General.defaultProps = {
   data: {},
-  profiles: {},
+  profiles: [],
 };
 
 export default General;
