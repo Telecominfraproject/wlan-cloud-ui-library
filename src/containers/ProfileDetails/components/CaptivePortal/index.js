@@ -1,23 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Input,
-  Radio,
-  Select,
-  Upload,
-  Alert,
-  Collapse,
-  message,
-  List,
-  Table,
-} from 'antd';
-import { QuestionCircleFilled, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, List } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
-import Modal from 'components/Modal';
 import Tooltip from 'components/Tooltip';
-import FormModal from './components/FormModal';
+import Users from './components/Users';
 
 import styles from '../index.module.scss';
 
@@ -70,58 +57,6 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
 
   const [userList, setUserList] = useState(details.userList || []);
 
-  const [addUserModal, setAddUserModal] = useState(false);
-  const [editUserModal, setEditUserModal] = useState(false);
-  const [deleteUserModal, setDeleteUserModal] = useState(false);
-  const [activeUser, setActiveUser] = useState({});
-
-  const columns = [
-    {
-      title: 'Username',
-      dataIndex: 'username',
-      width: 250,
-    },
-    {
-      title: 'First Name',
-      dataIndex: ['userDetails', 'firstName'],
-      width: 150,
-    },
-    {
-      title: 'Last Name',
-      dataIndex: ['userDetails', 'lastName'],
-    },
-    {
-      width: 64,
-      render: (_, record) => (
-        <Button
-          className={styles.InfoButton}
-          title={`edit-${record.username}`}
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setEditUserModal(true);
-            setActiveUser({ ...record });
-          }}
-        />
-      ),
-    },
-
-    {
-      width: 64,
-      render: (_, record) => (
-        <Button
-          className={styles.InfoButton}
-          title={`delete-${record.username}`}
-          type="danger"
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            setDeleteUserModal(true);
-            setActiveUser({ ...record });
-          }}
-        />
-      ),
-    },
-  ];
   const disableExternalSplashChange = () => {
     form.setFieldsValue({
       authenticationType: 'guest',
@@ -319,39 +254,16 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
 
   const handleDeleteWhitelist = item => setWhitelist(whitelist.filter(i => i !== item));
 
-  const handleAddUser = ({ username, password, firstName, lastName }) => {
-    const newUser = {
-      username,
-      password,
-      userDetails: {
-        firstName,
-        lastName,
-      },
-    };
+  const handleAddUser = newUser => {
     setUserList([...userList, newUser]);
-    setAddUserModal(false);
   };
-  const handleUpdateUser = ({ username, password, firstName, lastName }) => {
-    const newUser = {
-      username,
-      password,
-      userDetails: {
-        firstName,
-        lastName,
-      },
-    };
-    setUserList(userList.map(user => (user.username === activeUser.username ? newUser : user)));
-    setEditUserModal(false);
+  const handleUpdateUser = (activeUser, newUser) => {
+    setUserList(userList.map(user => (user.username === activeUser ? newUser : user)));
   };
 
-  const handleDeleteUser = () => {
-    setUserList(userList.filter(user => user.username !== activeUser.username));
-    setDeleteUserModal(false);
+  const handleDeleteUser = activeUser => {
+    setUserList(userList.filter(user => user.username !== activeUser));
   };
-
-  const usedUserNames = useMemo(() => {
-    return userList.map(i => i.username);
-  }, [userList]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -467,42 +379,12 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
 
       {authentication === 'username' && (
         <>
-          <Modal
-            onCancel={() => setDeleteUserModal(false)}
-            onSuccess={handleDeleteUser}
-            visible={deleteUserModal}
-            title="Are you sure?"
-            buttonText="Delete"
-            buttonType="danger"
-            content={
-              <p>
-                Are you sure you want to delete the user: <strong>{activeUser.username}</strong>
-              </p>
-            }
+          <Users
+            userList={userList}
+            handleAddUser={handleAddUser}
+            handleUpdateUser={handleUpdateUser}
+            handleDeleteUser={handleDeleteUser}
           />
-          <FormModal
-            onCancel={() => setEditUserModal(false)}
-            visible={editUserModal}
-            onSubmit={handleUpdateUser}
-            title="Edit User"
-            username={activeUser.username}
-            firstName={activeUser?.userDetails?.firstName}
-            lastName={activeUser?.userDetails?.lastName}
-            usedUserNames={usedUserNames}
-          />
-          <FormModal
-            onCancel={() => setAddUserModal(false)}
-            visible={addUserModal}
-            onSubmit={handleAddUser}
-            title="Add User"
-            usedUserNames={usedUserNames}
-          />
-          <Card
-            title="User List"
-            extra={<Button onClick={() => setAddUserModal(true)}> Add User</Button>}
-          >
-            <Table rowKey="username" columns={columns} dataSource={userList} pagination={false} />
-          </Card>
           <Item name="userList" noStyle hidden />
         </>
       )}
