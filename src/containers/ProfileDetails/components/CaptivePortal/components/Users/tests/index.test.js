@@ -150,13 +150,11 @@ describe('<Users />', () => {
       <Users {...mockProps} handleUpdateUser={submitSpy} />
     );
 
-    fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[0].username}` }));
+    fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[1].username}` }));
     const paragraph = getByText('Edit User');
     expect(paragraph).toBeVisible();
 
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
-    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
-    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
 
     fireEvent.click(getByRole('button', { name: `Save` }));
     await waitFor(() => {
@@ -195,19 +193,13 @@ describe('<Users />', () => {
   });
 
   it('handleUpdateUser default props', async () => {
-    const submitSpy = jest.fn();
+    const { getByRole, getByText, getByLabelText } = render(<Users {...mockProps} />);
 
-    const { getByRole, getByText, getByLabelText } = render(
-      <Users {...mockProps} handleUpdateUser={submitSpy} />
-    );
-
-    fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[0].username}` }));
+    fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[1].username}` }));
     const paragraph = getByText('Edit User');
     expect(paragraph).toBeVisible();
 
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
-    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
-    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
 
     fireEvent.click(getByRole('button', { name: `Save` }));
   });
