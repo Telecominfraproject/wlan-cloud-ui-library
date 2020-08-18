@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
@@ -28,6 +28,7 @@ const AccessPointDetails = ({
 }) => {
   const { id, tab } = useParams();
   const history = useHistory();
+  const location = useLocation();
 
   const [isFormDirty, setIsFormDirty] = useState(false);
 
@@ -96,8 +97,8 @@ const AccessPointDetails = ({
       <Modal
         onCancel={() => setConfirmTabModal(false)}
         onSuccess={() => {
-          setConfirmTabModal(false);
           history.push(redirectURL);
+          setConfirmTabModal(false);
           setIsFormDirty(false);
         }}
         visible={confirmTabModal}
@@ -153,7 +154,7 @@ const AccessPointDetails = ({
         bodyStyle={{ marginBottom: '-48px' }}
       />
 
-      {tab === 'general' && (
+      {location.pathname === `/network/access-points/${id}/general` && (
         <General
           data={data}
           onUpdateEquipment={onUpdateEquipment}
@@ -162,8 +163,8 @@ const AccessPointDetails = ({
           handleOnFormSave={handleFormSave}
         />
       )}
-      {tab === 'status' && <Status data={data} />}
-      {tab === 'location' && (
+      {location.pathname === `/network/access-points/${id}/status` && <Status data={data} />}
+      {location.pathname === `/network/access-points/${id}/location` && (
         <Location
           data={data}
           locations={locations}
@@ -172,8 +173,10 @@ const AccessPointDetails = ({
           handleOnFormSave={handleFormSave}
         />
       )}
-      {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
-      {tab === 'firmware' && (
+      {location.pathname === `/network/access-points/${id}/os` && (
+        <OS data={data} osData={osData} handleRefresh={handleRefresh} />
+      )}
+      {location.pathname === `/network/access-points/${id}/firmware` && (
         <Firmware
           firmware={firmware}
           data={data}
