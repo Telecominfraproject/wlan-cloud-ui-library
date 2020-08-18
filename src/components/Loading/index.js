@@ -3,6 +3,8 @@ import { Spin } from 'antd';
 
 import styles from './index.module.scss';
 
-const Loading = () => <Spin size="large" className={styles.spinner} />;
+const Loading = ({ ...restProps }) => (
+  <Spin size="large" className={styles.spinner} {...restProps} />
+);
 
 export default Loading;
