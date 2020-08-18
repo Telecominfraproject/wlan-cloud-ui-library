@@ -168,10 +168,10 @@ describe('<AssignmentModal />', () => {
   });
 
   it('All Model Ids Are in Use should be visible if filteredModels are empty is true for Add Model Target Version', async () => {
-    const { getByText } = render(<AssignmentModal {...mockProps} filteredModels={[]} />);
+    const { getByRole } = render(<AssignmentModal {...mockProps} filteredModels={[]} />);
 
     await waitFor(() => {
-      expect(getByText('All Model Ids Are in Use')).toBeInTheDocument();
+      expect(getByRole('alert')).toBeVisible();
     });
   });
   it('Loading spinner should be visible if firmwareVersionLoading is true for Add Model Target Version', async () => {
