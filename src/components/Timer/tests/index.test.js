@@ -34,4 +34,10 @@ describe('<Timer />', () => {
     expect(refreshSpy).toBeCalled();
     expect(refreshSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('timer with handleRefresh null', async () => {
+    render(<Timer handleRefresh={null} />);
+
+    jest.advanceTimersByTime(1000);
+  });
 });

@@ -31,10 +31,10 @@ describe('<Firmware />', () => {
     const paragraph = getByText('Upgrade');
     expect(paragraph).toBeVisible();
   });
-  it('firmware  should Render With Data and upgradeState is up_to_date', async () => {
+  it('firmware  should Render with Data and upgradeState is out_of_date', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'out_of_date' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'out_of_date' } },
       },
     };
     const { getByText } = render(<Firmware data={data} firmware={firmware} />);
@@ -45,7 +45,7 @@ describe('<Firmware />', () => {
   it('firmware  should Render with Data and upgradeState is up_to_date', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'up_to_date' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'up_to_date' } },
       },
     };
     const { getByText } = render(<Firmware data={data} firmware={firmware} />);
@@ -56,7 +56,7 @@ describe('<Firmware />', () => {
   it('firmware tab should show the change the target version on user input', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'applying' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'applying' } },
       },
     };
     const { getByText, getByRole } = render(<Firmware data={data} firmware={firmware} />);
@@ -74,7 +74,7 @@ describe('<Firmware />', () => {
   it('reboot button should show the reboot model', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'apply_complete' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'apply_complete' } },
       },
     };
     const { getByText, getByRole } = render(<Firmware data={data} firmware={firmware} />);
@@ -96,7 +96,7 @@ describe('<Firmware />', () => {
   it('cancel button should hide the reboot model', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'apply_initiated' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'apply_initiated' } },
       },
     };
     const { getByText, getByRole } = render(<Firmware data={data} firmware={firmware} />);
@@ -124,7 +124,7 @@ describe('<Firmware />', () => {
     const submitSpy = jest.fn();
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'download_complete' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'download_complete' } },
       },
     };
     const { getByText, getByRole } = render(
@@ -153,7 +153,7 @@ describe('<Firmware />', () => {
   it('reboot button should show the reboot model with default function ', async () => {
     const data = {
       status: {
-        firmware: { id: 1, upgradeState: 'download_initiated' },
+        firmware: { detailsJSON: { id: 1, upgradeState: 'download_initiated' } },
       },
     };
     const { getByText, getByRole } = render(<Firmware data={data} firmware={firmware} />);
