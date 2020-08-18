@@ -133,6 +133,10 @@ const DOWN_ARROW = { keyCode: 40 };
 
 describe('<CaptivePortalForm />', () => {
   afterEach(cleanup);
+
+  beforeAll(done => {
+    done();
+  });
   global.URL.createObjectURL = jest.fn();
 
   it('should work when authenticationType is null ', async () => {
