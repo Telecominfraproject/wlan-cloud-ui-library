@@ -1295,11 +1295,7 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByRole('button', { name: `Save` }));
 
     await waitFor(() => {
-      expect(
-        getByRole('button', {
-          name: `edit-${testUsername}`,
-        })
-      ).toBeInTheDocument();
+      expect(getByText(testUsername)).toBeInTheDocument();
     });
   });
 
@@ -1334,11 +1330,7 @@ describe('<CaptivePortalForm />', () => {
 
     fireEvent.click(getByRole('button', { name: `Save` }));
     await waitFor(() => {
-      expect(
-        getByRole('button', {
-          name: `edit-${testUsername}`,
-        })
-      ).toBeInTheDocument();
+      expect(getByText(testUsername)).toBeInTheDocument();
     });
   });
 
