@@ -13,6 +13,7 @@ const FormModal = ({
   visible,
   title,
   username,
+  password,
   firstName,
   lastName,
   usedUserNames,
@@ -21,7 +22,7 @@ const FormModal = ({
 
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ username, firstName, lastName });
+    form.setFieldsValue({ username, password, firstName, lastName });
   }, [visible]);
 
   const filteredUserNames = useMemo(() => {
@@ -108,6 +109,7 @@ FormModal.propTypes = {
   onSubmit: PropTypes.func,
   title: PropTypes.string,
   username: PropTypes.string,
+  password: PropTypes.string,
   firstName: PropTypes.string,
   lastName: PropTypes.string,
   usedUserNames: PropTypes.instanceOf(Array),
@@ -119,6 +121,7 @@ FormModal.defaultProps = {
   onSubmit: () => {},
   title: '',
   username: '',
+  password: '',
   firstName: '',
   lastName: '',
   usedUserNames: [],

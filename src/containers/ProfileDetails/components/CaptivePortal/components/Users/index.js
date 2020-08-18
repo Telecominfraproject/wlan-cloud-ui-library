@@ -118,6 +118,7 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
         onSubmit={updateUser}
         title="Edit User"
         username={activeUser.username}
+        password={activeUser.password}
         firstName={activeUser?.userDetails?.firstName}
         lastName={activeUser?.userDetails?.lastName}
         usedUserNames={usedUserNames}

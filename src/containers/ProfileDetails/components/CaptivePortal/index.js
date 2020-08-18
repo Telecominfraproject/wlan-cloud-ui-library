@@ -283,6 +283,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
       backgroundPosition: details.backgroundPosition || 'left_top',
       radiusAuthMethod: details.radiusAuthMethod,
       radiusServiceName: details.radiusServiceName,
+      userList: details.userList,
     });
   }, [form, details]);
 
@@ -385,7 +386,9 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             handleUpdateUser={handleUpdateUser}
             handleDeleteUser={handleDeleteUser}
           />
-          <Item name="userList" noStyle hidden />
+          <Item name="userList" hidden>
+            <Input />
+          </Item>
         </>
       )}
       {authentication === 'radius' && (
