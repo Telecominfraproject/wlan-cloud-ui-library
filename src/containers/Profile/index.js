@@ -80,7 +80,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           buttonType="danger"
           content={
             <p>
-              Are you sure you want to delete the account: <strong> {activeProfile.name}</strong>
+              Are you sure you want to delete the profile: <strong> {activeProfile.name}</strong>
             </p>
           }
         />
