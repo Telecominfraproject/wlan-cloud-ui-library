@@ -24,23 +24,21 @@ const PopoverMenuContent = ({
       <Button
         onClick={() => {
           hide();
-          setApModal(true);
+          setAddModal(true);
         }}
       >
-        Add Access Point
+        Add Location
       </Button>
-      {locationType !== 'FLOOR' && (
-        <Button
-          onClick={() => {
-            hide();
-            setAddModal(true);
-          }}
-        >
-          Add Location
-        </Button>
-      )}
       {locationType !== 'NETWORK' && (
         <>
+          <Button
+            onClick={() => {
+              hide();
+              setApModal(true);
+            }}
+          >
+            Add Access Point
+          </Button>
           <Button
             onClick={() => {
               hide();

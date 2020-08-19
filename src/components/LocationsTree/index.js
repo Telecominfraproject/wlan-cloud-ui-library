@@ -63,12 +63,13 @@ const LocationsTree = ({
 
   const addLocation = ({ location }) => {
     const { id, locationType } = selectedLocation;
-    if (locationType === 'COUNTRY') {
+    console.log(locationType);
+    if (locationType === 'NETWORK') {
+      onAddLocation(location, id, 'COUNTRY');
+    } else if (locationType === 'COUNTRY') {
       onAddLocation(location, id, 'SITE');
     } else if (locationType === 'SITE') {
-      onAddLocation(location, id, 'BUILDING');
-    } else if (locationType === 'BUILDING') {
-      onAddLocation(location, id, 'FLOOR');
+      onAddLocation(location, id, 'SITE');
     }
   };
 
