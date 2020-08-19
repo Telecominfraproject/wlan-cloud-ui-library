@@ -7,7 +7,7 @@ import styles from '../../index.module.scss';
 const { Option } = Select;
 const { Item } = Form;
 
-const Location = ({ locations, data, onUpdateEquipment, handleOnFormChange, handleOnFormSave }) => {
+const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
@@ -51,7 +51,7 @@ const Location = ({ locations, data, onUpdateEquipment, handleOnFormChange, hand
   const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
 
   const handleOnSave = () => {
-    handleOnFormSave();
+    onFormUpdate('save');
 
     const {
       id,
@@ -121,7 +121,7 @@ const Location = ({ locations, data, onUpdateEquipment, handleOnFormChange, hand
   }, [city, building, floor]);
 
   return (
-    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+    <Form {...layout} form={form} onValuesChange={onFormUpdate}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -195,14 +195,12 @@ Location.propTypes = {
   data: PropTypes.instanceOf(Object),
   locations: PropTypes.instanceOf(Array).isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
-  handleOnFormChange: PropTypes.func,
-  handleOnFormSave: PropTypes.func,
+  onFormUpdate: PropTypes.func,
 };
 
 Location.defaultProps = {
   data: {},
-  handleOnFormChange: () => {},
-  handleOnFormSave: () => {},
+  onFormUpdate: () => {},
 };
 
 export default Location;

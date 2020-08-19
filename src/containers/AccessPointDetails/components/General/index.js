@@ -9,7 +9,7 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, handleOnFormChange, handleOnFormSave }) => {
+const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -65,7 +65,7 @@ const General = ({ data, profiles, onUpdateEquipment, handleOnFormChange, handle
     form
       .validateFields()
       .then(values => {
-        handleOnFormSave();
+        onFormUpdate('save');
 
         const formattedData = { ...data.details };
         Object.keys(formattedData.radioMap).forEach(radio => {
@@ -232,7 +232,7 @@ const General = ({ data, profiles, onUpdateEquipment, handleOnFormChange, handle
   );
 
   return (
-    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+    <Form {...layout} form={form} onValuesChange={onFormUpdate}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -472,15 +472,13 @@ General.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Array),
   onUpdateEquipment: PropTypes.func.isRequired,
-  handleOnFormChange: PropTypes.func,
-  handleOnFormSave: PropTypes.func,
+  onFormUpdate: PropTypes.func,
 };
 
 General.defaultProps = {
   data: {},
   profiles: [],
-  handleOnFormChange: () => {},
-  handleOnFormSave: () => {},
+  onFormUpdate: () => {},
 };
 
 export default General;

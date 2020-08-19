@@ -9,7 +9,6 @@ import styles from './index.module.scss';
 const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
-
   return (
     <>
       <Table
@@ -22,11 +21,7 @@ const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
         onRow={record => {
           return {
             onClick: () => {
-              history.push(
-                url === '/network/client-devices'
-                  ? `${url}/${record.id}`
-                  : `${url}/${record.id}/general`
-              );
+              history.push(`${url}/${record.id}`);
             },
           };
         }}

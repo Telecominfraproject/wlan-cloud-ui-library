@@ -13,13 +13,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Item } = Form;
 
-const Firmware = ({
-  firmware,
-  data,
-  onUpdateEquipmentFirmware,
-  handleOnFormChange,
-  handleOnFormSave,
-}) => {
+const Firmware = ({ firmware, data, onUpdateEquipmentFirmware, onFormUpdate }) => {
   const [form] = Form.useForm();
 
   const [version, setVersion] = useState(null);
@@ -41,7 +35,7 @@ const Firmware = ({
   const handleUpdateFirmware = () => {
     onUpdateEquipmentFirmware(data.id, version.id);
     setRebootModal(false);
-    handleOnFormSave();
+    onFormUpdate('save');
   };
 
   const alertText = (value = '') => {
@@ -71,7 +65,7 @@ const Firmware = ({
         title="Confirm"
         content={<p>Confirm downloading, flashing, rebooting? </p>}
       />
-      <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+      <Form {...layout} form={form} onValuesChange={onFormUpdate}>
         <Card title="Firmware">
           <Item label="Active Version">
             {status.activeSwVersion}
@@ -137,15 +131,13 @@ Firmware.propTypes = {
   data: PropTypes.instanceOf(Object),
   firmware: PropTypes.instanceOf(Object),
   onUpdateEquipmentFirmware: PropTypes.func,
-  handleOnFormChange: PropTypes.func,
-  handleOnFormSave: PropTypes.func,
+  onFormUpdate: PropTypes.func,
 };
 
 Firmware.defaultProps = {
   data: {},
   firmware: {},
   onUpdateEquipmentFirmware: () => {},
-  handleOnFormChange: () => {},
-  handleOnFormSave: () => {},
+  onFormUpdate: () => {},
 };
 export default Firmware;
