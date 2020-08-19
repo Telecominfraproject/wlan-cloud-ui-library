@@ -74,7 +74,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(screen.getByTitle('delete'));
 
-    const paragraph = getByText('Are you sure you want to delete the account:');
+    const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
   });
 
@@ -87,7 +87,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(screen.getByTitle('delete'));
 
-    const paragraph = getByText('Are you sure you want to delete the account:');
+    const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
