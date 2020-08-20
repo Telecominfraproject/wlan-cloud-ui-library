@@ -9,16 +9,12 @@
     margin-left: 10px;
   }
 
-  a {
-    color: #fff;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   .LoadMore {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+  }
+  .Row {
+    cursor: pointer;
   }
 }
