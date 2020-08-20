@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
@@ -45,10 +45,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   const locationPath = getLocationPath();
-
-  const [city, setCity] = useState(locationPath[0]);
-  const [building, setBuilding] = useState(locationPath.length > 1 ? locationPath[1] : null);
-  const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
+  const [locationData, setLocationData]= useState(locationPath);
 
   const handleOnSave = () => {
     const {
@@ -68,14 +65,8 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
 
     form
       .validateFields()
-      .then(newValues => {
-        if (newValues?.floor) {
-          locationId = newValues.floor;
-        } else if (newValues?.building) {
-          locationId = newValues.building;
-        } else if (newValues?.city) {
-          locationId = newValues.city;
-        }
+      .then(() => {
+        locationId = locationData.slice(-1)[0].id;
 
         onUpdateEquipment(
           id,
@@ -93,30 +84,24 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
         );
       })
       .catch(() => {});
-  };
+  }; 
+  
+  const handleOnChangeSite = (value, i, site) => {
+    const newSite = site.children.find(child => child.id === value);
 
-  const handleOnChangeCity = value => {
-    setCity(locations.find(i => i.id === value));
-    setBuilding(null);
-    setFloor(null);
-  };
+    const newLocationData = locationData.splice(0, i + 2);
+    newLocationData[i+1] = newSite;
 
-  const handleOnChangeBuilding = value => {
-    setBuilding(city.children.find(i => i.id === value));
-    setFloor(null);
-  };
-
-  const handleOnChangeFloor = value => {
-    setFloor(building.children.find(i => i.id === value));
+    setLocationData(newLocationData);
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      city: city?.id,
-      building: building?.id,
-      floor: floor?.id,
+    locationData.forEach((site, i) => {
+      form.setFieldsValue({
+        [`site${i}`]: locationData[i+1]?.name,
+      });
     });
-  }, [city, building, floor]);
+  }, [locationData]);
 
   return (
     <Form {...layout} form={form}>
@@ -127,63 +112,31 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
       </div>
 
       <Card title="Location">
-        {locationPath.length > 0 && (
-          <Item
-            label="City"
-            name="city"
-            rules={[
-              {
-                required: true,
-                message: 'Please select your location city.',
-              },
-            ]}
-          >
-            <Select
-              className={styles.Field}
-              placeholder="Select Location City..."
-              onChange={handleOnChangeCity}
-            >
-              {Object.keys(locations).map(i => (
-                <Option key={locations[i].id} value={locations[i].id}>
-                  {locations[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
-
-        {city && city.children && (
-          <Item label="Building" name="building">
-            <Select
-              className={styles.Field}
-              placeholder="Select Location Building..."
-              onChange={handleOnChangeBuilding}
-              allowClear
-            >
-              {Object.keys(city.children).map(i => (
-                <Option key={city.children[i].id} value={city.children[i].id}>
-                  {city.children[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
-        {building && building.children && (
-          <Item label="Floor" name="floor">
-            <Select
-              className={styles.Field}
-              placeholder="Select Location Floor..."
-              onChange={handleOnChangeFloor}
-              allowClear
-            >
-              {Object.keys(building.children).map(i => (
-                <Option key={building.children[i].id} value={building.children[i].id}>
-                  {building.children[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
+        {
+          locationData.map((site, i) => {
+            return site.children &&
+              (<Item
+                key={site.id}
+                label={i === 0 ? 'Country' :`Site ${i}`}
+                name={`site${i}`}
+                rules={[
+                  { required: i === 0 }
+                ]}
+                >
+                <Select
+                  className={styles.Field}
+                  placeholder="Select Site..."
+                  onChange={(value) => handleOnChangeSite(value, i, site)}
+                >
+                  {site.children.map(child => (
+                    <Option key={child.id} value={child.id}>
+                      {child.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Item>);
+          })
+        }
       </Card>
     </Form>
   );
