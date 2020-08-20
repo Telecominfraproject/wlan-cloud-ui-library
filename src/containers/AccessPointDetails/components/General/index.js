@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, Tooltip, notification } from 'antd';
+import { Card, Form, Input, Table, Collapse, Select, Tooltip, notification, Alert } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import Loading from 'components/Loading';
 import Button from 'components/Button';
 import styles from '../../index.module.scss';
 
@@ -9,7 +10,14 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
+const General = ({
+  data,
+  profiles,
+  onUpdateEquipment,
+  onFormUpdate,
+  loadingProfiles,
+  errorProfiles,
+}) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -230,6 +238,22 @@ const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
       />
     </Item>
   );
+
+  if (loadingProfiles) {
+    return <Loading data-testid="loadingProfiles" />;
+  }
+
+  if (errorProfiles) {
+    return (
+      <Alert
+        message="Error"
+        description="Failed to load Access Point profiles."
+        type="error"
+        showIcon
+        data-testid="errorProfiles"
+      />
+    );
+  }
 
   return (
     <Form {...layout} form={form} onValuesChange={onFormUpdate}>
@@ -473,12 +497,16 @@ General.propTypes = {
   profiles: PropTypes.instanceOf(Array),
   onUpdateEquipment: PropTypes.func.isRequired,
   onFormUpdate: PropTypes.func,
+  loadingProfiles: PropTypes.bool,
+  errorProfiles: PropTypes.instanceOf(Object),
 };
 
 General.defaultProps = {
   data: {},
   profiles: [],
   onFormUpdate: () => {},
+  loadingProfiles: true,
+  errorProfiles: null,
 };
 
 export default General;

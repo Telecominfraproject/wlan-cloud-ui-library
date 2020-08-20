@@ -920,4 +920,6 @@ export const defaultProps = {
   profiles,
   locations,
   osData,
+  loadingProfiles: false,
+  loadingFirmware: false,
 };

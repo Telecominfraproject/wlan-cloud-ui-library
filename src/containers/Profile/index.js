@@ -49,7 +49,9 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       dataIndex: 'delete',
       width: 80,
       render: (_, record) => {
-        return record.profileType === 'ssid' || record.profileType === 'equipment_ap' ? (
+        return record.profileType === 'ssid' ||
+          record.profileType === 'equipment_ap' ||
+          record.profileType === 'bonjour' ? (
           <Button
             title="delete"
             icon={<DeleteFilled />}
@@ -80,7 +82,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           buttonType="danger"
           content={
             <p>
-              Are you sure you want to delete the account: <strong> {activeProfile.name}</strong>
+              Are you sure you want to delete the profile: <strong> {activeProfile.name}</strong>
             </p>
           }
         />
@@ -112,7 +114,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
 
 Profile.propTypes = {
   data: PropTypes.instanceOf(Array),
-  onDeleteProfile: PropTypes.func.isRequired,
+  onDeleteProfile: PropTypes.func,
   onReload: PropTypes.func,
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
@@ -122,6 +124,7 @@ Profile.defaultProps = {
   data: [],
   onReload: () => {},
   onLoadMore: () => {},
+  onDeleteProfile: () => {},
   isLastPage: true,
 };
 

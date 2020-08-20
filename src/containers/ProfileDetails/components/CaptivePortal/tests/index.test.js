@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, cleanup, waitFor, waitForElement, within } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
 
@@ -43,14 +43,100 @@ const mockProps = {
     sessionTimeoutInMinutes: 60,
     successPageMarkdownText: 'Welcome to the network',
     userAcceptancePolicy: 'Use this network at your own risk. No warranty of any kind.',
-    userList: [],
+    userList: [
+      {
+        model_type: 'TimedAccessUserRecord',
+        username: 'test',
+        password: 'test',
+        activationTime: null,
+        expirationTime: null,
+        numDevices: 0,
+        userDetails: {
+          model_type: 'TimedAccessUserDetails',
+          firstName: 'test',
+          lastName: 'test',
+          passwordNeedsReset: false,
+        },
+        userMacAddresses: [],
+        lastModifiedTimestamp: 0,
+      },
+      {
+        model_type: 'TimedAccessUserRecord',
+        username: 'test2',
+        password: 'test2',
+        activationTime: null,
+        expirationTime: null,
+        numDevices: 0,
+        userDetails: {
+          model_type: 'TimedAccessUserDetails',
+          firstName: 'test2',
+          lastName: 'test2',
+          passwordNeedsReset: false,
+        },
+        userMacAddresses: [],
+        lastModifiedTimestamp: 0,
+      },
+    ],
     usernamePasswordFile: null,
     walledGardenAllowlist: ['1.1.1.1'],
   },
+  radiusProfiles: [
+    {
+      id: '1',
+      name: 'Radius-Profile',
+      profileType: 'radius',
+      details: {
+        model_type: 'RadiusProfile',
+        subnetConfiguration: {
+          test: {
+            model_type: 'RadiusSubnetConfiguration',
+            subnetAddress: '111.111.111.11',
+            subnetCidrPrefix: 9,
+            subnetName: 'test',
+            proxyConfig: {
+              model_type: 'RadiusProxyConfiguration',
+              floatingIpAddress: '222.222.222.22',
+              floatingIfCidrPrefix: null,
+              floatingIfGwAddress: null,
+              floatingIfVlan: null,
+              sharedSecret: null,
+            },
+            probeInterval: null,
+            serviceRegionName: 'Ottawa',
+          },
+        },
+        serviceRegionMap: {
+          Ottawa: {
+            model_type: 'RadiusServiceRegion',
+            serverMap: {
+              'Radius-Profile': [
+                {
+                  model_type: 'RadiusServer',
+                  ipAddress: '192.168.0.1',
+                  secret: 'testing123',
+                  authPort: 1812,
+                  timeout: null,
+                },
+              ],
+            },
+            regionName: 'Ottawa',
+          },
+        },
+        profileType: 'radius',
+      },
+      __typename: 'Profile',
+    },
+  ],
 };
+
+const DOWN_ARROW = { keyCode: 40 };
 
 describe('<CaptivePortalForm />', () => {
   afterEach(cleanup);
+
+  beforeAll(done => {
+    done();
+  });
   global.URL.createObjectURL = jest.fn();
 
   it('should work when authenticationType is null ', async () => {
@@ -251,7 +337,7 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(container.querySelector('.ant-input-wrapper.ant-input-group > span span')).toHaveClass(
-        'anticon anticon-info-circle ant-tooltip-open'
+        'ant-tooltip-open Tooltip'
       );
     });
   });
@@ -924,6 +1010,361 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(queryByText(/testImg\.png/)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Changing the authentication setting to Captive Portal User List should show the user list card', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    await waitFor(() => {
+      expect(getByText('User List')).toBeInTheDocument();
+    });
+  });
+
+  it('Deleted user should not be shown in user list table after being deleted', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    const button = getByRole('button', {
+      name: `delete-${mockProps.details.userList[0].username}`,
+    });
+
+    fireEvent.click(button);
+
+    fireEvent.click(getByRole('button', { name: `Delete` }));
+
+    await waitFor(() => {
+      expect(button).not.toBeInTheDocument();
+    });
+  });
+
+  it('Changing the authentication setting to Radius should show the Radius card', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
+
+    await waitFor(() => {
+      expect(getByLabelText('Service')).toBeInTheDocument();
+    });
+  });
+
+  it('Radius card should show radius profiles and authentication modes', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getAllByLabelText, getByText, getAllByText } = render(<CaptivePortalFormComp />);
+
+    const authentication = getAllByLabelText('Authentication')[0];
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
+
+    const radiusAuthentication = getAllByLabelText('Authentication')[1];
+    fireEvent.keyDown(radiusAuthentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Password (PAP)'));
+    fireEvent.click(getByText('Password (PAP)'));
+
+    const radiusService = getAllByLabelText('Service')[0];
+    fireEvent.keyDown(radiusService, DOWN_ARROW);
+    await waitForElement(() => getAllByText(mockProps.radiusProfiles[0].name)[0]);
+    fireEvent.click(getAllByText(mockProps.radiusProfiles[0].name)[0]);
+
+    expect(getAllByText('Password (PAP)')[0]).toBeInTheDocument();
+    expect(getAllByText(mockProps.radiusProfiles[0].name)[0]).toBeInTheDocument();
+  });
+
+  it('Add User button press should show Add User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(getByRole('button', { name: /add user/i }));
+
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
+  });
+
+  it('Edit User button press should show Edit User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+    );
+    expect(getByText('Edit User')).toBeVisible();
+  });
+
+  it('Delete User button press should show Delete User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `delete-${mockProps.details.userList[0].username}` })
+    );
+
+    const paragraph = getByText('Are you sure you want to delete the user:');
+    expect(paragraph).toBeVisible();
+    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+  });
+
+  it('Cancel button press should hide Add User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(getByRole('button', { name: /add user/i }));
+
+    const paragraph = getByText('Add User', { selector: 'div' });
+    expect(paragraph).toBeVisible();
+    fireEvent.click(getByRole('button', { name: `Cancel` }));
+    await waitFor(() => {
+      expect(paragraph).not.toBeVisible();
+    });
+  });
+
+  it('Cancel button press should hide Edit User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+    );
+    const paragraph = getByText('Edit User');
+    expect(paragraph).toBeVisible();
+    fireEvent.click(getByRole('button', { name: `Cancel` }));
+    await waitFor(() => {
+      expect(paragraph).not.toBeVisible();
+    });
+  });
+
+  it('Cancel button press should hide Delete User modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `delete-${mockProps.details.userList[0].username}` })
+    );
+
+    const paragraph = getByText('Are you sure you want to delete the user:');
+    expect(paragraph).toBeVisible();
+    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: `Cancel` }));
+    await waitFor(() => {
+      expect(paragraph).not.toBeVisible();
+    });
+  });
+
+  it('Correct form submission on Add User Modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(getByRole('button', { name: /add user/i }));
+
+    const paragraph = getByText('Add User', { selector: 'div' });
+    expect(paragraph).toBeVisible();
+
+    const testUsername = 'username';
+
+    fireEvent.change(getByLabelText('Username'), { target: { value: testUsername } });
+    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
+    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
+    fireEvent.click(getByRole('button', { name: `Save` }));
+
+    await waitFor(() => {
+      expect(getByText(testUsername)).toBeInTheDocument();
+    });
+  });
+
+  it('Correct form submission on Edit User Modal', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    fireEvent.click(
+      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+    );
+    const paragraph = getByText('Edit User');
+    expect(paragraph).toBeVisible();
+
+    const testUsername = 'test-username';
+
+    fireEvent.change(getByLabelText('Username'), { target: { value: testUsername } });
+    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
+    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
+
+    fireEvent.click(getByRole('button', { name: `Save` }));
+    await waitFor(() => {
+      expect(getByText(testUsername)).toBeInTheDocument();
+    });
+  });
+
+  it('Delete button on Delete Modal should delete user', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+
+    const authentication = getByLabelText('Authentication');
+    fireEvent.keyDown(authentication, DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
+
+    const button = getByRole('button', {
+      name: `delete-${mockProps.details.userList[0].username}`,
+    });
+
+    fireEvent.click(button);
+
+    const paragraph = getByText('Are you sure you want to delete the user:');
+    expect(paragraph).toBeVisible();
+    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: 'Delete' }));
+
+    await waitFor(() => {
+      expect(button).not.toBeInTheDocument();
     });
   });
 });

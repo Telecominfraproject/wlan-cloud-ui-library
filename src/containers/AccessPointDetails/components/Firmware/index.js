@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tag, Select } from 'antd';
+import { Card, Form, Input, Tag, Select, Alert } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import Loading from 'components/Loading';
 import Modal from 'components/Modal';
 
 import styles from '../../index.module.scss';
@@ -13,7 +14,14 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Item } = Form;
 
-const Firmware = ({ firmware, data, onUpdateEquipmentFirmware, onFormUpdate }) => {
+const Firmware = ({
+  firmware,
+  data,
+  onUpdateEquipmentFirmware,
+  onFormUpdate,
+  loadingFirmware,
+  errorFirmware,
+}) => {
   const [form] = Form.useForm();
 
   const [version, setVersion] = useState(null);
@@ -56,6 +64,21 @@ const Firmware = ({ firmware, data, onUpdateEquipmentFirmware, onFormUpdate }) =
 
   const status = data?.status?.firmware?.detailsJSON || {};
 
+  if (loadingFirmware) {
+    return <Loading data-testid="loadingFirmware" />;
+  }
+
+  if (errorFirmware) {
+    return (
+      <Alert
+        message="Error"
+        description="Failed to load Access Point firmware."
+        type="error"
+        showIcon
+        data-testid="errorFirmware"
+      />
+    );
+  }
   return (
     <>
       <Modal
@@ -132,6 +155,8 @@ Firmware.propTypes = {
   firmware: PropTypes.instanceOf(Object),
   onUpdateEquipmentFirmware: PropTypes.func,
   onFormUpdate: PropTypes.func,
+  loadingFirmware: PropTypes.bool,
+  errorFirmware: PropTypes.instanceOf(Object),
 };
 
 Firmware.defaultProps = {
@@ -139,5 +164,7 @@ Firmware.defaultProps = {
   firmware: {},
   onUpdateEquipmentFirmware: () => {},
   onFormUpdate: () => {},
+  loadingFirmware: true,
+  errorFirmware: null,
 };
 export default Firmware;

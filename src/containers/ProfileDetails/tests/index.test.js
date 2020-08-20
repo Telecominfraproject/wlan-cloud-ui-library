@@ -310,9 +310,67 @@ describe('<ProfileDetails />', () => {
 
   it('onUpdateProfile should be called when all fields are submitted correctly profileType equipment_ap', async () => {
     const submitSpy = jest.fn();
+
     const { getByRole } = render(
       <Router>
         <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="equipment_ap" />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('onUpdateProfile should be called when all fields are submitted correctly for profileType: bonjour', async () => {
+    const submitSpy = jest.fn();
+
+    const mockData = {
+      profileType: 'bonjour',
+      name: 'bonjour-profile',
+      details: {
+        model_type: 'BonjourGatewayProfile',
+        profileDescription: 'test-description',
+        profileType: 'bonjour',
+        bonjourServices: [
+          {
+            model_type: 'BonjourServiceSet',
+            vlanId: null,
+            supportAllServices: false,
+            serviceNames: ['AirPlay', 'GoogleCast', 'SFTP', 'SAMBA'],
+          },
+          {
+            model_type: 'BonjourServiceSet',
+            vlanId: 17,
+            supportAllServices: false,
+            serviceNames: ['AirPort', 'SFTP'],
+          },
+          {
+            model_type: 'BonjourServiceSet',
+            vlanId: 33,
+            supportAllServices: false,
+            serviceNames: ['AirTunes', 'SFTP', 'AFP'],
+          },
+          {
+            model_type: 'BonjourServiceSet',
+            vlanId: 24,
+            supportAllServices: true,
+            serviceNames: null,
+          },
+          {
+            model_type: 'BonjourServiceSet',
+            vlanId: 26,
+            supportAllServices: true,
+            serviceNames: null,
+          },
+        ],
+      },
+      __typename: 'Profile',
+    };
+    const { getByRole } = render(
+      <Router>
+        <ProfileDetails onUpdateProfile={submitSpy} {...mockData} />
       </Router>
     );
     fireEvent.click(getByRole('button', { name: 'Save' }));
