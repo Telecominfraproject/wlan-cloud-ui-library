@@ -114,6 +114,7 @@ const AccessPointDetails = ({
         buttonText="OK"
         title="Leave Page?"
         content={<p>Please confirm exiting without saving this Access Point page.</p>}
+        mask={false}
       />
 
       <Button icon={<LeftOutlined />} onClick={handleOnBack}>
