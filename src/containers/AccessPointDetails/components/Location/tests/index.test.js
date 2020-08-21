@@ -26,24 +26,24 @@ describe('<Location />', () => {
     cleanup();
   });
 
-  it('handleSubmit should  be called on location tab with floor as new locationID', async () => {
+  it('handleSubmit should  be called on location tab with site 2 as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const city = getByLabelText('City');
-    fireEvent.keyDown(city, DOWN_ARROW);
+    const country = getByLabelText('Country');
+    fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
 
-    const building = getByLabelText('Building');
-    fireEvent.keyDown(building, DOWN_ARROW);
+    const site1 = getByLabelText('Site 1');
+    fireEvent.keyDown(site1, DOWN_ARROW);
     await waitForElement(() => getByText('Building 1'));
     fireEvent.click(getByText('Building 1'));
 
-    const floor = getByLabelText('Floor');
-    fireEvent.keyDown(floor, DOWN_ARROW);
+    const site2 = getByLabelText('Site 2');
+    fireEvent.keyDown(site2, DOWN_ARROW);
     await waitForElement(() => getByText('Floor 2'));
     fireEvent.click(getByText('Floor 2'));
 
@@ -54,21 +54,21 @@ describe('<Location />', () => {
     });
   });
 
-  it('handleSubmit should  be called on location tab with building as new locationID', async () => {
+  it('handleSubmit should  be called on location tab with site 1 as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const city = getByLabelText('City');
-    fireEvent.keyDown(city, DOWN_ARROW);
+    const country = getByLabelText('Country');
+    fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
 
-    const building = getByLabelText('Building');
-    fireEvent.keyDown(building, DOWN_ARROW);
-    await waitForElement(() => getByText('Building 2'));
-    fireEvent.click(getByText('Building 2'));
+    const site1 = getByLabelText('Site 1');
+    fireEvent.keyDown(site1, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 1'));
+    fireEvent.click(getByText('Building 1'));
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -77,21 +77,72 @@ describe('<Location />', () => {
     });
   });
 
-  it('handleSubmit should  be called on location tab with city as new locationID', async () => {
+  it('handleSubmit should  be called on location tab with country as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const city = getByLabelText('City');
-    fireEvent.keyDown(city, DOWN_ARROW);
-    await waitForElement(() => getByText('Ottawa'));
-    fireEvent.click(getByText('Ottawa'));
+    const country = getByLabelText('Country');
+    fireEvent.keyDown(country, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should have no site dropdowns if country has no locations', async () => {
+    const submitSpy = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <Location {...defaultProps} onUpdateEquipment={submitSpy} />
+    );
+
+    const country = getByLabelText('Country');
+    fireEvent.keyDown(country, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
+    const site1 = getByLabelText('Site 1');
+    expect(site1).toBeInTheDocument();
+
+    await waitForElement(() => getByText('Ottawa'));
+    fireEvent.click(getByText('Ottawa'));
+
+    await waitFor(() => {
+      expect(site1).not.toBeInTheDocument();
+    });
+  });
+
+  it('should have no dropdown for next site if site has no locations', async () => {
+    const submitSpy = jest.fn();
+    const { getByLabelText, getByText } = render(
+      <Location {...defaultProps} onUpdateEquipment={submitSpy} />
+    );
+
+    const country = getByLabelText('Country');
+    fireEvent.keyDown(country, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
+
+    const site1 = getByLabelText('Site 1');
+    fireEvent.keyDown(site1, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 1'));
+    fireEvent.click(getByText('Building 1'));
+
+    const site2 = getByLabelText('Site 2');
+    await waitFor(() => {
+      expect(site2).toBeInTheDocument();
+    });
+
+    fireEvent.keyDown(site1, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 2'));
+    fireEvent.click(getByText('Building 2'));
+
+    await waitFor(() => {
+      expect(site2).not.toBeInTheDocument();
     });
   });
 
