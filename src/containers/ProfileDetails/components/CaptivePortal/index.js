@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Input,
-  Radio,
-  Select,
-  Tooltip,
-  Upload,
-  Alert,
-  Collapse,
-  message,
-  List,
-} from 'antd';
-import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
+import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, List } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
+import Users from './components/Users';
+
 import styles from '../index.module.scss';
 
 const { Item } = Form;
@@ -46,8 +37,10 @@ const formatFile = file => {
   };
 };
 
-const CaptivePortalForm = ({ details, form, fileUpload }) => {
+const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
   const [showTips, setShowTips] = useState(false);
+
+  const [authentication, setAuthentication] = useState(details.authenticationType);
 
   const [externalSplash, setExternalSplash] = useState(!!details.externalCaptivePortalURL);
   const [isLoginText, setContentText] = useState(false);
@@ -58,10 +51,11 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
   const [bgFileList, setBgFileList] = useState(
     (details.backgroundFile && [formatFile(details.backgroundFile)]) || []
   );
-
   const [whitelist, setWhitelist] = useState(details.walledGardenAllowlist || []);
   const [whitelistSearch, setWhitelistSearch] = useState();
   const [whitelistValidation, setWhitelistValidation] = useState({});
+
+  const [userList, setUserList] = useState(details.userList || []);
 
   const disableExternalSplashChange = () => {
     form.setFieldsValue({
@@ -260,6 +254,17 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 
   const handleDeleteWhitelist = item => setWhitelist(whitelist.filter(i => i !== item));
 
+  const handleAddUser = newUser => {
+    setUserList([...userList, newUser]);
+  };
+  const handleUpdateUser = (activeUser, newUser) => {
+    setUserList(userList.map(user => (user.username === activeUser ? newUser : user)));
+  };
+
+  const handleDeleteUser = activeUser => {
+    setUserList(userList.filter(user => user.username !== activeUser));
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       authenticationType: details.authenticationType,
@@ -276,6 +281,9 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
       backgroundFile: details.backgroundFile && formatFile(details.backgroundFile),
       backgroundRepeat: details.backgroundRepeat || 'no_repeat',
       backgroundPosition: details.backgroundPosition || 'left_top',
+      radiusAuthMethod: details.radiusAuthMethod,
+      radiusServiceName: details.radiusServiceName,
+      userList: details.userList,
     });
   }, [form, details]);
 
@@ -285,26 +293,35 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
     });
   }, [whitelist]);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      userList,
+    });
+  }, [userList]);
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="General Settings ">
-        <Item label="Authentication">
-          <div className={styles.InlineDiv}>
-            <Item
-              name="authenticationType"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please select an authentication mode',
-                },
-              ]}
-            >
-              <Select className={styles.Field} placeholder="Select authentication mode ">
-                <Option value="guest">None</Option>
-                {externalSplash && <Option value="external">Externally Hosted API</Option>}
-              </Select>
-            </Item>
-          </div>
+        <Item
+          label="Authentication"
+          name="authenticationType"
+          rules={[
+            {
+              required: true,
+              message: 'Please select an authentication mode',
+            },
+          ]}
+        >
+          <Select
+            className={styles.Field}
+            placeholder="Select authentication mode"
+            onChange={setAuthentication}
+          >
+            <Option value="guest">None</Option>
+            <Option value="radius">RADIUS</Option>
+            <Option value="username">Captive Portal User List</Option>
+            {externalSplash && <Option value="external">Externally Hosted API</Option>}
+          </Select>
         </Item>
 
         <Item
@@ -333,11 +350,7 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
             type="number"
             min={1}
             max={1440}
-            addonBefore={
-              <Tooltip title="Timeout range is 1 - 1440 (one day max) ">
-                <InfoCircleOutlined />
-              </Tooltip>
-            }
+            addonBefore={<Tooltip title="Timeout range is 1 - 1440 (one day max) " />}
             addonAfter="Minutes"
           />
         </Item>
@@ -364,6 +377,58 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Radio.Group>
         </Item>
       </Card>
+
+      {authentication === 'username' && (
+        <>
+          <Users
+            userList={userList}
+            handleAddUser={handleAddUser}
+            handleUpdateUser={handleUpdateUser}
+            handleDeleteUser={handleDeleteUser}
+          />
+          <Item name="userList" hidden>
+            <Input />
+          </Item>
+        </>
+      )}
+      {authentication === 'radius' && (
+        <Card title="RADIUS">
+          <Item
+            name="radiusAuthMethod"
+            label="Authentication"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a RADIUS authentication mode',
+              },
+            ]}
+          >
+            <Select className={styles.Field} placeholder="Select RADIUS authentication mode">
+              <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
+              <Option value="PAP">Password (PAP)</Option>
+              <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
+            </Select>
+          </Item>
+          <Item
+            name="radiusServiceName"
+            label="Service"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a RADIUS service',
+              },
+            ]}
+          >
+            <Select className={styles.Field} placeholder="RADIUS Services">
+              {radiusProfiles.map(profile => (
+                <Option key={profile.id} value={profile.name}>
+                  {profile.name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
+        </Card>
+      )}
       {externalSplash && (
         <Card title="External Splash Page">
           <Item
@@ -481,23 +546,15 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           </Item>
         </Panel>
       </Collapse>
-
       <Collapse expandIconPosition="right">
         <Panel header="Splash Page Images" forceRender>
           <Item label="Configure">
             <div className={styles.InlineDiv}>
-              <Tooltip title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB">
-                <div className={styles.InlineDiv}>
-                  Logo
-                  <InfoCircleOutlined style={{ marginLeft: '6px' }} />
-                </div>
-              </Tooltip>
-              <Tooltip title="Max file size of 400KB">
-                <div className={styles.InlineDiv}>
-                  Background
-                  <InfoCircleOutlined style={{ marginLeft: '6px' }} />
-                </div>
-              </Tooltip>
+              <Tooltip
+                title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB"
+                text="Logo"
+              />
+              <Tooltip title="Max file size of 400KB" text="Background" />
             </div>
 
             <div className={styles.InlineDiv}>
@@ -555,7 +612,6 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
           )}
         </Panel>
       </Collapse>
-
       <Collapse expandIconPosition="right">
         <Panel header="Allow List" forceRender>
           <Item
@@ -604,12 +660,14 @@ const CaptivePortalForm = ({ details, form, fileUpload }) => {
 CaptivePortalForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
   form: null,
   details: {},
+  radiusProfiles: [],
   fileUpload: () => {},
 };
 

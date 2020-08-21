@@ -56,6 +56,18 @@
   }
 }
 
+.FlexDiv {
+  display: flex;
+  flex-wrap: wrap;
+  & > * {
+    margin: 0;
+    margin-right: 40px;
+  }
+  & > :last-child {
+    margin-right: 0;
+  }
+}
+
 .InlineDiv {
   display: flex;
   justify-content: space-around;
@@ -111,4 +123,21 @@
   &:global(.ant-list) {
     padding: 0;
   }
+}
+
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
+
+.DeleteButton {
+  margin: 20px 10px 0 0;
+}
+
+.ToolTip {
+  margin: 10px 20px 0 0;
+}
+
+.BonjourServices {
+  margin-bottom: 10px;
 }

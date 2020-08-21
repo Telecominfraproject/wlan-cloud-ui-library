@@ -47,6 +47,14 @@ const AssignmentModal = ({
 
   const content = (
     <Form {...layout} form={form}>
+      {filteredModels.length === 0 && !model && (
+        <Alert
+          className={styles.alertMessage}
+          showIcon
+          message="All Model IDs are in use."
+          type="warning"
+        />
+      )}
       <Item
         label="Model ID"
         name="modelId"
@@ -97,10 +105,6 @@ const AssignmentModal = ({
           </Select>
         )}
       </Item>
-
-      {filteredModels.length === 0 && !model && (
-        <div className={styles.Disclaimer}>All Model Ids Are in Use</div>
-      )}
     </Form>
   );
 

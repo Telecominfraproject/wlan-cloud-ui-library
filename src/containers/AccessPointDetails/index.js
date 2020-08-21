@@ -47,6 +47,10 @@ const AccessPointDetails = ({
   locations,
   onUpdateEquipment,
   onUpdateEquipmentFirmware,
+  loadingProfiles,
+  errorProfiles,
+  loadingFirmware,
+  errorFirmware,
 }) => {
   const { id, tab } = useParams();
   const history = useHistory();
@@ -158,6 +162,8 @@ const AccessPointDetails = ({
           handleOnEquipmentSave={handleOnEquipmentSave}
           profiles={profiles}
           handleOnFormChange={handleOnFormChange}
+          loadingProfiles={loadingProfiles}
+          errorProfiles={errorProfiles}
         />
       )}
       {tab === 'status' && <Status data={data} />}
@@ -176,6 +182,8 @@ const AccessPointDetails = ({
           data={data}
           handleOnFirmwareSave={handleOnFirmwareSave}
           handleOnFormChange={handleOnFormChange}
+          loadingFirmware={loadingFirmware}
+          errorFirmware={errorFirmware}
         />
       )}
     </div>
@@ -191,6 +199,10 @@ AccessPointDetails.propTypes = {
   onUpdateEquipment: PropTypes.func.isRequired,
   onUpdateEquipmentFirmware: PropTypes.func.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
+  loadingProfiles: PropTypes.bool,
+  errorProfiles: PropTypes.instanceOf(Object),
+  loadingFirmware: PropTypes.bool,
+  errorFirmware: PropTypes.instanceOf(Object),
 };
 
 AccessPointDetails.defaultProps = {
@@ -198,6 +210,10 @@ AccessPointDetails.defaultProps = {
   firmware: {},
   profiles: [],
   osData: {},
+  loadingProfiles: true,
+  errorProfiles: null,
+  loadingFirmware: true,
+  errorFirmware: null,
 };
 
 export default AccessPointDetails;

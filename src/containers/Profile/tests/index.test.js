@@ -22,7 +22,6 @@ Object.defineProperty(window, 'matchMedia', {
 
 const mockProps = {
   isLastPage: true,
-  onDeleteProfile: () => {},
   data: [
     { details: {}, id: 1, name: 'Radius-Profile', profileType: 'ssid', __typename: 'Profile' },
   ],
@@ -54,6 +53,15 @@ describe('<Profile />', () => {
     });
   });
 
+  it('onReload default prop test', async () => {
+    const { getByRole } = render(
+      <Router>
+        <Profile {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: /reload/i }));
+  });
+
   it('URL should changes to /addprofile when Add Profile button is clicked', () => {
     const URL = '/addprofile';
     const { getByRole } = render(
@@ -74,7 +82,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(screen.getByTitle('delete'));
 
-    const paragraph = getByText('Are you sure you want to delete the account:');
+    const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
   });
 
@@ -87,7 +95,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(screen.getByTitle('delete'));
 
-    const paragraph = getByText('Are you sure you want to delete the account:');
+    const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
@@ -122,6 +130,29 @@ describe('<Profile />', () => {
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('onDeleteProfile default prop test', async () => {
+    const data = {
+      ...mockProps,
+      data: [
+        {
+          details: {},
+          id: 1,
+          name: 'Radius-Profile',
+          profileType: 'equipment_ap',
+          __typename: 'Profile',
+        },
+      ],
+    };
+    const { getByRole } = render(
+      <Router>
+        <Profile {...data} />
+      </Router>
+    );
+    fireEvent.click(screen.getByTitle('delete'));
+    expect(getByRole('button', { name: 'Delete' }));
+    fireEvent.click(getByRole('button', { name: 'Delete' }));
   });
 
   it('should work with profileType null', async () => {

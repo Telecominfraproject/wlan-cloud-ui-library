@@ -922,4 +922,6 @@ export const defaultProps = {
   osData,
   onUpdateEquipmentFirmware: () => {},
   onUpdateEquipment: () => {},
+  loadingProfiles: false,
+  loadingFirmware: false,
 };

@@ -451,4 +451,19 @@ describe('<General />', () => {
       expect(getByText('0 - 100%')).toBeVisible();
     });
   });
+  it('loadingProfiles should show loading spinner', async () => {
+    const { getByTestId } = render(<General loadingProfiles />);
+
+    await waitFor(() => {
+      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
+    });
+  });
+
+  it('errorProfiles should show error alert', async () => {
+    const { getByTestId } = render(<General loadingProfiles={false} errorProfiles />);
+
+    await waitFor(() => {
+      expect(getByTestId('errorProfiles')).toBeInTheDocument();
+    });
+  });
 });
