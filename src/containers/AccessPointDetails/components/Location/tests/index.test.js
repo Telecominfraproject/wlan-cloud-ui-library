@@ -29,7 +29,7 @@ describe('<Location />', () => {
   it('handleSubmit should  be called on location tab with floor as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
-      <Location {...defaultProps} onUpdateEquipment={submitSpy} />
+      <Location {...defaultProps} handleOnEquipmentSave={submitSpy} />
     );
 
     const city = getByLabelText('City');
@@ -57,7 +57,7 @@ describe('<Location />', () => {
   it('handleSubmit should  be called on location tab with building as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
-      <Location {...defaultProps} onUpdateEquipment={submitSpy} />
+      <Location {...defaultProps} handleOnEquipmentSave={submitSpy} />
     );
 
     const city = getByLabelText('City');
@@ -80,7 +80,7 @@ describe('<Location />', () => {
   it('handleSubmit should  be called on location tab with city as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(
-      <Location {...defaultProps} onUpdateEquipment={submitSpy} />
+      <Location {...defaultProps} handleOnEquipmentSave={submitSpy} />
     );
 
     const city = getByLabelText('City');
@@ -147,6 +147,6 @@ describe('<Location />', () => {
         },
       ],
     };
-    render(<Location {...data} onUpdateEquipment={submitSpy} />);
+    render(<Location {...data} handleOnEquipmentSave={submitSpy} />);
   });
 });

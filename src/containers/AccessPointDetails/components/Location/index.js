@@ -7,7 +7,7 @@ import styles from '../../index.module.scss';
 const { Option } = Select;
 const { Item } = Form;
 
-const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
+const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
@@ -51,8 +51,6 @@ const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
   const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
 
   const handleOnSave = () => {
-    onFormUpdate('save');
-
     const {
       id,
       equipmentType,
@@ -79,7 +77,7 @@ const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
           locationId = newValues.city;
         }
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
@@ -91,8 +89,8 @@ const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
           longitude,
           serial,
           lastModifiedTimestamp,
-          details
-        );
+          details,
+        });
       })
       .catch(() => {});
   };
@@ -121,7 +119,7 @@ const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
   }, [city, building, floor]);
 
   return (
-    <Form {...layout} form={form} onValuesChange={onFormUpdate}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -194,13 +192,14 @@ const Location = ({ locations, data, onUpdateEquipment, onFormUpdate }) => {
 Location.propTypes = {
   data: PropTypes.instanceOf(Object),
   locations: PropTypes.instanceOf(Array).isRequired,
-  onUpdateEquipment: PropTypes.func.isRequired,
-  onFormUpdate: PropTypes.func,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
 };
 
 Location.defaultProps = {
   data: {},
-  onFormUpdate: () => {},
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
 };
 
 export default Location;

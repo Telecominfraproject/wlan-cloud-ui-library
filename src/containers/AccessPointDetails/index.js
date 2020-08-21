@@ -57,15 +57,9 @@ const AccessPointDetails = ({
 
   const [redirectURL, setRedirectURL] = useState();
 
-  const onFormUpdate = state => {
-    switch (state) {
-      case 'save':
-        setIsFormDirty(false);
-        break;
-      default:
-        if (!isFormDirty) {
-          setIsFormDirty(true);
-        }
+  const handleOnFormChange = () => {
+    if (!isFormDirty) {
+      setIsFormDirty(true);
     }
   };
 
@@ -85,6 +79,16 @@ const AccessPointDetails = ({
     } else {
       history.push(`/network/access-points/${id}/${key}`);
     }
+  };
+
+  const handleOnFirmwareSave = (dataId, versionId) => {
+    onUpdateEquipmentFirmware(dataId, versionId);
+    setIsFormDirty(false);
+  };
+
+  const handleOnEquipmentSave = equipment => {
+    onUpdateEquipment(...Object.values(equipment));
+    setIsFormDirty(false);
   };
 
   const breadCrumbs = getLocationPath(data.locationId, locations).map(item => (
@@ -151,9 +155,9 @@ const AccessPointDetails = ({
       {tab === 'general' && (
         <General
           data={data}
-          onUpdateEquipment={onUpdateEquipment}
+          handleOnEquipmentSave={handleOnEquipmentSave}
           profiles={profiles}
-          onFormUpdate={onFormUpdate}
+          handleOnFormChange={handleOnFormChange}
         />
       )}
       {tab === 'status' && <Status data={data} />}
@@ -161,8 +165,8 @@ const AccessPointDetails = ({
         <Location
           data={data}
           locations={locations}
-          onUpdateEquipment={onUpdateEquipment}
-          onFormUpdate={onFormUpdate}
+          handleOnEquipmentSave={handleOnEquipmentSave}
+          handleOnFormChange={handleOnFormChange}
         />
       )}
       {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
@@ -170,8 +174,8 @@ const AccessPointDetails = ({
         <Firmware
           firmware={firmware}
           data={data}
-          onUpdateEquipmentFirmware={onUpdateEquipmentFirmware}
-          onFormUpdate={onFormUpdate}
+          handleOnFirmwareSave={handleOnFirmwareSave}
+          handleOnFormChange={handleOnFormChange}
         />
       )}
     </div>

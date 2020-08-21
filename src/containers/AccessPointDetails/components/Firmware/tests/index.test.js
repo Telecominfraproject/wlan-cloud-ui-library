@@ -128,7 +128,7 @@ describe('<Firmware />', () => {
       },
     };
     const { getByText, getByRole } = render(
-      <Firmware firmware={firmware} data={data} onUpdateEquipmentFirmware={submitSpy} />
+      <Firmware firmware={firmware} data={data} handleOnFirmwareSave={submitSpy} />
     );
 
     const paragraph = getByText('Upgrade');

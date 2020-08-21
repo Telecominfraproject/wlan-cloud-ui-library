@@ -9,7 +9,7 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
+const General = ({ data, profiles, handleOnEquipmentSave, handleOnFormChange }) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -65,8 +65,6 @@ const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
     form
       .validateFields()
       .then(values => {
-        onFormUpdate('save');
-
         const formattedData = { ...data.details };
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
@@ -125,20 +123,20 @@ const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
           });
         });
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
           customerId,
-          selectedProfile?.id,
+          profileId: selectedProfile?.id,
           locationId,
-          values.access,
+          name: values.access,
           latitude,
           longitude,
           serial,
           lastModifiedTimestamp,
-          formattedData
-        );
+          formattedData,
+        });
       })
       .catch(() => {
         notification.error({
@@ -232,7 +230,7 @@ const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
   );
 
   return (
-    <Form {...layout} form={form} onValuesChange={onFormUpdate}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -471,14 +469,15 @@ const General = ({ data, profiles, onUpdateEquipment, onFormUpdate }) => {
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Array),
-  onUpdateEquipment: PropTypes.func.isRequired,
-  onFormUpdate: PropTypes.func,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
 };
 
 General.defaultProps = {
   data: {},
   profiles: [],
-  onFormUpdate: () => {},
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
 };
 
 export default General;

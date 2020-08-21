@@ -56,7 +56,7 @@ describe('<General />', () => {
   it('handleSubmit should  be called if access point name is entered on general tab', async () => {
     const submitSpy = jest.fn();
     const { getByText, getByRole, getByPlaceholderText } = render(
-      <General {...defaultProps} onUpdateEquipment={submitSpy} />
+      <General {...defaultProps} handleOnEquipmentSave={submitSpy} />
     );
 
     const paragraph = getByText('Identity');
@@ -82,7 +82,7 @@ describe('<General />', () => {
 
   it(' handleSubmit should  be called if advanced settings are filled', async () => {
     const submitSpy = jest.fn();
-    const { getByRole } = render(<General {...defaultProps} onUpdateEquipment={submitSpy} />);
+    const { getByRole } = render(<General {...defaultProps} handleOnEquipmentSave={submitSpy} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
     fireEvent.click(getByRole('button', { name: 'Save' }));
