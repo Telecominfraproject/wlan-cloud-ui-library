@@ -4,8 +4,8 @@ import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, Lis
 import { QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import globalStyles from 'styles/index.scss';
 import Users from './components/Users';
-
 import styles from '../index.module.scss';
 
 const { Item } = Form;
@@ -313,7 +313,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
           ]}
         >
           <Select
-            className={styles.Field}
+            className={globalStyles.field}
             placeholder="Select authentication mode"
             onChange={setAuthentication}
           >
@@ -345,13 +345,11 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
           ]}
         >
           <Input
-            className={styles.Field}
             placeholder="1-1440"
             type="number"
             min={1}
             max={1440}
-            addonBefore={<Tooltip title="Timeout range is 1 - 1440 (one day max) " />}
-            addonAfter="Minutes"
+            addonAfter={<Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />}
           />
         </Item>
         <Item
@@ -364,7 +362,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             },
           ]}
         >
-          <Input className={styles.Field} placeholder="http://... or https://..." />
+          <Input className={globalStyles.field} placeholder="http://... or https://..." />
         </Item>
         <Item label="Splash Page" name="externalSplashPage">
           <Radio.Group>
@@ -403,7 +401,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
               },
             ]}
           >
-            <Select className={styles.Field} placeholder="Select RADIUS authentication mode">
+            <Select className={globalStyles.field} placeholder="Select RADIUS authentication mode">
               <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
               <Option value="PAP">Password (PAP)</Option>
               <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
@@ -419,7 +417,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
               },
             ]}
           >
-            <Select className={styles.Field} placeholder="RADIUS Services">
+            <Select className={globalStyles.field} placeholder="RADIUS Services">
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
                   {profile.name}
@@ -443,7 +441,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             ]}
           >
             <div className={styles.InlineDiv}>
-              <Input className={styles.Field} placeholder="http://... or https://..." />
+              <Input className={globalStyles.field} placeholder="http://... or https://..." />
               <Button onClick={() => setShowTips(!showTips)} icon={<QuestionCircleFilled />}>
                 {!showTips ? 'Show Splash Page Tips' : 'Hide Splash Page Tips'}
               </Button>
@@ -451,7 +449,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
           </Item>
           {showTips && (
             <Alert
-              className={styles.Field}
+              className={globalStyles.field}
               description={
                 <ol>
                   <li>
@@ -504,7 +502,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
               },
             ]}
           >
-            <Input className={styles.Field} placeholder="Browser title" />
+            <Input className={globalStyles.field} placeholder="Browser title" />
           </Item>
           <Item
             name="headerContent"
@@ -515,7 +513,7 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
               },
             ]}
           >
-            <Input className={styles.Field} placeholder="Page title" />
+            <Input className={globalStyles.field} placeholder="Page title" />
           </Item>
           <Item label="Body Content">
             <div className={styles.InlineDiv}>
@@ -534,12 +532,12 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             </div>
             {!isLoginText && (
               <Item name="userAcceptancePolicy">
-                <TextArea data-testid="bodyContent" className={styles.Field} rows={4} />
+                <TextArea data-testid="bodyContent" className={globalStyles.field} rows={4} />
               </Item>
             )}
             {isLoginText && (
               <Item name="successPageMarkdownText">
-                <TextArea data-testid="bodyContent" className={styles.Field} rows={4} />
+                <TextArea data-testid="bodyContent" className={globalStyles.field} rows={4} />
               </Item>
             )}
             &nbsp; Markdown and plain text supported.
@@ -588,14 +586,14 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
             <Item label="Background Styles">
               <div className={styles.InlineDiv}>
                 <Item name="backgroundRepeat">
-                  <Select className={styles.Field} placeholder="Select Background Repeat">
+                  <Select className={globalStyles.field} placeholder="Select Background Repeat">
                     <Option value="no_repeat">No Repeat</Option>
                     <Option value="repeat">Repeat</Option>
                     <Option value="cover">Cover</Option>
                   </Select>
                 </Item>
                 <Item name="backgroundPosition">
-                  <Select className={styles.Field} placeholder="Select Background Position">
+                  <Select className={globalStyles.field} placeholder="Select Background Position">
                     <Option value="left_top">Top Left</Option>
                     <Option value="center_top">Top Center</Option>
                     <Option value="right_top">Top Right</Option>

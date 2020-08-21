@@ -42,7 +42,7 @@ const ProfileDetails = ({
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const layout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 

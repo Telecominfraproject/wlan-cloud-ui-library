@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tooltip, Checkbox, Radio, Select } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
-
+import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
+import Tooltip from 'components/Tooltip';
+import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+
 import { RADIOS, ROAMING } from '../../constants/index';
 
 const { Item } = Form;
@@ -20,7 +21,7 @@ const SSIDForm = ({ form, details }) => {
   };
 
   const dropdownOptions = (
-    <Select className={styles.Field}>
+    <Select className={globalStyles.field}>
       <Option value="auto">Auto</Option>
       <Option value="true">Enabled</Option>
       <Option value="false">Disabled</Option>
@@ -66,7 +67,7 @@ const SSIDForm = ({ form, details }) => {
           name="ssid"
           rules={[{ required: true, message: 'Please input your new SSID name' }]}
         >
-          <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
+          <Input className={globalStyles.field} name="ssidName" placeholder="Enter SSID name" />
         </Item>
 
         <Item
@@ -107,18 +108,16 @@ const SSIDForm = ({ form, details }) => {
               ]}
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
                 max={100}
                 addonAfter={
-                  <div>
-                    Down Mbps&nbsp;
-                    <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  </div>
+                  <Tooltip
+                    title="Down Mbps: Limit is 0 - 100 (0 means unlimited)"
+                    text="Down Mbps"
+                  />
                 }
               />
             </Item>
@@ -143,18 +142,13 @@ const SSIDForm = ({ form, details }) => {
               ]}
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
                 max={100}
                 addonAfter={
-                  <div>
-                    Up Mbps&nbsp;
-                    <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  </div>
+                  <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)" text="Up Mbps" />
                 }
               />
             </Item>
@@ -191,10 +185,8 @@ const SSIDForm = ({ form, details }) => {
                     </div>
                   </div>
                 }
-              >
-                <InfoCircleOutlined />
-              </Tooltip>
-              &nbsp; Mode
+              />
+              Mode
             </span>
           }
         >
@@ -218,10 +210,10 @@ const SSIDForm = ({ form, details }) => {
                 name="noLocalSubnets"
                 label={
                   <span>
-                    <Tooltip title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied.">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                    &nbsp; Local Access
+                    <Tooltip
+                      title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
+                      text="Local Access"
+                    />
                   </span>
                 }
               >
@@ -254,7 +246,7 @@ const SSIDForm = ({ form, details }) => {
             return getFieldValue('captivePortal') === 'usePortal' ? (
               <Item label=" " colon={false}>
                 <Item name="captivePortalId" style={{ marginTop: '10px' }}>
-                  <Select className={styles.Field} placeholder="Select Captive Portal">
+                  <Select className={globalStyles.field} placeholder="Select Captive Portal">
                     <Option value="default">Default</Option>
                   </Select>
                 </Item>
@@ -277,7 +269,7 @@ const SSIDForm = ({ form, details }) => {
         >
           <Select
             data-testid="securityMode"
-            className={styles.Field}
+            className={globalStyles.field}
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
@@ -320,7 +312,7 @@ const SSIDForm = ({ form, details }) => {
           >
             <Input.Password
               visibilityToggle
-              className={styles.Field}
+              className={globalStyles.field}
               placeholder="8-63 characters"
               maxLength={63}
             />
@@ -354,7 +346,7 @@ const SSIDForm = ({ form, details }) => {
               hasFeedback
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="Enter WEP key"
                 onKeyPress={e => hexadecimalRegex(e)}
                 maxLength={26}
@@ -370,7 +362,7 @@ const SSIDForm = ({ form, details }) => {
                 },
               ]}
             >
-              <Select className={styles.Field} placeholder="Select vlan key ID">
+              <Select className={globalStyles.field} placeholder="Select vlan key ID">
                 <Option value={1}>1</Option>
                 <Option value={2}>2</Option>
                 <Option value={3}>3</Option>
@@ -431,7 +423,7 @@ const SSIDForm = ({ form, details }) => {
                   hasFeedback
                 >
                   <Input
-                    className={styles.Field}
+                    className={globalStyles.field}
                     placeholder="2-4095"
                     type="number"
                     min={2}
@@ -459,14 +451,10 @@ const SSIDForm = ({ form, details }) => {
           {mode !== 'open' && (
             <Item
               label={
-                <span style={{ marginTop: '5px' }}>
-                  <Tooltip title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly.">
-                    <InfoCircleOutlined />
-                  </Tooltip>
-                  &nbsp; Fast BSS
-                  <br />
-                  Transition (802.11r)
-                </span>
+                <Tooltip
+                  title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
+                  text="Fast BSS Transition (802.11r)"
+                />
               }
             >
               <div className={styles.InlineDiv}>

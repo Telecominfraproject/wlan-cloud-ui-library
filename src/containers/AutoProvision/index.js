@@ -36,7 +36,7 @@ const AutoProvision = ({
   const [deleteModal, setDeleteModal] = useState(false);
 
   const layout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 

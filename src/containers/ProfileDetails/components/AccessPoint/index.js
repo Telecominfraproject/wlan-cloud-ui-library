@@ -4,7 +4,7 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 
 import Button from 'components/Button';
-
+import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
 const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
@@ -136,7 +136,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
             >
               <Input
                 data-testid="vlanInput"
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="2-4095"
                 type="number"
                 min={2}
@@ -158,7 +158,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               name={['ntpServer', 'value']}
               rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
             >
-              <Input className={styles.Field} placeholder="Enter NTP server" />
+              <Input className={globalStyles.field} placeholder="Enter NTP server" />
             </Item>
           </Item>
         )}
@@ -199,7 +199,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                 ]}
                 hasFeedback
               >
-                <Input className={styles.Field} placeholder="IP Address" />
+                <Input className={globalStyles.field} placeholder="IP Address" />
               </Item>
               <Item
                 name={['rtlsSettings', 'srvHostPort']}
@@ -220,7 +220,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                 hasFeedback
               >
                 <Input
-                  className={styles.Field}
+                  className={globalStyles.field}
                   placeholder="Port"
                   type="number"
                   min={1}
@@ -264,7 +264,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                   ]}
                   hasFeedback
                 >
-                  <Input className={styles.Field} placeholder="IP Address" />
+                  <Input className={globalStyles.field} placeholder="IP Address" />
                 </Item>
                 <Item
                   name={['syslogRelay', 'srvHostPort']}
@@ -285,7 +285,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
                   hasFeedback
                 >
                   <Input
-                    className={styles.Field}
+                    className={globalStyles.field}
                     placeholder="Port"
                     type="number"
                     min={1}
@@ -304,7 +304,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
               >
                 <Select
                   data-testid="select"
-                  className={styles.Field}
+                  className={globalStyles.field}
                   placeholder="Select Syslog Mode"
                 >
                   <Option value="DEBUG">Debug (DEBUG)</Option>

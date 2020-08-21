@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip as AntdTooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import styles from './index.module.scss';
 
 const Tooltip = ({ children, className, text, ...restProps }) => (
-  <AntdTooltip className={`${styles.Tooltip} ${className}`} {...restProps}>
+  <AntdTooltip className={`${className}`} {...restProps}>
     <InfoCircleOutlined />
-    {text}
+    &nbsp; {text}
     {children}
   </AntdTooltip>
 );
