@@ -51,9 +51,11 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           record.profileType === 'equipment_ap' ||
           record.profileType === 'bonjour' ? (
           <Button
-            title="delete"
+            title={`delete-${record.name}`}
+            className={styles.InfoButton}
             icon={<DeleteFilled />}
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation();
               setDeleteModal(true);
               setActiveProfile({
                 id: record.id,
