@@ -98,7 +98,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   useEffect(() => {
     locationData.forEach((site, i) => {
       form.setFieldsValue({
-        [`site${i}`]: locationData[i+1]?.name,
+        [`level${i}`]: locationData[i+1]?.name,
       });
     });
   }, [locationData]);
@@ -117,15 +117,15 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
             return site.children &&
               (<Item
                 key={site.id}
-                label={i === 0 ? 'Country' :`Site ${i}`}
-                name={`site${i}`}
+                label={i === 0 ? 'Country' :`Level ${i}`}
+                name={`level${i}`}
                 rules={[
                   { required: i === 0 }
                 ]}
                 >
                 <Select
                   className={styles.Field}
-                  placeholder="Select Site..."
+                  placeholder="Select Location..."
                   onChange={(value) => handleOnChangeSite(value, i, site)}
                 >
                   {site.children.map(child => (
