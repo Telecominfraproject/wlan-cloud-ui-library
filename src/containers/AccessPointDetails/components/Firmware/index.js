@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Tag, Select, Alert } from 'antd';
 import moment from 'moment';
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Loading from 'components/Loading';
@@ -95,7 +95,17 @@ const Firmware = ({
             </Tag>
           </Item>
 
-          <Item label="Inactive Version">{status.alternateSwVersion}</Item>
+          <Item label="Inactive Version">
+            {status.alternateSwVersion}
+            <Button
+              className={styles.UpgradeState}
+              icon={<LoginOutlined />}
+              onClick={() => setRebootModal(true)}
+              disabled={status.alternateSwVersion === status.activeSwVersion}
+            >
+              Switch to Inactive Bank and Reboot
+            </Button>
+          </Item>
         </Card>
         <Card title="Upgrade">
           <Item label="Target Version">
