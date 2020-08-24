@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
@@ -45,7 +45,6 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   const locationPath = getLocationPath();
-  const [locationData, setLocationData]= useState(locationPath);
 
   const handleOnSave = () => {
     const {
@@ -66,7 +65,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
     form
       .validateFields()
       .then(() => {
-        locationId = locationData.slice(-1)[0].id;
+        locationId = form.getFieldValue('locations').slice(-1)[0].id;
 
         onUpdateEquipment(
           id,
@@ -86,22 +85,29 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
       .catch(() => {});
   }; 
   
-  const handleOnChangeSite = (value, i, site) => {
-    const newSite = site.children.find(child => child.id === value);
+  const handleOnChangeSite = (value, i, sites) => {
+    const newSite = sites[i].children.find(child => child.id === value);
+    newSite.level = null;
 
-    const newLocationData = locationData.splice(0, i + 2);
+    const newLocationData = sites.splice(0, i + 2);
+    newLocationData[i].level = newSite.name;
     newLocationData[i+1] = newSite;
 
-    setLocationData(newLocationData);
+    form.setFieldsValue({
+      locations: newLocationData,
+    });
   };
 
   useEffect(() => {
-    locationData.forEach((site, i) => {
       form.setFieldsValue({
-        [`level${i}`]: locationData[i+1]?.name,
+        locations: locationPath.map((location, i) => {
+          return {
+            level: locationPath[i+1]?.name,
+            children: location.children,
+          };
+        })
       });
-    });
-  }, [locationData]);
+  }, []);
 
   return (
     <Form {...layout} form={form}>
@@ -112,31 +118,39 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
       </div>
 
       <Card title="Location">
-        {
-          locationData.map((site, i) => {
-            return site.children &&
-              (<Item
-                key={site.id}
-                label={i === 0 ? 'Country' :`Level ${i}`}
-                name={`level${i}`}
-                rules={[
-                  { required: i === 0 }
-                ]}
-                >
-                <Select
-                  className={styles.Field}
-                  placeholder="Select Location..."
-                  onChange={(value) => handleOnChangeSite(value, i, site)}
-                >
-                  {site.children.map(child => (
-                    <Option key={child.id} value={child.id}>
-                      {child.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Item>);
-          })
-        }
+        <Form.List name='locations'>
+          {(fields) => (
+              <>
+                {fields.map((field, i) => {
+                  const sites = form.getFieldValue('locations');
+                  return (
+                    sites[i].children && 
+                    <Item
+                      key={field.key}
+                      label={i === 0 ? 'Country' :`Level ${i}`}
+                      name={[field.name, `level`]}
+                      rules={[
+                        { required: i === 0 }
+                      ]}
+                      >
+                      <Select
+                        className={styles.Field}
+                        placeholder="Select Location..."
+                        onChange={(value) => handleOnChangeSite(value, i, sites)}
+                      >
+                        {
+                          sites[i].children?.map(child => (
+                            <Option key={child.id} value={child.id}>
+                              {child.name}
+                            </Option>
+                          ))
+                        }
+                      </Select>
+                    </Item>);
+                })}
+            </>
+          )}
+        </Form.List>
       </Card>
     </Form>
   );
