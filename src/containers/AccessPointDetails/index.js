@@ -67,21 +67,12 @@ const AccessPointDetails = ({
     }
   };
 
-  const handleOnBack = () => {
+  const handlePageChange = path => {
     if (isFormDirty) {
-      setRedirectURL('/network/access-points');
+      setRedirectURL(path);
       setConfirmModal(true);
     } else {
-      history.push(`/network/access-points`);
-    }
-  };
-
-  const handleTabChange = key => {
-    if (isFormDirty) {
-      setRedirectURL(`/network/access-points/${id}/${key}`);
-      setConfirmModal(true);
-    } else {
-      history.push(`/network/access-points/${id}/${key}`);
+      history.push(path);
     }
   };
 
@@ -117,7 +108,7 @@ const AccessPointDetails = ({
         mask={false}
       />
 
-      <Button icon={<LeftOutlined />} onClick={handleOnBack}>
+      <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points/')}>
         BACK
       </Button>
       <Card
@@ -152,7 +143,7 @@ const AccessPointDetails = ({
           </div>
         }
         tabList={TAB_LIST}
-        onTabChange={handleTabChange}
+        onTabChange={key => handlePageChange(`/network/access-points/${id}/${key}`)}
         activeTabKey={tab}
         bodyStyle={{ marginBottom: '-48px' }}
       />
