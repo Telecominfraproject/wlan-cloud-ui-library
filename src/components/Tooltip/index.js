@@ -5,8 +5,8 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import styles from './index.module.scss';
 
 const Tooltip = ({ children, className, text, ...restProps }) => (
-  <AntdTooltip className={`${styles.Tooltip} ${className}`} {...restProps}>
-    <InfoCircleOutlined />
+  <AntdTooltip className={`${className}`} {...restProps}>
+    <InfoCircleOutlined className={styles.infoIcon} />
     {text}
     {children}
   </AntdTooltip>

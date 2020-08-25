@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Table } from 'antd';
 import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import Modal from 'components/Modal';
 import styles from './index.module.scss';
 
 const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) => {
+  const history = useHistory();
   const [deleteModal, setDeleteModal] = useState(false);
   const [activeProfile, setActiveProfile] = useState({
     id: 0,
@@ -30,19 +31,16 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       title: 'NAME',
       dataIndex: 'name',
       width: 250,
-      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.name}</Link>,
     },
     {
       title: 'TYPE',
       dataIndex: 'profileType',
       width: 250,
-      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.profileType}</Link>,
     },
     {
       title: 'ACCESS POINTS',
       dataIndex: 'equipmentCount',
       width: 700,
-      render: (_, record) => <Link to={`/profiles/${record.id}`}>{record.equipmentCount}</Link>,
     },
     {
       title: '',
@@ -53,9 +51,11 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           record.profileType === 'equipment_ap' ||
           record.profileType === 'bonjour' ? (
           <Button
-            title="delete"
+            title={`delete-${record.name}`}
+            className={styles.InfoButton}
             icon={<DeleteFilled />}
-            onClick={() => {
+            onClick={e => {
+              e.stopPropagation();
               setDeleteModal(true);
               setActiveProfile({
                 id: record.id,
@@ -96,11 +96,19 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           </div>
         </Header>
         <Table
+          rowClassName={styles.Row}
           rowKey="id"
           className={styles.Profile}
           dataSource={data}
           columns={columns}
           pagination={false}
+          onRow={record => {
+            return {
+              onClick: () => {
+                history.push(`/profiles/${record.id}`);
+              },
+            };
+          }}
         />
         {!isLastPage && (
           <div className={styles.LoadMore}>
