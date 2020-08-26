@@ -7,7 +7,7 @@ import styles from '../../index.module.scss';
 const { Option } = Select;
 const { Item } = Form;
 
-const Location = ({ locations, data, onUpdateEquipment }) => {
+const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
@@ -77,7 +77,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
           locationId = newValues.city;
         }
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
@@ -89,8 +89,8 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
           longitude,
           serial,
           lastModifiedTimestamp,
-          details
-        );
+          details,
+        });
       })
       .catch(() => {});
   };
@@ -119,7 +119,7 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   }, [city, building, floor]);
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
@@ -192,11 +192,14 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
 Location.propTypes = {
   data: PropTypes.instanceOf(Object),
   locations: PropTypes.instanceOf(Array).isRequired,
-  onUpdateEquipment: PropTypes.func.isRequired,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
 };
 
 Location.defaultProps = {
   data: {},
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
 };
 
 export default Location;

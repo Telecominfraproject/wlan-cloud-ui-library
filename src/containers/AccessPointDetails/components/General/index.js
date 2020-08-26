@@ -10,7 +10,14 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProfiles }) => {
+const General = ({
+  data,
+  profiles,
+  handleOnEquipmentSave,
+  handleOnFormChange,
+  loadingProfiles,
+  errorProfiles,
+}) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -124,20 +131,20 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
           });
         });
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
           customerId,
-          selectedProfile?.id,
+          profileId: selectedProfile?.id,
           locationId,
-          values.access,
+          name: values.access,
           latitude,
           longitude,
           serial,
           lastModifiedTimestamp,
-          formattedData
-        );
+          formattedData,
+        });
       })
       .catch(() => {
         notification.error({
@@ -247,7 +254,7 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
   }
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -486,7 +493,8 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Array),
-  onUpdateEquipment: PropTypes.func.isRequired,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
 };
@@ -494,6 +502,8 @@ General.propTypes = {
 General.defaultProps = {
   data: {},
   profiles: [],
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
   loadingProfiles: true,
   errorProfiles: null,
 };
