@@ -4,6 +4,7 @@
   padding-top: 15px;
   height: 100%;
   position: fixed;
+  overflow: auto;
 
   @media only screen and (max-width: 660px) {
     width: 190px;

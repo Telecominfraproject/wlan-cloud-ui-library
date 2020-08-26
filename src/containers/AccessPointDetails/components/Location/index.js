@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
@@ -46,10 +46,6 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
 
   const locationPath = getLocationPath();
 
-  const [city, setCity] = useState(locationPath[0]);
-  const [building, setBuilding] = useState(locationPath.length > 1 ? locationPath[1] : null);
-  const [floor, setFloor] = useState(locationPath.length > 2 ? locationPath[2] : null);
-
   const handleOnSave = () => {
     const {
       id,
@@ -68,14 +64,8 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
 
     form
       .validateFields()
-      .then(newValues => {
-        if (newValues?.floor) {
-          locationId = newValues.floor;
-        } else if (newValues?.building) {
-          locationId = newValues.building;
-        } else if (newValues?.city) {
-          locationId = newValues.city;
-        }
+      .then(() => {
+        locationId = form.getFieldValue('locations').slice(-1)[0].id;
 
         handleOnEquipmentSave({
           id,
@@ -95,28 +85,29 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
       .catch(() => {});
   };
 
-  const handleOnChangeCity = value => {
-    setCity(locations.find(i => i.id === value));
-    setBuilding(null);
-    setFloor(null);
-  };
+  const handleOnChangeSite = (value, i, sites) => {
+    const newSite = sites[i].children.find(child => child.id === value);
+    newSite.level = null;
 
-  const handleOnChangeBuilding = value => {
-    setBuilding(city.children.find(i => i.id === value));
-    setFloor(null);
-  };
+    const newLocationData = sites.splice(0, i + 2);
+    newLocationData[i].level = newSite.name;
+    newLocationData[i + 1] = newSite;
 
-  const handleOnChangeFloor = value => {
-    setFloor(building.children.find(i => i.id === value));
+    form.setFieldsValue({
+      locations: newLocationData,
+    });
   };
 
   useEffect(() => {
     form.setFieldsValue({
-      city: city?.id,
-      building: building?.id,
-      floor: floor?.id,
+      locations: locationPath.map((location, i) => {
+        return {
+          level: locationPath[i + 1]?.name,
+          children: location.children,
+        };
+      }),
     });
-  }, [city, building, floor]);
+  }, []);
 
   return (
     <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
@@ -127,63 +118,37 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
       </div>
 
       <Card title="Location">
-        {locationPath.length > 0 && (
-          <Item
-            label="City"
-            name="city"
-            rules={[
-              {
-                required: true,
-                message: 'Please select your location city.',
-              },
-            ]}
-          >
-            <Select
-              className={styles.Field}
-              placeholder="Select Location City..."
-              onChange={handleOnChangeCity}
-            >
-              {Object.keys(locations).map(i => (
-                <Option key={locations[i].id} value={locations[i].id}>
-                  {locations[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
-
-        {city && city.children && (
-          <Item label="Building" name="building">
-            <Select
-              className={styles.Field}
-              placeholder="Select Location Building..."
-              onChange={handleOnChangeBuilding}
-              allowClear
-            >
-              {Object.keys(city.children).map(i => (
-                <Option key={city.children[i].id} value={city.children[i].id}>
-                  {city.children[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
-        {building && building.children && (
-          <Item label="Floor" name="floor">
-            <Select
-              className={styles.Field}
-              placeholder="Select Location Floor..."
-              onChange={handleOnChangeFloor}
-              allowClear
-            >
-              {Object.keys(building.children).map(i => (
-                <Option key={building.children[i].id} value={building.children[i].id}>
-                  {building.children[i].name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
-        )}
+        <Form.List name="locations">
+          {fields => (
+            <>
+              {fields.map((field, i) => {
+                const sites = form.getFieldValue('locations');
+                return (
+                  sites[i].children && (
+                    <Item
+                      key={field.key}
+                      label={`Level ${i}`}
+                      name={[field.name, `level`]}
+                      rules={[{ required: i === 0 }]}
+                    >
+                      <Select
+                        className={styles.Field}
+                        placeholder="Select Location..."
+                        onChange={value => handleOnChangeSite(value, i, sites)}
+                      >
+                        {sites[i].children?.map(child => (
+                          <Option key={child.id} value={child.id}>
+                            {child.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                  )
+                );
+              })}
+            </>
+          )}
+        </Form.List>
       </Card>
     </Form>
   );

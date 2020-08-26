@@ -61,32 +61,6 @@ const LocationsTree = ({
     return locationsPath;
   };
 
-  const addLocation = ({ location }) => {
-    const { id, locationType } = selectedLocation;
-    if (locationType === 'COUNTRY') {
-      onAddLocation(location, id, 'SITE');
-    } else if (locationType === 'SITE') {
-      onAddLocation(location, id, 'BUILDING');
-    } else if (locationType === 'BUILDING') {
-      onAddLocation(location, id, 'FLOOR');
-    }
-  };
-
-  const editLocation = ({ name }) => {
-    const { id, parentId, locationType, lastModifiedTimestamp } = selectedLocation;
-    onEditLocation(id, parentId, name, locationType, lastModifiedTimestamp);
-  };
-
-  const deleteLocation = () => {
-    const { id } = selectedLocation;
-    onDeleteLocation(id);
-  };
-
-  const createEquipment = ({ inventoryId, name, profileId }) => {
-    const { id: locationId } = selectedLocation;
-    onCreateEquipment(inventoryId, locationId, name, profileId);
-  };
-
   return (
     <div className={styles.sideTree}>
       <Tree
@@ -104,32 +78,31 @@ const LocationsTree = ({
       <AddFormModal
         locationPath={getLocationPath()}
         visible={addModal}
-        onSubmit={addLocation}
+        onSubmit={onAddLocation}
         onCancel={() => setAddModal(false)}
         title="Add Location"
       />
       <AddApModal
         visible={apModal}
-        onSubmit={createEquipment}
+        onSubmit={onCreateEquipment}
         onCancel={() => setApModal(false)}
         profiles={profiles}
         title="Add Access Point"
         buttonText="Add"
-        selectedLocation={selectedLocation}
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
       />
 
       <EditFormModal
         visible={editModal}
-        onSubmit={editLocation}
+        onSubmit={onEditLocation}
         onCancel={() => setEditModal(false)}
         title="Edit Location"
         selectedLocation={selectedLocation}
       />
       <Modal
         onCancel={() => setDeleteModal(false)}
-        onSuccess={deleteLocation}
+        onSuccess={onDeleteLocation}
         visible={deleteModal}
         title="Are you sure?"
         buttonText="Delete"

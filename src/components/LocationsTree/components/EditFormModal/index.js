@@ -37,7 +37,6 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
       >
         <Input className={styles.field} />
       </Item>
-      <Item label="Location Type">{selectedLocation && selectedLocation.locationType}</Item>
     </Form>
   );
 
