@@ -83,15 +83,15 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
         );
       })
       .catch(() => {});
-  }; 
-  
+  };
+
   const handleOnChangeSite = (value, i, sites) => {
     const newSite = sites[i].children.find(child => child.id === value);
     newSite.level = null;
 
     const newLocationData = sites.splice(0, i + 2);
     newLocationData[i].level = newSite.name;
-    newLocationData[i+1] = newSite;
+    newLocationData[i + 1] = newSite;
 
     form.setFieldsValue({
       locations: newLocationData,
@@ -99,14 +99,14 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
   };
 
   useEffect(() => {
-      form.setFieldsValue({
-        locations: locationPath.map((location, i) => {
-          return {
-            level: locationPath[i+1]?.name,
-            children: location.children,
-          };
-        })
-      });
+    form.setFieldsValue({
+      locations: locationPath.map((location, i) => {
+        return {
+          level: locationPath[i + 1]?.name,
+          children: location.children,
+        };
+      }),
+    });
   }, []);
 
   return (
@@ -118,36 +118,34 @@ const Location = ({ locations, data, onUpdateEquipment }) => {
       </div>
 
       <Card title="Location">
-        <Form.List name='locations'>
-          {(fields) => (
-              <>
-                {fields.map((field, i) => {
-                  const sites = form.getFieldValue('locations');
-                  return (
-                    sites[i].children && 
+        <Form.List name="locations">
+          {fields => (
+            <>
+              {fields.map((field, i) => {
+                const sites = form.getFieldValue('locations');
+                return (
+                  sites[i].children && (
                     <Item
                       key={field.key}
-                      label={i === 0 ? 'Country' :`Level ${i}`}
+                      label={`Level ${i}`}
                       name={[field.name, `level`]}
-                      rules={[
-                        { required: i === 0 }
-                      ]}
-                      >
+                      rules={[{ required: i === 0 }]}
+                    >
                       <Select
                         className={styles.Field}
                         placeholder="Select Location..."
-                        onChange={(value) => handleOnChangeSite(value, i, sites)}
+                        onChange={value => handleOnChangeSite(value, i, sites)}
                       >
-                        {
-                          sites[i].children?.map(child => (
-                            <Option key={child.id} value={child.id}>
-                              {child.name}
-                            </Option>
-                          ))
-                        }
+                        {sites[i].children?.map(child => (
+                          <Option key={child.id} value={child.id}>
+                            {child.name}
+                          </Option>
+                        ))}
                       </Select>
-                    </Item>);
-                })}
+                    </Item>
+                  )
+                );
+              })}
             </>
           )}
         </Form.List>

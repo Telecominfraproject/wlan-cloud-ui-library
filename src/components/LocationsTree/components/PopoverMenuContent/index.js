@@ -42,18 +42,18 @@ const PopoverMenuContent = ({
           <Button
             onClick={() => {
               hide();
-              setEditModal(true);
-            }}
-          >
-            Edit Location
-          </Button>
-          <Button
-            onClick={() => {
-              hide();
               handleBulkEdit();
             }}
           >
             Bulk Edit APs
+          </Button>
+          <Button
+            onClick={() => {
+              hide();
+              setEditModal(true);
+            }}
+          >
+            Edit Location
           </Button>
           <Button
             onClick={() => {

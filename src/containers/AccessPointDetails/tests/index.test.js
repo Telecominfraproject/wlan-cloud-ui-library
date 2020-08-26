@@ -80,7 +80,7 @@ describe('<AccessPointDetails />', () => {
     );
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
-    const paragraph = getByText('Country');
+    const paragraph = getByText('Level 0');
     expect(paragraph).toBeVisible();
   });
 

@@ -32,7 +32,7 @@ describe('<Location />', () => {
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const country = getByLabelText('Country');
+    const country = getByLabelText('Level 0');
     fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
@@ -60,7 +60,7 @@ describe('<Location />', () => {
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const country = getByLabelText('Country');
+    const country = getByLabelText('Level 0');
     fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
@@ -83,7 +83,7 @@ describe('<Location />', () => {
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const country = getByLabelText('Country');
+    const country = getByLabelText('Level 0');
     fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
@@ -101,7 +101,7 @@ describe('<Location />', () => {
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const country = getByLabelText('Country');
+    const country = getByLabelText('Level 0');
     fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
@@ -122,7 +122,7 @@ describe('<Location />', () => {
       <Location {...defaultProps} onUpdateEquipment={submitSpy} />
     );
 
-    const country = getByLabelText('Country');
+    const country = getByLabelText('Level 0');
     fireEvent.keyDown(country, DOWN_ARROW);
     await waitForElement(() => getByText('Menlo Park'));
     fireEvent.click(getByText('Menlo Park'));
