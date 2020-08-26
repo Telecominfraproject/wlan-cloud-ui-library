@@ -15,6 +15,7 @@ import {
   formatBonjourGatewayForm,
 } from 'utils/profiles';
 
+import globalStyles from 'styles/index.scss';
 import styles from './index.module.scss';
 
 import SSIDForm from '../ProfileDetails/components/SSID';
@@ -34,7 +35,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const layout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 
@@ -114,7 +115,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               ]}
             >
               <Select
-                className={styles.Field}
+                className={globalStyles.field}
                 onChange={value => setType(value)}
                 placeholder="Select Profile Type"
               >
@@ -129,7 +130,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input className={styles.Field} placeholder="Enter profile name" />
+              <Input className={globalStyles.field} placeholder="Enter profile name" />
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}

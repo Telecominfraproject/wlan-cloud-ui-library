@@ -337,7 +337,7 @@ describe('<CaptivePortalForm />', () => {
 
     await waitFor(() => {
       expect(container.querySelector('.ant-input-wrapper.ant-input-group > span span')).toHaveClass(
-        'ant-tooltip-open Tooltip'
+        'ant-tooltip-open'
       );
     });
   });
