@@ -25,7 +25,7 @@ import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
+const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles, isLastProfilesPage }) => {
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -135,7 +135,12 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
           {profileType === 'equipment_ap' && (
-            <AccessPointForm form={form} ssidProfiles={ssidProfiles} />
+            <AccessPointForm
+              form={form}
+              ssidProfiles={ssidProfiles}
+              onFetchMoreProfiles={onFetchMoreProfiles}
+              isLastProfilesPage={isLastProfilesPage}
+            />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
         </Form>
@@ -147,10 +152,14 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
 };
 
 export default AddProfile;

@@ -36,6 +36,10 @@ const ProfileDetails = ({
   ssidProfiles,
   radiusProfiles,
   fileUpload,
+  onFetchMoreProfiles,
+  isLastProfilesPage,
+  onFetchMoreRadiusProfiles,
+  isLastRadiusPage,
 }) => {
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
@@ -160,6 +164,8 @@ const ProfileDetails = ({
             details={details}
             ssidProfiles={ssidProfiles}
             childProfileIds={childProfileIds}
+            onFetchMoreProfiles={onFetchMoreProfiles}
+            isLastProfilesPage={isLastProfilesPage}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -168,6 +174,8 @@ const ProfileDetails = ({
             details={details}
             radiusProfiles={radiusProfiles}
             fileUpload={fileUpload}
+            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
+            isLastRadiusPage={isLastRadiusPage}
           />
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
@@ -186,6 +194,10 @@ ProfileDetails.propTypes = {
   ssidProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
+  onFetchMoreRadiusProfiles: PropTypes.func,
+  isLastRadiusPage: PropTypes.bool,
 };
 
 ProfileDetails.defaultProps = {
@@ -195,6 +207,10 @@ ProfileDetails.defaultProps = {
   ssidProfiles: [],
   radiusProfiles: [],
   childProfileIds: [],
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
+  onFetchMoreRadiusProfiles: () => {},
+  isLastRadiusPage: true,
 };
 
 export default ProfileDetails;

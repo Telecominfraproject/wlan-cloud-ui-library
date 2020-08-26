@@ -10,7 +10,15 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProfiles }) => {
+const General = ({
+  data,
+  profiles,
+  onUpdateEquipment,
+  loadingProfiles,
+  errorProfiles,
+  onFetchMoreProfiles,
+  isLastProfilesPage,
+}) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -230,6 +238,18 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
     </Item>
   );
 
+  const handleOnPopupScroll = e => {
+    if (isLastProfilesPage) {
+      return false;
+    }
+    e.persist();
+    const { target } = e;
+    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+      onFetchMoreProfiles();
+    }
+    return true;
+  };
+
   if (loadingProfiles) {
     return <Loading data-testid="loadingProfiles" />;
   }
@@ -292,6 +312,7 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
             className={styles.Field}
             onChange={handleProfileChange}
             placeholder="Select access point profile..."
+            onPopupScroll={handleOnPopupScroll}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -489,6 +510,8 @@ General.propTypes = {
   onUpdateEquipment: PropTypes.func.isRequired,
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
 };
 
 General.defaultProps = {
@@ -496,6 +519,8 @@ General.defaultProps = {
   profiles: [],
   loadingProfiles: true,
   errorProfiles: null,
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
 };
 
 export default General;

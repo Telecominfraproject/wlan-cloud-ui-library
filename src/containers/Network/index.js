@@ -25,6 +25,8 @@ const Network = ({
   profiles,
   loadingProfile,
   errorProfile,
+  onFetchMoreProfiles,
+  isLastProfilesPage,
 }) => {
   return (
     <div className={styles.clientDevices}>
@@ -50,6 +52,8 @@ const Network = ({
           profiles={profiles}
           loadingProfile={loadingProfile}
           errorProfile={errorProfile}
+          onFetchMoreProfiles={onFetchMoreProfiles}
+          isLastProfilesPage={isLastProfilesPage}
         />
         <div className={styles.mainContent}>{children}</div>
       </div>
@@ -85,11 +89,15 @@ Network.propTypes = {
     name: PropTypes.string,
     parentId: PropTypes.string,
   }),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
 };
 
 Network.defaultProps = {
   selectedLocation: null,
   errorProfile: {},
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
 };
 
 export default Network;
