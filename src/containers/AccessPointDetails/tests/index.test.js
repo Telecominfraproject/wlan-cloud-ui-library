@@ -188,10 +188,10 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
 
-    const city = getByLabelText('City');
-    fireEvent.keyDown(city, DOWN_ARROW);
-    await waitForElement(() => getByText(defaultProps.locations[1].name));
-    fireEvent.click(getByText(defaultProps.locations[1].name));
+    const level0 = getByLabelText('Level 0');
+    fireEvent.keyDown(level0, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[0].children[0].name));
+    fireEvent.click(getByText(defaultProps.locations[0].children[0].name));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
     expect(
@@ -199,9 +199,6 @@ describe('<AccessPointDetails />', () => {
     ).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
-    fireEvent.keyDown(city, DOWN_ARROW);
-    await waitForElement(() => getByText(defaultProps.locations[0].name));
-    fireEvent.click(getByText(defaultProps.locations[0].name));
   });
 
   it('Confirm leave form Modal should appear if Firmware tab form is changed', async () => {
@@ -246,10 +243,10 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('tab', { name: /location/i }));
 
-    const city = getByLabelText('City');
-    fireEvent.keyDown(city, DOWN_ARROW);
-    await waitForElement(() => getByText(defaultProps.locations[1].name));
-    fireEvent.click(getByText(defaultProps.locations[1].name));
+    const level0 = getByLabelText('Level 0');
+    fireEvent.keyDown(level0, DOWN_ARROW);
+    await waitForElement(() => getByText(defaultProps.locations[0].children[0].name));
+    fireEvent.click(getByText(defaultProps.locations[0].children[0].name));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
     fireEvent.click(getByRole('button', { name: /cancel/i }));
