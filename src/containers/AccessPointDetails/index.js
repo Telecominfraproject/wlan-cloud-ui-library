@@ -108,7 +108,7 @@ const AccessPointDetails = ({
         mask={false}
       />
 
-      <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points/')}>
+      <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
         BACK
       </Button>
       <Card
