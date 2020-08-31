@@ -331,7 +331,6 @@ const RadiusForm = ({ form, details }) => {
             addonAfter={
               <Tooltip title="Probe range interval is 60 - 100 (0 means disabled)" text="Seconds" />
             }
-            bsSize="small"
           />
         </Item>
       </Card>
