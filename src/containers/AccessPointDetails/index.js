@@ -51,6 +51,8 @@ const AccessPointDetails = ({
   errorProfiles,
   loadingFirmware,
   errorFirmware,
+  onFetchMoreProfiles,
+  isLastProfilesPage,
 }) => {
   const { id, tab } = useParams();
   const history = useHistory();
@@ -156,6 +158,8 @@ const AccessPointDetails = ({
           handleOnFormChange={handleOnFormChange}
           loadingProfiles={loadingProfiles}
           errorProfiles={errorProfiles}
+          onFetchMoreProfiles={onFetchMoreProfiles}
+          isLastProfilesPage={isLastProfilesPage}
         />
       )}
       {tab === 'status' && <Status data={data} />}
@@ -195,6 +199,8 @@ AccessPointDetails.propTypes = {
   errorProfiles: PropTypes.instanceOf(Object),
   loadingFirmware: PropTypes.bool,
   errorFirmware: PropTypes.instanceOf(Object),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -206,6 +212,8 @@ AccessPointDetails.defaultProps = {
   errorProfiles: null,
   loadingFirmware: true,
   errorFirmware: null,
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
 };
 
 export default AccessPointDetails;

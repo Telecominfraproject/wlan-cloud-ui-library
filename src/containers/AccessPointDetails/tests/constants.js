@@ -371,10 +371,10 @@ const profiles = [
 
 const locations = [
   {
-    id: "0",
-    key: "0",
-    value: "0",
-    children:[
+    id: '0',
+    key: '0',
+    value: '0',
+    children: [
       {
         id: 2,
         key: 2,
@@ -443,9 +443,8 @@ const locations = [
         title: 'Toronto',
         value: '15',
       },
-    ]
-  }
-  
+    ],
+  },
 ];
 export const defaultProps = {
   data: {

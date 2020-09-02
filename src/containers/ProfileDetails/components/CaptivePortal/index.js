@@ -37,7 +37,14 @@ const formatFile = file => {
   };
 };
 
-const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
+const CaptivePortalForm = ({
+  details,
+  form,
+  fileUpload,
+  radiusProfiles,
+  onFetchMoreRadiusProfiles,
+  isLastRadiusPage,
+}) => {
   const [showTips, setShowTips] = useState(false);
 
   const [authentication, setAuthentication] = useState(details.authenticationType);
@@ -265,6 +272,18 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
     setUserList(userList.filter(user => user.username !== activeUser));
   };
 
+  const handleOnPopupScroll = e => {
+    if (isLastRadiusPage) {
+      return false;
+    }
+    e.persist();
+    const { target } = e;
+    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+      onFetchMoreRadiusProfiles();
+    }
+    return true;
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       authenticationType: details.authenticationType,
@@ -417,7 +436,11 @@ const CaptivePortalForm = ({ details, form, fileUpload, radiusProfiles }) => {
               },
             ]}
           >
-            <Select className={globalStyles.field} placeholder="RADIUS Services">
+            <Select
+              className={globalStyles.field}
+              placeholder="RADIUS Services"
+              onPopupScroll={handleOnPopupScroll}
+            >
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
                   {profile.name}
@@ -660,6 +683,8 @@ CaptivePortalForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
+  onFetchMoreRadiusProfiles: PropTypes.func,
+  isLastRadiusPage: PropTypes.bool,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -667,6 +692,8 @@ CaptivePortalForm.defaultProps = {
   details: {},
   radiusProfiles: [],
   fileUpload: () => {},
+  onFetchMoreRadiusProfiles: () => {},
+  isLastRadiusPage: true,
 };
 
 export default CaptivePortalForm;

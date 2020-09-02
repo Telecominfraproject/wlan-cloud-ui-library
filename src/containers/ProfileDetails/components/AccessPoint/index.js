@@ -7,19 +7,24 @@ import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
-const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
+const AccessPointForm = ({
+  form,
+  details,
+  childProfileIds,
+  ssidProfiles,
+  onFetchMoreProfiles,
+  isLastProfilesPage,
+}) => {
   const { Item } = Form;
   const { Option } = Select;
 
-  const [vlan, setVlan] = useState(details.vlanNative === undefined ? true : details.vlanNative);
+  const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(
-    (details.ntpServer && details.ntpServer.auto) === undefined
-      ? true
-      : details.ntpServer && details.ntpServer.auto
+    details?.ntpServer?.auto === undefined ? true : details?.ntpServer?.auto
   );
 
-  const [rtls, setRtls] = useState(details.rtlsSettings && details.rtlsSettings.enabled);
-  const [syslog, setSyslog] = useState(details.syslogRelay && details.syslogRelay.enabled);
+  const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
+  const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
 
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
 
@@ -40,29 +45,42 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
   useEffect(() => {
     setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
-      vlanNative: details.vlanNative === undefined ? true : details.vlanNative,
-      vlan: details.vlan,
+      vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
+      vlan: details?.vlan,
       ntpServer: {
-        auto: details.ntpServer && details.ntpServer.auto,
-        value: details.ntpServer && details.ntpServer.value,
+        auto: details?.ntpServer?.auto,
+        value: details?.ntpServer?.value,
       },
-      ledControlEnabled: details.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled,
       rtlsSettings: {
-        enabled: details.rtlsSettings && details.rtlsSettings.enabled ? 'true' : 'false',
-        srvHostIp: details.rtlsSettings && details.rtlsSettings.srvHostIp,
-        srvHostPort: details.rtlsSettings && details.rtlsSettings.srvHostPort,
+        enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
+        srvHostIp: details?.rtlsSettings?.srvHostIp,
+        srvHostPort: details?.rtlsSettings?.srvHostPort,
       },
       syslogRelay: {
-        enabled: details.syslogRelay && details.syslogRelay.enabled ? 'true' : 'false',
-        srvHostIp: details.syslogRelay && details.syslogRelay.srvHostIp,
-        srvHostPort: details.syslogRelay && details.syslogRelay.srvHostPort,
-        severity: (details.syslogRelay && details.syslogRelay.severity) || 'DEBUG',
+        enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
+        srvHostIp: details?.syslogRelay?.srvHostIp,
+        srvHostPort: details?.syslogRelay?.srvHostPort,
+        severity: details?.syslogRelay?.severity || 'DEBUG',
       },
-      syntheticClientEnabled: details.syntheticClientEnabled ? 'true' : 'false',
-      equipmentDiscovery: details.equipmentDiscovery ? 'true' : 'false',
+      syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
+      equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       childProfileIds,
     });
+    onFetchMoreProfiles();
   }, [form, details, childProfileIds]);
+
+  const handleOnPopupScroll = e => {
+    if (isLastProfilesPage) {
+      return false;
+    }
+    e.persist();
+    const { target } = e;
+    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
+      onFetchMoreProfiles();
+    }
+    return true;
+  };
 
   const columns = [
     {
@@ -348,6 +366,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles }) => {
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
+            onPopupScroll={handleOnPopupScroll}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
@@ -379,6 +398,8 @@ AccessPointForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -386,6 +407,8 @@ AccessPointForm.defaultProps = {
   details: {},
   childProfileIds: [],
   ssidProfiles: [],
+  onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
 };
 
 export default AccessPointForm;
