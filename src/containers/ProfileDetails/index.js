@@ -35,11 +35,11 @@ const ProfileDetails = ({
   onUpdateProfile,
   ssidProfiles,
   radiusProfiles,
+  captiveProfiles,
   fileUpload,
   onFetchMoreProfiles,
-  isLastProfilesPage,
   onFetchMoreRadiusProfiles,
-  isLastRadiusPage,
+  onFetchMoreCaptiveProfiles,
 }) => {
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
@@ -157,7 +157,16 @@ const ProfileDetails = ({
             <Input className={globalStyles.field} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {profileType === 'ssid' && <SSIDForm form={form} details={details} />}
+        {profileType === 'ssid' && (
+          <SSIDForm
+            form={form}
+            details={details}
+            captiveProfiles={captiveProfiles}
+            radiusProfiles={radiusProfiles}
+            onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}
+            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
+          />
+        )}
         {profileType === 'equipment_ap' && (
           <AccessPointForm
             form={form}
@@ -165,7 +174,6 @@ const ProfileDetails = ({
             ssidProfiles={ssidProfiles}
             childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
-            isLastProfilesPage={isLastProfilesPage}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -175,7 +183,6 @@ const ProfileDetails = ({
             radiusProfiles={radiusProfiles}
             fileUpload={fileUpload}
             onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
-            isLastRadiusPage={isLastRadiusPage}
           />
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
@@ -193,11 +200,11 @@ ProfileDetails.propTypes = {
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
+  captiveProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
-  isLastProfilesPage: PropTypes.bool,
   onFetchMoreRadiusProfiles: PropTypes.func,
-  isLastRadiusPage: PropTypes.bool,
+  onFetchMoreCaptiveProfiles: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -206,11 +213,11 @@ ProfileDetails.defaultProps = {
   details: {},
   ssidProfiles: [],
   radiusProfiles: [],
+  captiveProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
-  isLastProfilesPage: true,
   onFetchMoreRadiusProfiles: () => {},
-  isLastRadiusPage: true,
+  onFetchMoreCaptiveProfiles: () => {},
 };
 
 export default ProfileDetails;

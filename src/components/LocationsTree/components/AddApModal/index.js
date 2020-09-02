@@ -18,25 +18,12 @@ const AddApModal = ({
   loadingProfile,
   errorProfile,
   onFetchMoreProfiles,
-  isLastProfilesPage,
 }) => {
   const [form] = Form.useForm();
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 12 },
-  };
-
-  const handleOnPopupScroll = e => {
-    if (isLastProfilesPage) {
-      return false;
-    }
-    e.persist();
-    const { target } = e;
-    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
-      onFetchMoreProfiles();
-    }
-    return true;
   };
 
   const content = (
@@ -80,7 +67,7 @@ const AddApModal = ({
         <Select
           className={styles.field}
           placeholder="Select Access Point Profile"
-          onPopupScroll={handleOnPopupScroll}
+          onPopupScroll={onFetchMoreProfiles}
           listItemHeight={10}
         >
           {Object.keys(profiles).map(i => (
@@ -132,7 +119,6 @@ AddApModal.propTypes = {
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool.isRequired,
   onFetchMoreProfiles: PropTypes.func,
-  isLastProfilesPage: PropTypes.bool,
 };
 
 AddApModal.defaultProps = {
@@ -141,7 +127,6 @@ AddApModal.defaultProps = {
   profiles: {},
   errorProfile: {},
   onFetchMoreProfiles: () => {},
-  isLastProfilesPage: true,
 };
 
 export default AddApModal;

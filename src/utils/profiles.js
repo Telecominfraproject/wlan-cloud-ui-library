@@ -6,7 +6,9 @@ const isBool = value => value === 'true';
 export const formatSsidProfileForm = values => {
   const formattedData = {
     radioBasedConfigs: {},
+    childProfileIds: [],
   };
+
   if (values.wepKey) {
     const wepKeyType = values.wepKey.length === 26 ? 'wep128' : 'wep64';
     const wepConfig = {
@@ -47,6 +49,12 @@ export const formatSsidProfileForm = values => {
         values[`${j}${i}`] === 'auto' ? null : isBool(values[`${j}${i}`]);
     });
   });
+
+  if (values.captivePortal === 'usePortal') {
+    formattedData.childProfileIds.push(parseInt(values.captivePortalId, 10));
+  } else {
+    formattedData.captivePortalId = null;
+  }
 
   return formattedData;
 };

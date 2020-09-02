@@ -25,7 +25,7 @@ import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles, isLastProfilesPage }) => {
+const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -139,7 +139,6 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles, isLast
               form={form}
               ssidProfiles={ssidProfiles}
               onFetchMoreProfiles={onFetchMoreProfiles}
-              isLastProfilesPage={isLastProfilesPage}
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
@@ -153,13 +152,11 @@ AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
-  isLastProfilesPage: PropTypes.bool,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
   onFetchMoreProfiles: () => {},
-  isLastProfilesPage: true,
 };
 
 export default AddProfile;

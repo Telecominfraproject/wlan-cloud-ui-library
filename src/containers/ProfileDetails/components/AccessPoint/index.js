@@ -7,14 +7,7 @@ import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
-const AccessPointForm = ({
-  form,
-  details,
-  childProfileIds,
-  ssidProfiles,
-  onFetchMoreProfiles,
-  isLastProfilesPage,
-}) => {
+const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetchMoreProfiles }) => {
   const { Item } = Form;
   const { Option } = Select;
 
@@ -67,20 +60,7 @@ const AccessPointForm = ({
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       childProfileIds,
     });
-    onFetchMoreProfiles();
   }, [form, details, childProfileIds]);
-
-  const handleOnPopupScroll = e => {
-    if (isLastProfilesPage) {
-      return false;
-    }
-    e.persist();
-    const { target } = e;
-    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
-      onFetchMoreProfiles();
-    }
-    return true;
-  };
 
   const columns = [
     {
@@ -366,7 +346,7 @@ const AccessPointForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={handleOnPopupScroll}
+            onPopupScroll={onFetchMoreProfiles}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
@@ -399,7 +379,6 @@ AccessPointForm.propTypes = {
   childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
-  isLastProfilesPage: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -408,7 +387,6 @@ AccessPointForm.defaultProps = {
   childProfileIds: [],
   ssidProfiles: [],
   onFetchMoreProfiles: () => {},
-  isLastProfilesPage: true,
 };
 
 export default AccessPointForm;

@@ -30,7 +30,6 @@ const LocationsTree = ({
   loadingProfile,
   errorProfile,
   onFetchMoreProfiles,
-  isLastProfilesPage,
 }) => {
   const getLocationPath = () => {
     const locationsPath = [];
@@ -94,7 +93,6 @@ const LocationsTree = ({
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
         onFetchMoreProfiles={onFetchMoreProfiles}
-        isLastProfilesPage={isLastProfilesPage}
       />
 
       <EditFormModal
@@ -150,7 +148,6 @@ LocationsTree.propTypes = {
     parentId: PropTypes.string,
   }),
   onFetchMoreProfiles: PropTypes.func,
-  isLastProfilesPage: PropTypes.bool,
 };
 
 LocationsTree.defaultProps = {
@@ -161,7 +158,6 @@ LocationsTree.defaultProps = {
   selectedLocation: null,
   errorProfile: {},
   onFetchMoreProfiles: () => {},
-  isLastProfilesPage: true,
 };
 
 export default LocationsTree;

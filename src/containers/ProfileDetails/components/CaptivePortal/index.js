@@ -43,7 +43,6 @@ const CaptivePortalForm = ({
   fileUpload,
   radiusProfiles,
   onFetchMoreRadiusProfiles,
-  isLastRadiusPage,
 }) => {
   const [showTips, setShowTips] = useState(false);
 
@@ -272,18 +271,6 @@ const CaptivePortalForm = ({
     setUserList(userList.filter(user => user.username !== activeUser));
   };
 
-  const handleOnPopupScroll = e => {
-    if (isLastRadiusPage) {
-      return false;
-    }
-    e.persist();
-    const { target } = e;
-    if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
-      onFetchMoreRadiusProfiles();
-    }
-    return true;
-  };
-
   useEffect(() => {
     form.setFieldsValue({
       authenticationType: details.authenticationType,
@@ -439,7 +426,7 @@ const CaptivePortalForm = ({
             <Select
               className={globalStyles.field}
               placeholder="RADIUS Services"
-              onPopupScroll={handleOnPopupScroll}
+              onPopupScroll={onFetchMoreRadiusProfiles}
             >
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
@@ -684,7 +671,6 @@ CaptivePortalForm.propTypes = {
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
-  isLastRadiusPage: PropTypes.bool,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -693,7 +679,6 @@ CaptivePortalForm.defaultProps = {
   radiusProfiles: [],
   fileUpload: () => {},
   onFetchMoreRadiusProfiles: () => {},
-  isLastRadiusPage: true,
 };
 
 export default CaptivePortalForm;
