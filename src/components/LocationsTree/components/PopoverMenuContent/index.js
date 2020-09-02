@@ -24,30 +24,20 @@ const PopoverMenuContent = ({
       <Button
         onClick={() => {
           hide();
-          setApModal(true);
+          setAddModal(true);
         }}
       >
-        Add Access Point
+        Add Location
       </Button>
-      {locationType !== 'FLOOR' && (
-        <Button
-          onClick={() => {
-            hide();
-            setAddModal(true);
-          }}
-        >
-          Add Location
-        </Button>
-      )}
       {locationType !== 'NETWORK' && (
         <>
           <Button
             onClick={() => {
               hide();
-              setEditModal(true);
+              setApModal(true);
             }}
           >
-            Edit Location
+            Add Access Point
           </Button>
           <Button
             onClick={() => {
@@ -56,6 +46,14 @@ const PopoverMenuContent = ({
             }}
           >
             Bulk Edit APs
+          </Button>
+          <Button
+            onClick={() => {
+              hide();
+              setEditModal(true);
+            }}
+          >
+            Edit Location
           </Button>
           <Button
             onClick={() => {

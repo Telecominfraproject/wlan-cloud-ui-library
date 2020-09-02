@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import Modal from 'components/Modal';
 import { getLocationPath } from 'utils/locations';
 
 import General from './components/General';
@@ -15,6 +16,28 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
+const TAB_LIST = [
+  {
+    key: 'general',
+    tab: 'General',
+  },
+  {
+    key: 'status',
+    tab: 'Status',
+  },
+  {
+    key: 'location',
+    tab: 'Location',
+  },
+  {
+    key: 'os',
+    tab: 'OS Stats',
+  },
+  {
+    key: 'firmware',
+    tab: 'Firmware',
+  },
+];
 const AccessPointDetails = ({
   data,
   profiles,
@@ -31,42 +54,65 @@ const AccessPointDetails = ({
   onFetchMoreProfiles,
   isLastProfilesPage,
 }) => {
-  const [tab, setTab] = useState('general');
+  const { id, tab } = useParams();
+  const history = useHistory();
 
-  const tabList = [
-    {
-      key: 'general',
-      tab: 'General',
-    },
-    {
-      key: 'status',
-      tab: 'Status',
-    },
-    {
-      key: 'location',
-      tab: 'Location',
-    },
-    {
-      key: 'os',
-      tab: 'OS Stats',
-    },
-    {
-      key: 'firmware',
-      tab: 'Firmware',
-    },
-  ];
+  const [isFormDirty, setIsFormDirty] = useState(false);
 
-  const breadCrumbs = getLocationPath(data.locationId, locations).map(location => (
-    <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
+  const [confirmModal, setConfirmModal] = useState(false);
+
+  const [redirectURL, setRedirectURL] = useState();
+
+  const handleOnFormChange = () => {
+    if (!isFormDirty) {
+      setIsFormDirty(true);
+    }
+  };
+
+  const handlePageChange = path => {
+    if (isFormDirty) {
+      setRedirectURL(path);
+      setConfirmModal(true);
+    } else {
+      history.push(path);
+    }
+  };
+
+  const handleOnFirmwareSave = (dataId, versionId) => {
+    onUpdateEquipmentFirmware(dataId, versionId);
+    setIsFormDirty(false);
+  };
+
+  const handleOnEquipmentSave = equipment => {
+    onUpdateEquipment(...Object.values(equipment));
+    setIsFormDirty(false);
+  };
+
+  const breadCrumbs = getLocationPath(data.locationId, locations).map(item => (
+    <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
   ));
 
   return (
     <div className={styles.AccessPointDetails}>
-      <Link to="/network/access-points">
-        <Button className={styles.backButton} icon={<LeftOutlined />} name="back">
-          BACK
-        </Button>
-      </Link>
+      <Modal
+        onCancel={() => {
+          setConfirmModal(false);
+        }}
+        onSuccess={() => {
+          setConfirmModal(false);
+          setIsFormDirty(false);
+          history.push(redirectURL);
+        }}
+        visible={confirmModal}
+        buttonText="OK"
+        title="Leave Page?"
+        content={<p>Please confirm exiting without saving this Access Point page.</p>}
+        mask={false}
+      />
+
+      <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
+        BACK
+      </Button>
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
@@ -98,18 +144,18 @@ const AccessPointDetails = ({
             </div>
           </div>
         }
-        tabList={tabList}
-        onTabChange={key => {
-          setTab(key);
-        }}
+        tabList={TAB_LIST}
+        onTabChange={key => handlePageChange(`/network/access-points/${id}/${key}`)}
+        activeTabKey={tab}
         bodyStyle={{ marginBottom: '-48px' }}
       />
 
       {tab === 'general' && (
         <General
           data={data}
-          onUpdateEquipment={onUpdateEquipment}
+          handleOnEquipmentSave={handleOnEquipmentSave}
           profiles={profiles}
+          handleOnFormChange={handleOnFormChange}
           loadingProfiles={loadingProfiles}
           errorProfiles={errorProfiles}
           onFetchMoreProfiles={onFetchMoreProfiles}
@@ -118,14 +164,20 @@ const AccessPointDetails = ({
       )}
       {tab === 'status' && <Status data={data} />}
       {tab === 'location' && (
-        <Location data={data} locations={locations} onUpdateEquipment={onUpdateEquipment} />
+        <Location
+          data={data}
+          locations={locations}
+          handleOnEquipmentSave={handleOnEquipmentSave}
+          handleOnFormChange={handleOnFormChange}
+        />
       )}
       {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
       {tab === 'firmware' && (
         <Firmware
           firmware={firmware}
           data={data}
-          onUpdateEquipmentFirmware={onUpdateEquipmentFirmware}
+          handleOnFirmwareSave={handleOnFirmwareSave}
+          handleOnFormChange={handleOnFormChange}
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
         />

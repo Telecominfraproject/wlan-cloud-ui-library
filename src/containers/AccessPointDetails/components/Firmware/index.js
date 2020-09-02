@@ -17,7 +17,8 @@ const { Item } = Form;
 const Firmware = ({
   firmware,
   data,
-  onUpdateEquipmentFirmware,
+  handleOnFirmwareSave,
+  handleOnFormChange,
   loadingFirmware,
   errorFirmware,
 }) => {
@@ -40,7 +41,7 @@ const Firmware = ({
   };
 
   const handleUpdateFirmware = () => {
-    onUpdateEquipmentFirmware(data.id, version.id);
+    handleOnFirmwareSave(data.id, version.id);
     setRebootModal(false);
   };
 
@@ -86,7 +87,7 @@ const Firmware = ({
         title="Confirm"
         content={<p>Confirm downloading, flashing, rebooting? </p>}
       />
-      <Form {...layout} form={form}>
+      <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
         <Card title="Firmware">
           <Item label="Active Version">
             {status.activeSwVersion}
@@ -100,7 +101,7 @@ const Firmware = ({
         <Card title="Upgrade">
           <Item label="Target Version">
             <div className={styles.InlineDiv}>
-              <Item>
+              <Item name="targetVersion">
                 <Select
                   className={styles.Field}
                   onChange={handleOnChangeVersion}
@@ -151,7 +152,8 @@ const Firmware = ({
 Firmware.propTypes = {
   data: PropTypes.instanceOf(Object),
   firmware: PropTypes.instanceOf(Object),
-  onUpdateEquipmentFirmware: PropTypes.func,
+  handleOnFirmwareSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
   loadingFirmware: PropTypes.bool,
   errorFirmware: PropTypes.instanceOf(Object),
 };
@@ -159,7 +161,8 @@ Firmware.propTypes = {
 Firmware.defaultProps = {
   data: {},
   firmware: {},
-  onUpdateEquipmentFirmware: () => {},
+  handleOnFirmwareSave: () => {},
+  handleOnFormChange: () => {},
   loadingFirmware: true,
   errorFirmware: null,
 };

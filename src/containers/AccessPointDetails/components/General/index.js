@@ -13,7 +13,8 @@ const { Panel } = Collapse;
 const General = ({
   data,
   profiles,
-  onUpdateEquipment,
+  handleOnEquipmentSave,
+  handleOnFormChange,
   loadingProfiles,
   errorProfiles,
   onFetchMoreProfiles,
@@ -132,20 +133,20 @@ const General = ({
           });
         });
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
           customerId,
-          selectedProfile?.id,
+          profileId: selectedProfile?.id,
           locationId,
-          values.access,
+          name: values.access,
           latitude,
           longitude,
           serial,
           lastModifiedTimestamp,
-          formattedData
-        );
+          formattedData,
+        });
       })
       .catch(() => {
         notification.error({
@@ -267,7 +268,7 @@ const General = ({
   }
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -507,7 +508,8 @@ const General = ({
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Array),
-  onUpdateEquipment: PropTypes.func.isRequired,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
@@ -517,6 +519,8 @@ General.propTypes = {
 General.defaultProps = {
   data: {},
   profiles: [],
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
   loadingProfiles: true,
   errorProfiles: null,
   onFetchMoreProfiles: () => {},

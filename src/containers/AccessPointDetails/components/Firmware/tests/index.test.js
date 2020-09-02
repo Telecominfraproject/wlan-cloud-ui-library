@@ -129,13 +129,10 @@ describe('<Firmware />', () => {
       <Firmware
         firmware={firmware}
         data={data}
-        onUpdateEquipmentFirmware={submitSpy}
+        handleOnFirmwareSave={submitSpy}
         {...defaultProps}
       />
     );
-
-    const paragraph = getByText('Upgrade');
-    expect(paragraph).toBeVisible();
 
     const targetVersion = getByRole('combobox');
 
