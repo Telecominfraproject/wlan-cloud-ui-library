@@ -361,8 +361,8 @@ describe('<SSIDForm />', () => {
     const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
-    await waitForElement(() => getByText('Open (No ecryption)'));
-    fireEvent.click(getByText('Open (No ecryption)'));
+    await waitForElement(() => getByText('Open (No Encryption)'));
+    fireEvent.click(getByText('Open (No Encryption)'));
     await waitFor(() => {
       expect(getByText('802.11k')).toBeVisible();
     });
