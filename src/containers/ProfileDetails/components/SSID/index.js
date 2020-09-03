@@ -49,7 +49,7 @@ const SSIDForm = ({
       ssid: details.ssid || '',
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSSID: details.broadcastSsid === 'enabled' ? 'showSSID' : 'hideSSID',
+      broadcastSsid: details.broadcastSsid,
       appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
@@ -79,7 +79,7 @@ const SSIDForm = ({
 
         <Item
           label="Broadcast SSID"
-          name="broadcastSSID"
+          name="broadcastSsid"
           rules={[
             {
               required: true,
@@ -88,8 +88,8 @@ const SSIDForm = ({
           ]}
         >
           <Radio.Group>
-            <Radio value="showSSID">Show SSID</Radio>
-            <Radio value="hideSSID">Hide SSID</Radio>
+            <Radio value="enabled">Show SSID</Radio>
+            <Radio value="disabled">Hide SSID</Radio>
           </Radio.Group>
         </Item>
 
