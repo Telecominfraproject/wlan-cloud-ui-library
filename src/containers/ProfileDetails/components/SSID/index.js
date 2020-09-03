@@ -49,7 +49,7 @@ const SSIDForm = ({
       ssid: details.ssid || '',
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSsid: details.broadcastSsid,
+      broadcastSsid: details.broadcastSsid || 'enabled',
       appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
