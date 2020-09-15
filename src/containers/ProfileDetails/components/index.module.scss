@@ -52,6 +52,10 @@
     font-size: 16px;
     transform: translate(0, 10%);
   }
+
+  :global(.ant-collapse-arrow) {
+    transform: translateY(-100%) !important;
+  }
 }
 
 .FlexDiv {
