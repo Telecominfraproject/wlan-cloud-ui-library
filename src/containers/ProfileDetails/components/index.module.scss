@@ -47,6 +47,11 @@
   :global(.ant-upload.ant-upload-select-picture-card) {
     width: 100%;
   }
+
+  :global(.ant-collapse-header) {
+    font-size: 16px;
+    transform: translate(0, 10%);
+  }
 }
 
 .FlexDiv {
