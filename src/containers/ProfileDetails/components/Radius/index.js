@@ -402,16 +402,7 @@ const RadiusForm = ({ form, details }) => {
                 aria-label={`serviceZoneItem-${item.name}`}
                 extra={
                   <>
-                    <div className={styles.RadiusInline}>
-                      <Card className={styles.infoCard} title=" Radius Services" bordered={false}>
-                        <Table
-                          dataSource={services}
-                          columns={columns}
-                          pagination={false}
-                          size="small"
-                          rowKey="name"
-                        />
-                        <>
+                    <>
                           <b className={styles.iconButton}>{item.name}</b>
                           <Button
                             title="editRadiusServiceZone"
@@ -427,6 +418,15 @@ const RadiusForm = ({ form, details }) => {
                             type="danger"
                           />
                         </>
+                    <div className={styles.RadiusInline}>
+                      <Card className={styles.infoCard} title=" Radius Services" bordered={false}>
+                        <Table
+                          dataSource={services}
+                          columns={columns}
+                          pagination={false}
+                          size="small"
+                          rowKey="name"
+                        />
                       </Card>
 
                       <Card className={styles.infoCard} title=" Management Subset" bordered={false}>
