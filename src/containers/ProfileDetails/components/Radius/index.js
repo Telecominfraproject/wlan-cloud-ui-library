@@ -403,21 +403,21 @@ const RadiusForm = ({ form, details }) => {
                 extra={
                   <>
                     <>
-                          <b className={styles.iconButton}>{item.name}</b>
-                          <Button
-                            title="editRadiusServiceZone"
-                            onClick={() => handleEditZone(item)}
-                            className={styles.iconButton}
-                            icon={<EditOutlined />}
-                          />
-                          <Button
-                            title="deleteRadiusServiceZone"
-                            onClick={() => handleDeleteZone(item)}
-                            className={styles.iconButton}
-                            icon={<DeleteOutlined />}
-                            type="danger"
-                          />
-                        </>
+                      <b className={styles.iconButton}>{item.name}</b>
+                        <Button
+                          title="editRadiusServiceZone"
+                          onClick={() => handleEditZone(item)}
+                          className={styles.iconButton}
+                          icon={<EditOutlined />}
+                        />
+                        <Button
+                          title="deleteRadiusServiceZone"
+                          onClick={() => handleDeleteZone(item)}
+                          className={styles.iconButton}
+                          icon={<DeleteOutlined />}
+                          type="danger"
+                        />
+                    </>
                     <div className={styles.RadiusInline}>
                       <Card className={styles.infoCard} title=" Radius Services" bordered={false}>
                         <Table
