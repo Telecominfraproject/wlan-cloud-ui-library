@@ -13,6 +13,7 @@ import {
   formatSsidProfileForm,
   formatApProfileForm,
   formatBonjourGatewayForm,
+  formatRadiusForm,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -21,6 +22,7 @@ import styles from './index.module.scss';
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
+import RadiusForm from '../ProfileDetails/components/Radius';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -74,6 +76,11 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
         }
 
+        if (profileType === 'radius') {
+          formattedData.model_type = 'RadiusProfile';
+          formattedData = Object.assign(formattedData, formatRadiusForm(values));
+        }
+
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -122,6 +129,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
                 <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="radius">Radius</Option>
               </Select>
             </Item>
             <Item
@@ -142,6 +150,12 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
+          {profileType === 'radius' && (
+            <RadiusForm 
+              form={form} 
+              details={{}} 
+            />
+          )}
         </Form>
       </div>
     </Container>
@@ -152,11 +166,13 @@ AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  radiusProfiles: PropTypes.instanceOf(Array),
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
   onFetchMoreProfiles: () => {},
+  radiusProfiles: [],
 };
 
 export default AddProfile;
