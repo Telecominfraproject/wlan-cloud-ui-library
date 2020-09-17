@@ -77,17 +77,15 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
+              let cidr = value;
+              setCidrPrefix(cidr);
               if (
                 !value ||
                 (getFieldValue('subnetCidrPrefix') >= 1 &&
                   getFieldValue('subnetCidrPrefix') <= 32) ||
                 ipPattern.test(getFieldValue('subnetCidrPrefix'))
               ) {
-                return Promise.resolve(value).then( cidrValue => {
-                  let cidr = 0;
-                  if (cidrValue.length <= 2 && cidrValue >= 1 && cidrValue <=32){
-                    cidr = value;
-                  } else if (ipPattern.test(value)){
+                  if (ipPattern.test(getFieldValue('subnetCidrPrefix'))){
                     const maskNodes = value.match(/(\d+)/g);
                     cidr = 0;
                     for (let i = 0; i < maskNodes.length; i += 1){
@@ -95,7 +93,7 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
                     }
                   }
                   setCidrPrefix(cidr);
-                });
+                return Promise.resolve();
               }
               return Promise.reject(
                 new Error(
