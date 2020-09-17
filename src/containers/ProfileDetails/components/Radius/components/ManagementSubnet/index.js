@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input } from 'antd';
 
@@ -17,6 +17,7 @@ const ipPattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
 const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) => {
   const [form] = Form.useForm();
+  const [cidrPrefix, setCidrPrefix] = useState();
 
   useEffect(() => {
     form.resetFields();
@@ -30,6 +31,9 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
         onSuccess(newValues);
       })
       .catch(() => {});
+     form.setFieldsValue({
+      subnetCidrPrefix: cidrPrefix,
+    });
   };
 
   const addServerContent = (
@@ -79,7 +83,19 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
                   getFieldValue('subnetCidrPrefix') <= 32) ||
                 ipPattern.test(getFieldValue('subnetCidrPrefix'))
               ) {
-                return Promise.resolve();
+                return Promise.resolve(value).then( cidrValue => {
+                  let cidr = 0;
+                  if (cidrValue.length <= 2 && cidrValue >= 1 && cidrValue <=32){
+                    cidr = value;
+                  } else if (ipPattern.test(value)){
+                    const maskNodes = value.match(/(\d+)/g);
+                    cidr = 0;
+                    for (let i = 0; i < maskNodes.length; i += 1){
+                      cidr += (((maskNodes[i] >>> 0).toString(2)).match(/1/g) || []).length; // eslint-disable-line no-bitwise
+                    }
+                  }
+                  setCidrPrefix(cidr);
+                });
               }
               return Promise.reject(
                 new Error(
