@@ -176,13 +176,11 @@ AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
-  radiusProfiles: PropTypes.instanceOf(Array),
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
   onFetchMoreProfiles: () => {},
-  radiusProfiles: [],
 };
 
 export default AddProfile;
