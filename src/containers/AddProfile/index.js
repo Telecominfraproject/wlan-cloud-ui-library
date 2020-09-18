@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Form, Input, Card, Select } from 'antd';
+import { Form, Input, Card, Select, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -77,6 +77,21 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         }
 
         if (profileType === 'radius') {
+          if (values.services.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service is required.',
+            });
+            return;
+          }
+          if (values.zones.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service Zone is required.',
+            });
+            return;
+          }
+          
           formattedData.model_type = 'RadiusProfile';
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
@@ -150,12 +165,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
-          {profileType === 'radius' && (
-            <RadiusForm 
-              form={form} 
-              details={{}} 
-            />
-          )}
+          {profileType === 'radius' && <RadiusForm form={form} />}
         </Form>
       </div>
     </Container>

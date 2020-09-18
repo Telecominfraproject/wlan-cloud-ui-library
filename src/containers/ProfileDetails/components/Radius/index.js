@@ -111,7 +111,7 @@ const RadiusForm = ({ form, details }) => {
   const handleEditZoneSuccess = item => {
     setZones(
       zones.map(i => {
-        if (i.name === selectedZone.name) {
+        if (i.name === item.name) {
           return item;
         }
         return i;
@@ -132,10 +132,15 @@ const RadiusForm = ({ form, details }) => {
   const handleAddSubnetSuccess = item => {
     setZones(
       zones.map(i => {
-        if (i.name === item.serviceRegionName) {
+        if (i.name === item.serviceRegionName && 'subnets' in i) {
           return {
             ...i,
             subnets: [...i.subnets, item],
+          };
+        }  
+        if (i.name === item.serviceRegionName) {
+          return {
+            ...i, subnets: [item],
           };
         }
         return i;
