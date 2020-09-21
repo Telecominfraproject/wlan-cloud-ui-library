@@ -408,7 +408,6 @@ const General = ({
                 <Select className={styles.Field}>
                   <Option value="20MHz">20MHz</Option>
                   <Option value="40MHz">40MHz</Option>
-                  <Option value="80MHz">80MHz</Option>
                 </Select>
               ),
             }
