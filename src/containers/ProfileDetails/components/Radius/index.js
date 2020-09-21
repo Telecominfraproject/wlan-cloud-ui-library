@@ -134,9 +134,10 @@ const RadiusForm = ({ form, details }) => {
       zones.map(i => {
         if (i.name === item.serviceRegionName) {
           return {
+            ...i,
             subnets: i?.subnets ? [...i.subnets, item] : [item],
           };
-        }  
+        }
         return i;
       })
     );
