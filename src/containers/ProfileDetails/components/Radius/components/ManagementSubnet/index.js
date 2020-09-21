@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input } from 'antd';
 
@@ -17,7 +17,6 @@ const ipPattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
 
 const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) => {
   const [form] = Form.useForm();
-  const [cidrPrefix, setCidrPrefix] = useState();
 
   useEffect(() => {
     form.resetFields();
@@ -28,12 +27,26 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
     form
       .validateFields()
       .then(newValues => {
-        onSuccess(newValues);
+        const currentCidr = newValues.subnetCidrPrefix;
+        let cidr = currentCidr;
+        if (ipPattern.test(currentCidr)){
+          const maskNodes = currentCidr.match(/(\d+)/g);
+          cidr = 0;
+          for (let i = 0; i < maskNodes.length; i += 1){
+            cidr += (((maskNodes[i] >>> 0).toString(2)).match(/1/g) || []).length; // eslint-disable-line no-bitwise
+          }
+        } else {
+          cidr = parseInt(cidr, 10);
+        }
+
+        const updatedValues = {
+          ...newValues,
+          subnetCidrPrefix: cidr,
+        };
+
+        onSuccess(updatedValues);
       })
       .catch(() => {});
-     form.setFieldsValue({
-      subnetCidrPrefix: cidrPrefix,
-    });
   };
 
   const addServerContent = (
@@ -77,22 +90,12 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
           },
           ({ getFieldValue }) => ({
             validator(_rule, value) {
-              let cidr = value;
-              setCidrPrefix(cidr);
               if (
                 !value ||
                 (getFieldValue('subnetCidrPrefix') >= 1 &&
                   getFieldValue('subnetCidrPrefix') <= 32) ||
                 ipPattern.test(getFieldValue('subnetCidrPrefix'))
               ) {
-                  if (ipPattern.test(getFieldValue('subnetCidrPrefix'))){
-                    const maskNodes = value.match(/(\d+)/g);
-                    cidr = 0;
-                    for (let i = 0; i < maskNodes.length; i += 1){
-                      cidr += (((maskNodes[i] >>> 0).toString(2)).match(/1/g) || []).length; // eslint-disable-line no-bitwise
-                    }
-                  }
-                  setCidrPrefix(cidr);
                 return Promise.resolve();
               }
               return Promise.reject(
