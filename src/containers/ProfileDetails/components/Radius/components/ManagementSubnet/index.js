@@ -39,12 +39,10 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
           cidr = parseInt(cidr, 10);
         }
 
-        const updatedValues = {
+        onSuccess({
           ...newValues,
           subnetCidrPrefix: cidr,
-        };
-
-        onSuccess(updatedValues);
+        });
       })
       .catch(() => {});
   };
