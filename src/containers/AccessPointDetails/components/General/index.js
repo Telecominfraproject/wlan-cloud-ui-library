@@ -74,7 +74,8 @@ const General = ({
     form
       .validateFields()
       .then(values => {
-        const formattedData = { ...data.details };
+        const formattedData = JSON.parse(JSON.stringify({ ...data.details }));
+        
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
             if (field === 'neighbouringListApConfig') {
@@ -204,7 +205,7 @@ const General = ({
         },
       ]}
     >
-      {options.dropdown}
+      {dataIndex === 'channelBandwidth' && key === 'is2dot4GHz' ? options.dropdown2 : options.dropdown}
     </Item>
   );
 
@@ -372,9 +373,9 @@ const General = ({
           {renderItem('Radio Mode', data.details.advancedRadioMap, 'radioMode', renderOptionItem, {
             dropdown: (
               <Select className={styles.Field}>
-                <Option value="BGN">BGN</Option>
-                <Option value="N">N</Option>
-                <Option value="AC">AC</Option>
+                <Option value="modeBGN">modeBGN</Option>
+                <Option value="modeN">modeN</Option>
+                <Option value="modeAC">modeAC</Option>
               </Select>
             ),
           })}
@@ -406,11 +407,19 @@ const General = ({
             {
               dropdown: (
                 <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                  <Option value="40MHz">40MHz</Option>
+                  <Option value="is20MHz">is20MHz</Option>
+                  <Option value="is40MHz">is40MHz</Option>
+                  <Option value="is80MHz">is80MHz</Option>
                 </Select>
               ),
-            }
+
+              dropdown2: (
+                <Select className={styles.Field}>
+                  <Option value="is20MHz">is20MHz</Option>
+                  <Option value="is40MHz">is40MHz</Option>
+                </Select>
+              ),
+            },
           )}
           <p>Radio Resource Management:</p>
 
