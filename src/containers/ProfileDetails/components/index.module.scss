@@ -47,6 +47,21 @@
   :global(.ant-upload.ant-upload-select-picture-card) {
     width: 100%;
   }
+
+  :global(div.ant-collapse-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  :global(.ant-collapse .ant-collapse-item .ant-collapse-header::before), 
+  :global(.ant-collapse .ant-collapse-item .ant-collapse-header::after) {
+    content: none;
+  }
+
+  :global(div.ant-collapse-header div button) {
+    margin-bottom: 0px;
+  }
 }
 
 .FlexDiv {
