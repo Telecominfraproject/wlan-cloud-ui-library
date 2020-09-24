@@ -77,7 +77,7 @@ const General = ({
       .validateFields()
       .then(values => {
         const formattedData = _.cloneDeep(data.details);
-        
+
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
             if (field === 'neighbouringListApConfig') {
@@ -211,7 +211,7 @@ const General = ({
         },
       ]}
     >
-      {dataIndex === 'channelBandwidth' && key === 'is2dot4GHz' ? options.dropdown2 : options.dropdown}
+      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
     </Item>
   );
 
@@ -379,9 +379,9 @@ const General = ({
           {renderItem('Radio Mode', data.details.advancedRadioMap, 'radioMode', renderOptionItem, {
             dropdown: (
               <Select className={styles.Field}>
-                <Option value="modeBGN">modeBGN</Option>
-                <Option value="modeN">modeN</Option>
-                <Option value="modeAC">modeAC</Option>
+                <Option value="modeBGN">BGN</Option>
+                <Option value="modeN">N</Option>
+                <Option value="modeAC">AC</Option>
               </Select>
             ),
           })}
@@ -411,20 +411,15 @@ const General = ({
             'channelBandwidth',
             renderOptionItem,
             {
-              dropdown: (
+              dropdown: (key) => {
+                return (
                 <Select className={styles.Field}>
                   <Option value="is20MHz">is20MHz</Option>
                   <Option value="is40MHz">is40MHz</Option>
-                  <Option value="is80MHz">is80MHz</Option>
+                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">is80MHz</Option>}
                 </Select>
-              ),
-
-              dropdown2: (
-                <Select className={styles.Field}>
-                  <Option value="is20MHz">is20MHz</Option>
-                  <Option value="is40MHz">is40MHz</Option>
-                </Select>
-              ),
+                );
+              },
             },
           )}
           <p>Radio Resource Management:</p>
