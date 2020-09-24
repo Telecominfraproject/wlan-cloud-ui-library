@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, Tooltip, notification, Alert } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import _ from 'lodash';
+
 import Loading from 'components/Loading';
 import Button from 'components/Button';
 import styles from '../../index.module.scss';
@@ -74,7 +76,7 @@ const General = ({
     form
       .validateFields()
       .then(values => {
-        const formattedData = JSON.parse(JSON.stringify({ ...data.details }));
+        const formattedData = _.cloneDeep(data.details);
         
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
@@ -87,13 +89,15 @@ const General = ({
                 formattedData.radioMap[radio].neighbouringListApConfig.minSignal =
                   values[`minSignal${radio}`];
               }
-            } else if (field === 'perimeterDetectionEnabled') {
-              formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
-            } else if (field === 'deauthAttackDetection') {
-              formattedData.advancedRadioMap[radio][field] =
-                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
-              formattedData.radioMap[radio][field] = values[`${field}${radio}`];
+              if (field === 'perimeterDetectionEnabled') {
+                formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
+              } else if (field === 'deauthAttackDetection') {
+                formattedData.advancedRadioMap[radio][field] =
+                  values[`${field}${radio}`] === 'enabled';
+              } else {
+                formattedData.radioMap[radio][field] = values[`${field}${radio}`];
+              }
             }
           });
         });
@@ -124,11 +128,13 @@ const General = ({
                 formattedData.advancedRadioMap[radio].bestApSettings.minLoadFactor =
                   values[`minLoadFactor${radio}`];
               }
-            } else if (field === 'deauthAttackDetection') {
-              formattedData.advancedRadioMap[radio][field] =
-                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
-              formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+              if (field === 'deauthAttackDetection') {
+                formattedData.advancedRadioMap[radio][field] =
+                  values[`${field}${radio}`] === 'enabled';
+              } else {
+                formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+              }
             }
           });
         });
