@@ -7,7 +7,6 @@ import styles from '../../../index.module.scss';
 const RadiusZoneModal = ({ onSuccess, onCancel, visible, title, zone }) => {
   const { Item } = Form;
   const [form] = Form.useForm();
-  form.resetFields();
 
   const layout = {
     labelCol: { span: 8 },

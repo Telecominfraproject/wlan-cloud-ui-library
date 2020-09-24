@@ -27,7 +27,22 @@ const ManagementSubnetModal = ({ onSuccess, onCancel, visible, title, subnet }) 
     form
       .validateFields()
       .then(newValues => {
-        onSuccess(newValues);
+        const currentCidr = newValues.subnetCidrPrefix;
+        let cidr = currentCidr;
+        if (ipPattern.test(currentCidr)){
+          const maskNodes = currentCidr.match(/(\d+)/g);
+          cidr = 0;
+          for (let i = 0; i < maskNodes.length; i += 1){
+            cidr += (((maskNodes[i] >>> 0).toString(2)).match(/1/g) || []).length; // eslint-disable-line no-bitwise
+          }
+        } else {
+          cidr = parseInt(cidr, 10);
+        }
+
+        onSuccess({
+          ...newValues,
+          subnetCidrPrefix: cidr,
+        });
       })
       .catch(() => {});
   };
