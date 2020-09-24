@@ -16,7 +16,7 @@ const Login = ({ onLogin }) => {
   const theme = useContext(ThemeContext);
 
   const handleSubmit = values => {
-    onLogin(values.email, values.password);
+    onLogin(values.email.toLowerCase(), values.password);
   };
 
   return (
