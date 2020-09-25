@@ -5,11 +5,11 @@
   margin: 5px;
 }
 
-.LineChart > div rect {
-  fill: #141414;
-}
-
 .container {
   width: 100%;
   overflow: auto;
+}
+
+:global(.highcharts-button-box) {
+  fill: #141414;
 }
