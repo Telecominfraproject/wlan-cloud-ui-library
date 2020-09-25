@@ -414,9 +414,9 @@ const General = ({
               dropdown: (key) => {
                 return (
                 <Select className={styles.Field}>
-                  <Option value="is20MHz">is20MHz</Option>
-                  <Option value="is40MHz">is40MHz</Option>
-                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">is80MHz</Option>}
+                  <Option value="is20MHz">20MHz</Option>
+                  <Option value="is40MHz">40MHz</Option>
+                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
                 </Select>
                 );
               },
