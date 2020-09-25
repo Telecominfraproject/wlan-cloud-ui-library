@@ -211,7 +211,7 @@ const General = ({
         },
       ]}
     >
-      {options.dropdown}
+      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
     </Item>
   );
 
@@ -379,9 +379,9 @@ const General = ({
           {renderItem('Radio Mode', data.details.advancedRadioMap, 'radioMode', renderOptionItem, {
             dropdown: (
               <Select className={styles.Field}>
-                <Option value="BGN">BGN</Option>
-                <Option value="N">N</Option>
-                <Option value="AC">AC</Option>
+                <Option value="modeBGN">BGN</Option>
+                <Option value="modeN">N</Option>
+                <Option value="modeAC">AC</Option>
               </Select>
             ),
           })}
@@ -411,14 +411,16 @@ const General = ({
             'channelBandwidth',
             renderOptionItem,
             {
-              dropdown: (
+              dropdown: (key) => {
+                return (
                 <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                  <Option value="40MHz">40MHz</Option>
-                  <Option value="80MHz">80MHz</Option>
+                  <Option value="is20MHz">20MHz</Option>
+                  <Option value="is40MHz">40MHz</Option>
+                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
                 </Select>
-              ),
-            }
+                );
+              },
+            },
           )}
           <p>Radio Resource Management:</p>
 
