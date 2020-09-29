@@ -233,7 +233,7 @@ const Firmware = ({
       width: 60,
       render: (_, record) => {
         const found = Object.values(trackAssignmentData).some(
-          i => Object.values(record).indexOf(i.modelId) > 0
+          i => Object.values(record).indexOf(i.firmwareVersionRecordId) > 0
         );
         return !found ? (
           <Button

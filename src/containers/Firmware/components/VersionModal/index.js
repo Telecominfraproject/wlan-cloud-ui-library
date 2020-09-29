@@ -79,7 +79,16 @@ const VersionModal = ({
       >
         <Input className={globalStyles.field} />
       </Item>
-      <Item label="Validation Code (MD5)" name="validationCode">
+      <Item
+        label="Validation Code (MD5)"
+        name="validationCode"
+        rules={[
+          {
+            required: true,
+            message: 'Please input your Validation Code ',
+          },
+        ]}
+      >
         <Input className={globalStyles.field} />
       </Item>
       <Item label="Commit" name="commit">
