@@ -2,8 +2,8 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { screen } from '@testing-library/dom';
 import { render } from 'tests/utils';
+import { screen } from '@testing-library/dom';
 import Profile from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -23,7 +23,12 @@ Object.defineProperty(window, 'matchMedia', {
 const mockProps = {
   isLastPage: true,
   data: [
-    { details: {}, id: 1, name: 'Radius-Profile', profileType: 'ssid', __typename: 'Profile' },
+    {
+      id: '2',
+      name: 'TipWlan-cloud-Enterprise',
+      profileType: 'ssid',
+      __typename: 'Profile',
+    },
   ],
 };
 
@@ -74,13 +79,13 @@ describe('<Profile />', () => {
   });
 
   it('delete profile button click should show delete modal', () => {
-    const { getByText } = render(
+    const { getByText, getByRole } = render(
       <Router>
         <Profile {...mockProps} />
       </Router>
     );
 
-    fireEvent.click(screen.getByTitle('delete'));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
 
     const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
@@ -93,7 +98,7 @@ describe('<Profile />', () => {
       </Router>
     );
 
-    fireEvent.click(screen.getByTitle('delete'));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
 
     const paragraph = getByText('Are you sure you want to delete the profile:');
     expect(paragraph).toBeVisible();
@@ -105,25 +110,13 @@ describe('<Profile />', () => {
   });
 
   it('onDeleteProfile should be called when Delete button on modal is clicked', async () => {
-    const data = {
-      ...mockProps,
-      data: [
-        {
-          details: {},
-          id: 1,
-          name: 'Radius-Profile',
-          profileType: 'equipment_ap',
-          __typename: 'Profile',
-        },
-      ],
-    };
     const submitSpy = jest.fn();
     const { getByRole } = render(
       <Router>
-        <Profile {...data} onDeleteProfile={submitSpy} />
+        <Profile {...mockProps} onDeleteProfile={submitSpy} />
       </Router>
     );
-    fireEvent.click(screen.getByTitle('delete'));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
     expect(getByRole('button', { name: 'Delete' }));
     fireEvent.click(getByRole('button', { name: 'Delete' }));
 
@@ -132,25 +125,24 @@ describe('<Profile />', () => {
     });
   });
 
-  it('onDeleteProfile default prop test', async () => {
-    const data = {
-      ...mockProps,
-      data: [
-        {
-          details: {},
-          id: 1,
-          name: 'Radius-Profile',
-          profileType: 'equipment_ap',
-          __typename: 'Profile',
-        },
-      ],
-    };
-    const { getByRole } = render(
+  it('Clicking on table row should change url to /profiles/:id', async () => {
+    render(
       <Router>
-        <Profile {...data} />
+        <Profile {...mockProps} />
       </Router>
     );
-    fireEvent.click(screen.getByTitle('delete'));
+
+    fireEvent.click(screen.getByText(mockProps.data[0].name));
+    expect(window.location.pathname).toEqual(`/profiles/${mockProps.data[0].id}`);
+  });
+
+  it('onDeleteProfile default prop test', async () => {
+    const { getByRole } = render(
+      <Router>
+        <Profile {...mockProps} />
+      </Router>
+    );
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
     expect(getByRole('button', { name: 'Delete' }));
     fireEvent.click(getByRole('button', { name: 'Delete' }));
   });

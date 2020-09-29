@@ -24,14 +24,13 @@ const RadiusServiceModal = ({ onSuccess, onCancel, visible, title, disabled, ser
     {
       title: '',
       width: 64,
-      // eslint-disable-next-line no-unused-vars
-      render: (_, r, index) => (
+      render: (_, record) => (
         <Button
           title="delete"
           type="danger"
           icon={<DeleteOutlined />}
           onClick={() => {
-            setIps(ips.slice(index + 1));
+            setIps(ips.filter(item => item.ipAddress !== record.ipAddress));
           }}
         />
       ),

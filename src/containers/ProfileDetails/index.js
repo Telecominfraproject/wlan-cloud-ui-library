@@ -35,14 +35,18 @@ const ProfileDetails = ({
   onUpdateProfile,
   ssidProfiles,
   radiusProfiles,
+  captiveProfiles,
   fileUpload,
+  onFetchMoreProfiles,
+  onFetchMoreRadiusProfiles,
+  onFetchMoreCaptiveProfiles,
 }) => {
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const layout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 
@@ -153,13 +157,23 @@ const ProfileDetails = ({
             <Input className={globalStyles.field} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {profileType === 'ssid' && <SSIDForm form={form} details={details} />}
+        {profileType === 'ssid' && (
+          <SSIDForm
+            form={form}
+            details={details}
+            captiveProfiles={captiveProfiles}
+            radiusProfiles={radiusProfiles}
+            onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}
+            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
+          />
+        )}
         {profileType === 'equipment_ap' && (
           <AccessPointForm
             form={form}
             details={details}
             ssidProfiles={ssidProfiles}
             childProfileIds={childProfileIds}
+            onFetchMoreProfiles={onFetchMoreProfiles}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -168,6 +182,7 @@ const ProfileDetails = ({
             details={details}
             radiusProfiles={radiusProfiles}
             fileUpload={fileUpload}
+            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
           />
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
@@ -185,7 +200,11 @@ ProfileDetails.propTypes = {
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
+  captiveProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRadiusProfiles: PropTypes.func,
+  onFetchMoreCaptiveProfiles: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -194,7 +213,11 @@ ProfileDetails.defaultProps = {
   details: {},
   ssidProfiles: [],
   radiusProfiles: [],
+  captiveProfiles: [],
   childProfileIds: [],
+  onFetchMoreProfiles: () => {},
+  onFetchMoreRadiusProfiles: () => {},
+  onFetchMoreCaptiveProfiles: () => {},
 };
 
 export default ProfileDetails;

@@ -17,6 +17,7 @@ const AddApModal = ({
   profiles,
   loadingProfile,
   errorProfile,
+  onFetchMoreProfiles,
 }) => {
   const [form] = Form.useForm();
 
@@ -63,7 +64,12 @@ const AddApModal = ({
           },
         ]}
       >
-        <Select className={styles.field} placeholder="Select Access Point Profile">
+        <Select
+          className={styles.field}
+          placeholder="Select Access Point Profile"
+          onPopupScroll={onFetchMoreProfiles}
+          listItemHeight={10}
+        >
           {Object.keys(profiles).map(i => (
             <Option key={profiles[i].id} value={profiles[i].id}>
               {profiles[i].name}
@@ -112,6 +118,7 @@ AddApModal.propTypes = {
   profiles: PropTypes.instanceOf(Object),
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool.isRequired,
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 AddApModal.defaultProps = {
@@ -119,6 +126,7 @@ AddApModal.defaultProps = {
   buttonText: '',
   profiles: {},
   errorProfile: {},
+  onFetchMoreProfiles: () => {},
 };
 
 export default AddApModal;

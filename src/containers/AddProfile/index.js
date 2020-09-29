@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Form, Input, Card, Select } from 'antd';
+import { Form, Input, Card, Select, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -13,18 +13,21 @@ import {
   formatSsidProfileForm,
   formatApProfileForm,
   formatBonjourGatewayForm,
+  formatRadiusForm,
 } from 'utils/profiles';
 
+import globalStyles from 'styles/index.scss';
 import styles from './index.module.scss';
 
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
+import RadiusForm from '../ProfileDetails/components/Radius';
 
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
+const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -34,7 +37,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const layout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 
@@ -71,6 +74,26 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
         if (profileType === 'bonjour') {
           formattedData.model_type = 'BonjourGatewayProfile';
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
+
+        if (profileType === 'radius') {
+          if (values.services.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service is required.',
+            });
+            return;
+          }
+          if (values.zones.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service Zone is required.',
+            });
+            return;
+          }
+          
+          formattedData.model_type = 'RadiusProfile';
+          formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
 
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
@@ -114,13 +137,14 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               ]}
             >
               <Select
-                className={styles.Field}
+                className={globalStyles.field}
                 onChange={value => setType(value)}
                 placeholder="Select Profile Type"
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
                 <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="radius">Radius</Option>
               </Select>
             </Item>
             <Item
@@ -129,14 +153,19 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input className={styles.Field} placeholder="Enter profile name" />
+              <Input className={globalStyles.field} placeholder="Enter profile name" />
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
           {profileType === 'equipment_ap' && (
-            <AccessPointForm form={form} ssidProfiles={ssidProfiles} />
+            <AccessPointForm
+              form={form}
+              ssidProfiles={ssidProfiles}
+              onFetchMoreProfiles={onFetchMoreProfiles}
+            />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
+          {profileType === 'radius' && <RadiusForm form={form} />}
         </Form>
       </div>
     </Container>
@@ -146,10 +175,12 @@ const AddProfile = ({ onCreateProfile, ssidProfiles }) => {
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
+  onFetchMoreProfiles: () => {},
 };
 
 export default AddProfile;

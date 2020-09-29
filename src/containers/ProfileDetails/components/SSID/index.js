@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tooltip, Checkbox, Radio, Select } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
-
+import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
+import Tooltip from 'components/Tooltip';
+import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+
 import { RADIOS, ROAMING } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
 
-const SSIDForm = ({ form, details }) => {
+const SSIDForm = ({
+  form,
+  details,
+  captiveProfiles,
+  onFetchMoreCaptiveProfiles,
+  radiusProfiles,
+  onFetchMoreRadiusProfiles,
+}) => {
   const [mode, setMode] = useState(details.secureMode || 'open');
 
   const hexadecimalRegex = e => {
@@ -20,7 +28,7 @@ const SSIDForm = ({ form, details }) => {
   };
 
   const dropdownOptions = (
-    <Select className={styles.Field}>
+    <Select className={globalStyles.field}>
       <Option value="auto">Auto</Option>
       <Option value="true">Enabled</Option>
       <Option value="false">Disabled</Option>
@@ -41,19 +49,19 @@ const SSIDForm = ({ form, details }) => {
       ssid: details.ssid || '',
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSSID: details.broadcastSsid === 'enabled' ? 'showSSID' : 'hideSSID',
+      broadcastSsid: details.broadcastSsid || 'enabled',
       appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
-      captivePortal:
-        details.captivePortalId && details.captivePortalId > 0 ? 'usePortal' : 'notPortal',
-      captivePortalId: details.captivePortalId || 'default',
+      captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
+      captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
       secureMode: details.secureMode || 'open',
       vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
       keyStr: details.keyStr,
       wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
       wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
       vlanId: details.vlanId,
+      radiusServiceName: details.radiusServiceName,
       ...radioBasedValues,
     });
   }, [form, details]);
@@ -66,12 +74,12 @@ const SSIDForm = ({ form, details }) => {
           name="ssid"
           rules={[{ required: true, message: 'Please input your new SSID name' }]}
         >
-          <Input className={styles.Field} name="ssidName" placeholder="Enter SSID name" />
+          <Input className={globalStyles.field} name="ssidName" placeholder="Enter SSID name" />
         </Item>
 
         <Item
           label="Broadcast SSID"
-          name="broadcastSSID"
+          name="broadcastSsid"
           rules={[
             {
               required: true,
@@ -80,8 +88,8 @@ const SSIDForm = ({ form, details }) => {
           ]}
         >
           <Radio.Group>
-            <Radio value="showSSID">Show SSID</Radio>
-            <Radio value="hideSSID">Hide SSID</Radio>
+            <Radio value="enabled">Show SSID</Radio>
+            <Radio value="disabled">Hide SSID</Radio>
           </Radio.Group>
         </Item>
 
@@ -107,18 +115,16 @@ const SSIDForm = ({ form, details }) => {
               ]}
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
                 max={100}
                 addonAfter={
-                  <div>
-                    Down Mbps&nbsp;
-                    <Tooltip title="Down Mbps: Limit is 0 - 100 (0 means unlimited)">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  </div>
+                  <Tooltip
+                    title="Down Mbps: Limit is 0 - 100 (0 means unlimited)"
+                    text="Down Mbps"
+                  />
                 }
               />
             </Item>
@@ -143,18 +149,13 @@ const SSIDForm = ({ form, details }) => {
               ]}
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
                 max={100}
                 addonAfter={
-                  <div>
-                    Up Mbps&nbsp;
-                    <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                  </div>
+                  <Tooltip title="Up Mbps: Limit is 0 - 100 (0 means unlimited)" text="Up Mbps" />
                 }
               />
             </Item>
@@ -191,10 +192,8 @@ const SSIDForm = ({ form, details }) => {
                     </div>
                   </div>
                 }
-              >
-                <InfoCircleOutlined />
-              </Tooltip>
-              &nbsp; Mode
+              />
+              Mode
             </span>
           }
         >
@@ -218,10 +217,10 @@ const SSIDForm = ({ form, details }) => {
                 name="noLocalSubnets"
                 label={
                   <span>
-                    <Tooltip title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied.">
-                      <InfoCircleOutlined />
-                    </Tooltip>
-                    &nbsp; Local Access
+                    <Tooltip
+                      title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
+                      text="Local Access"
+                    />
                   </span>
                 }
               >
@@ -252,12 +251,18 @@ const SSIDForm = ({ form, details }) => {
         >
           {({ getFieldValue }) => {
             return getFieldValue('captivePortal') === 'usePortal' ? (
-              <Item label=" " colon={false}>
-                <Item name="captivePortalId" style={{ marginTop: '10px' }}>
-                  <Select className={styles.Field} placeholder="Select Captive Portal">
-                    <Option value="default">Default</Option>
-                  </Select>
-                </Item>
+              <Item label=" " colon={false} name="captivePortalId">
+                <Select
+                  className={globalStyles.field}
+                  placeholder="Select Captive Portal"
+                  onPopupScroll={onFetchMoreCaptiveProfiles}
+                >
+                  {captiveProfiles.map(profile => (
+                    <Option key={profile.id} value={profile.id}>
+                      {profile.name}
+                    </Option>
+                  ))}
+                </Select>
               </Item>
             ) : null;
           }}
@@ -277,11 +282,11 @@ const SSIDForm = ({ form, details }) => {
         >
           <Select
             data-testid="securityMode"
-            className={styles.Field}
+            className={globalStyles.field}
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
-            <Option value="open">Open (No ecryption)</Option>
+            <Option value="open">Open (No Encryption)</Option>
             <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
@@ -300,8 +305,29 @@ const SSIDForm = ({ form, details }) => {
           </Item>
         )}
 
-        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && details.radiusServiceName && (
-          <Item label="RADIUS Service">{details.radiusServiceName}</Item>
+        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && (
+          <Item
+            name="radiusServiceName"
+            label="RADIUS Service"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a RADIUS service',
+              },
+            ]}
+          >
+            <Select
+              className={globalStyles.field}
+              placeholder="Select RADIUS Service"
+              onPopupScroll={onFetchMoreRadiusProfiles}
+            >
+              {radiusProfiles.map(profile => (
+                <Option key={profile.id} value={profile.name}>
+                  {profile.name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
         )}
 
         {(mode === 'wpaPSK' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK') && (
@@ -320,7 +346,7 @@ const SSIDForm = ({ form, details }) => {
           >
             <Input.Password
               visibilityToggle
-              className={styles.Field}
+              className={globalStyles.field}
               placeholder="8-63 characters"
               maxLength={63}
             />
@@ -354,7 +380,7 @@ const SSIDForm = ({ form, details }) => {
               hasFeedback
             >
               <Input
-                className={styles.Field}
+                className={globalStyles.field}
                 placeholder="Enter WEP key"
                 onKeyPress={e => hexadecimalRegex(e)}
                 maxLength={26}
@@ -370,7 +396,7 @@ const SSIDForm = ({ form, details }) => {
                 },
               ]}
             >
-              <Select className={styles.Field} placeholder="Select vlan key ID">
+              <Select className={globalStyles.field} placeholder="Select vlan key ID">
                 <Option value={1}>1</Option>
                 <Option value={2}>2</Option>
                 <Option value={3}>3</Option>
@@ -431,7 +457,7 @@ const SSIDForm = ({ form, details }) => {
                   hasFeedback
                 >
                   <Input
-                    className={styles.Field}
+                    className={globalStyles.field}
                     placeholder="2-4095"
                     type="number"
                     min={2}
@@ -459,14 +485,10 @@ const SSIDForm = ({ form, details }) => {
           {mode !== 'open' && (
             <Item
               label={
-                <span style={{ marginTop: '5px' }}>
-                  <Tooltip title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly.">
-                    <InfoCircleOutlined />
-                  </Tooltip>
-                  &nbsp; Fast BSS
-                  <br />
-                  Transition (802.11r)
-                </span>
+                <Tooltip
+                  title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
+                  text="Fast BSS Transition (802.11r)"
+                />
               }
             >
               <div className={styles.InlineDiv}>
@@ -507,11 +529,19 @@ const SSIDForm = ({ form, details }) => {
 SSIDForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  captiveProfiles: PropTypes.instanceOf(Array),
+  radiusProfiles: PropTypes.instanceOf(Array),
+  onFetchMoreCaptiveProfiles: PropTypes.func,
+  onFetchMoreRadiusProfiles: PropTypes.func,
 };
 
 SSIDForm.defaultProps = {
   form: null,
   details: {},
+  captiveProfiles: [],
+  radiusProfiles: [],
+  onFetchMoreCaptiveProfiles: () => {},
+  onFetchMoreRadiusProfiles: () => {},
 };
 
 export default SSIDForm;

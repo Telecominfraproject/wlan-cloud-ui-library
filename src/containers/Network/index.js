@@ -25,6 +25,7 @@ const Network = ({
   profiles,
   loadingProfile,
   errorProfile,
+  onFetchMoreProfiles,
 }) => {
   return (
     <div className={styles.clientDevices}>
@@ -50,6 +51,7 @@ const Network = ({
           profiles={profiles}
           loadingProfile={loadingProfile}
           errorProfile={errorProfile}
+          onFetchMoreProfiles={onFetchMoreProfiles}
         />
         <div className={styles.mainContent}>{children}</div>
       </div>
@@ -85,11 +87,13 @@ Network.propTypes = {
     name: PropTypes.string,
     parentId: PropTypes.string,
   }),
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 Network.defaultProps = {
   selectedLocation: null,
   errorProfile: {},
+  onFetchMoreProfiles: () => {},
 };
 
 export default Network;

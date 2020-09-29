@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, Tooltip, notification, Alert } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import _ from 'lodash';
+
 import Loading from 'components/Loading';
 import Button from 'components/Button';
 import styles from '../../index.module.scss';
@@ -10,7 +12,15 @@ const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProfiles }) => {
+const General = ({
+  data,
+  profiles,
+  handleOnEquipmentSave,
+  handleOnFormChange,
+  loadingProfiles,
+  errorProfiles,
+  onFetchMoreProfiles,
+}) => {
   const [form] = Form.useForm();
   const columns = [
     {
@@ -66,7 +76,8 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
     form
       .validateFields()
       .then(values => {
-        const formattedData = { ...data.details };
+        const formattedData = _.cloneDeep(data.details);
+
         Object.keys(formattedData.radioMap).forEach(radio => {
           Object.keys(formattedData.radioMap[radio]).forEach(field => {
             if (field === 'neighbouringListApConfig') {
@@ -78,13 +89,15 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
                 formattedData.radioMap[radio].neighbouringListApConfig.minSignal =
                   values[`minSignal${radio}`];
               }
-            } else if (field === 'perimeterDetectionEnabled') {
-              formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
-            } else if (field === 'deauthAttackDetection') {
-              formattedData.advancedRadioMap[radio][field] =
-                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
-              formattedData.radioMap[radio][field] = values[`${field}${radio}`];
+              if (field === 'perimeterDetectionEnabled') {
+                formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
+              } else if (field === 'deauthAttackDetection') {
+                formattedData.advancedRadioMap[radio][field] =
+                  values[`${field}${radio}`] === 'enabled';
+              } else {
+                formattedData.radioMap[radio][field] = values[`${field}${radio}`];
+              }
             }
           });
         });
@@ -115,29 +128,31 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
                 formattedData.advancedRadioMap[radio].bestApSettings.minLoadFactor =
                   values[`minLoadFactor${radio}`];
               }
-            } else if (field === 'deauthAttackDetection') {
-              formattedData.advancedRadioMap[radio][field] =
-                values[`${field}${radio}`] === 'enabled';
             } else if (`${field}${radio}` in values) {
-              formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+              if (field === 'deauthAttackDetection') {
+                formattedData.advancedRadioMap[radio][field] =
+                  values[`${field}${radio}`] === 'enabled';
+              } else {
+                formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+              }
             }
           });
         });
 
-        onUpdateEquipment(
+        handleOnEquipmentSave({
           id,
           equipmentType,
           inventoryId,
           customerId,
-          selectedProfile?.id,
+          profileId: selectedProfile?.id,
           locationId,
-          values.access,
+          name: values.access,
           latitude,
           longitude,
           serial,
           lastModifiedTimestamp,
-          formattedData
-        );
+          formattedData,
+        });
       })
       .catch(() => {
         notification.error({
@@ -196,7 +211,7 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
         },
       ]}
     >
-      {options.dropdown}
+      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
     </Item>
   );
 
@@ -247,7 +262,7 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
   }
 
   return (
-    <Form {...layout} form={form}>
+    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -292,6 +307,7 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
             className={styles.Field}
             onChange={handleProfileChange}
             placeholder="Select access point profile..."
+            onPopupScroll={onFetchMoreProfiles}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -363,9 +379,9 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
           {renderItem('Radio Mode', data.details.advancedRadioMap, 'radioMode', renderOptionItem, {
             dropdown: (
               <Select className={styles.Field}>
-                <Option value="BGN">BGN</Option>
-                <Option value="N">N</Option>
-                <Option value="AC">AC</Option>
+                <Option value="modeBGN">BGN</Option>
+                <Option value="modeN">N</Option>
+                <Option value="modeAC">AC</Option>
               </Select>
             ),
           })}
@@ -395,14 +411,16 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
             'channelBandwidth',
             renderOptionItem,
             {
-              dropdown: (
+              dropdown: (key) => {
+                return (
                 <Select className={styles.Field}>
-                  <Option value="20MHz">20MHz</Option>
-                  <Option value="40MHz">40MHz</Option>
-                  <Option value="80MHz">80MHz</Option>
+                  <Option value="is20MHz">20MHz</Option>
+                  <Option value="is40MHz">40MHz</Option>
+                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
                 </Select>
-              ),
-            }
+                );
+              },
+            },
           )}
           <p>Radio Resource Management:</p>
 
@@ -486,16 +504,21 @@ const General = ({ data, profiles, onUpdateEquipment, loadingProfiles, errorProf
 General.propTypes = {
   data: PropTypes.instanceOf(Object),
   profiles: PropTypes.instanceOf(Array),
-  onUpdateEquipment: PropTypes.func.isRequired,
+  handleOnEquipmentSave: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 General.defaultProps = {
   data: {},
   profiles: [],
+  handleOnFormChange: () => {},
+  handleOnEquipmentSave: () => {},
   loadingProfiles: true,
   errorProfiles: null,
+  onFetchMoreProfiles: () => {},
 };
 
 export default General;

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, List, Collapse, Tooltip, Table } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Form, Input, List, Collapse, Table } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
-
+import Tooltip from 'components/Tooltip';
+import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import RadiusServiceModal from './components/RadiusService';
 import RadiusZoneModal from './components/RadiusZone';
@@ -110,7 +111,7 @@ const RadiusForm = ({ form, details }) => {
   const handleEditZoneSuccess = item => {
     setZones(
       zones.map(i => {
-        if (i.name === selectedZone.name) {
+        if (i.name === item.name) {
           return item;
         }
         return i;
@@ -134,7 +135,7 @@ const RadiusForm = ({ form, details }) => {
         if (i.name === item.serviceRegionName) {
           return {
             ...i,
-            subnets: [...i.subnets, item],
+            subnets: i?.subnets ? [...i.subnets, item] : [item],
           };
         }
         return i;
@@ -322,17 +323,14 @@ const RadiusForm = ({ form, details }) => {
           ]}
         >
           <Input
-            className={styles.Field}
+            className={globalStyles.field}
             placeholder="0 or 60 - 100"
             type="number"
             min={0}
             max={100}
-            addonBefore={
-              <Tooltip title="Probe range interval is 60 - 100 (0 means disabled)">
-                <InfoCircleOutlined />
-              </Tooltip>
+            addonAfter={
+              <Tooltip title="Probe range interval is 60 - 100 (0 means disabled)" text="Seconds" />
             }
-            addonAfter="Seconds"
           />
         </Item>
       </Card>
@@ -404,6 +402,22 @@ const RadiusForm = ({ form, details }) => {
                 aria-label={`serviceZoneItem-${item.name}`}
                 extra={
                   <>
+                    <>
+                      <b className={styles.iconButton}>{item.name}</b>
+                        <Button
+                          title="editRadiusServiceZone"
+                          onClick={() => handleEditZone(item)}
+                          className={styles.iconButton}
+                          icon={<EditOutlined />}
+                        />
+                        <Button
+                          title="deleteRadiusServiceZone"
+                          onClick={() => handleDeleteZone(item)}
+                          className={styles.iconButton}
+                          icon={<DeleteOutlined />}
+                          type="danger"
+                        />
+                    </>
                     <div className={styles.RadiusInline}>
                       <Card className={styles.infoCard} title=" Radius Services" bordered={false}>
                         <Table
@@ -435,28 +449,7 @@ const RadiusForm = ({ form, details }) => {
                     </div>
                   </>
                 }
-              >
-                <List.Item.Meta
-                  title={
-                    <>
-                      <b className={styles.iconButton}>{item.name}</b>
-                      <Button
-                        title="editRadiusServiceZone"
-                        onClick={() => handleEditZone(item)}
-                        className={styles.iconButton}
-                        icon={<EditOutlined />}
-                      />
-                      <Button
-                        title="deleteRadiusServiceZone"
-                        onClick={() => handleDeleteZone(item)}
-                        className={styles.iconButton}
-                        icon={<DeleteOutlined />}
-                        type="danger"
-                      />
-                    </>
-                  }
-                />
-              </List.Item>
+              />
             )}
           />
         </Panel>
