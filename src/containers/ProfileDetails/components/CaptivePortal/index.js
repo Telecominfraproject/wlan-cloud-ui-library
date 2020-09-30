@@ -440,6 +440,7 @@ const CaptivePortalForm = ({
       {externalSplash && (
         <Card title="External Splash Page">
           <Item
+            name="externalCaptivePortalURL"
             label="URL"
             rules={[
               {
