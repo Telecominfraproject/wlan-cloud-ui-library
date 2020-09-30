@@ -440,7 +440,6 @@ const CaptivePortalForm = ({
       {externalSplash && (
         <Card title="External Splash Page">
           <Item
-            name="externalCaptivePortalURL"
             label="URL"
             rules={[
               {
@@ -451,7 +450,7 @@ const CaptivePortalForm = ({
             ]}
           >
             <div className={styles.InlineDiv}>
-              <Input className={globalStyles.field} placeholder="http://... or https://..." />
+              <Input className={globalStyles.field} placeholder="http://... or https://..." defaultValue={details.externalCaptivePortalURL}/>
               <Button onClick={() => setShowTips(!showTips)} icon={<QuestionCircleFilled />}>
                 {!showTips ? 'Show Splash Page Tips' : 'Hide Splash Page Tips'}
               </Button>
