@@ -78,7 +78,7 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetch
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios.join(',  '),
+      render: appliedRadios => appliedRadios?.join(',  '),
     },
     {
       title: '',
