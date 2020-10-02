@@ -47,6 +47,8 @@ const AccessPointDetails = ({
   locations,
   onUpdateEquipment,
   onUpdateEquipmentFirmware,
+  onRequestEquipmentSwitchBank,
+  onRequestEquipmentReboot,
   loadingProfiles,
   errorProfiles,
   loadingFirmware,
@@ -176,6 +178,8 @@ const AccessPointDetails = ({
           data={data}
           handleOnFirmwareSave={handleOnFirmwareSave}
           handleOnFormChange={handleOnFormChange}
+          onRequestEquipmentSwitchBank={onRequestEquipmentSwitchBank}
+          onRequestEquipmentReboot={onRequestEquipmentReboot}
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
         />
@@ -192,6 +196,8 @@ AccessPointDetails.propTypes = {
   handleRefresh: PropTypes.func.isRequired,
   onUpdateEquipment: PropTypes.func.isRequired,
   onUpdateEquipmentFirmware: PropTypes.func.isRequired,
+  onRequestEquipmentSwitchBank: PropTypes.func.isRequired,
+  onRequestEquipmentReboot: PropTypes.func.isRequired,
   locations: PropTypes.instanceOf(Array).isRequired,
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
