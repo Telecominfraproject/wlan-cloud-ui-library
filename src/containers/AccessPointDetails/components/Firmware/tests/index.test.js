@@ -95,7 +95,7 @@ describe('<Firmware />', () => {
         firmware: { detailsJSON: { id: 1, upgradeState: 'apply_initiated' } },
       },
     };
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole, queryByText } = render(
       <Firmware data={data} firmware={firmware} {...defaultProps} />
     );
 
@@ -109,12 +109,12 @@ describe('<Firmware />', () => {
     fireEvent.click(getByText(firmware[0].versionName));
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
-    expect(getByText('Confirm')).toBeVisible();
+    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Confirm')).not.toBeVisible();
+      expect(queryByText('Confirm downloading, flashing, rebooting?')).not.toBeInTheDocument();
     });
   });
 
@@ -142,9 +142,9 @@ describe('<Firmware />', () => {
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
 
-    expect(getByText('Confirm')).toBeVisible();
+    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
 
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    fireEvent.click(getByRole('button', { name: 'Confirm' }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalled();
@@ -171,9 +171,9 @@ describe('<Firmware />', () => {
 
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
 
-    expect(getByText('Confirm')).toBeVisible();
+    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
 
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    fireEvent.click(getByRole('button', { name: 'Confirm' }));
   });
 
   it('loadingFirmware should show loading spinner', async () => {
