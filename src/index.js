@@ -30,3 +30,4 @@ export { default as PopoverMenu } from 'components/LocationsTree/components/Popo
 export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints';
 export { default as Button } from 'components/Button';
 export { default as ToggleButton } from 'components/ToggleButton';
+export { default as Modal } from 'components/Modal';
