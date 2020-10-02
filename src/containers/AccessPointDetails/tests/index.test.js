@@ -283,7 +283,7 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
-    fireEvent.click(getByRole('button', { name: /save/i }));
+    fireEvent.click(getByRole('button', { name: /confirm/i }));
   });
 
   it('URL changes to /network/access-points on clicking the back button', () => {

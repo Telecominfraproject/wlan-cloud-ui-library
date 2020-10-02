@@ -42,7 +42,7 @@ const General = ({
       title: 'Radio(s)',
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
-      render: appliedRadios => appliedRadios.join(',  '),
+      render: appliedRadios => appliedRadios?.join(',  '),
     },
   ];
 
@@ -411,16 +411,16 @@ const General = ({
             'channelBandwidth',
             renderOptionItem,
             {
-              dropdown: (key) => {
+              dropdown: key => {
                 return (
-                <Select className={styles.Field}>
-                  <Option value="is20MHz">20MHz</Option>
-                  <Option value="is40MHz">40MHz</Option>
-                  {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
-                </Select>
+                  <Select className={styles.Field}>
+                    <Option value="is20MHz">20MHz</Option>
+                    <Option value="is40MHz">40MHz</Option>
+                    {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
+                  </Select>
                 );
               },
-            },
+            }
           )}
           <p>Radio Resource Management:</p>
 
