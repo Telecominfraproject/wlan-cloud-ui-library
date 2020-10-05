@@ -101,9 +101,6 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === 'captive_portal') {
-          if (!values?.externalCaptivePortalURL){
-            formattedData.externalCaptivePortalURL = null;
-          }
           formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
 
