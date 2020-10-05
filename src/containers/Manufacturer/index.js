@@ -126,7 +126,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
                 onSearch={handleOnSearch}
               />
             </Item>
-            {returnedOUI && !cancel && (
+            {returnedOUI?.oui && !cancel && (
               <>
                 <Item label="Manufacturer">{returnedOUI.manufacturerName}</Item>
                 <Item
