@@ -124,7 +124,7 @@ const CaptivePortalForm = ({
   };
 
   const validateWhitelist = (_rule, value) => {
-    let inputString = value.trim();
+    let inputString = value.toLowerCase().trim();
 
     if (inputString.match(/[a-z]/i)) {
       // contains letters, so validate as hostname
@@ -232,7 +232,7 @@ const CaptivePortalForm = ({
 
   const handleOnWhitelist = value => {
     validateWhitelist(null, value).then(() => {
-      setWhitelist([...whitelist, value.trim()]);
+      setWhitelist([...whitelist, value.toLowerCase().trim()]);
       setWhitelistSearch('');
       setWhitelistValidation({
         status: null,
