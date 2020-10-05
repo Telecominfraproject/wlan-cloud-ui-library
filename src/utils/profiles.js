@@ -162,5 +162,9 @@ export const formatCaptiveForm = (values, details) => {
     formattedData.backgroundFile = details.backgroundFile;
   }
 
+  if (!values?.externalCaptivePortalURL){
+    formattedData.externalCaptivePortalURL = null;
+  }
+
   return formattedData;
 };
