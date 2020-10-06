@@ -62,6 +62,11 @@
   :global(div.ant-collapse-header div button) {
     margin-bottom: 0px;
   }
+
+  :global(div:nth-child(2) > div.ant-card-body .ant-input-group-addon){
+    background: #141414;
+    border: none;
+  }
 }
 
 .FlexDiv {

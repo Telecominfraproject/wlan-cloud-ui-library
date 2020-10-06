@@ -439,8 +439,7 @@ const CaptivePortalForm = ({
       )}
       {externalSplash && (
         <Card title="External Splash Page">
-          <div className={styles.InlineDiv}>
-            <Item
+          <Item
               name="externalCaptivePortalURL"
               label="URL"
               rules={[
@@ -450,13 +449,15 @@ const CaptivePortalForm = ({
                   message: 'Please enter URL in the format http://... or https://...',
                 },
               ]}
-            > 
-              <Input className={globalStyles.field} placeholder="http://... or https://..." />
-            </Item>
-            <Button onClick={() => setShowTips(!showTips)} icon={<QuestionCircleFilled />}>
-              {!showTips ? 'Show Splash Page Tips' : 'Hide Splash Page Tips'}
-            </Button>
-          </div>
+          > 
+            <Input className={globalStyles.field} placeholder="http://... or https://..." 
+             addonAfter={
+              <Button className={styles.SplashInfo}onClick={() => setShowTips(!showTips)} icon={<QuestionCircleFilled />}>
+                {!showTips ? 'Show Splash Page Tips' : 'Hide Splash Page Tips'}
+              </Button>
+             } 
+            />
+          </Item>
           {showTips && (
             <Alert
               className={globalStyles.field}
