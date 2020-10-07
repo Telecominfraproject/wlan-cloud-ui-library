@@ -54,11 +54,19 @@ const Firmware = ({
 
   const createUpdateAssignment = ({ firmwareVersionRecordId, modelId }) => {
     const { createdTimestamp, lastModifiedTimestamp } = traskAssignmentValues;
+    let prevFirmwareVersionRecordId = firmwareVersionRecordId;
+    trackAssignmentData.forEach((element, index) => {
+      if (element.modelId === modelId) {
+        prevFirmwareVersionRecordId = trackAssignmentData[index].firmwareVersionRecordId;
+      }
+    });
+
     onUpdateTrackAssignment(
       firmwareVersionRecordId,
       modelId,
       createdTimestamp,
-      lastModifiedTimestamp
+      lastModifiedTimestamp,
+      prevFirmwareVersionRecordId
     );
     setEditAssignmentModal(false);
   };
