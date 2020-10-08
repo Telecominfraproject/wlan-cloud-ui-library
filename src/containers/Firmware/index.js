@@ -53,8 +53,7 @@ const Firmware = ({
   };
 
   const createUpdateAssignment = ({ firmwareVersionRecordId, modelId }) => {
-    const { createdTimestamp, lastModifiedTimestamp } = traskAssignmentValues;
-    const prevFirmwareVersionRecordId = traskAssignmentValues.firmwareVersionRecordId;
+    const { createdTimestamp, lastModifiedTimestamp, firmwareVersionRecordId: prevFirmwareVersionRecordId } = traskAssignmentValues;
 
     onUpdateTrackAssignment(
       firmwareVersionRecordId,
