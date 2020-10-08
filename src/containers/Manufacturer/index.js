@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Alert, Upload, Input, Form, message } from 'antd';
+import { Card, Alert, Upload, Input, Form, message, Spin } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -17,7 +17,7 @@ const layout = {
   wrapperCol: { span: 12 },
 };
 
-const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => {
+const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadingFileUpload }) => {
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);
@@ -111,9 +111,13 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload }) => 
                 onChange={handleOnChangeOUI}
                 showUploadList={false}
                 data-testid="ouiUpload"
+                disabled={loadingFileUpload}
               >
-                <Button icon={<UploadOutlined />}>Select File to Import...</Button>
+                <Button disabled={loadingFileUpload} icon={<UploadOutlined />}>
+                  Select File to Import...
+                </Button>
               </Upload>
+              {loadingFileUpload && <Spin style={{ marginLeft: '10px' }} />}
             </Item>
           </Card>
           <Card title="Set a Manufacturer Alias">
@@ -160,10 +164,12 @@ Manufacturer.propTypes = {
   onSearchOUI: PropTypes.func.isRequired,
   onUpdateOUI: PropTypes.func.isRequired,
   fileUpload: PropTypes.func.isRequired,
+  loadingFileUpload: PropTypes.bool,
   returnedOUI: PropTypes.instanceOf(Object),
 };
 
 Manufacturer.defaultProps = {
+  loadingFileUpload: false,
   returnedOUI: null,
 };
 
