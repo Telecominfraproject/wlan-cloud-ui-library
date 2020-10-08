@@ -90,7 +90,7 @@ const AssignmentModal = ({
         ]}
       >
         {firmwareVersionLoading ? (
-          <Spin data-testid="firmwareVersionLoading" daclassName={styles.spinner} size="large" />
+          <Spin data-testid="firmwareVersionLoading" className={styles.spinner} size="large" />
         ) : (
           <Select
             className={globalStyles.field}

@@ -5,6 +5,7 @@ import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import Header from 'components/Header';
 import Modal from 'components/Modal';
 import { getLocationPath } from 'utils/locations';
 
@@ -110,10 +111,11 @@ const AccessPointDetails = ({
         content={<p>Please confirm exiting without saving this Access Point page.</p>}
         mask={false}
       />
-
-      <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
-        BACK
-      </Button>
+      <Header>
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
+          BACK
+        </Button>
+      </Header>
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
