@@ -14,6 +14,7 @@ import {
   formatApProfileForm,
   formatBonjourGatewayForm,
   formatRadiusForm,
+  formatRfProfileForm,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -23,6 +24,7 @@ import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 import RadiusForm from '../ProfileDetails/components/Radius';
+import RFForm from '../ProfileDetails/components/RF';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -96,6 +98,10 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
 
+        if (profileType === 'rf') {
+          formattedData.model_type = 'RfConfiguration';
+          formattedData = Object.assign(formattedData, formatRfProfileForm(values));
+        }
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -145,6 +151,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
                 <Option value="equipment_ap">Access Point</Option>
                 <Option value="bonjour">Bonjour Gateway</Option>
                 <Option value="radius">Radius</Option>
+                <Option value="rf">RF</Option>
               </Select>
             </Item>
             <Item
@@ -166,6 +173,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
+          {profileType === 'rf' && <RFForm form={form} />}
         </Form>
       </div>
     </Container>
