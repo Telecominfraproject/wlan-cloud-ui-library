@@ -99,6 +99,11 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         }
 
         if (profileType === 'rf') {
+          const reformattedData = {
+            name: formattedData.name,
+            profileType: formattedData.profileType,
+          };
+          formattedData = reformattedData;
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }

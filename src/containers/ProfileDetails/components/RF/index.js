@@ -55,7 +55,7 @@ const RFForm = ({form, details}) => {
 
       const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => (
         <Item
-          name={dataIndex + options?.value + key}
+          name={dataIndex + (options?.value ? options.value : '') + key}
           initialValue={setInitialValue(obj, dataIndex, key, options)}
           rules={[
             { required: true, message: options.error },
@@ -63,8 +63,8 @@ const RFForm = ({form, details}) => {
               validator(_rule, value) {
                 if (
                   !value ||
-                  (getFieldValue(dataIndex + options?.value + key) <= options.max &&
-                    getFieldValue(dataIndex + options?.value + key) >= options.min)
+                  (getFieldValue(dataIndex + (options?.value ? options.value : '') + key) <= options.max &&
+                    getFieldValue(dataIndex + (options?.value ? options.value : '') + key) >= options.min)
                 ) {
                   return Promise.resolve();
                 }
@@ -85,7 +85,7 @@ const RFForm = ({form, details}) => {
 
       const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => (
         <Item
-          name={dataIndex + options?.value + key}
+          name={dataIndex + (options?.value ? options.value : '') + key}
           initialValue={setInitialValue(obj, dataIndex, key, options)}
           rules={[
             {
