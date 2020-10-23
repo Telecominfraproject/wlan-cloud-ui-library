@@ -1,4 +1,5 @@
 import { notification } from 'antd';
+import _ from 'lodash';
 import { 
   RADIOS, 
   ROAMING, 
@@ -89,8 +90,7 @@ export const formatBonjourGatewayForm = values => {
 };
 
 export const formatRadiusForm = values => {
-  const formattedData = { ...values, serviceRegionMap: {} };
-
+  const formattedData = _.cloneDeep({ ...values, serviceRegionMap: {} });
   values.zones.forEach(i => {
     if (!(i.name in formattedData.serviceRegionMap)) {
       formattedData.serviceRegionMap[i.name] = {
@@ -115,7 +115,7 @@ export const formatRadiusForm = values => {
       if (!formattedData.subnetConfiguration) {
         formattedData.subnetConfiguration = {};
       }
-      formattedData.subnetConfiguration[j.subnetName] = j;
+      formattedData.subnetConfiguration[j.subnetName] = _.cloneDeep(j);
       if (values.probeInterval) {
         formattedData.subnetConfiguration[j.subnetName].probeInterval = values.probeInterval;
       }

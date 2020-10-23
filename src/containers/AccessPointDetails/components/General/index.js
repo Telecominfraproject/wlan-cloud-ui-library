@@ -170,7 +170,7 @@ const General = ({
   );
 
   const setInitialValue = (obj = {}, dataIndex, key, options = {}) => {
-    const val = options.value ? obj[key][options.value][dataIndex] : obj[key][dataIndex];
+    const val = options.value ? obj[key]?.[options.value]?.[dataIndex] : obj[key]?.[dataIndex];
     if (val === undefined || val === null) {
       return 'disabled';
     }
@@ -192,7 +192,7 @@ const General = ({
             renderInput(obj, dataIndex, i, label, options)
           ) : (
             <span key={i} className={styles.spanStyle}>
-              {dataIndex ? obj[i][dataIndex] : obj[i]}
+              {dataIndex ? obj[i]?.[dataIndex] : obj[i]}
             </span>
           )
         )}
