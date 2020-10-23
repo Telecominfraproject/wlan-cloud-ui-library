@@ -17,6 +17,7 @@ import {
   formatRadiusForm,
   formatCaptiveForm,
   formatBonjourGatewayForm,
+  formatRfProfileForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -108,6 +109,11 @@ const ProfileDetails = ({
         if (profileType === 'bonjour') {
           formattedData.model_type = 'BonjourGatewayProfile';
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
+        if (profileType === 'rf') {
+          formattedData = {};
+          formattedData.model_type = 'RfConfiguration';
+          formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);

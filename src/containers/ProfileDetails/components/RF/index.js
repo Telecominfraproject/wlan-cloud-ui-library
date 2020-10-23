@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Select, Tooltip  } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -7,13 +7,7 @@ import styles from '../index.module.scss';
 const { Item  } = Form;
 const { Option } = Select;
 
-const RFForm = ({form, details}) => {
-
-    useEffect(() => {
-        form.setFieldsValue({
-            // TODO
-        });
-    }, [details]);
+const RFForm = ({ details}) => {
 
     const defaultOptions = (
         <Select className={styles.Field}>
@@ -127,7 +121,6 @@ const RFForm = ({form, details}) => {
                     },
                     }
                 )}
-                {/* not found in yaml file */}
                 {renderItem('Radio Mode', 
                 details.rfConfigMap, 
                 'radioMode', 
@@ -135,13 +128,17 @@ const RFForm = ({form, details}) => {
                 {
                     dropdown: (
                     <Select className={styles.Field}>
-                        <Option value="modeBGN">BGN</Option>
                         <Option value="modeN">N</Option>
                         <Option value="modeAC">AC</Option>
+                        <Option value="modeGN">GN</Option>
+                        <Option value="modeX">X</Option>
+                        <Option value="modeA">A</Option>
+                        <Option value="modeB">B</Option>
+                        <Option value="modeG">G</Option>
+                        <Option value="modeAB">AB</Option>
                     </Select>
                     ),
                 })}
-                {/* details of beconInterval copied from ap table */}
                 {renderItem(
                     <span>
                     <Tooltip title="TU (Time Unit) is 1.024ms ">
@@ -164,7 +161,6 @@ const RFForm = ({form, details}) => {
                     ),
                     }
                 )}
-                {/* details of RTS/CTS threshold copied from ap table */}
                 {renderItem(
                     'RTS/CTS threshold',
                     details.rfConfigMap,
@@ -232,49 +228,45 @@ const RFForm = ({form, details}) => {
                 {renderItem(
                     'Rx Cell Size (dBm)',
                     details.rfConfigMap,
-                    'value',
+                    'rxCellSizeDb',
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'rxCellSizeDb',
                     }
                 )}
                 {renderItem(
                     'Probe Response Threshold (dB)',
                     details.rfConfigMap,
-                    'value',
+                    'probeResponseThresholdDb',
                     renderInputItem, 
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'probeResponseThresholdDb',
                     }
                 )}
                 {renderItem(
                     'Client Disconnect Threshold (dBm)',
                     details.rfConfigMap,
-                    'value',
+                    'clientDisconnectThresholdDb',
                     renderInputItem, 
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'clientDisconnectThresholdDb', 
                     }
                 )}
                 {renderItem(
                     'EIRP Tx Power(dBm)',
                     details.rfConfigMap,
-                    'value',
+                    'eirpTxPower',
                     renderInputItem, 
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'eirpTxPower',
                     }
                 )}
                 <p>Active Scan Setting:</p>
@@ -432,7 +424,7 @@ const RFForm = ({form, details}) => {
 };
 
 const defaultRadio = {
-    radioMode: null, // not in yaml file yet
+    radioMode: "modeN",
     autoChannelSelection: false,
     beaconInterval: 0,
     forceScanDuringVoice: 'disabled',
@@ -447,29 +439,14 @@ const defaultRadio = {
         scanDurationMillis:0,
     },
     managementRate: 'rate1mbps',
-    rxCellSizeDb: {
-        auto: null,
-        value: 0,
-    },
-    probeResponseThresholdDb: {
-        auto: null,
-        value: 0,
-    },
-    clientDisconnectThresholdDb: {
-        auto: null,
-        value: 0,
-    },
-    eirpTxPower: {
-        auto: null,
-        value: 0,
-    },
-    bestApEnabled: true,
+    rxCellSizeDb: 0,
+    probeResponseThresholdDb: 0,
+    clientDisconnectThresholdDb: 0,
+    eirpTxPower: 0,
     neighbouringListApConfig: {
         minSignal: 0,
         maxAps: 0,
     },
-    minAutoCellSize: 0,
-    perimeterDetectionEnabled: true,
     channelHopSettings: {
         noiseFloorThresholdInDB: -75,
         noiseFloorThresholdTimeInSeconds: 180,
@@ -485,18 +462,16 @@ const defaultRadio = {
 };
 
 RFForm.propTypes = {
-    form: PropTypes.instanceOf(Object),
     details: PropTypes.instanceOf(Object),
   };
   
 RFForm.defaultProps = {
-    form: null,
     details: {
         rfConfigMap: {
-            is2dot4GHz: defaultRadio,
-            is5GHz: defaultRadio,
-            is5GHzU: defaultRadio,
-            is5GHzL: defaultRadio,
+            is2dot4GHz: { radioType: "is2dot4GHz", ...defaultRadio},
+            is5GHz: { radioType: "is5GHz", ...defaultRadio},
+            is5GHzU: { radioType: "is5GHzU", ...defaultRadio},
+            is5GHzL: { radioType: "is5GHzL", ...defaultRadio},
         }
     },
   };

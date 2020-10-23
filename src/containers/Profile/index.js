@@ -49,7 +49,8 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       render: (_, record) => {
         return record.profileType === 'ssid' ||
           record.profileType === 'equipment_ap' ||
-          record.profileType === 'bonjour' ? (
+          record.profileType === 'bonjour' ||
+          record.profileType === 'rf' ? (
           <Button
             title={`delete-${record.name}`}
             className={styles.InfoButton}

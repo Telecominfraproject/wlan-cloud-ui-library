@@ -1,5 +1,13 @@
 import { notification } from 'antd';
-import { RADIOS, ROAMING } from '../containers/ProfileDetails/constants/index';
+import { 
+  RADIOS, 
+  ROAMING, 
+  RFELEMENT_CONFIG_PROPERTIES,
+  ACTIVE_SCAN_PROPERTIES,
+  NEIGHBOURING_LIST_PROPERTIES,
+  CHANNEL_HOP_PROPERTIES,
+  BEST_AP_POPERTIES,
+ } from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
 
@@ -82,7 +90,6 @@ export const formatBonjourGatewayForm = values => {
 
 export const formatRadiusForm = values => {
   const formattedData = { ...values, serviceRegionMap: {} };
-  console.log('formateRaduisForm values',values);
 
   values.zones.forEach(i => {
     if (!(i.name in formattedData.serviceRegionMap)) {
@@ -170,82 +177,61 @@ export const formatCaptiveForm = (values, details) => {
   return formattedData;
 };
 
-const exampleRadio = {
-  model_type: "RfElementConfiguration",
-  rf: null,
-  radioMode: null, // not in yaml file yet
-  autoChannelSelection: false,
-  beaconInterval: 0,
-  forceScanDuringVoice: 'disabled',
-  rtsCtsThreshold: 0,
-  channelBandwidth: 'is20MHz',
-  mimoMode: 'none',
-  maxNumClients: 0,
-  multicastRate: 'rate6mbps',
-  activeScanSettings: {
-    model_type: "ActiveScanSettings",
-    enabled: true,
-    scanFrequencySeconds: 0,
-    scanDurationMillis:0,
-  },
-  managementRate: 'rate1mbps',
-  rxCellSizeDb: {
-    model_type: "AutoOrManualValue",
-    auto: null,
-    value: 0,
-  },
-  probeResponseThresholdDb: {
-    model_type: "AutoOrManualValue",
-    auto: null,
-    value: 0,
-  },
-  clientDisconnectThresholdDb: {
-    model_type: "AutoOrManualValue",
-    auto: null,
-    value: 0,
-  },
-  eirpTxPower: {
-    model_type: "AutoOrManualValue",
-    auto: null,
-    value: 0,
-  },
-  bestApEnabled: true,
-  neighbouringListApConfig: {
-    model_type: "NeighbouringAPListConfiguration",
-    minSignal: 0,
-    maxAps: 0,
-  },
-  minAutoCellSize: 0,
-  perimeterDetectionEnabled: true,
-  channelHopSettings: {
-    model_type: "ChannelHopSettings",
-    noiseFloorThresholdInDB: -75,
-    noiseFloorThresholdTimeInSeconds: 180,
-    nonWifiThresholdInPercentage: 50,
-    nonWifiThresholdTimeInSeconds: 180,
-    obssHopMode: 'NON_WIFI',
-  },
-  bestApSettings: {
-    model_type: "RadioBestApSettings",
-    mlComputed: true,
-    dropInSnrPercentage: 10,
-    minLoadFactor: 10,
-  },
-};
-
-const exampleRfProfileDetails = {
-  model_type: "RfConfiguration",
-  rfConfigMap: {
-    is2dot4GHz: exampleRadio,
-    is5GHz: exampleRadio,
-    is5GHzU: exampleRadio,
-    is5GHzL: exampleRadio,
-  },
-};
-
 export const formatRfProfileForm = values => {
-  const formattedData = exampleRfProfileDetails;
-  
+  const formattedData = {
+    model_type: "RfConfiguration",
+    rfConfigMap: {},
+  };
+  // create empty rfConfigMap
+  RADIOS.forEach(radio => {
+    formattedData.rfConfigMap[radio] = {};
+    RFELEMENT_CONFIG_PROPERTIES.forEach(property => {
+      if (property === 'model_type'){
+        formattedData.rfConfigMap[radio].model_type = 'RfElementConfiguration';
+      } else if (property === 'radioType') {
+        formattedData.rfConfigMap[radio].radioType = radio;
+      } else if (property === 'activeScanSettings') {
+        formattedData.rfConfigMap[radio].activeScanSettings = {};
+        ACTIVE_SCAN_PROPERTIES.forEach(nestedProperty => {
+          if (nestedProperty === 'model_type') {
+            formattedData.rfConfigMap[radio].activeScanSettings.model_type = 'ActiveScanSettings';
+          } else {
+            formattedData.rfConfigMap[radio].activeScanSettings[nestedProperty] = null;
+          }
+        });
+      } else if (property === 'neighbouringListApConfig') {
+        formattedData.rfConfigMap[radio].neighbouringListApConfig = {};
+        NEIGHBOURING_LIST_PROPERTIES.forEach(nestedProperty => {
+          if (nestedProperty === 'model_type') {
+            formattedData.rfConfigMap[radio].neighbouringListApConfig.model_type = 'NeighbouringAPListConfiguration';
+          } else {
+            formattedData.rfConfigMap[radio].neighbouringListApConfig[nestedProperty] = null;
+          }
+        });
+      } else if (property === 'channelHopSettings') {
+        formattedData.rfConfigMap[radio].channelHopSettings = {};
+        CHANNEL_HOP_PROPERTIES.forEach(nestedProperty => {
+          if (nestedProperty === 'model_type'){
+            formattedData.rfConfigMap[radio].channelHopSettings.model_type = 'ChannelHopSettings';
+          } else {
+            formattedData.rfConfigMap[radio].channelHopSettings[nestedProperty] = null;
+          }
+        });
+      } else if (property === 'bestApSettings') {
+        formattedData.rfConfigMap[radio].bestApSettings = {};
+        BEST_AP_POPERTIES.forEach(nestedProperty => {
+          if (nestedProperty === 'model_type') {
+            formattedData.rfConfigMap[radio].bestApSettings.model_type = 'RadioBestApSettings';
+          } else {
+            formattedData.rfConfigMap[radio].bestApSettings[nestedProperty] = null;
+          }
+        });
+      } else {
+        formattedData.rfConfigMap[radio][property] = null;
+      }
+    });
+  });
+  // fill empty rfConfigMap with values
   Object.keys(formattedData.rfConfigMap).forEach(radio => {
     Object.keys(formattedData.rfConfigMap[radio]).forEach(field => {
       if (field === 'rf') {
@@ -255,7 +241,7 @@ export const formatRfProfileForm = values => {
       } else if (field === 'activeScanSettings') {
           if (`enabledactiveScanSettings${radio}` in values) {
             formattedData.rfConfigMap[radio].activeScanSettings.enabled = 
-              values[`enabledactiveScanSettings${radio}`];
+              values[`enabledactiveScanSettings${radio}`] === 'enabled';
           }
           if (`scanFrequencySecondsactiveScanSettings${radio}` in values) {
             formattedData.rfConfigMap[radio].activeScanSettings.scanFrequencySeconds =
@@ -264,25 +250,6 @@ export const formatRfProfileForm = values => {
           if (`scanDurationMillisactiveScanSettings${radio}` in values) {
             formattedData.rfConfigMap[radio].activeScanSettings.scanDurationMillis =
               values[`scanDurationMillisactiveScanSettings${radio}`];
-          }
-      } else if (field === 'rxCellSizeDb') {
-          if (`valuerxCellSizeDb${radio}` in values) {
-            formattedData.rfConfigMap[radio].rxCellSizeDb.value = values[`valuerxCellSizeDb${radio}`];
-          }
-      } else if (field === 'probeResponseThresholdDb') {
-          if (`valueprobeResponseThresholdDb${radio}` in values) {
-            formattedData.rfConfigMap[radio].probeResponseThresholdDb.value =
-              values[`valueprobeResponseThresholdDb${radio}`];
-          }
-      } else if (field === 'clientDisconnectThresholdDb') {
-          if (`valueclientDisconnectThresholdDb${radio}` in values) {
-            formattedData.rfConfigMap[radio].clientDisconnectThresholdDb.value =
-              values[`valueclientDisconnectThresholdDb${radio}`];
-          }
-      } else if (field === 'eirpTxPower') {
-          if (`valueeirpTxPower${radio}` in values) {
-            formattedData.rfConfigMap[radio].eirpTxPower.value =
-              values[`valueeirpTxPower${radio}`];
           }
       } else if (field === 'neighbouringListApConfig') {
           if (`minSignalneighbouringListApConfig${radio}` in values){
