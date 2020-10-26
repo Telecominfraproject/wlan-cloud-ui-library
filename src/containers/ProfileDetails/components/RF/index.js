@@ -95,7 +95,7 @@ const RFForm = ({ details}) => {
     return (
         <div className={styles.Profiledetails}>
             <Card>
-                {renderItem(' ', ["2.4GHz", "5GHz", "5GHzU", "5GHzL"])}
+                {renderItem(' ', Object.keys(details.rfConfigMap))}
                 {renderItem(
                     'Maximum Devices',
                     details.rfConfigMap,
@@ -237,7 +237,7 @@ const RFForm = ({ details}) => {
                     }
                 )}
                 {renderItem(
-                    'Probe Response Threshold (dB)',
+                    'Probe Response Threshold (dBm)',
                     details.rfConfigMap,
                     'probeResponseThresholdDb',
                     renderInputItem, 
@@ -311,9 +311,9 @@ const RFForm = ({ details}) => {
                     'minSignal',
                     renderInputItem,
                     { 
-                        min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
+                        min: -90, 
+                        max: -50, 
+                        error: '-90 - -50 dB',
                         value: 'neighbouringListApConfig',
                     }
                 )}
@@ -324,8 +324,8 @@ const RFForm = ({ details}) => {
                     renderInputItem,
                     { 
                         min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
+                        max: 512, 
+                        error: '0 - 512 APs',
                         value: 'neighbouringListApConfig',
                     }
                 )}
@@ -338,7 +338,7 @@ const RFForm = ({ details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100%',
                         value: 'bestApSettings',
                     }
                 )}
@@ -350,7 +350,7 @@ const RFForm = ({ details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100%',
                         value: 'bestApSettings',
                     }
                 )}
@@ -361,9 +361,9 @@ const RFForm = ({ details}) => {
                     'noiseFloorThresholdInDB',
                     renderInputItem,
                     { 
-                        min: -300, 
-                        max: 300, 
-                        error: '-300 - 300',
+                        min: -90, 
+                        max: -10, 
+                        error: '-90 - -10 dB',
                         value: 'channelHopSettings',
                     }
                 )}
@@ -373,9 +373,9 @@ const RFForm = ({ details}) => {
                     'noiseFloorThresholdTimeInSeconds',
                     renderInputItem,
                     { 
-                        min: -300, 
-                        max: 300, 
-                        error: '-300 - 300',
+                        min: 120, 
+                        max: 600, 
+                        error: '120 - 600 seconds',
                         value: 'channelHopSettings', 
                     }
                 )}
@@ -444,7 +444,7 @@ const defaultRadio = {
     clientDisconnectThresholdDb: 0,
     eirpTxPower: 0,
     neighbouringListApConfig: {
-        minSignal: 0,
+        minSignal: -50,
         maxAps: 0,
     },
     channelHopSettings: {
