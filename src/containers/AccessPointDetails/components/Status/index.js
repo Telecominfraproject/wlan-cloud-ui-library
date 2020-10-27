@@ -115,20 +115,6 @@ const Status = ({ data }) => {
     return devices;
   };
 
-  // const j = {
-  //   is2dot4GHz: {
-  //     // availableCapacity: 69,
-  //     radioType: 5,
-  //   },
-  //   is5GHzL: {
-  //     // availableCapacity: 69,
-  //     radioType: 0,
-  //   },
-  //   is5GHzU: {
-  //     radioType: 0,
-  //   },
-  // };
-
   return (
     <>
       <Form {...layout}>
