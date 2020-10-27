@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
 
-import styles from '../../index.module.scss';
-
 import { sortRadios } from '../../../../utils/sortRadios';
+
+import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
@@ -60,11 +60,9 @@ const Status = ({ data }) => {
     if (!obj.is2dot4GHz) {
       newObj = { ...newObj, is2dot4GHz: 'N/A' };
     }
-
     if (!obj.is5GHzU) {
       newObj = { ...newObj, is5GHzU: 'N/A' };
     }
-
     if (!obj.is5GHzL) {
       newObj = { ...newObj, is5GHzL: 'N/A' };
     }
