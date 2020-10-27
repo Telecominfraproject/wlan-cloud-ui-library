@@ -14,7 +14,7 @@ const Status = ({ data }) => {
 
   const columns = [
     {
-      title: 'Severity	',
+      title: 'Severity  ',
       dataIndex: 'severity',
       key: 'severity',
     },
@@ -24,7 +24,7 @@ const Status = ({ data }) => {
       key: 'type',
     },
     {
-      title: 'Message	',
+      title: 'Message ',
       dataIndex: ['details', 'message'],
       key: 'security',
     },
@@ -39,11 +39,17 @@ const Status = ({ data }) => {
     },
   ];
 
+  const sortRadio = obj => {
+    const sortOrder = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
+
+    return obj.sort((a, b) => sortOrder.indexOf(a) - sortOrder.indexOf(b));
+  };
+
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
         {obj &&
-          Object.keys(obj).map(i => (
+          sortRadio(Object.keys(obj)).map(i => (
             <span key={i} className={styles.spanStyle}>
               {dataIndex ? obj[i][dataIndex] : obj[i]}
             </span>
@@ -51,6 +57,77 @@ const Status = ({ data }) => {
       </div>
     </Item>
   );
+
+  const checkNoise = obj => {
+    let newObj = { ...obj };
+
+    if (!obj.is2dot4GHz) {
+      newObj = { ...newObj, is2dot4GHz: 'N/A' };
+    }
+
+    if (!obj.is5GHzU) {
+      newObj = { ...newObj, is5GHzU: 'N/A' };
+    }
+
+    if (!obj.is5GHzL) {
+      newObj = { ...newObj, is5GHzL: 'N/A' };
+    }
+
+    return newObj;
+  };
+
+  const checkCapacity = obj => {
+    const newObj = { ...obj };
+    const cap = Object.keys(obj).reduce((p, c) => {
+      if (!obj[c].availableCapacity) {
+        newObj[c].availableCapacity = 'N/A';
+        return newObj;
+      }
+      return newObj;
+    }, {});
+
+    return cap;
+  };
+
+  const checkDevices = obj => {
+    if (!obj) {
+      return {
+        is2dot4GHz: {
+          radioType: 0,
+        },
+        is5GHzL: {
+          radioType: 0,
+        },
+        is5GHzU: {
+          radioType: 0,
+        },
+      };
+    }
+    const newObj = { ...obj };
+
+    const devices = Object.keys(obj).reduce((p, c) => {
+      if (!obj[c].radioType) {
+        newObj[c].radioType = 0;
+        return newObj;
+      }
+      return newObj;
+    }, {});
+    return devices;
+  };
+
+  // const j = {
+  //   is2dot4GHz: {
+  //     // availableCapacity: 69,
+  //     radioType: 5,
+  //   },
+  //   is5GHzL: {
+  //     // availableCapacity: 69,
+  //     radioType: 0,
+  //   },
+  //   is5GHzU: {
+  //     radioType: 0,
+  //   },
+  // };
 
   return (
     <>
@@ -62,27 +139,33 @@ const Status = ({ data }) => {
 
           {renderSpanItem(
             'Noise Floor',
-            data.status &&
-              data.status.radioUtilization &&
-              data.status.radioUtilization.detailsJSON &&
-              data.status.radioUtilization.detailsJSON.avgNoiseFloor
+            checkNoise(
+              data.status &&
+                data.status.radioUtilization &&
+                data.status.radioUtilization.detailsJSON &&
+                data.status.radioUtilization.detailsJSON.avgNoiseFloor
+            )
           )}
 
           {renderSpanItem(
             'Number of Devices',
-            data.status &&
-              data.status.clientDetails &&
-              data.status.clientDetails.detailsJSON &&
-              data.status.clientDetails.detailsJSON.numClientsPerRadio,
+            checkDevices(
+              data.status &&
+                data.status.clientDetails &&
+                data.status.clientDetails.detailsJSON &&
+                data.status.clientDetails.detailsJSON.numClientsPerRadio
+            ),
             'radioType'
           )}
 
           {renderSpanItem(
             'Available Capacity',
-            data.status &&
-              data.status.radioUtilization &&
-              data.status.radioUtilization.detailsJSON &&
-              data.status.radioUtilization.detailsJSON.capacityDetails,
+            checkCapacity(
+              data.status &&
+                data.status.radioUtilization &&
+                data.status.radioUtilization.detailsJSON &&
+                data.status.radioUtilization.detailsJSON.capacityDetails
+            ),
             'availableCapacity'
           )}
         </Card>
