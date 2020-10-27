@@ -184,10 +184,16 @@ const General = ({
     return val;
   };
 
+  const sortRadio = obj => {
+    const sortOrder = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
+
+    return obj.sort((a, b) => sortOrder.indexOf(a) - sortOrder.indexOf(b));
+  };
+
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(obj).map(i =>
+        {sortRadio(Object.keys(obj)).map(i =>
           renderInput ? (
             renderInput(obj, dataIndex, i, label, options)
           ) : (
