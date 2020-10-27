@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import styles from '../../index.module.scss';
 
+import { sortRadios } from '../../../../utils/sortRadios';
+
 const { Item } = Form;
 
 const Status = ({ data }) => {
@@ -39,17 +41,11 @@ const Status = ({ data }) => {
     },
   ];
 
-  const sortRadio = obj => {
-    const sortOrder = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
-
-    return obj.sort((a, b) => sortOrder.indexOf(a) - sortOrder.indexOf(b));
-  };
-
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
         {obj &&
-          sortRadio(Object.keys(obj)).map(i => (
+          sortRadios(Object.keys(obj)).map(i => (
             <span key={i} className={styles.spanStyle}>
               {dataIndex ? obj[i][dataIndex] : obj[i]}
             </span>
