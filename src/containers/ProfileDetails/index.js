@@ -111,7 +111,6 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
         }
         if (profileType === 'rf') {
-          formattedData = {};
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }

@@ -1,64 +1,92 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Select, Tooltip  } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import styles from '../index.module.scss';
+import { RADIOS } from '../../constants';
 
 const { Item  } = Form;
 const { Option } = Select;
 
-const RFForm = ({ details}) => {
+const RFForm = ({ form, details}) => {
+
+    useEffect(() => {
+        const formData = {
+            rfConfigMap: {},
+        };
+        const currentRadios = details.rfConfigMap ? Object.keys(details.rfConfigMap) : RADIOS;
+
+        currentRadios.forEach(radio => {
+            formData.rfConfigMap[radio] = {
+                radioType: details.rfConfigMap[radio]?.radioType || radio,
+                radioMode: details.rfConfigMap[radio]?.radioMode || 'modeN',
+                beaconInterval: details.rfConfigMap[radio]?.beaconInterval || 0,
+                forceScanDuringVoice: details.rfConfigMap[radio]?.forceScanDuringVoice || 'disabled',
+                rtsCtsThreshold: details.rfConfigMap[radio]?.rtsCtsThreshold || 0,
+                channelBandwidth: details.rfConfigMap[radio]?.channelBandwidth || 'is20MHz',
+                mimoMode: details.rfConfigMap[radio]?.channelBandwidth || 'none',
+                maxNumClients: details.rfConfigMap[radio]?.maxNumClients || 0,
+                multicastRate: details.rfConfigMap[radio]?.multicastRate || 'rate6mbps',
+                activeScanSettings: {
+                    enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
+                    scanFrequencySeconds: details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds || 0,
+                    scanDurationMillis: details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis || 0,
+                },
+                managementRate: details.rfConfigMap[radio]?.managementRate || 'rate1mbps',
+                rxCellSizeDb: details.rfConfigMap[radio]?.rxCellSizeDb || 0,
+                probeResponseThresholdDb: details.rfConfigMap[radio]?.probeResponseThresholdDb || 0,
+                clientDisconnectThresholdDb: details.rfConfigMap[radio]?.clientDisconnectThresholdDb || 0,
+                eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || 0,
+                neighbouringListApConfig: {
+                    minSignal: details.rfConfigMap[radio]?.neighbouringListApConfig?.minSignal || 0,
+                    maxAps: details.rfConfigMap[radio]?.neighbouringListApConfig?.maxAps || 0,
+                },
+                channelHopSettings: {
+                    noiseFloorThresholdInDB: details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB || -75,
+                    noiseFloorThresholdTimeInSeconds: details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds || 180,
+                    nonWifiThresholdInPercentage: details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage || 50,
+                    nonWifiThresholdTimeInSeconds: details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds || 180,
+                    obssHopMode: details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode || 'NON_WIFI',
+                },
+                bestApSettings: {
+                    mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed ? 'true' : 'false',
+                    dropInSnrPercentage: details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage || 10,
+                    minLoadFactor: details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor || 10,
+                }
+            };
+        });
+
+        form.setFieldsValue({...formData});
+    }, [form, details]);
 
     const defaultOptions = (
         <Select className={styles.Field}>
-          <Option value="enabled">enabled</Option>
-          <Option value="disabled">disabled</Option>
+          <Option value="true">Enabled</Option>
+          <Option value="false">Disabled</Option>
         </Select>
       );
-    
-      const setInitialValue = (obj = {}, dataIndex, key, options = {}) => {
-        const val = options.value ? obj[key][options.value][dataIndex] : obj[key][dataIndex];
-        if (val === undefined || val === null) {
-          return 'disabled';
-        }
-        if (val === true) {
-          return 'enabled';
-        }
-        if (val === false) {
-          return 'disabled';
-        }
-    
-        return val;
-      };
 
     const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
         <Item label={label} colon={false}>
           <div className={styles.InlineDiv}>
-            {Object.keys(obj).map(i =>
-              renderInput ? (
-                renderInput(obj, dataIndex, i, label, options)
-              ) : (
-                <span key={i} className={styles.spanStyle}>
-                  {dataIndex ? obj[i][dataIndex] : obj[i]}
-                </span>
-              )
-            )}
+            {Object.keys(obj).map(i => (
+                renderInput(dataIndex, i, label, options)
+            ))}
           </div>
         </Item>
       );
 
-      const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => (
+      const renderInputItem = (dataIndex, key, label, options = {}) => (
         <Item
-          name={dataIndex + (options?.value ? options.value : '') + key}
-          initialValue={setInitialValue(obj, dataIndex, key, options)}
+          name={['rfConfigMap', key, ...dataIndex]}
           rules={[
             { required: true, message: options.error },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
                   !value ||
-                  (getFieldValue(dataIndex + (options?.value ? options.value : '') + key) <= options.max &&
-                    getFieldValue(dataIndex + (options?.value ? options.value : '') + key) >= options.min)
+                  (getFieldValue(['rfConfigMap', key, ...dataIndex]) <= options.max &&
+                    getFieldValue(['rfConfigMap', key, ...dataIndex]) >= options.min)
                 ) {
                   return Promise.resolve();
                 }
@@ -73,14 +101,14 @@ const RFForm = ({ details}) => {
             type="number"
             min={options.min}
             max={options.max}
+            addonAfter={options?.addOnText ? options?.addOnText : ''}
           />
         </Item>
       );
 
-      const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => (
+      const renderOptionItem = (dataIndex, key, label, options = {}) => (
         <Item
-          name={dataIndex + (options?.value ? options.value : '') + key}
-          initialValue={setInitialValue(obj, dataIndex, key, options)}
+          name={['rfConfigMap', key, ...dataIndex]}
           rules={[
             {
               required: true,
@@ -93,23 +121,31 @@ const RFForm = ({ details}) => {
       );
 
     return (
-        <div className={styles.Profiledetails}>
+        <div className={styles.ProfileDetails}>
             <Card>
-                {renderItem(' ', Object.keys(details.rfConfigMap))}
+                <Item label={' '} colon={false}>
+                    <div className={styles.InlineDiv}>
+                        {Object.keys(details.rfConfigMap).map(radio =>
+                            <span key={radio} className={styles.spanStyle}>
+                                {radio}
+                            </span>
+                        )}
+                    </div>
+                </Item>
                 {renderItem(
                     'Maximum Devices',
                     details.rfConfigMap,
-                    'maxNumClients',
+                    ['maxNumClients'],
                     renderInputItem,
-                    { min: 0, max: 100, error: '0 - 100' }
+                    { min: 0, max: 100, error: '0 - 100' },
                 )}
                 {renderItem(
                     'Channel Bandwidth (MHz)', 
                     details.rfConfigMap, 
-                    'channelBandwidth',
+                    ['channelBandwidth'],
                     renderOptionItem,
                     {
-                    dropdown: key => {
+                        dropdown: key => {
                         return (
                         <Select className={styles.Field}>
                             <Option value="is20MHz">20MHz</Option>
@@ -119,26 +155,28 @@ const RFForm = ({ details}) => {
                         </Select>
                         );
                     },
-                    }
+                    },
                 )}
-                {renderItem('Radio Mode', 
-                details.rfConfigMap, 
-                'radioMode', 
-                renderOptionItem, 
-                {
-                    dropdown: (
-                    <Select className={styles.Field}>
-                        <Option value="modeN">N</Option>
-                        <Option value="modeAC">AC</Option>
-                        <Option value="modeGN">GN</Option>
-                        <Option value="modeX">X</Option>
-                        <Option value="modeA">A</Option>
-                        <Option value="modeB">B</Option>
-                        <Option value="modeG">G</Option>
-                        <Option value="modeAB">AB</Option>
-                    </Select>
-                    ),
-                })}
+                {renderItem(
+                    'Radio Mode', 
+                    details.rfConfigMap, 
+                    ['radioMode'], 
+                    renderOptionItem, 
+                    {
+                        dropdown: (
+                            <Select className={styles.Field}>
+                                <Option value="modeN">N</Option>
+                                <Option value="modeAC">AC</Option>
+                                <Option value="modeGN">GN</Option>
+                                <Option value="modeX">X</Option>
+                                <Option value="modeA">A</Option>
+                                <Option value="modeB">B</Option>
+                                <Option value="modeG">G</Option>
+                                <Option value="modeAB">AB</Option>
+                            </Select>
+                        ),
+                    },
+                )}
                 {renderItem(
                     <span>
                     <Tooltip title="TU (Time Unit) is 1.024ms ">
@@ -147,30 +185,30 @@ const RFForm = ({ details}) => {
                     &nbsp; Beacon Interval (kusecs)
                     </span>,
                     details.rfConfigMap,
-                    'beaconInterval',
+                    ['beaconInterval'],
                     renderOptionItem,
                     {
-                    dropdown: (
-                        <Select className={styles.Field}>
-                        <Option value={100}>100</Option>
-                        <Option value={200}>200</Option>
-                        <Option value={300}>300</Option>
-                        <Option value={400}>400</Option>
-                        <Option value={500}>500</Option>
-                        </Select>
-                    ),
-                    }
+                        dropdown: (
+                            <Select className={styles.Field}>
+                                <Option value={100}>100</Option>
+                                <Option value={200}>200</Option>
+                                <Option value={300}>300</Option>
+                                <Option value={400}>400</Option>
+                                <Option value={500}>500</Option>
+                            </Select>
+                        ),
+                    },
                 )}
                 {renderItem(
                     'RTS/CTS threshold',
                     details.rfConfigMap,
-                    'rtsCtsThreshold',
+                    ['rtsCtsThreshold'],
                     renderInputItem,
-                    { min: 0, max: 65535, error: '0 - 65535 (Bytes)' }
+                    { min: 0, max: 65535, error: '0 - 65535 (Bytes)', addOnText: 'bytes', },
                 )}
                 {renderItem('Mimo Mode', 
                     details.rfConfigMap, 
-                    'mimoMode',
+                    ['mimoMode'],
                     renderOptionItem,
                     {
                         dropdown: (
@@ -182,12 +220,12 @@ const RFForm = ({ details}) => {
                                 <Option value="fourByFour">fourByFour</Option>
                             </Select>
                         ),
-                    }
+                    },
                 )}
                 {renderItem(
                     'Management Rate (Mbps)',
                     details.rfConfigMap,
-                    'managementRate',
+                    ['managementRate'],
                     renderOptionItem,
                     {
                         dropdown: (
@@ -203,12 +241,12 @@ const RFForm = ({ details}) => {
                                 <Option value="rate24mbps">24</Option>
                             </Select>
                         ),
-                    }
+                    },
                 )}
                 {renderItem(
                     'Multicast Rate (Mbps)',
                     details.rfConfigMap,
-                    'multicastRate',
+                    ['multicastRate'],
                     renderOptionItem,
                     {
                         dropdown: (
@@ -223,190 +261,192 @@ const RFForm = ({ details}) => {
                                 <Option value="rate54mbps">54</Option>
                             </Select>
                         ),
-                    }
-                )}
-                {renderItem(
-                    'Rx Cell Size (dBm)',
-                    details.rfConfigMap,
-                    'rxCellSizeDb',
-                    renderInputItem,
-                    { 
-                        min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
-                    }
-                )}
-                {renderItem(
-                    'Probe Response Threshold (dBm)',
-                    details.rfConfigMap,
-                    'probeResponseThresholdDb',
-                    renderInputItem, 
-                    { 
-                        min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
-                    }
-                )}
-                {renderItem(
-                    'Client Disconnect Threshold (dBm)',
-                    details.rfConfigMap,
-                    'clientDisconnectThresholdDb',
-                    renderInputItem, 
-                    { 
-                        min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
-                    }
-                )}
-                {renderItem(
-                    'EIRP Tx Power(dBm)',
-                    details.rfConfigMap,
-                    'eirpTxPower',
-                    renderInputItem, 
-                    { 
-                        min: 0, 
-                        max: 100, 
-                        error: '0 - 100',
-                    }
-                )}
-                <p>Active Scan Setting:</p>
-                {renderItem(
-                    'Multicast Rate (Mbps)',
-                    details.rfConfigMap,
-                    'enabled',
-                    renderOptionItem,
-                    {
-                        dropdown: defaultOptions,
-                        value: 'activeScanSettings',
                     },
                 )}
                 {renderItem(
-                    'Scan Frequency (sec)',
+                    'Rx Cell Size',
                     details.rfConfigMap,
-                    'scanFrequencySeconds',
+                    ['rxCellSizeDb'],
                     renderInputItem,
                     { 
-                        min: 0, 
+                        min: -100, 
                         max: 100, 
-                        error: '0 - 100',
-                        value:'activeScanSettings',
-                    }
+                        error: '-100 - 100',
+                        addOnText: 'dBm',
+                    },
                 )}
                 {renderItem(
-                    'Scan Duration (ms)',
+                    'Probe Response Threshold',
                     details.rfConfigMap,
-                    'scanDurationMillis',
+                    ['probeResponseThresholdDb'],
+                    renderInputItem, 
+                    { 
+                        min: -100, 
+                        max: 100, 
+                        error: '-100 - 100',
+                        addOnText: 'dBm',
+                    },
+                )}
+                {renderItem(
+                    'Client Disconnect Threshold',
+                    details.rfConfigMap,
+                    ['clientDisconnectThresholdDb'],
+                    renderInputItem, 
+                    { 
+                        min: -100, 
+                        max: 100, 
+                        error: '-100 - 100',
+                        addOnText: 'dBm',
+                    },
+                )}
+                {renderItem(
+                    'EIRP Tx Power',
+                    details.rfConfigMap,
+                    ['eirpTxPower'],
+                    renderInputItem, 
+                    { 
+                        min: 0, 
+                        max: 100, 
+                        error: '0 - 100',
+                        addOnText: 'dBm',
+                    },
+                )}
+                <p>Active Scan Setting:</p>
+                {renderItem(
+                    'Enable',
+                    details.rfConfigMap,
+                    ['activeScanSettings', 'enabled'],
+                    renderOptionItem,
+                    {
+                        dropdown: defaultOptions,
+                    },
+                )}
+                {renderItem(
+                    'Scan Frequency',
+                    details.rfConfigMap,
+                    ['activeScanSettings', 'scanFrequencySeconds'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'activeScanSettings',
-                    }
+                        addOnText: 'sec',
+                    },
+                )}
+                {renderItem(
+                    'Scan Duration',
+                    details.rfConfigMap,
+                    ['activeScanSettings', 'scanDurationMillis'],
+                    renderInputItem,
+                    { 
+                        min: 0, 
+                        max: 100, 
+                        error: '0 - 100',
+                        addOnText: 'ms',
+                    },
                 )}
                 <p>Neighbouring AP List:</p>
                 {renderItem(
-                    'Minimum Signal (dBm)',
+                    'Minimum Signal',
                     details.rfConfigMap,
-                    'minSignal',
+                    ['neighbouringListApConfig', 'minSignal'],
                     renderInputItem,
                     { 
                         min: -90, 
                         max: -50, 
                         error: '-90 - -50 dB',
-                        value: 'neighbouringListApConfig',
-                    }
+                        addOnText: 'dBm',
+                    },
                 )}
                 {renderItem(
                     'Maximum APs',
                     details.rfConfigMap,
-                    'maxAps',
+                    ['neighbouringListApConfig', 'maxAps'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 512, 
                         error: '0 - 512 APs',
-                        value: 'neighbouringListApConfig',
                     }
                 )}
                 <p>Client Steering Thresholds:</p>
                 {renderItem(
-                    'Min Load (%)',
+                    'Min Load',
                     details.rfConfigMap,
-                    'minLoadFactor',
+                    ['bestApSettings', 'minLoadFactor'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100%',
-                        value: 'bestApSettings',
-                    }
+                        addOnText: '%',
+                    },
                 )}
                 {renderItem(
-                    'SNR (% Drop)',
+                    'SNR',
                     details.rfConfigMap,
-                    'dropInSnrPercentage',
+                    ['bestApSettings', 'dropInSnrPercentage'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100%',
-                        value: 'bestApSettings',
-                    }
+                        addOnText: '% Drop',
+                    },
                 )}
                 <p>Channel Hop Configuration:</p>
                 {renderItem(
-                    'Noise Floor (dBm)',
+                    'Noise Floor',
                     details.rfConfigMap,
-                    'noiseFloorThresholdInDB',
+                    ['channelHopSettings', 'noiseFloorThresholdInDB'],
                     renderInputItem,
                     { 
                         min: -90, 
                         max: -10, 
                         error: '-90 - -10 dB',
-                        value: 'channelHopSettings',
-                    }
+                        addOnText: 'dBm',
+                    },
                 )}
                 {renderItem(
-                    'Noise Floor Time (sec)',
+                    'Noise Floor Time',
                     details.rfConfigMap,
-                    'noiseFloorThresholdTimeInSeconds',
+                    ['channelHopSettings', 'noiseFloorThresholdTimeInSeconds'],
                     renderInputItem,
                     { 
                         min: 120, 
                         max: 600, 
                         error: '120 - 600 seconds',
-                        value: 'channelHopSettings', 
-                    }
+                        addOnText: 'sec',
+                    },
                 )}
                 {renderItem(
-                    'Non WIFI (%)',
+                    'Non WIFI',
                     details.rfConfigMap,
-                    'nonWifiThresholdInPercentage',
+                    ['channelHopSettings', 'nonWifiThresholdInPercentage'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 100, 
                         error: '0 - 100',
-                        value: 'channelHopSettings',
-                    }
+                        addOnText: '%',
+                    },
                 )}
                 {renderItem(
-                    'Non WIFI Time (sec)',
+                    'Non WIFI Time',
                     details.rfConfigMap,
-                    'nonWifiThresholdTimeInSeconds',
+                    ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
                     renderInputItem,
                     { 
                         min: 0, 
                         max: 500, 
                         error: '0 - 500',
-                        value: 'channelHopSettings',
-                    }
+                        addOnText: 'sec',
+                    },
                 )}
                 {renderItem(
                     'OBSS Hop Mode',
                     details.rfConfigMap,
-                    'obssHopMode',
+                    ['channelHopSettings', 'obssHopMode'],
                     renderOptionItem,
                     {
                         dropdown: (
@@ -415,7 +455,6 @@ const RFForm = ({ details}) => {
                                 <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
                             </Select>
                         ),
-                        value: 'channelHopSettings',
                     }
                 )}
             </Card>
@@ -423,56 +462,20 @@ const RFForm = ({ details}) => {
     );
 };
 
-const defaultRadio = {
-    radioMode: "modeN",
-    autoChannelSelection: false,
-    beaconInterval: 0,
-    forceScanDuringVoice: 'disabled',
-    rtsCtsThreshold: 0,
-    channelBandwidth: 'is20MHz',
-    mimoMode: 'none',
-    maxNumClients: 0,
-    multicastRate: 'rate6mbps',
-    activeScanSettings: {
-        enabled: true,
-        scanFrequencySeconds: 0,
-        scanDurationMillis:0,
-    },
-    managementRate: 'rate1mbps',
-    rxCellSizeDb: 0,
-    probeResponseThresholdDb: 0,
-    clientDisconnectThresholdDb: 0,
-    eirpTxPower: 0,
-    neighbouringListApConfig: {
-        minSignal: -50,
-        maxAps: 0,
-    },
-    channelHopSettings: {
-        noiseFloorThresholdInDB: -75,
-        noiseFloorThresholdTimeInSeconds: 180,
-        nonWifiThresholdInPercentage: 50,
-        nonWifiThresholdTimeInSeconds: 180,
-        obssHopMode: 'NON_WIFI',
-    },
-    bestApSettings: {
-        mlComputed: true,
-        dropInSnrPercentage: 10,
-        minLoadFactor: 10,
-    },
-};
-
 RFForm.propTypes = {
+    form: PropTypes.instanceOf(Object),
     details: PropTypes.instanceOf(Object),
   };
   
 RFForm.defaultProps = {
+    form: {},
     details: {
         rfConfigMap: {
-            is2dot4GHz: { radioType: "is2dot4GHz", ...defaultRadio},
-            is5GHz: { radioType: "is5GHz", ...defaultRadio},
-            is5GHzU: { radioType: "is5GHzU", ...defaultRadio},
-            is5GHzL: { radioType: "is5GHzL", ...defaultRadio},
-        }
+            is2dot4GHz: {},
+            is5GHz: {},
+            is5GHzU: {},
+            is5GHzL: {},
+        },
     },
   };
 
