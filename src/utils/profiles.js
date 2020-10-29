@@ -177,7 +177,8 @@ export const formatRfProfileForm = values => {
   const currentRadios = Object.keys(formattedData.rfConfigMap);
 
   currentRadios.forEach(radio => {
-    // formattedData.rfConfigMap[radio].rf = values.name;
+    formattedData.rfConfigMap[radio].radioType = radio;
+    formattedData.rfConfigMap[radio].rf = values.name;
     formattedData.rfConfigMap[radio].activeScanSettings.enabled = isBool(values.rfConfigMap[radio].activeScanSettings.enabled);
     formattedData.rfConfigMap[radio].bestApSettings.mlComputed = isBool(values.rfConfigMap[radio].bestApSettings.mlComputed);
   });
