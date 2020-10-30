@@ -10,7 +10,7 @@ const DeviceStatsCard = ({ title, cardData }) => {
       {Object.keys(cardData).map(d => (
         <div key={d} className={styles.row}>
           <div>{d}</div>
-          <div>{cardData[d]}</div>
+          {!cardData[d] ? <div>N/A</div> : <div>{cardData[d]}</div>}
         </div>
       ))}
     </Card>
