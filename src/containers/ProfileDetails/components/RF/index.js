@@ -263,7 +263,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: -100, 
                         max: 100, 
-                        error: '-100 - 100',
+                        error: '-100 - 100 dBm',
                         addOnText: 'dBm',
                     },
                 )}
@@ -274,7 +274,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: -100, 
                         max: 100, 
-                        error: '-100 - 100',
+                        error: '-100 - 100 dBm',
                         addOnText: 'dBm',
                     },
                 )}
@@ -285,7 +285,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: -100, 
                         max: 100, 
-                        error: '-100 - 100',
+                        error: '-100 - 100 dBm',
                         addOnText: 'dBm',
                     },
                 )}
@@ -296,7 +296,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100 dBm',
                         addOnText: 'dBm',
                     },
                 )}
@@ -316,7 +316,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100 seconds',
                         addOnText: 'sec',
                     },
                 )}
@@ -327,7 +327,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100 milliseconds',
                         addOnText: 'ms',
                     },
                 )}
@@ -339,7 +339,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: -90, 
                         max: -50, 
-                        error: '-90 - -50 dB',
+                        error: '-90 - -50 dBm',
                         addOnText: 'dBm',
                     },
                 )}
@@ -406,7 +406,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: 0, 
                         max: 100, 
-                        error: '0 - 100',
+                        error: '0 - 100%',
                         addOnText: '%',
                     },
                 )}
@@ -417,7 +417,7 @@ const RFForm = ({ form, details}) => {
                     { 
                         min: 0, 
                         max: 500, 
-                        error: '0 - 500',
+                        error: '0 - 500 seconds',
                         addOnText: 'sec',
                     },
                 )}
