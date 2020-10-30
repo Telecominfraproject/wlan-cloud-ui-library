@@ -63,6 +63,8 @@ const CaptivePortalForm = ({
 
   const [userList, setUserList] = useState(details.userList || []);
 
+  const [selectSize, setSelectSize] = useState(40);
+
   const disableExternalSplashChange = () => {
     form.setFieldsValue({
       authenticationType: 'guest',
@@ -305,6 +307,22 @@ const CaptivePortalForm = ({
     });
   }, [userList]);
 
+  const handleSelectSize = () => {
+    if (radiusProfiles.length <= 1) {
+      setSelectSize(40);
+    } else if (radiusProfiles.length <= 2) {
+      setSelectSize(60);
+    } else if (radiusProfiles.length <= 3) {
+      setSelectSize(90);
+    } else {
+      setSelectSize(120);
+    }
+  };
+
+  useEffect(() => {
+    handleSelectSize();
+  }, [radiusProfiles]);
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="General Settings ">
@@ -340,7 +358,7 @@ const CaptivePortalForm = ({
             },
             () => ({
               validator(_rule, value) {
-                if (!value || value >= 1 && value <= 1440) {
+                if (!value || (value >= 1 && value <= 1440)) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -426,6 +444,7 @@ const CaptivePortalForm = ({
             <Select
               className={globalStyles.field}
               placeholder="RADIUS Services"
+              listHeight={selectSize}
               onPopupScroll={onFetchMoreRadiusProfiles}
             >
               {radiusProfiles.map(profile => (
