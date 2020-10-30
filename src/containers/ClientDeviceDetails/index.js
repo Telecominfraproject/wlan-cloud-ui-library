@@ -56,7 +56,6 @@ const ClientDeviceDetails = ({
     if (!details.associationState) {
       return null;
     }
-
     if (details.associationState === 'Active_Data') {
       return 'Connected';
     }
