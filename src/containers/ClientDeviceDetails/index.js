@@ -53,7 +53,7 @@ const ClientDeviceDetails = ({
   } = details?.metricDetails || {};
 
   const getStatusState = () => {
-    if (!details.associationState) {
+    if (!details) {
       return null;
     }
     if (details.associationState === 'Active_Data') {
