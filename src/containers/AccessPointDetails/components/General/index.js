@@ -8,6 +8,8 @@ import Loading from 'components/Loading';
 import Button from 'components/Button';
 import styles from '../../index.module.scss';
 
+import { sortRadios } from '../../../../utils/sortRadios';
+
 const { Item } = Form;
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -184,16 +186,10 @@ const General = ({
     return val;
   };
 
-  const sortRadio = obj => {
-    const sortOrder = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
-
-    return obj.sort((a, b) => sortOrder.indexOf(a) - sortOrder.indexOf(b));
-  };
-
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {sortRadio(Object.keys(obj)).map(i =>
+        {sortRadios(Object.keys(obj)).map(i =>
           renderInput ? (
             renderInput(obj, dataIndex, i, label, options)
           ) : (
