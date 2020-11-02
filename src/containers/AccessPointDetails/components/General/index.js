@@ -184,10 +184,16 @@ const General = ({
     return val;
   };
 
+  const sortRadio = obj => {
+    const sortOrder = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
+
+    return obj.sort((a, b) => sortOrder.indexOf(a) - sortOrder.indexOf(b));
+  };
+
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(obj).map(i =>
+        {sortRadio(Object.keys(obj)).map(i =>
           renderInput ? (
             renderInput(obj, dataIndex, i, label, options)
           ) : (
@@ -286,8 +292,8 @@ const General = ({
         <Item label="Serial Number">{data.serial} </Item>
         <Item label="SKU"> {data.status.protocol.reportedSku}</Item>
         <Item label="Country Code"> {data.status.protocol.countryCode}</Item>
-        <Item label="Ethernet MAC Address"> {data.status.protocol.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> {data.status.protocol.manufacturer}</Item>
+        <Item label="Ethernet MAC Address"> {data.status.protocol.details.reportedMacAddr}</Item>
+        <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
 

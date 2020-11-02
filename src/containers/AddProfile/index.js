@@ -13,6 +13,7 @@ import {
   formatSsidProfileForm,
   formatApProfileForm,
   formatBonjourGatewayForm,
+  formatCaptiveForm,
   formatRadiusForm,
   formatRfProfileForm,
 } from 'utils/profiles';
@@ -23,6 +24,7 @@ import styles from './index.module.scss';
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
+import CaptivePortalForm from '../ProfileDetails/components/CaptivePortal';
 import RadiusForm from '../ProfileDetails/components/Radius';
 import RFForm from '../ProfileDetails/components/RF';
 
@@ -78,6 +80,11 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
         }
 
+        if (profileType === 'captive_portal') {
+          formattedData.model_type = 'CaptivePortalConfiguration';
+          formattedData = Object.assign(formattedData, formatCaptiveForm(values));
+        }
+
         if (profileType === 'radius') {
           if (values.services.length === 0) {
             notification.error({
@@ -93,7 +100,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             });
             return;
           }
-          
+
           formattedData.model_type = 'RadiusProfile';
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
@@ -151,6 +158,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
                 <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
               </Select>
@@ -173,6 +181,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
+          {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
         </Form>
