@@ -9,24 +9,9 @@ const DeviceStatsCard = ({ title, cardData }) => {
     <Card title={title} className={styles.individualCard}>
       {Object.keys(cardData).map(d => (
         <div key={d} className={styles.row}>
+          {console.log(cardData[d])}
           <div>{d}</div>
-          {!cardData[d] ? (
-            <div>N/A</div>
-          ) : (
-            <div>
-              {d === 'Status' ? (
-                <>
-                  {cardData[d] === 'Active_Data' ? (
-                    'Connected'
-                  ) : (
-                    <>{cardData[d] === 'Disconnected' ? 'Disconnected' : 'N/A'}</>
-                  )}
-                </>
-              ) : (
-                <>{cardData[d]}</>
-              )}
-            </div>
-          )}
+          <div>{cardData[d]}</div>
         </div>
       ))}
     </Card>

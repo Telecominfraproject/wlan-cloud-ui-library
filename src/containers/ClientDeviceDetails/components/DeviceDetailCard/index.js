@@ -31,18 +31,7 @@ const DeviceDetailCard = ({
         </div>
         <div className={styles.rightWrapContent}>
           <p>
-            {!status ? (
-              'N/A'
-            ) : (
-              <>
-                {status === 'Active_Data' ? (
-                  'Connected'
-                ) : (
-                  <>{status === 'Disconnected' ? 'Disconnected' : 'N/A'}</>
-                )}
-              </>
-            )}{' '}
-            <WifiOutlined />
+            {status} <WifiOutlined />
           </p>
           <p>
             {formatBytes(dataTransferred, 1)}
