@@ -292,8 +292,8 @@ const General = ({
         <Item label="Serial Number">{data.serial} </Item>
         <Item label="SKU"> {data.status.protocol.reportedSku}</Item>
         <Item label="Country Code"> {data.status.protocol.countryCode}</Item>
-        <Item label="Ethernet MAC Address"> {data.status.protocol.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> {data.status.protocol.manufacturer}</Item>
+        <Item label="Ethernet MAC Address"> {data.status.protocol.details.reportedMacAddr}</Item>
+        <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
         <Item label="Asset ID"> {data.inventoryId}</Item>
       </Card>
 
