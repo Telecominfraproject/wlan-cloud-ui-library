@@ -13,6 +13,7 @@ import {
   formatSsidProfileForm,
   formatApProfileForm,
   formatBonjourGatewayForm,
+  formatCaptiveForm,
   formatRadiusForm,
 } from 'utils/profiles';
 
@@ -22,6 +23,7 @@ import styles from './index.module.scss';
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
+import CaptivePortalForm from '../ProfileDetails/components/CaptivePortal';
 import RadiusForm from '../ProfileDetails/components/Radius';
 
 const { Item } = Form;
@@ -74,6 +76,11 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         if (profileType === 'bonjour') {
           formattedData.model_type = 'BonjourGatewayProfile';
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
+        }
+
+        if (profileType === 'captive_portal') {
+          formattedData.model_type = 'CaptivePortalConfiguration';
+          formattedData = Object.assign(formattedData,formatCaptiveForm(values));
         }
 
         if (profileType === 'radius') {
@@ -144,6 +151,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
                 <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
               </Select>
             </Item>
@@ -165,6 +173,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
+          {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
         </Form>
       </div>
