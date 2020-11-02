@@ -53,10 +53,10 @@ const ClientDeviceDetails = ({
   } = details?.metricDetails || {};
 
   const getStatus = () => {
-    if (details.associationState === 'Active_Data') {
+    if (details?.associationState === 'Active_Data') {
       return 'Connected';
     }
-    if (details.associationState === 'Disconnected') {
+    if (details?.associationState === 'Disconnected') {
       return 'Disconnected';
     }
     return 'N/A';
