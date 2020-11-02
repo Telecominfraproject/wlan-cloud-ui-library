@@ -6,9 +6,9 @@ import _ from 'lodash';
 
 import Loading from 'components/Loading';
 import Button from 'components/Button';
-import styles from '../../index.module.scss';
+import { sortRadioTypes } from 'utils/sortRadioTypes';
 
-import { sortRadios } from '../../../../utils/sortRadios';
+import styles from '../../index.module.scss';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -189,7 +189,7 @@ const General = ({
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {sortRadios(Object.keys(obj)).map(i =>
+        {sortRadioTypes(Object.keys(obj)).map(i =>
           renderInput ? (
             renderInput(obj, dataIndex, i, label, options)
           ) : (
