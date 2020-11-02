@@ -14,7 +14,7 @@ const RFForm = ({ form, details}) => {
         const formData = {
             rfConfigMap: {},
         };
-        const currentRadios = details.rfConfigMap ? Object.keys(details.rfConfigMap) : RADIOS;
+        const currentRadios = Object.keys(details.rfConfigMap);
 
         currentRadios.forEach(radio => {
             formData.rfConfigMap[radio] = {
@@ -447,12 +447,8 @@ RFForm.propTypes = {
 RFForm.defaultProps = {
     form: {},
     details: {
-        rfConfigMap: {
-            is2dot4GHz: {},
-            is5GHz: {},
-            is5GHzU: {},
-            is5GHzL: {},
-        },
+        // eslint-disable-next-line no-return-assign, no-sequences
+        rfConfigMap: RADIOS.reduce((acc, i) => (acc[i] = {}, acc), {})
     },
   };
 
