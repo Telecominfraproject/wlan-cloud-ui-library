@@ -52,21 +52,8 @@ const ClientDeviceDetails = ({
     totalTxPackets,
   } = details?.metricDetails || {};
 
-  const getStatusState = () => {
-    if (!details) {
-      return null;
-    }
-    if (details.associationState === 'Active_Data') {
-      return 'Connected';
-    }
-    if (details.associationState === 'Disconnected') {
-      return 'Disconnected';
-    }
-    return null;
-  };
-
   const getGeneralStats = () => ({
-    Status: getStatusState(),
+    Status: details?.associationState,
     'Associated On': moment(details?.assocTimestamp).format('llll'),
     'Access Point': equipment?.name,
     SSID: ssid,
@@ -112,7 +99,7 @@ const ClientDeviceDetails = ({
         signal={signal}
         dataTransferred={txBytes + rxBytes}
         dataThroughput={txMbps + rxMbps}
-        status={getStatusState()}
+        status={details?.associationState}
       />
       <div className={styles.infoWrapper}>
         <DeviceStatsCard title="General" cardData={getGeneralStats()} />

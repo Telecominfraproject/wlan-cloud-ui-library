@@ -9,7 +9,6 @@ import styles from './index.module.scss';
 const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
-
   return (
     <>
       <Table
