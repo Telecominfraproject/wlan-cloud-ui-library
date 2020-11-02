@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
 
+import { sortRadioTypes } from 'utils/sortRadioTypes';
+
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
@@ -14,7 +16,7 @@ const Status = ({ data }) => {
 
   const columns = [
     {
-      title: 'Severity	',
+      title: 'Severity',
       dataIndex: 'severity',
       key: 'severity',
     },
@@ -24,7 +26,7 @@ const Status = ({ data }) => {
       key: 'type',
     },
     {
-      title: 'Message	',
+      title: 'Message',
       dataIndex: ['details', 'message'],
       key: 'security',
     },
@@ -42,12 +44,11 @@ const Status = ({ data }) => {
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {obj &&
-          Object.keys(obj).map(i => (
-            <span key={i} className={styles.spanStyle}>
-              {dataIndex ? obj[i][dataIndex] : obj[i]}
-            </span>
-          ))}
+        {sortRadioTypes(Object.keys(data?.details?.radioMap)).map(i => (
+          <span key={i} className={styles.spanStyle}>
+            {(dataIndex ? obj?.[i]?.[dataIndex] : obj?.[i]) || 'N/A'}
+          </span>
+        ))}
       </div>
     </Item>
   );
@@ -56,33 +57,22 @@ const Status = ({ data }) => {
     <>
       <Form {...layout}>
         <Card title="Status">
-          {renderSpanItem(' ', data.details && data.details.radioMap, 'radioType')}
+          {renderSpanItem(' ', data?.details?.radioMap, 'radioType')}
 
-          {renderSpanItem('Channel', data.details && data.details.radioMap, 'channelNumber')}
+          {renderSpanItem('Channel', data?.details?.radioMap, 'channelNumber')}
 
           {renderSpanItem(
             'Noise Floor',
-            data.status &&
-              data.status.radioUtilization &&
-              data.status.radioUtilization.detailsJSON &&
-              data.status.radioUtilization.detailsJSON.avgNoiseFloor
+            data?.status?.radioUtilization?.detailsJSON?.avgNoiseFloor
           )}
-
           {renderSpanItem(
             'Number of Devices',
-            data.status &&
-              data.status.clientDetails &&
-              data.status.clientDetails.detailsJSON &&
-              data.status.clientDetails.detailsJSON.numClientsPerRadio,
+            data?.status?.clientDetails?.detailsJSON?.numClientsPerRadio,
             'radioType'
           )}
-
           {renderSpanItem(
             'Available Capacity',
-            data.status &&
-              data.status.radioUtilization &&
-              data.status.radioUtilization.detailsJSON &&
-              data.status.radioUtilization.detailsJSON.capacityDetails,
+            data?.status?.radioUtilization?.detailsJSON?.capacityDetails,
             'availableCapacity'
           )}
         </Card>
