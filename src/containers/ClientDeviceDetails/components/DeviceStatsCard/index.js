@@ -9,7 +9,6 @@ const DeviceStatsCard = ({ title, cardData }) => {
     <Card title={title} className={styles.individualCard}>
       {Object.keys(cardData).map(d => (
         <div key={d} className={styles.row}>
-          {console.log(cardData[d])}
           <div>{d}</div>
           <div>{cardData[d]}</div>
         </div>
