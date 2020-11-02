@@ -44,21 +44,11 @@ const Status = ({ data }) => {
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {obj ? (
-          sortRadioTypes(Object.keys(data?.details?.radioMap)).map(i => (
-            <span key={i} className={styles.spanStyle}>
-              {dataIndex ? obj[i]?.[dataIndex] || 'N/A' : obj[i] || 'N/A'}
-            </span>
-          ))
-        ) : (
-          <>
-            {Object.keys(data?.details?.radioMap).map(i => (
-              <span className={styles.spanStyle} key={i}>
-                N/A
-              </span>
-            ))}
-          </>
-        )}
+        {sortRadioTypes(Object.keys(data?.details?.radioMap)).map(i => (
+          <span key={i} className={styles.spanStyle}>
+            {dataIndex ? obj?.[i]?.[dataIndex] || 'N/A' : obj[i] || 'N/A'}
+          </span>
+        ))}
       </div>
     </Item>
   );
