@@ -17,6 +17,7 @@ import {
   formatRadiusForm,
   formatCaptiveForm,
   formatBonjourGatewayForm,
+  formatRfProfileForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -24,6 +25,7 @@ import AccessPointForm from './components/AccessPoint';
 import RadiusForm from './components/Radius';
 import CaptivePortalForm from './components/CaptivePortal';
 import BonjourGatewayForm from './components/BonjourGateway';
+import RFForm from './components/RF';
 
 import styles from './index.module.scss';
 
@@ -108,6 +110,10 @@ const ProfileDetails = ({
           formattedData.model_type = 'BonjourGatewayProfile';
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
         }
+        if (profileType === 'rf') {
+          formattedData.model_type = 'RfConfiguration';
+          formattedData = Object.assign(formattedData, formatRfProfileForm(values));
+        }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -186,6 +192,7 @@ const ProfileDetails = ({
         )}
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
         {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
+        {profileType === 'rf' && <RFForm details={details} form={form} />}
       </Form>
     </Container>
   );

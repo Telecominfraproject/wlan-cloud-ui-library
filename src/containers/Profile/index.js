@@ -46,28 +46,23 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
       title: '',
       dataIndex: 'delete',
       width: 80,
-      render: (_, record) => {
-        return record.profileType === 'ssid' ||
-          record.profileType === 'equipment_ap' ||
-          record.profileType === 'bonjour' ||
-          record.profileType === 'captive_portal' ? (
-          <Button
-            title={`delete-${record.name}`}
-            className={styles.InfoButton}
-            icon={<DeleteFilled />}
-            onClick={e => {
-              e.stopPropagation();
-              setDeleteModal(true);
-              setActiveProfile({
-                id: record.id,
-                name: record.name,
-                profileType: record.profileType,
-                __typename: record.__typename,
-              });
-            }}
-          />
-        ) : null;
-      },
+      render: (_, record) => (
+        <Button
+          title={`delete-${record.name}`}
+          className={styles.InfoButton}
+          icon={<DeleteFilled />}
+          onClick={e => {
+            e.stopPropagation();
+            setDeleteModal(true);
+            setActiveProfile({
+              id: record.id,
+              name: record.name,
+              profileType: record.profileType,
+              __typename: record.__typename,
+            });
+          }}
+        />
+      ),
     },
   ];
 

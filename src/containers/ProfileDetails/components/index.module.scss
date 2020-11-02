@@ -83,6 +83,8 @@
   & > * {
     margin: 0;
     margin-right: 10px;
+    width: 100%;
+    overflow: hidden;
   }
   & > :last-child {
     margin-right: 0;
@@ -148,4 +150,13 @@
 
 .BonjourServices {
   margin-bottom: 10px;
+}
+
+p {
+  font-weight: bold;
+  font-size: 16px;
+}
+.spanStyle {
+  flex: 1;
+  margin-left: 10px;
 }
