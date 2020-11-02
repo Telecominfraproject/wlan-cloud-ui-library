@@ -47,11 +47,7 @@ const Status = ({ data }) => {
         {obj ? (
           sortRadioTypes(Object.keys(data?.details?.radioMap)).map(i => (
             <span key={i} className={styles.spanStyle}>
-              {dataIndex ? (
-                <>{obj[i][dataIndex] ? obj[i][dataIndex] : 'N/A'}</>
-              ) : (
-                <>{obj[i] ? obj[i] : 'N/A'}</>
-              )}
+              {dataIndex ? obj[i]?.[dataIndex] || 'N/A' : obj[i] || 'N/A'}
             </span>
           ))
         ) : (
