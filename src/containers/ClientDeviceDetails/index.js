@@ -60,7 +60,7 @@ const ClientDeviceDetails = ({
       return 'Disconnected';
     }
     return 'N/A';
-  }, []);
+  }, [details?.associationState]);
 
   const getGeneralStats = () => ({
     Status: status,
