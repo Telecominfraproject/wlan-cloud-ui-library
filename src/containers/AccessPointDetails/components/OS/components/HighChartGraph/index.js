@@ -20,10 +20,10 @@ const processMetrics = data => {
   const cpuTemperature = [];
 
   data.forEach(i => {
-    if (i.details && i.details.apPerformance) {
-      freeMemory.push(i.details.apPerformance.freeMemory);
-      cpuTemperature.push(i.details.apPerformance.cpuTemperature);
-      i.details.apPerformance.cpuUtilized.forEach((j, index) => {
+    if (i?.detailsJSON?.apPerformance) {
+      freeMemory.push(i.detailsJSON.apPerformance.freeMemory);
+      cpuTemperature.push(i.detailsJSON.apPerformance.cpuTemperature);
+      i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
         if (!(index in cpuUtilCores)) {
           cpuUtilCores[index] = [];
         }
