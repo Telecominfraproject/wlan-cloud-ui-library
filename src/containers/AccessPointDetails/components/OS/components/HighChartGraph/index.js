@@ -18,11 +18,14 @@ const processMetrics = data => {
   const cpuUtilCores = {};
   const freeMemory = [];
   const cpuTemperature = [];
+  const timeStamp = [];
 
   data.forEach(i => {
     if (i?.detailsJSON?.apPerformance) {
       freeMemory.push(i.detailsJSON.apPerformance.freeMemory);
       cpuTemperature.push(i.detailsJSON.apPerformance.cpuTemperature);
+      // eslint-disable-next-line radix
+      timeStamp.push(parseInt(i.createdTimestamp));
       i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
         if (!(index in cpuUtilCores)) {
           cpuUtilCores[index] = [];
@@ -32,7 +35,7 @@ const processMetrics = data => {
     }
   });
 
-  return { cpuUtilCores, freeMemory, cpuTemperature };
+  return { cpuUtilCores, freeMemory, cpuTemperature, timeStamp };
 };
 
 const HighChartGraph = ({ osData }) => {
@@ -67,7 +70,12 @@ const HighChartGraph = ({ osData }) => {
         dateTimeLabelFormats={dateTimeLabelFormats}
         offset={20}
         type="datetime"
-        showEmpty
+        categories={metrics.timeStamp}
+        labels={{
+          formatter: i => {
+            return new Date(i.value).toUTCString();
+          },
+        }}
       >
         <XAxis.Title>Time</XAxis.Title>
       </XAxis>
