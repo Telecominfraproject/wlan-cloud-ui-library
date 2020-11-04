@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Card, Alert } from 'antd';
@@ -52,8 +52,18 @@ const ClientDeviceDetails = ({
     totalTxPackets,
   } = details?.metricDetails || {};
 
+  const status = useMemo(() => {
+    if (details?.associationState === 'Active_Data') {
+      return 'Connected';
+    }
+    if (details?.associationState === 'Disconnected') {
+      return 'Disconnected';
+    }
+    return 'N/A';
+  }, [details?.associationState]);
+
   const getGeneralStats = () => ({
-    Status: '',
+    Status: status,
     'Associated On': moment(details?.assocTimestamp).format('llll'),
     'Access Point': equipment?.name,
     SSID: ssid,
@@ -99,6 +109,7 @@ const ClientDeviceDetails = ({
         signal={signal}
         dataTransferred={txBytes + rxBytes}
         dataThroughput={txMbps + rxMbps}
+        status={status}
       />
       <div className={styles.infoWrapper}>
         <DeviceStatsCard title="General" cardData={getGeneralStats()} />
