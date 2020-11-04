@@ -56,7 +56,7 @@ const LineChart = ({ title, data, options }) => {
             split={false}
             shared
             useHTML
-            xDateFormat="%b %e %Y %l:%M%P"
+            xDateFormat="%b %e %Y %l:%M:%S%P"
             pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
           />
           <Legend>

@@ -18,33 +18,29 @@ const processMetrics = data => {
   const cpuUtilCores = {};
   const freeMemory = [];
   const cpuTemperature = [];
-  const timeStamp = [];
 
   data.forEach(i => {
     if (i?.detailsJSON?.apPerformance) {
-      freeMemory.push(i.detailsJSON.apPerformance.freeMemory);
-      cpuTemperature.push(i.detailsJSON.apPerformance.cpuTemperature);
-      // eslint-disable-next-line radix
-      timeStamp.push(parseInt(i.createdTimestamp));
+      const time = parseInt(i.createdTimestamp, []);
+      freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
+      cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
       i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
         if (!(index in cpuUtilCores)) {
           cpuUtilCores[index] = [];
         }
-        cpuUtilCores[index].push(j);
+        cpuUtilCores[index].push([time, j]);
       });
     }
   });
 
-  return { cpuUtilCores, freeMemory, cpuTemperature, timeStamp };
+  return { cpuUtilCores, freeMemory, cpuTemperature };
 };
 
 const HighChartGraph = ({ osData }) => {
   const dateTimeLabelFormats = {
-    millisecond: '%l:%M:%S%P',
-    second: '%l:%M:%S%P',
-    minute: '%l:%M:%S%P',
-    hour: '%l:%M:%S%P',
-    day: '%a. %l:%M:%S%P',
+    minute: '%l:%M%P',
+    hour: '%l:%M%P',
+    day: '%a. %l:%M%P',
     week: '',
     month: '',
     year: '',
@@ -61,21 +57,20 @@ const HighChartGraph = ({ osData }) => {
   }, [osData]);
 
   return (
-    <HighchartsStockChart data-testid="highchartsGraph">
+    <HighchartsStockChart
+      data-testid="highchartsGraph"
+      time={{
+        useUTC: false,
+      }}
+    >
       <Chart zoomType="x" backgroundColor="#141414" />
 
-      <Tooltip split={false} shared useHTML />
+      <Tooltip split={false} shared useHTML xDateFormat="%b %e %Y %l:%M:%S%P" />
       <XAxis
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
         offset={20}
         type="datetime"
-        categories={metrics.timeStamp}
-        labels={{
-          formatter: i => {
-            return new Date(i.value).toUTCString();
-          },
-        }}
       >
         <XAxis.Title>Time</XAxis.Title>
       </XAxis>
