@@ -11,6 +11,7 @@ import {
   SplineSeries,
   Tooltip,
 } from 'react-jsx-highstock';
+import { formatBytes } from 'utils/bytes';
 
 import Loading from 'components/Loading';
 
@@ -20,14 +21,15 @@ const processMetrics = data => {
   const cpuTemperature = [];
 
   data.forEach(i => {
-    if (i.details && i.details.apPerformance) {
-      freeMemory.push(i.details.apPerformance.freeMemory);
-      cpuTemperature.push(i.details.apPerformance.cpuTemperature);
-      i.details.apPerformance.cpuUtilized.forEach((j, index) => {
+    if (i?.detailsJSON?.apPerformance) {
+      const time = parseInt(i.createdTimestamp, 10);
+      freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
+      cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
+      i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
         if (!(index in cpuUtilCores)) {
           cpuUtilCores[index] = [];
         }
-        cpuUtilCores[index].push(j);
+        cpuUtilCores[index].push([time, j]);
       });
     }
   });
@@ -35,13 +37,28 @@ const processMetrics = data => {
   return { cpuUtilCores, freeMemory, cpuTemperature };
 };
 
+const formatName = (name, value) => {
+  if (name.includes('Temperature')) {
+    return `${name}: <b>${value}°C</b>`;
+  }
+  if (name.includes('Memory')) {
+    return `${name}: <b>${formatBytes(value)}</b>`;
+  }
+  return `${name}: <b>${value}%</b>`;
+};
+
+function tooltipFormatter() {
+  const { series, y } = this;
+  return `<span style="color:${this.color}">●</span>
+       ${formatName(series.name, y)}
+      <br/>`;
+}
+
 const HighChartGraph = ({ osData }) => {
   const dateTimeLabelFormats = {
-    millisecond: '%l:%M:%S%P',
-    second: '%l:%M:%S%P',
-    minute: '%l:%M:%S%P',
-    hour: '%l:%M:%S%P',
-    day: '%a. %l:%M:%S%P',
+    minute: '%l:%M%P',
+    hour: '%l:%M%P',
+    day: '%a. %l:%M%P',
     week: '',
     month: '',
     year: '',
@@ -58,16 +75,26 @@ const HighChartGraph = ({ osData }) => {
   }, [osData]);
 
   return (
-    <HighchartsStockChart data-testid="highchartsGraph">
+    <HighchartsStockChart
+      data-testid="highchartsGraph"
+      time={{
+        useUTC: false,
+      }}
+    >
       <Chart zoomType="x" backgroundColor="#141414" />
 
-      <Tooltip split={false} shared useHTML />
+      <Tooltip
+        split={false}
+        shared
+        useHTML
+        xDateFormat="%b %e %Y %l:%M:%S%P"
+        pointFormatter={tooltipFormatter || null}
+      />
       <XAxis
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
         offset={20}
         type="datetime"
-        showEmpty
       >
         <XAxis.Title>Time</XAxis.Title>
       </XAxis>
