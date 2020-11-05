@@ -11,6 +11,7 @@ import {
   SplineSeries,
   Tooltip,
 } from 'react-jsx-highstock';
+import { formatBytes } from 'utils/bytes';
 
 import Loading from 'components/Loading';
 
@@ -35,6 +36,23 @@ const processMetrics = data => {
 
   return { cpuUtilCores, freeMemory, cpuTemperature };
 };
+
+const formatName = (name, value) => {
+  if (name.includes('Temperature')) {
+    return `${name}: <b>${value}°C</b>`;
+  }
+  if (name.includes('Memory')) {
+    return `${name}: <b>${formatBytes(value)}</b>`;
+  }
+  return `${name}: <b>${value}%</b>`;
+};
+
+function tooltipFormatter() {
+  const { series, y } = this;
+  return `<span style="color:${this.color}">●</span>
+       ${formatName(series.name, y)}
+      <br/>`;
+}
 
 const HighChartGraph = ({ osData }) => {
   const dateTimeLabelFormats = {
@@ -65,7 +83,13 @@ const HighChartGraph = ({ osData }) => {
     >
       <Chart zoomType="x" backgroundColor="#141414" />
 
-      <Tooltip split={false} shared useHTML xDateFormat="%b %e %Y %l:%M:%S%P" />
+      <Tooltip
+        split={false}
+        shared
+        useHTML
+        xDateFormat="%b %e %Y %l:%M:%S%P"
+        pointFormatter={tooltipFormatter || null}
+      />
       <XAxis
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}

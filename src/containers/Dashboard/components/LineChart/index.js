@@ -33,6 +33,7 @@ const headerStyle = {
 const LineChart = ({ title, data, options }) => {
   return (
     <div className={styles.container}>
+      {console.log(options)}
       <Card
         title={title}
         headStyle={headerStyle}
