@@ -1,4 +1,8 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV,
@@ -11,6 +15,38 @@ module.exports = {
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        // Use multi-process parallel running to improve the build speed
+        // Default number of concurrent runs: os.cpus().length - 1
+        parallel: true,
+      }),
+      new OptimizeCSSAssetsPlugin(),
+    ],
+    // Automatically split vendor and commons
+    // https://twitter.com/wSokra/status/969633336732905474
+    // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'initial',
+        },
+        async: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'async',
+          chunks: 'async',
+          minChunks: 4,
+        },
+      },
+    },
+    // Keep the runtime chunk seperated to enable long term caching
+    // https://twitter.com/wSokra/status/969679223278505985
+    runtimeChunk: true,
+  },
   externals: [
     {
       react: {
@@ -20,16 +56,19 @@ module.exports = {
         root: 'React',
       },
     },
-    'react-dom',
-    'antd',
     '@ant-design/icons',
+    'antd',
+    'highcharts',
+    'highcharts-react-official',
+    'history',
+    'lodash',
+    'moment',
     'prop-types',
+    'react-dom',
+    'react-jsx-highcharts',
+    'react-jsx-highstock',
     'react-router-dom',
   ],
-  devtool: 'inline-source-map',
-  devServer: {
-    port: 3000,
-  },
   module: {
     rules: [
       {
@@ -38,42 +77,18 @@ module.exports = {
         use: ['babel-loader', 'eslint-loader'],
       },
       {
-        // Preprocess 3rd party .css files located in node_modules
-        test: /\.css$/,
-        include: /node_modules/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.less$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              javascriptEnabled: true,
-            },
-          },
-        ],
-      },
-      {
         test: /\.(css|scss)$/,
         exclude: /node_modules/,
         use: [
-          {
-            loader: 'style-loader',
-          },
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
+              sourceMap: false,
+              localsConvention: 'camelCase',
               modules: {
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
-              sourceMap: true,
             },
           },
           {
@@ -95,4 +110,12 @@ module.exports = {
       'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom'),
     },
   },
+
+  plugins: [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: `css/[name].css`,
+      chunkFilename: `css/[name].css`,
+    }),
+  ],
 };
