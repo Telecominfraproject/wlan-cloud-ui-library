@@ -22,7 +22,7 @@ const processMetrics = data => {
 
   data.forEach(i => {
     if (i?.detailsJSON?.apPerformance) {
-      const time = parseInt(i.createdTimestamp, []);
+      const time = parseInt(i.createdTimestamp, 10);
       freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
       cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
       i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
