@@ -24,6 +24,28 @@ const OS = ({ data, osData, handleRefresh }) => {
     return hDisplay + mDisplay + sDisplay;
   };
 
+  const processMetrics = (metrics = []) => {
+    const cpuUtilCores = {};
+    const freeMemory = [];
+    const cpuTemperature = [];
+
+    metrics.forEach(i => {
+      if (i?.detailsJSON?.apPerformance) {
+        const time = parseInt(i.createdTimestamp, 10);
+        freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
+        cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
+        i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
+          if (!(index in cpuUtilCores)) {
+            cpuUtilCores[index] = [];
+          }
+          cpuUtilCores[index].push([time, j]);
+        });
+      }
+    });
+
+    return { cpuUtilCores, freeMemory, cpuTemperature };
+  };
+
   const memory = useMemo(() => {
     if (!osPerformance.avgFreeMemoryKb || !osPerformance.totalAvailableMemoryKb) {
       return 0;
@@ -51,6 +73,10 @@ const OS = ({ data, osData, handleRefresh }) => {
     return parseFloat(osPerformance.avgCpuTemperature.toFixed(2), 10);
   }, [data]);
 
+  const metrics = useMemo(() => {
+    return processMetrics(osData?.data);
+  }, [osData?.data]);
+
   return (
     <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
       <Alert
@@ -64,7 +90,12 @@ const OS = ({ data, osData, handleRefresh }) => {
         <SolidGauge data={memory} title="Current Free Memory" />
         <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>
-      <HighChartGraph osData={osData} />
+      <HighChartGraph
+        loading={osData?.loading}
+        cpuUsage={metrics.cpuUtilCores}
+        freeMemory={metrics.freeMemory}
+        cpuTemp={metrics.cpuTemperature}
+      />
     </Card>
   );
 };

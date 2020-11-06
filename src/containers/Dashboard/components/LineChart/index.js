@@ -56,7 +56,7 @@ const LineChart = ({ title, data, options }) => {
             split={false}
             shared
             useHTML
-            xDateFormat="%b %e %Y %l:%M:%S%P"
+            xDateFormat="%b %e %Y %l:%M%P"
             pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
           />
           <Legend>
@@ -71,7 +71,7 @@ const LineChart = ({ title, data, options }) => {
             }}
           >
             {Array.isArray(data?.value) ? (
-              <SplineSeries name={data.key} data={data.value} />
+              <SplineSeries key={data.key} name={data.key} data={data.value} />
             ) : (
               data &&
               Object.keys(data).map(key => (

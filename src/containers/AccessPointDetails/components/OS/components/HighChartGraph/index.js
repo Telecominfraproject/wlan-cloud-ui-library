@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts/highstock';
 import {
@@ -14,28 +14,6 @@ import {
 import { formatBytes } from 'utils/bytes';
 
 import Loading from 'components/Loading';
-
-const processMetrics = data => {
-  const cpuUtilCores = {};
-  const freeMemory = [];
-  const cpuTemperature = [];
-
-  data.forEach(i => {
-    if (i?.detailsJSON?.apPerformance) {
-      const time = parseInt(i.createdTimestamp, 10);
-      freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
-      cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
-      i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
-        if (!(index in cpuUtilCores)) {
-          cpuUtilCores[index] = [];
-        }
-        cpuUtilCores[index].push([time, j]);
-      });
-    }
-  });
-
-  return { cpuUtilCores, freeMemory, cpuTemperature };
-};
 
 const formatName = (name, value) => {
   if (name.includes('Temperature')) {
@@ -54,7 +32,7 @@ function tooltipFormatter() {
       <br/>`;
 }
 
-const HighChartGraph = ({ osData }) => {
+const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
   const dateTimeLabelFormats = {
     minute: '%l:%M%P',
     hour: '%l:%M%P',
@@ -64,15 +42,9 @@ const HighChartGraph = ({ osData }) => {
     year: '',
   };
 
-  const { loading, data } = osData;
-
-  if (loading || !data) {
+  if (loading) {
     return <Loading />;
   }
-
-  const metrics = useMemo(() => {
-    return processMetrics(data);
-  }, [osData]);
 
   return (
     <HighchartsStockChart
@@ -103,6 +75,7 @@ const HighChartGraph = ({ osData }) => {
         <Legend.Title />
       </Legend>
       <YAxis
+        id="usage"
         labels={{
           style: { color: '#7cb5ec' },
         }}
@@ -114,12 +87,18 @@ const HighChartGraph = ({ osData }) => {
         >
           CPU Usage (%)
         </YAxis.Title>
-        {Object.keys(metrics.cpuUtilCores).map(i => (
-          <SplineSeries id={`cpuCore${i}`} name={`CPU Core ${i}`} data={metrics.cpuUtilCores[i]} />
+        {Object.keys(cpuUsage).map(i => (
+          <SplineSeries
+            key={`cpuCore${i}`}
+            id={`cpuCore${i}`}
+            name={`CPU Core ${i}`}
+            data={cpuUsage[i]}
+          />
         ))}
       </YAxis>
 
       <YAxis
+        id="free"
         labels={{
           style: { color: '#34AE29' },
         }}
@@ -132,10 +111,11 @@ const HighChartGraph = ({ osData }) => {
         >
           Free Memory (MB)
         </YAxis.Title>
-        <SplineSeries id="freeMemory" name="Free Memory" data={metrics.freeMemory} />
+        <SplineSeries id="freeMemory" name="Free Memory" data={freeMemory} />
       </YAxis>
 
       <YAxis
+        id="temp"
         labels={{
           style: { color: '#f7a35c' },
         }}
@@ -147,18 +127,24 @@ const HighChartGraph = ({ osData }) => {
         >
           CPU Temperature (°C)
         </YAxis.Title>
-        <SplineSeries id="cpuTemp" name="CPU Temperature" data={metrics.cpuTemperature} />
+        <SplineSeries id="cpuTemp" name="CPU Temperature" data={cpuTemp} />
       </YAxis>
     </HighchartsStockChart>
   );
 };
 
 HighChartGraph.propTypes = {
-  osData: PropTypes.instanceOf(Object),
+  loading: PropTypes.bool,
+  cpuUsage: PropTypes.instanceOf(Object),
+  freeMemory: PropTypes.instanceOf(Object),
+  cpuTemp: PropTypes.instanceOf(Object),
 };
 
 HighChartGraph.defaultProps = {
-  osData: {},
+  loading: false,
+  cpuUsage: [],
+  freeMemory: {},
+  cpuTemp: {},
 };
 
 export default withHighcharts(HighChartGraph, Highcharts);

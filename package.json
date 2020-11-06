@@ -62,7 +62,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.0",
-    "highcharts": "^8.1.1",
+    "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
     "husky": "^4.2.3",
     "identity-obj-proxy": "^3.0.0",
