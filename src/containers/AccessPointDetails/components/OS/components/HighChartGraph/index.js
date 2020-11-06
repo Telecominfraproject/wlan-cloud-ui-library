@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Highcharts from 'highcharts/highstock';
 import {
@@ -66,13 +66,21 @@ const HighChartGraph = ({ osData }) => {
 
   const { loading, data } = osData;
 
-  if (loading || !data) {
-    return <Loading />;
-  }
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setVisible(i => !i);
+    }, 100);
+  }, []);
 
   const metrics = useMemo(() => {
     return processMetrics(data);
   }, [osData]);
+
+  if (loading || !data || !metrics) {
+    return <Loading />;
+  }
 
   return (
     <HighchartsStockChart
@@ -82,7 +90,6 @@ const HighChartGraph = ({ osData }) => {
       }}
     >
       <Chart zoomType="x" backgroundColor="#141414" />
-
       <Tooltip
         split={false}
         shared
@@ -106,6 +113,7 @@ const HighChartGraph = ({ osData }) => {
         labels={{
           style: { color: '#7cb5ec' },
         }}
+        visible={visible}
       >
         <YAxis.Title
           style={{
@@ -124,6 +132,7 @@ const HighChartGraph = ({ osData }) => {
           style: { color: '#34AE29' },
         }}
         opposite
+        visible={visible}
       >
         <YAxis.Title
           style={{
@@ -139,6 +148,7 @@ const HighChartGraph = ({ osData }) => {
         labels={{
           style: { color: '#f7a35c' },
         }}
+        visible={visible}
       >
         <YAxis.Title
           style={{

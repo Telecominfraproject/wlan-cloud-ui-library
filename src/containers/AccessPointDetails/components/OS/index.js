@@ -64,7 +64,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         <SolidGauge data={memory} title="Current Free Memory" />
         <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>
-      <HighChartGraph osData={osData} />
+      <HighChartGraph osData={osData} handleRefresh={handleRefresh} />
     </Card>
   );
 };
