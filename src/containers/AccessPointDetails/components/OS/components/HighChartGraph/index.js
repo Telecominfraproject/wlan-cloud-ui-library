@@ -32,16 +32,16 @@ function tooltipFormatter() {
       <br/>`;
 }
 
-const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
-  const dateTimeLabelFormats = {
-    minute: '%l:%M%P',
-    hour: '%l:%M%P',
-    day: '%a. %l:%M%P',
-    week: '',
-    month: '',
-    year: '',
-  };
+const dateTimeLabelFormats = {
+  minute: '%l:%M%P',
+  hour: '%l:%M%P',
+  day: '%a. %l:%M%P',
+  week: '',
+  month: '',
+  year: '',
+};
 
+const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
   if (loading) {
     return <Loading />;
   }
