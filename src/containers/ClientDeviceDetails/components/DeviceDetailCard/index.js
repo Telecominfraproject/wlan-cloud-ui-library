@@ -24,19 +24,15 @@ const DeviceDetailCard = ({
           <p>{name}</p>
           <p>{manufacturer}</p>
         </div>
-
         <div className={styles.middleWrapContent}>
           <p>{radioType}</p>
           <p>{ipAddress}</p>
           <p>{macAddress}</p>
         </div>
         <div className={styles.rightWrapContent}>
-          {status && (
-            <p>
-              {status}
-              <WifiOutlined />
-            </p>
-          )}
+          <p>
+            {status} <WifiOutlined />
+          </p>
           <p>
             {formatBytes(dataTransferred, 1)}
             <span>({Math.round(dataThroughput)} bps)</span>
