@@ -72,7 +72,6 @@ const HighChartGraph = ({ osData }) => {
     setTimeout(() => {
       setVisible(i => !i);
     }, 100);
-    console.log('hey');
   }, []);
 
   const metrics = useMemo(() => {
