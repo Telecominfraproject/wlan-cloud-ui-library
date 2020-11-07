@@ -16,8 +16,6 @@ import addHighchartsMore from 'highcharts/highcharts-more';
 
 addHighchartsMore(Highcharts);
 
-const TIMEZONE_OFFSET = new Date().getTimezoneOffset() * 60000;
-
 const dateTimeLabelFormats = {
   millisecond: '%l:%M%P',
   second: '%l:%M%P',
@@ -32,7 +30,7 @@ const dateTimeLabelFormats = {
 const metricsHeight = 25;
 const metricsPadding = 8;
 
-const metrics = {
+const METRICS = {
   rssi: 'RSSI',
   rxBytes: 'RX Mbps',
   txBytes: 'TX Mbps',
@@ -48,15 +46,15 @@ function tooltipFormatter() {
   const html = [];
 
   if (this.points && this.points.length) {
-    html.push(moment.utc(this.points[0].x).format('MMM D, YYYY h:mm A'));
+    html.push(moment(this.points[0].x).format('MMM D, YYYY h:mm A'));
     html.push('<br /><span style="color: transparent">.</span><br />');
 
     for (let i = 0; i < this.points.length; i += 1) {
       html.push(`<strong>${this.points[i].series.name}</strong>`);
       let unit = '';
       if (
-        this.points[i].series.name === metrics.rxBytes ||
-        this.points[i].series.name === metrics.txBytes
+        this.points[i].series.name === METRICS.rxBytes ||
+        this.points[i].series.name === METRICS.txBytes
       ) {
         unit = ' Mbps';
       }
@@ -71,7 +69,7 @@ function tooltipFormatter() {
   return html.join('<br />');
 }
 
-const DeviceHistoryChart = ({ loading, data, historyDate }) => {
+const DeviceHistoryChart = ({ loading, data }) => {
   const config = useMemo(() => {
     const rssi = { id: 'rssi', data: [] };
     const rx = { id: 'rx', data: [] };
@@ -148,7 +146,11 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
   };
 
   return (
-    <HighchartsStockChart>
+    <HighchartsStockChart
+      time={{
+        useUTC: false,
+      }}
+    >
       <Chart
         backgroundColor="transparent"
         plotBackgroundColor={null}
@@ -157,9 +159,6 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         height={350}
         spacingTop={0}
         spacingBottom={0}
-        time={{
-          useUTC: false,
-        }}
       />
       <Loading
         isLoading={loading}
@@ -177,42 +176,26 @@ const DeviceHistoryChart = ({ loading, data, historyDate }) => {
         time={{
           useUTC: false,
         }}
-        max={historyDate?.toTime?.valueOf() - TIMEZONE_OFFSET}
-        min={historyDate?.fromTime?.valueOf() - TIMEZONE_OFFSET}
         tickPixelInterval={90}
         dateTimeLabelFormats={dateTimeLabelFormats}
         type="datetime"
         showEmpty
-        plotLines={[
-          {
-            id: 'event_line',
-            color: '#BFBFBF',
-            dashStyle: 'ShortDot',
-            width: 1,
-            value: historyDate.valueOf() - TIMEZONE_OFFSET,
-          },
-        ]}
       />
 
-      {renderMetrics(0, 'rssi', metrics.rssi, config.rssi.data, -100, -40)}
-      {renderMetrics(1, 'rxBytes', metrics.rxBytes, config.rx.data, 0, 1000)}
-      {renderMetrics(2, 'txBytes', metrics.txBytes, config.tx.data, 0, 1000)}
+      {renderMetrics(0, 'rssi', METRICS.rssi, config.rssi.data, -100, -40)}
+      {renderMetrics(1, 'rxBytes', METRICS.rxBytes, config.rx.data, 0, 1000)}
+      {renderMetrics(2, 'txBytes', METRICS.txBytes, config.tx.data, 0, 1000)}
     </HighchartsStockChart>
   );
 };
 
 DeviceHistoryChart.propTypes = {
   data: T.instanceOf(Object),
-  historyDate: T.instanceOf(Object),
   loading: T.bool,
 };
 
 DeviceHistoryChart.defaultProps = {
   data: {},
-  historyDate: {
-    toTime: moment(),
-    fromTime: moment(),
-  },
   loading: false,
 };
 
