@@ -69,6 +69,8 @@ const LineChart = ({ title, data, options }) => {
             labels={{
               formatter: options.formatter ? options.formatter : null,
             }}
+            min={0}
+            minTickInterval={1}
           >
             {Array.isArray(data?.value) ? (
               <SplineSeries key={data.key} name={data.key} data={data.value} />
