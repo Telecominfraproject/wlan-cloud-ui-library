@@ -195,23 +195,21 @@ const General = ({
     return val;
   };
 
-  const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => {
-    return (
-      <Item label={label} colon={false}>
-        <div className={styles.InlineDiv}>
-          {sortRadioTypes(Object.keys(obj)).map(i =>
-            renderInput ? (
-              renderInput(obj, dataIndex, i, label, options)
-            ) : (
-              <span key={i} className={styles.spanStyle}>
-                {dataIndex ? obj[i]?.[dataIndex] : obj[i]}
-              </span>
-            )
-          )}
-        </div>
-      </Item>
-    );
-  };
+  const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
+    <Item label={label} colon={false}>
+      <div className={styles.InlineDiv}>
+        {sortRadioTypes(Object.keys(obj)).map(i =>
+          renderInput ? (
+            renderInput(obj, dataIndex, i, label, options)
+          ) : (
+            <span key={i} className={styles.spanStyle}>
+              {dataIndex ? obj[i]?.[dataIndex] : obj[i]}
+            </span>
+          )
+        )}
+      </div>
+    </Item>
+  );
 
   const getName = (dataIndex, key, options) => {
     if (dataIndex === 'value') {
@@ -220,54 +218,50 @@ const General = ({
     return dataIndex + key;
   };
 
-  const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => {
-    return (
-      <Item
-        name={getName(dataIndex, key, options)}
-        initialValue={setInitialValue(obj, dataIndex, key, options)}
-        rules={[
-          {
-            required: true,
-            message: `Enter ${label} for ${key}`,
-          },
-        ]}
-      >
-        {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
-      </Item>
-    );
-  };
+  const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => (
+    <Item
+      name={getName(dataIndex, key, options)}
+      initialValue={setInitialValue(obj, dataIndex, key, options)}
+      rules={[
+        {
+          required: true,
+          message: `Enter ${label} for ${key}`,
+        },
+      ]}
+    >
+      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
+    </Item>
+  );
 
-  const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => {
-    return (
-      <Item
-        name={getName(dataIndex, key, options)}
-        initialValue={setInitialValue(obj, dataIndex, key, options)}
-        rules={[
-          { required: true, message: options.error },
-          ({ getFieldValue }) => ({
-            validator(_rule, value) {
-              if (
-                !value ||
-                (getFieldValue(getName(dataIndex, key, options)) <= options.max &&
-                  getFieldValue(getName(dataIndex, key, options)) >= options.min)
-              ) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error(options.error));
-            },
-          }),
-        ]}
-      >
-        <Input
-          className={styles.Field}
-          placeholder={`Enter ${label} for ${key}`}
-          type="number"
-          min={options.min}
-          max={options.max}
-        />
-      </Item>
-    );
-  };
+  const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => (
+    <Item
+      name={getName(dataIndex, key, options)}
+      initialValue={setInitialValue(obj, dataIndex, key, options)}
+      rules={[
+        { required: true, message: options.error },
+        ({ getFieldValue }) => ({
+          validator(_rule, value) {
+            if (
+              !value ||
+              (getFieldValue(getName(dataIndex, key, options)) <= options.max &&
+                getFieldValue(getName(dataIndex, key, options)) >= options.min)
+            ) {
+              return Promise.resolve();
+            }
+            return Promise.reject(new Error(options.error));
+          },
+        }),
+      ]}
+    >
+      <Input
+        className={styles.Field}
+        placeholder={`Enter ${label} for ${key}`}
+        type="number"
+        min={options.min}
+        max={options.max}
+      />
+    </Item>
+  );
 
   if (loadingProfiles) {
     return <Loading data-testid="loadingProfiles" />;
