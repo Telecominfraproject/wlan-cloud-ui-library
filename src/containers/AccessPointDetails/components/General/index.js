@@ -74,7 +74,7 @@ const General = ({
   } = data;
 
   useEffect(() => {
-    const currentRadios = Object.keys(data?.details?.advancedRadioMap);
+    const currentRadios = Object.keys(data.details.advancedRadioMap);
     const formData = {
       advancedRadioMap: {},
       radioMap: {},
@@ -88,10 +88,10 @@ const General = ({
           : 'false',
         uapsdState: data.details.advancedRadioMap[radio]?.uapsdState || 'disabled',
         managementRate: {
-          value: data.details.advancedRadioMap[radio]?.managementRate.value || 'rate1mbps',
+          value: data.details.advancedRadioMap[radio]?.managementRate?.value || 'rate1mbps',
         },
         multicastRate: {
-          value: data.details.advancedRadioMap[radio]?.multicastRate.value || 'rate6mbps',
+          value: data.details.advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
         },
         bestApSettings: {
           dropInSnrPercentage:
@@ -103,16 +103,16 @@ const General = ({
 
       formData.radioMap[radio] = {
         rxCellSizeDb: {
-          value: data.details.radioMap[radio]?.rxCellSizeDb.value || 0,
+          value: data.details.radioMap[radio]?.rxCellSizeDb?.value || 0,
         },
         probeResponseThresholdDb: {
-          value: data.details.radioMap[radio]?.probeResponseThresholdDb.value || 0,
+          value: data.details.radioMap[radio]?.probeResponseThresholdDb?.value || 0,
         },
         clientDisconnectThresholdDb: {
-          value: data.details.radioMap[radio]?.clientDisconnectThresholdDb.value || 0,
+          value: data.details.radioMap[radio]?.clientDisconnectThresholdDb?.value || 0,
         },
         eirpTxPower: {
-          value: data.details.radioMap[radio]?.eirpTxPower.value || 0,
+          value: data.details.radioMap[radio]?.eirpTxPower?.value || 0,
         },
         perimeterDetectionEnabled: data.details.radioMap[radio]?.perimeterDetectionEnabled
           ? 'true'
