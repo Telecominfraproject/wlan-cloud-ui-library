@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, notification, Alert } from 'antd';
 import _ from 'lodash';
@@ -73,6 +73,56 @@ const General = ({
     lastModifiedTimestamp,
   } = data;
 
+  useEffect(() => {
+    const currentRadios = Object.keys(data?.details?.advancedRadioMap);
+    const formData = {
+      advancedRadioMap: {},
+      radioMap: {},
+    };
+
+    currentRadios.forEach(radio => {
+      formData.advancedRadioMap[radio] = {
+        radioAdminState: data.details.advancedRadioMap[radio]?.radioAdminState || 'disabled',
+        deauthAttackDetection: data.details.advancedRadioMap[radio]?.deauthAttackDetection
+          ? 'true'
+          : 'false',
+        uapsdState: data.details.advancedRadioMap[radio]?.uapsdState || 'disabled',
+        managementRate: {
+          value: data.details.advancedRadioMap[radio]?.managementRate.value || 'rate1mbps',
+        },
+        multicastRate: {
+          value: data.details.advancedRadioMap[radio]?.multicastRate.value || 'rate6mbps',
+        },
+        bestApSettings: {
+          dropInSnrPercentage:
+            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage || 10,
+          minLoadFactor:
+            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 10,
+        },
+      };
+
+      formData.radioMap[radio] = {
+        rxCellSizeDb: {
+          value: data.details.radioMap[radio]?.rxCellSizeDb.value || 0,
+        },
+        probeResponseThresholdDb: {
+          value: data.details.radioMap[radio]?.probeResponseThresholdDb.value || 0,
+        },
+        clientDisconnectThresholdDb: {
+          value: data.details.radioMap[radio]?.clientDisconnectThresholdDb.value || 0,
+        },
+        eirpTxPower: {
+          value: data.details.radioMap[radio]?.eirpTxPower.value || 0,
+        },
+        perimeterDetectionEnabled: data.details.radioMap[radio]?.perimeterDetectionEnabled
+          ? 'true'
+          : 'false',
+      };
+    });
+
+    form.setFieldsValue({ ...formData });
+  }, []);
+
   const handleOnSave = () => {
     form
       .validateFields()
@@ -80,68 +130,65 @@ const General = ({
         const formattedData = _.cloneDeep(data.details);
 
         Object.keys(formattedData.advancedRadioMap).forEach(radio => {
-          Object.keys(formattedData.advancedRadioMap[radio]).forEach(field => {
-            if (field === 'bestApSettings') {
-              if (`dropInSnrPercentage${radio}` in values) {
-                formattedData.advancedRadioMap[radio][field].value.dropInSnrPercentage =
-                  values[`dropInSnrPercentage${radio}`];
-                if (
-                  formattedData.advancedRadioMap[radio][field].value.dropInSnrPercentage !==
-                  data.details.advancedRadioMap[radio][field].value.dropInSnrPercentage
-                ) {
-                  formattedData.advancedRadioMap[radio][field].source = 'manual';
-                }
-              }
+          Object.keys(values.advancedRadioMap[radio]).forEach(field => {
+            if (field in formattedData.advancedRadioMap[radio]) {
+              if (
+                typeof formattedData.advancedRadioMap[radio][field] === 'object' &&
+                formattedData.advancedRadioMap[radio][field] !== null
+              ) {
+                if (field === 'bestApSettings') {
+                  Object.assign(
+                    formattedData.advancedRadioMap[radio][field].value,
+                    values.advancedRadioMap[radio][field]
+                  );
 
-              if (`minLoadFactor${radio}` in values) {
-                formattedData.advancedRadioMap[radio][field].value.minLoadFactor =
-                  values[`minLoadFactor${radio}`];
-                if (
-                  formattedData.advancedRadioMap[radio][field].value.minLoadFactor !==
-                  data.details.advancedRadioMap[radio][field].value.minLoadFactor
-                ) {
-                  formattedData.advancedRadioMap[radio][field].source = 'manual';
-                }
-              }
-            } else if (field === 'managementRate') {
-              if (`${field}${radio}` in values) {
-                formattedData.advancedRadioMap[radio][field].value = values[`${field}${radio}`];
+                  if (
+                    !_.isEqual(
+                      formattedData.advancedRadioMap[radio][field].value,
+                      data.details.advancedRadioMap[radio][field].value
+                    )
+                  ) {
+                    formattedData.advancedRadioMap[radio][field].source = 'manual';
+                  }
+                } else {
+                  Object.assign(
+                    formattedData.advancedRadioMap[radio][field],
+                    values.advancedRadioMap[radio][field]
+                  );
 
-                if (
-                  formattedData.advancedRadioMap[radio][field].value !==
-                  data.details.advancedRadioMap[radio][field].value
-                ) {
-                  formattedData.advancedRadioMap[radio][field].source = 'manual';
+                  if (
+                    !_.isEqual(
+                      formattedData.advancedRadioMap[radio][field],
+                      data.details.advancedRadioMap[radio][field]
+                    )
+                  ) {
+                    formattedData.advancedRadioMap[radio][field].source = 'manual';
+                  }
                 }
-              }
-            } else if (field === 'deauthAttackDetection') {
-              if (`${field}${radio}` in values) {
-                formattedData.advancedRadioMap[radio][field] =
-                  values[`${field}${radio}`] === 'enabled';
-              }
-            } else if (`${field}${radio}` in values) {
-              if (field === 'multicastRate') {
-                formattedData.advancedRadioMap[radio][field].value = values[`${field}${radio}`];
               } else {
-                formattedData.advancedRadioMap[radio][field] = values[`${field}${radio}`];
+                formattedData.advancedRadioMap[radio][field] =
+                  values.advancedRadioMap[radio][field];
               }
             }
           });
-        });
 
-        Object.keys(formattedData.radioMap).forEach(radio => {
-          Object.keys(formattedData.radioMap[radio]).forEach(field => {
-            if (`${field}${radio}` in values) {
-              if (field === 'deauthAttackDetection' || field === 'perimeterDetectionEnabled') {
-                formattedData.radioMap[radio][field] = values[`${field}${radio}`] === 'enabled';
-              } else {
-                formattedData.radioMap[radio][field].value = values[`${field}${radio}`];
+          Object.keys(values.radioMap[radio]).forEach(field => {
+            if (field in formattedData.radioMap[radio]) {
+              if (
+                typeof formattedData.radioMap[radio][field] === 'object' &&
+                formattedData.radioMap[radio][field] !== null
+              ) {
+                Object.assign(formattedData.radioMap[radio][field], values.radioMap[radio][field]);
                 if (
-                  formattedData.radioMap[radio][field].value !==
-                  data.details.radioMap[radio][field].value
+                  !_.isEqual(
+                    formattedData.radioMap[radio][field],
+                    data.details.radioMap[radio][field]
+                  )
                 ) {
                   formattedData.radioMap[radio][field].source = 'manual';
                 }
+              } else {
+                formattedData.radioMap[radio][field] = values.radioMap[radio][field];
               }
             }
           });
@@ -177,30 +224,19 @@ const General = ({
     </Select>
   );
 
-  const setInitialValue = (obj = {}, dataIndex, key, options = {}) => {
-    const val = options.value
-      ? obj[key]?.[options.value]?.value?.[dataIndex] || obj[key]?.[options.value]?.[dataIndex]
-      : obj[key]?.[dataIndex];
-
-    if (val === undefined || val === null) {
-      return 'disabled';
-    }
-    if (val === true) {
-      return 'enabled';
-    }
-    if (val === false) {
-      return 'disabled';
-    }
-
-    return val;
-  };
+  const defaultOptionsBoolean = (
+    <Select className={styles.Field}>
+      <Option value="true">enabled</Option>
+      <Option value="false">disabled</Option>
+    </Select>
+  );
 
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(obj)).map(i =>
           renderInput ? (
-            renderInput(obj, dataIndex, i, label, options)
+            renderInput(dataIndex, i, label, options)
           ) : (
             <span key={i} className={styles.spanStyle}>
               {dataIndex ? obj[i]?.[dataIndex] : obj[i]}
@@ -211,40 +247,17 @@ const General = ({
     </Item>
   );
 
-  const getName = (dataIndex, key, options) => {
-    if (dataIndex === 'value') {
-      return options.value + key;
-    }
-    return dataIndex + key;
-  };
-
-  const renderOptionItem = (obj = {}, dataIndex, key, label, options = {}) => (
+  const renderInputItem = (dataIndex, key, label, options = {}) => (
     <Item
-      name={getName(dataIndex, key, options)}
-      initialValue={setInitialValue(obj, dataIndex, key, options)}
-      rules={[
-        {
-          required: true,
-          message: `Enter ${label} for ${key}`,
-        },
-      ]}
-    >
-      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
-    </Item>
-  );
-
-  const renderInputItem = (obj = {}, dataIndex, key, label, options = {}) => (
-    <Item
-      name={getName(dataIndex, key, options)}
-      initialValue={setInitialValue(obj, dataIndex, key, options)}
+      name={[options.mapName, key, ...dataIndex]}
       rules={[
         { required: true, message: options.error },
         ({ getFieldValue }) => ({
           validator(_rule, value) {
             if (
               !value ||
-              (getFieldValue(getName(dataIndex, key, options)) <= options.max &&
-                getFieldValue(getName(dataIndex, key, options)) >= options.min)
+              (getFieldValue([options.mapName, key, ...dataIndex]) <= options.max &&
+                getFieldValue([options.mapName, key, ...dataIndex]) >= options.min)
             ) {
               return Promise.resolve();
             }
@@ -259,9 +272,26 @@ const General = ({
         type="number"
         min={options.min}
         max={options.max}
+        addonAfter={options?.addOnText ? options?.addOnText : ''}
       />
     </Item>
   );
+
+  const renderOptionItem = (dataIndex, key, label, options = {}) => {
+    return (
+      <Item
+        name={[options.mapName, key, ...dataIndex]}
+        rules={[
+          {
+            required: true,
+            message: `Enter ${label} for ${key}`,
+          },
+        ]}
+      >
+        {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
+      </Item>
+    );
+  };
 
   if (loadingProfiles) {
     return <Loading data-testid="loadingProfiles" />;
@@ -354,129 +384,159 @@ const General = ({
           {renderItem(
             'Enable Radio',
             data.details.advancedRadioMap,
-            'radioAdminState',
+            ['radioAdminState'],
             renderOptionItem,
-            { dropdown: defaultOptions }
+            {
+              dropdown: defaultOptions,
+              mapName: 'advancedRadioMap',
+            }
           )}
           {renderItem(
             'Deauth Attack Detection',
             data.details.advancedRadioMap,
-            'deauthAttackDetection',
+            ['deauthAttackDetection'],
             renderOptionItem,
-            { dropdown: defaultOptions }
+            {
+              mapName: 'advancedRadioMap',
+              dropdown: defaultOptionsBoolean,
+            }
           )}
-          {renderItem('UAPSD', data.details.advancedRadioMap, 'uapsdState', renderOptionItem, {
+          {renderItem('UAPSD', data.details.advancedRadioMap, ['uapsdState'], renderOptionItem, {
+            mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
           {renderItem('Active Channel', data.details.radioMap, 'channelNumber')}
           {renderItem('Backup Channel', data.details.radioMap, 'backupChannelNumber')}
-
-          {renderItem('Management Rate', data.details.advancedRadioMap, 'value', renderOptionItem, {
-            value: 'managementRate',
-            dropdown: (
-              <Select className={styles.Field}>
-                <Option value="auto">auto</Option>
-                <Option value="rate1mbps">1 Mbps</Option>
-                <Option value="rate2mbps">2 Mbps</Option>
-                <Option value="rate5dot5mbps">5.5 Mpbs</Option>
-                <Option value="rate6mbps">6 Mbps</Option>
-                <Option value="rate9mbps">9 Mpbs</Option>
-                <Option value="rate11mbps">11 Mpbs</Option>
-                <Option value="rate12mbps">12 Mpbs</Option>
-                <Option value="rate18mbps">18 Mpbs</Option>
-                <Option value="rate24mbps">24 Mpbs</Option>
-              </Select>
-            ),
-          })}
-
-          {renderItem('Multicast Rate', data.details.advancedRadioMap, 'value', renderOptionItem, {
-            value: 'multicastRate',
-            dropdown: (
-              <Select className={styles.Field}>
-                <Option value="auto">auto</Option>
-                <Option value="rate6mbps">6 Mbps</Option>
-                <Option value="rate9mbps">9 Mbps</Option>
-                <Option value="rate12mbps">12 Mpbs</Option>
-                <Option value="rate18mbps">18 Mbps</Option>
-                <Option value="rate24mbps">24 Mpbs</Option>
-                <Option value="rate36mbps">36 Mpbs</Option>
-                <Option value="rate48mbps">48 Mpbs</Option>
-                <Option value="rate54mbps">54 Mpbs</Option>
-              </Select>
-            ),
-          })}
-
-          {renderItem('Rx Cell Size Db', data.details.radioMap, 'value', renderInputItem, {
-            min: -1000,
-            max: 1000,
-            error: '-1000 - 1000',
-            value: 'rxCellSizeDb',
-          })}
-
           {renderItem(
-            'Probe Response Threshold Db',
-            data.details.radioMap,
-            'value',
-            renderInputItem,
+            'Management Rate (Mbps)',
+            data.details.advancedRadioMap,
+            ['managementRate', 'value'],
+            renderOptionItem,
             {
-              min: -1000,
-              max: 1000,
-              error: '-1000 - 1000',
-              value: 'probeResponseThresholdDb',
+              mapName: 'advancedRadioMap',
+              dropdown: (
+                <Select className={styles.Field}>
+                  <Option value="rate1mbps">1</Option>
+                  <Option value="rate2mbps">2</Option>
+                  <Option value="rate5dot5mbps">5.5</Option>
+                  <Option value="rate6mbps">6</Option>
+                  <Option value="rate9mbps">9</Option>
+                  <Option value="rate11mbps">11</Option>
+                  <Option value="rate12mbps">12</Option>
+                  <Option value="rate18mbps">18</Option>
+                  <Option value="rate24mbps">24</Option>
+                </Select>
+              ),
             }
           )}
-
           {renderItem(
-            'Client Disconnect Threshold Db',
-            data.details.radioMap,
-            'value',
-            renderInputItem,
+            'Multicast Rate (Mbps)',
+            data.details.advancedRadioMap,
+            ['multicastRate', 'value'],
+            renderOptionItem,
             {
-              min: -1000,
-              max: 1000,
-              error: '-1000 - 1000',
-              value: 'clientDisconnectThresholdDb',
+              mapName: 'advancedRadioMap',
+              dropdown: (
+                <Select className={styles.Field}>
+                  <Option value="rate6mbps">6</Option>
+                  <Option value="rate9mbps">9</Option>
+                  <Option value="rate12mbps">12</Option>
+                  <Option value="rate18mbps">18</Option>
+                  <Option value="rate24mbps">24</Option>
+                  <Option value="rate36mbps">36</Option>
+                  <Option value="rate48mbps">48</Option>
+                  <Option value="rate54mbps">54</Option>
+                </Select>
+              ),
             }
           )}
-
-          {renderItem('Eir Tx Power', data.details.radioMap, 'value', renderInputItem, {
-            min: -1000,
-            max: 1000,
-            error: '-1000 - 1000',
-            value: 'eirpTxPower',
-          })}
+          {renderItem(
+            'Rx Cell Size',
+            data.details.radioMap,
+            ['rxCellSizeDb', 'value'],
+            renderInputItem,
+            {
+              min: -100,
+              max: 100,
+              error: '-100 - 100 dBm',
+              addOnText: 'dBm',
+              mapName: 'radioMap',
+            }
+          )}
+          {renderItem(
+            'Probe Response Threshold',
+            data.details.radioMap,
+            ['probeResponseThresholdDb', 'value'],
+            renderInputItem,
+            {
+              min: -100,
+              max: 100,
+              error: '-100 - 100 dBm',
+              addOnText: 'dBm',
+              mapName: 'radioMap',
+            }
+          )}
+          {renderItem(
+            'Client Disconnect Threshold',
+            data.details.radioMap,
+            ['clientDisconnectThresholdDb', 'value'],
+            renderInputItem,
+            {
+              min: -100,
+              max: 100,
+              error: '-100 - 100 dBm',
+              addOnText: 'dBm',
+              mapName: 'radioMap',
+            }
+          )}
+          {renderItem(
+            'EIRP Tx Power',
+            data.details.radioMap,
+            ['eirpTxPower', 'value'],
+            renderInputItem,
+            {
+              min: 0,
+              max: 100,
+              error: '0 - 100 dBm',
+              addOnText: 'dBm',
+              mapName: 'radioMap',
+            }
+          )}
 
           <p>Radio Resource Management:</p>
           {renderItem(
             'Perimeter Detection',
             data.details.radioMap,
-            'perimeterDetectionEnabled',
+            ['perimeterDetectionEnabled'],
             renderOptionItem,
-            { dropdown: defaultOptions }
+            { dropdown: defaultOptionsBoolean, mapName: 'radioMap' }
           )}
+
           <p>Steering Threshold:</p>
           {renderItem(
-            'SNR (% Drop)',
+            'SNR',
             data.details.advancedRadioMap,
-            'dropInSnrPercentage',
+            ['bestApSettings', 'dropInSnrPercentage'],
             renderInputItem,
             {
               min: 0,
               max: 100,
               error: '0 - 100%',
-              value: 'bestApSettings',
+              addOnText: '% Drop',
+              mapName: 'advancedRadioMap',
             }
           )}
           {renderItem(
-            'Min Load (%)',
+            'Min Load',
             data.details.advancedRadioMap,
-            'minLoadFactor',
+            ['bestApSettings', 'minLoadFactor'],
             renderInputItem,
             {
               min: 0,
               max: 100,
               error: '0 - 100%',
-              value: 'bestApSettings',
+              addOnText: '%',
+              mapName: 'advancedRadioMap',
             }
           )}
         </Panel>
