@@ -94,10 +94,13 @@ const General = ({
           value: data.details.advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
         },
         bestApSettings: {
-          dropInSnrPercentage:
-            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage || 10,
-          minLoadFactor:
-            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 10,
+          value: {
+            dropInSnrPercentage:
+              data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage ||
+              10,
+            minLoadFactor:
+              data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 10,
+          },
         },
       };
 
@@ -127,72 +130,26 @@ const General = ({
     form
       .validateFields()
       .then(values => {
-        const formattedData = _.cloneDeep(data.details);
+        const formattedData = _.merge({}, data.details, values);
 
-        Object.keys(formattedData.advancedRadioMap).forEach(radio => {
-          Object.keys(values.advancedRadioMap[radio]).forEach(field => {
-            if (field in formattedData.advancedRadioMap[radio]) {
+        const formatSourceSelection = radioMapKey =>
+          Object.keys(formattedData?.[radioMapKey]).forEach(i =>
+            Object.keys(formattedData?.[radioMapKey][i]).forEach(j => {
               if (
-                typeof formattedData.advancedRadioMap[radio][field] === 'object' &&
-                formattedData.advancedRadioMap[radio][field] !== null
+                formattedData?.[radioMapKey][i][j]?.source &&
+                !_.isEqual(
+                  formattedData?.[radioMapKey][i][j]?.value,
+                  data?.details?.[radioMapKey]?.[i]?.[j]?.value
+                )
               ) {
-                if (field === 'bestApSettings') {
-                  Object.assign(
-                    formattedData.advancedRadioMap[radio][field].value,
-                    values.advancedRadioMap[radio][field]
-                  );
-
-                  if (
-                    !_.isEqual(
-                      formattedData.advancedRadioMap[radio][field].value,
-                      data.details.advancedRadioMap[radio][field].value
-                    )
-                  ) {
-                    formattedData.advancedRadioMap[radio][field].source = 'manual';
-                  }
-                } else {
-                  Object.assign(
-                    formattedData.advancedRadioMap[radio][field],
-                    values.advancedRadioMap[radio][field]
-                  );
-
-                  if (
-                    !_.isEqual(
-                      formattedData.advancedRadioMap[radio][field],
-                      data.details.advancedRadioMap[radio][field]
-                    )
-                  ) {
-                    formattedData.advancedRadioMap[radio][field].source = 'manual';
-                  }
-                }
-              } else {
-                formattedData.advancedRadioMap[radio][field] =
-                  values.advancedRadioMap[radio][field];
+                // eslint-disable-next-line no-param-reassign
+                formattedData[radioMapKey][i][j].source = 'manual';
               }
-            }
-          });
+            })
+          );
 
-          Object.keys(values.radioMap[radio]).forEach(field => {
-            if (field in formattedData.radioMap[radio]) {
-              if (
-                typeof formattedData.radioMap[radio][field] === 'object' &&
-                formattedData.radioMap[radio][field] !== null
-              ) {
-                Object.assign(formattedData.radioMap[radio][field], values.radioMap[radio][field]);
-                if (
-                  !_.isEqual(
-                    formattedData.radioMap[radio][field],
-                    data.details.radioMap[radio][field]
-                  )
-                ) {
-                  formattedData.radioMap[radio][field].source = 'manual';
-                }
-              } else {
-                formattedData.radioMap[radio][field] = values.radioMap[radio][field];
-              }
-            }
-          });
-        });
+        formatSourceSelection('advancedRadioMap');
+        formatSourceSelection('radioMap');
 
         handleOnEquipmentSave({
           id,
@@ -249,6 +206,7 @@ const General = ({
 
   const renderInputItem = (dataIndex, key, label, options = {}) => (
     <Item
+      key={dataIndex}
       name={[options.mapName, key, ...dataIndex]}
       rules={[
         { required: true, message: options.error },
@@ -280,6 +238,7 @@ const General = ({
   const renderOptionItem = (dataIndex, key, label, options = {}) => {
     return (
       <Item
+        key={dataIndex}
         name={[options.mapName, key, ...dataIndex]}
         rules={[
           {
@@ -516,7 +475,7 @@ const General = ({
           {renderItem(
             'SNR',
             data.details.advancedRadioMap,
-            ['bestApSettings', 'dropInSnrPercentage'],
+            ['bestApSettings', 'value', 'dropInSnrPercentage'],
             renderInputItem,
             {
               min: 0,
@@ -529,7 +488,7 @@ const General = ({
           {renderItem(
             'Min Load',
             data.details.advancedRadioMap,
-            ['bestApSettings', 'minLoadFactor'],
+            ['bestApSettings', 'value', 'minLoadFactor'],
             renderInputItem,
             {
               min: 0,
