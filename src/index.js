@@ -31,3 +31,5 @@ export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints
 export { default as Button } from 'components/Button';
 export { default as ToggleButton } from 'components/ToggleButton';
 export { default as Modal } from 'components/Modal';
+export { default as Header } from 'components/Header';
+export { default as Container } from 'components/Container';
