@@ -1,9 +1,6 @@
 import { notification } from 'antd';
 import _ from 'lodash';
-import { 
-  RADIOS, 
-  ROAMING, 
- } from '../containers/ProfileDetails/constants/index';
+import { RADIOS, ROAMING } from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
 
@@ -165,7 +162,7 @@ export const formatCaptiveForm = (values, details) => {
     formattedData.backgroundFile = details.backgroundFile;
   }
 
-  if (!values?.externalCaptivePortalURL){
+  if (!values?.externalCaptivePortalURL) {
     formattedData.externalCaptivePortalURL = null;
   }
 
@@ -179,8 +176,12 @@ export const formatRfProfileForm = values => {
   currentRadios.forEach(radio => {
     formattedData.rfConfigMap[radio].radioType = radio;
     formattedData.rfConfigMap[radio].rf = values.name;
-    formattedData.rfConfigMap[radio].activeScanSettings.enabled = isBool(values.rfConfigMap[radio].activeScanSettings.enabled);
-    formattedData.rfConfigMap[radio].bestApSettings.mlComputed = isBool(values.rfConfigMap[radio].bestApSettings.mlComputed);
+    formattedData.rfConfigMap[radio].activeScanSettings.enabled = isBool(
+      values.rfConfigMap[radio].activeScanSettings.enabled
+    );
+    formattedData.rfConfigMap[radio].bestApSettings.mlComputed = isBool(
+      values.rfConfigMap[radio].bestApSettings.mlComputed
+    );
   });
 
   return formattedData;
