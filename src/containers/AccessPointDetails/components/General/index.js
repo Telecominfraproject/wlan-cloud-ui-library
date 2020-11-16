@@ -74,54 +74,57 @@ const General = ({
   } = data;
 
   useEffect(() => {
-    const currentRadios = Object.keys(data.details.advancedRadioMap);
-    const formData = {
-      advancedRadioMap: {},
-      radioMap: {},
-    };
-
-    currentRadios.forEach(radio => {
-      formData.advancedRadioMap[radio] = {
-        radioAdminState: data.details.advancedRadioMap[radio]?.radioAdminState || 'disabled',
-        deauthAttackDetection: data.details.advancedRadioMap[radio]?.deauthAttackDetection
-          ? 'true'
-          : 'false',
-        uapsdState: data.details.advancedRadioMap[radio]?.uapsdState || 'disabled',
-        managementRate: {
-          value: data.details.advancedRadioMap[radio]?.managementRate?.value || 'rate1mbps',
-        },
-        multicastRate: {
-          value: data.details.advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
-        },
-        bestApSettings: {
-          dropInSnrPercentage:
-            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage || 10,
-          minLoadFactor:
-            data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 10,
-        },
+    if (data?.details) {
+      const currentRadios = Object.keys(data.details.advancedRadioMap);
+      const formData = {
+        advancedRadioMap: {},
+        radioMap: {},
       };
 
-      formData.radioMap[radio] = {
-        rxCellSizeDb: {
-          value: data.details.radioMap[radio]?.rxCellSizeDb?.value || 0,
-        },
-        probeResponseThresholdDb: {
-          value: data.details.radioMap[radio]?.probeResponseThresholdDb?.value || 0,
-        },
-        clientDisconnectThresholdDb: {
-          value: data.details.radioMap[radio]?.clientDisconnectThresholdDb?.value || 0,
-        },
-        eirpTxPower: {
-          value: data.details.radioMap[radio]?.eirpTxPower?.value || 0,
-        },
-        perimeterDetectionEnabled: data.details.radioMap[radio]?.perimeterDetectionEnabled
-          ? 'true'
-          : 'false',
-      };
-    });
+      currentRadios.forEach(radio => {
+        formData.advancedRadioMap[radio] = {
+          radioAdminState: data.details.advancedRadioMap[radio]?.radioAdminState || 'disabled',
+          deauthAttackDetection: data.details.advancedRadioMap[radio]?.deauthAttackDetection
+            ? 'true'
+            : 'false',
+          uapsdState: data.details.advancedRadioMap[radio]?.uapsdState || 'disabled',
+          managementRate: {
+            value: data.details.advancedRadioMap[radio]?.managementRate?.value || 'rate1mbps',
+          },
+          multicastRate: {
+            value: data.details.advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
+          },
+          bestApSettings: {
+            dropInSnrPercentage:
+              data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage ||
+              10,
+            minLoadFactor:
+              data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 10,
+          },
+        };
 
-    form.setFieldsValue({ ...formData });
-  }, []);
+        formData.radioMap[radio] = {
+          rxCellSizeDb: {
+            value: data.details.radioMap[radio]?.rxCellSizeDb?.value || 0,
+          },
+          probeResponseThresholdDb: {
+            value: data.details.radioMap[radio]?.probeResponseThresholdDb?.value || 0,
+          },
+          clientDisconnectThresholdDb: {
+            value: data.details.radioMap[radio]?.clientDisconnectThresholdDb?.value || 0,
+          },
+          eirpTxPower: {
+            value: data.details.radioMap[radio]?.eirpTxPower?.value || 0,
+          },
+          perimeterDetectionEnabled: data.details.radioMap[radio]?.perimeterDetectionEnabled
+            ? 'true'
+            : 'false',
+        };
+      });
+
+      form.setFieldsValue({ ...formData });
+    }
+  }, [data]);
 
   const handleOnSave = () => {
     form
