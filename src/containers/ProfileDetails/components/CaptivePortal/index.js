@@ -340,7 +340,7 @@ const CaptivePortalForm = ({
             },
             () => ({
               validator(_rule, value) {
-                if (!value || value >= 1 && value <= 1440) {
+                if (!value || (value >= 1 && value <= 1440)) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
