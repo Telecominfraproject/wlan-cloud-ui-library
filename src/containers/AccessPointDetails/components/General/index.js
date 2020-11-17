@@ -71,11 +71,12 @@ const General = ({
     longitude,
     serial,
     lastModifiedTimestamp,
+    details: { advancedRadioMap = {}, radioMap = {} },
   } = data;
 
   useEffect(() => {
     if (data?.details) {
-      const currentRadios = Object.keys(data.details.advancedRadioMap);
+      const currentRadios = Object.keys(advancedRadioMap);
       const formData = {
         advancedRadioMap: {},
         radioMap: {},
@@ -83,44 +84,38 @@ const General = ({
 
       currentRadios.forEach(radio => {
         formData.advancedRadioMap[radio] = {
-          radioAdminState: data.details.advancedRadioMap[radio]?.radioAdminState || 'disabled',
-          deauthAttackDetection: data.details.advancedRadioMap[radio]?.deauthAttackDetection
-            ? 'true'
-            : 'false',
-          uapsdState: data.details.advancedRadioMap[radio]?.uapsdState || 'disabled',
+          radioAdminState: advancedRadioMap[radio]?.radioAdminState || 'disabled',
+          deauthAttackDetection: advancedRadioMap[radio]?.deauthAttackDetection ? 'true' : 'false',
+          uapsdState: advancedRadioMap[radio]?.uapsdState || 'disabled',
           managementRate: {
-            value: data.details.advancedRadioMap[radio]?.managementRate?.value || 'rate1mbps',
+            value: advancedRadioMap[radio]?.managementRate?.value || 'rate1mbps',
           },
           multicastRate: {
-            value: data.details.advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
+            value: advancedRadioMap[radio]?.multicastRate?.value || 'rate6mbps',
           },
           bestApSettings: {
             value: {
               dropInSnrPercentage:
-                data.details.advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage ||
-                0,
-              minLoadFactor:
-                data.details.advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 0,
+                advancedRadioMap[radio]?.bestApSettings?.value?.dropInSnrPercentage || 0,
+              minLoadFactor: advancedRadioMap[radio]?.bestApSettings?.value?.minLoadFactor || 0,
             },
           },
         };
 
         formData.radioMap[radio] = {
           rxCellSizeDb: {
-            value: data.details.radioMap[radio]?.rxCellSizeDb?.value || 0,
+            value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
           probeResponseThresholdDb: {
-            value: data.details.radioMap[radio]?.probeResponseThresholdDb?.value || 0,
+            value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
           },
           clientDisconnectThresholdDb: {
-            value: data.details.radioMap[radio]?.clientDisconnectThresholdDb?.value || 0,
+            value: radioMap[radio]?.clientDisconnectThresholdDb?.value || 0,
           },
           eirpTxPower: {
-            value: data.details.radioMap[radio]?.eirpTxPower?.value || 0,
+            value: radioMap[radio]?.eirpTxPower?.value || 0,
           },
-          perimeterDetectionEnabled: data.details.radioMap[radio]?.perimeterDetectionEnabled
-            ? 'true'
-            : 'false',
+          perimeterDetectionEnabled: radioMap[radio]?.perimeterDetectionEnabled ? 'true' : 'false',
         };
       });
 
@@ -342,19 +337,13 @@ const General = ({
         <Panel header="Advanced Settings" name="settings">
           {renderItem(' ', data.details.radioMap, 'radioType')}
           <p>Radio Specific Parameters:</p>
-          {renderItem(
-            'Enable Radio',
-            data.details.advancedRadioMap,
-            ['radioAdminState'],
-            renderOptionItem,
-            {
-              dropdown: defaultOptions,
-              mapName: 'advancedRadioMap',
-            }
-          )}
+          {renderItem('Enable Radio', advancedRadioMap, ['radioAdminState'], renderOptionItem, {
+            dropdown: defaultOptions,
+            mapName: 'advancedRadioMap',
+          })}
           {renderItem(
             'Deauth Attack Detection',
-            data.details.advancedRadioMap,
+            advancedRadioMap,
             ['deauthAttackDetection'],
             renderOptionItem,
             {
@@ -362,15 +351,15 @@ const General = ({
               dropdown: defaultOptionsBoolean,
             }
           )}
-          {renderItem('UAPSD', data.details.advancedRadioMap, ['uapsdState'], renderOptionItem, {
+          {renderItem('UAPSD', advancedRadioMap, ['uapsdState'], renderOptionItem, {
             mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
-          {renderItem('Active Channel', data.details.radioMap, 'channelNumber')}
-          {renderItem('Backup Channel', data.details.radioMap, 'backupChannelNumber')}
+          {renderItem('Active Channel', radioMap, 'channelNumber')}
+          {renderItem('Backup Channel', radioMap, 'backupChannelNumber')}
           {renderItem(
             'Management Rate (Mbps)',
-            data.details.advancedRadioMap,
+            advancedRadioMap,
             ['managementRate', 'value'],
             renderOptionItem,
             {
@@ -392,7 +381,7 @@ const General = ({
           )}
           {renderItem(
             'Multicast Rate (Mbps)',
-            data.details.advancedRadioMap,
+            advancedRadioMap,
             ['multicastRate', 'value'],
             renderOptionItem,
             {
@@ -411,22 +400,16 @@ const General = ({
               ),
             }
           )}
-          {renderItem(
-            'Rx Cell Size',
-            data.details.radioMap,
-            ['rxCellSizeDb', 'value'],
-            renderInputItem,
-            {
-              min: -100,
-              max: 100,
-              error: '-100 - 100 dBm',
-              addOnText: 'dBm',
-              mapName: 'radioMap',
-            }
-          )}
+          {renderItem('Rx Cell Size', radioMap, ['rxCellSizeDb', 'value'], renderInputItem, {
+            min: -100,
+            max: 100,
+            error: '-100 - 100 dBm',
+            addOnText: 'dBm',
+            mapName: 'radioMap',
+          })}
           {renderItem(
             'Probe Response Threshold',
-            data.details.radioMap,
+            radioMap,
             ['probeResponseThresholdDb', 'value'],
             renderInputItem,
             {
@@ -439,7 +422,7 @@ const General = ({
           )}
           {renderItem(
             'Client Disconnect Threshold',
-            data.details.radioMap,
+            radioMap,
             ['clientDisconnectThresholdDb', 'value'],
             renderInputItem,
             {
@@ -450,24 +433,18 @@ const General = ({
               mapName: 'radioMap',
             }
           )}
-          {renderItem(
-            'EIRP Tx Power',
-            data.details.radioMap,
-            ['eirpTxPower', 'value'],
-            renderInputItem,
-            {
-              min: 0,
-              max: 100,
-              error: '0 - 100 dBm',
-              addOnText: 'dBm',
-              mapName: 'radioMap',
-            }
-          )}
+          {renderItem('EIRP Tx Power', radioMap, ['eirpTxPower', 'value'], renderInputItem, {
+            min: 0,
+            max: 100,
+            error: '0 - 100 dBm',
+            addOnText: 'dBm',
+            mapName: 'radioMap',
+          })}
 
           <p>Radio Resource Management:</p>
           {renderItem(
             'Perimeter Detection',
-            data.details.radioMap,
+            radioMap,
             ['perimeterDetectionEnabled'],
             renderOptionItem,
             { dropdown: defaultOptionsBoolean, mapName: 'radioMap' }
@@ -476,7 +453,7 @@ const General = ({
           <p>Steering Threshold:</p>
           {renderItem(
             'SNR',
-            data.details.advancedRadioMap,
+            advancedRadioMap,
             ['bestApSettings', 'value', 'dropInSnrPercentage'],
             renderInputItem,
             {
@@ -489,7 +466,7 @@ const General = ({
           )}
           {renderItem(
             'Min Load',
-            data.details.advancedRadioMap,
+            advancedRadioMap,
             ['bestApSettings', 'value', 'minLoadFactor'],
             renderInputItem,
             {

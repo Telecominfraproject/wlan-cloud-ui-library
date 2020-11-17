@@ -251,7 +251,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('0 - 100 dBm')).toBeVisible();
     });
   });
   it('error if the eirp tx power exceeds bounds for the is5GHzU setting', async () => {
@@ -265,7 +265,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('0 - 100 dBm')).toBeVisible();
     });
   });
   it('error if the eirp tx power exceeds bounds for the is5GHzL setting', async () => {
@@ -279,7 +279,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('0 - 100 dBm')).toBeVisible();
     });
   });
 
@@ -326,13 +326,6 @@ describe('<General />', () => {
       expect(getByText('0 - 100%')).toBeVisible();
     });
   });
-  it('loadingProfiles should show loading spinner', async () => {
-    const { getByTestId } = render(<General loadingProfiles />);
-
-    await waitFor(() => {
-      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
-    });
-  });
 
   // Snr
   it('error if the snr percentage drop exceeds bounds for the is2dot4GHz setting', async () => {
@@ -375,13 +368,6 @@ describe('<General />', () => {
 
     await waitFor(() => {
       expect(getByText('0 - 100%')).toBeVisible();
-    });
-  });
-  it('loadingProfiles should show loading spinner', async () => {
-    const { getByTestId } = render(<General loadingProfiles />);
-
-    await waitFor(() => {
-      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
     });
   });
 });
