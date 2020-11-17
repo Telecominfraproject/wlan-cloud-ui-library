@@ -53,7 +53,7 @@ describe('<General />', () => {
     });
   });
 
-  it('handleSubmit should  be called if access point name is entered on general tab', async () => {
+  it('handleSubmit should be called if access point name is entered on general tab', async () => {
     const submitSpy = jest.fn();
     const { getByText, getByRole, getByPlaceholderText } = render(
       <General {...defaultProps} handleOnEquipmentSave={submitSpy} />
@@ -80,7 +80,211 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: /settings/i }));
   });
 
-  it('error if the minimum load percentage exceeds bounds for the is2dot4GHz setting ', async () => {
+  it('loadingProfiles should show loading spinner', async () => {
+    const { getByTestId } = render(<General loadingProfiles />);
+
+    await waitFor(() => {
+      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
+    });
+  });
+
+  it('handleSubmit should be called if advanced settings are filled', async () => {
+    const submitSpy = jest.fn();
+    const { getByRole } = render(<General {...defaultProps} handleOnEquipmentSave={submitSpy} />);
+
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(submitSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('errorProfiles should show error alert', async () => {
+    const { getByTestId } = render(<General loadingProfiles={false} errorProfiles />);
+
+    await waitFor(() => {
+      expect(getByTestId('errorProfiles')).toBeInTheDocument();
+    });
+  });
+
+  // Rx Cell Size
+  it('error if the rx cell size exceeds bounds for the is2dot4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is2dot4GHz'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the rx cell size exceeds bounds for the is5GHzU setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzU'), {
+      target: { value: -101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the rx cell size exceeds bounds for the is5GHzL setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+
+  // Probe response threshold
+  it('error if the probe response threshold exceeds bounds for the is2dot4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is2dot4GHz'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the probe response threshold exceeds bounds for the is5GHzU setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHzU'), {
+      target: { value: -101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the probe response threshold exceeds bounds for the is5GHzL setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+
+  // Client disconnect threshold
+  it('error if the client disconnect threshold exceeds bounds for the is2dot4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is2dot4GHz'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the client disconnect threshold exceeds bounds for the is5GHzU setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is5GHzU'), {
+      target: { value: -101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the client disconnect threshold exceeds bounds for the is5GHzL setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+
+  // Eirp TX power
+  it('error if the eirp tx power exceeds bounds for the is2dot4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is2dot4GHz'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the eirp tx power exceeds bounds for the is5GHzU setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHzU'), {
+      target: { value: -101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+  it('error if the eirp tx power exceeds bounds for the is5GHzL setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100 dBm')).toBeVisible();
+    });
+  });
+
+  // Min load
+  it('error if the minimum load percentage exceeds bounds for the is2dot4GHz setting', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
@@ -94,8 +298,7 @@ describe('<General />', () => {
       expect(getByText('0 - 100%')).toBeVisible();
     });
   });
-
-  it('error if the minimum load percentage exceeds bounds for the is5GHzU setting ', async () => {
+  it('error if the minimum load percentage exceeds bounds for the is5GHzU setting', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
@@ -109,8 +312,7 @@ describe('<General />', () => {
       expect(getByText('0 - 100%')).toBeVisible();
     });
   });
-
-  it('error if the minimum load percentage exceeds bounds for the is5GHzL setting ', async () => {
+  it('error if the minimum load percentage exceeds bounds for the is5GHzL setting', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
@@ -132,11 +334,54 @@ describe('<General />', () => {
     });
   });
 
-  it('errorProfiles should show error alert', async () => {
-    const { getByTestId } = render(<General loadingProfiles={false} errorProfiles />);
+  // Snr
+  it('error if the snr percentage drop exceeds bounds for the is2dot4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter SNR for is2dot4GHz'), {
+      target: { value: -1 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByTestId('errorProfiles')).toBeInTheDocument();
+      expect(getByText('0 - 100%')).toBeVisible();
+    });
+  });
+  it('error if the snr percentage drop exceeds bounds for the is5GHzU setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter SNR for is5GHzU'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('0 - 100%')).toBeVisible();
+    });
+  });
+  it('error if the snr percentage drop exceeds bounds for the is5GHzL setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    fireEvent.change(getByPlaceholderText('Enter SNR for is5GHzL'), {
+      target: { value: 101 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    await waitFor(() => {
+      expect(getByText('0 - 100%')).toBeVisible();
+    });
+  });
+  it('loadingProfiles should show loading spinner', async () => {
+    const { getByTestId } = render(<General loadingProfiles />);
+
+    await waitFor(() => {
+      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
     });
   });
 });
