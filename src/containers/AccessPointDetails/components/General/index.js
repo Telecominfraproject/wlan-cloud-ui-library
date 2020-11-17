@@ -71,7 +71,7 @@ const General = ({
     longitude,
     serial,
     lastModifiedTimestamp,
-    details: { advancedRadioMap = {}, radioMap = {} },
+    details: { advancedRadioMap = {}, radioMap = {} } = {},
   } = data;
 
   useEffect(() => {
