@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "author": "ConnectUs",
   "description": "React UI Library",
   "engines": {
@@ -91,7 +91,7 @@
   "lint-staged": {
     "*.{js,jsx}": [
       "pretty-quick --staged",
-      "eslint --fix 'app/**/*.js' --max-warnings=0",
+      "eslint --fix 'src/**/*.js' --max-warnings=0",
       "git add"
     ]
   },
