@@ -41,10 +41,12 @@ const Status = ({ data }) => {
     },
   ];
 
+  const { radioMap = {} } = data.details;
+
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(data?.details?.radioMap)).map(i => (
+        {sortRadioTypes(Object.keys(radioMap)).map(i => (
           <span key={i} className={styles.spanStyle}>
             {(dataIndex ? obj?.[i]?.[dataIndex] : obj?.[i]) ?? 'N/A'}
           </span>
@@ -57,8 +59,8 @@ const Status = ({ data }) => {
     <>
       <Form {...layout}>
         <Card title="Status">
-          {renderSpanItem(' ', data?.details?.radioMap, 'radioType')}
-          {renderSpanItem('Channel', data?.details?.radioMap, 'channelNumber')}
+          {renderSpanItem(' ', radioMap, 'radioType')}
+          {renderSpanItem('Channel', radioMap, 'channelNumber')}
           {renderSpanItem(
             'Noise Floor',
             data?.status?.radioUtilization?.detailsJSON?.avgNoiseFloor
