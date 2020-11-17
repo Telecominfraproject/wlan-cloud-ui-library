@@ -41,7 +41,10 @@ const Status = ({ data }) => {
     },
   ];
 
-  const { radioMap = {} } = data.details;
+  const {
+    details: { radioMap = {} },
+    status = {},
+  } = data;
 
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
@@ -61,17 +64,14 @@ const Status = ({ data }) => {
         <Card title="Status">
           {renderSpanItem(' ', radioMap, 'radioType')}
           {renderSpanItem('Channel', radioMap, 'channelNumber')}
-          {renderSpanItem(
-            'Noise Floor',
-            data?.status?.radioUtilization?.detailsJSON?.avgNoiseFloor
-          )}
+          {renderSpanItem('Noise Floor', status?.radioUtilization?.detailsJSON?.avgNoiseFloor)}
           {renderSpanItem(
             'Number of Devices',
-            data?.status?.clientDetails?.detailsJSON?.numClientsPerRadio
+            status?.clientDetails?.detailsJSON?.numClientsPerRadio
           )}
           {renderSpanItem(
             'Available Capacity',
-            data?.status?.radioUtilization?.detailsJSON?.capacityDetails,
+            status?.radioUtilization?.detailsJSON?.capacityDetails,
             'availableCapacity'
           )}
         </Card>
