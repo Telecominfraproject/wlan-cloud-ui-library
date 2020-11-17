@@ -54,7 +54,7 @@
     justify-content: space-between;
   }
 
-  :global(.ant-collapse .ant-collapse-item .ant-collapse-header::before), 
+  :global(.ant-collapse .ant-collapse-item .ant-collapse-header::before),
   :global(.ant-collapse .ant-collapse-item .ant-collapse-header::after) {
     content: none;
   }
