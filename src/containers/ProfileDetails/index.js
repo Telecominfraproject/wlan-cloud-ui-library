@@ -29,6 +29,7 @@ import RFForm from './components/RF';
 
 import styles from './index.module.scss';
 import VenueForm from './components/Venue';
+import ProviderIdForm from './components/ProviderId';
 
 const ProfileDetails = ({
   profileType,
@@ -115,6 +116,10 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
+
+        if (profileType === 'passpoint_osu_id_provider') {
+          formattedData.model_type = 'PasspointOsuProviderProfile';
+        }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -164,6 +169,9 @@ const ProfileDetails = ({
           </Item>
         </Card>
         {profileType === 'passpoint_venue' && <VenueForm form={form} details={details} />}
+        {profileType === 'passpoint_osu_id_provider' && (
+          <ProviderIdForm form={form} details={details} />
+        )}
         {profileType === 'ssid' && (
           <SSIDForm
             form={form}
