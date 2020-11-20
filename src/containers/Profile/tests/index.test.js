@@ -67,8 +67,8 @@ describe('<Profile />', () => {
     fireEvent.click(getByRole('button', { name: /reload/i }));
   });
 
-  it('URL should changes to /addprofile when Add Profile button is clicked', () => {
-    const URL = '/addprofile';
+  it('URL should changes to /configure/addprofile when Add Profile button is clicked', () => {
+    const URL = '/configure/addprofile';
     const { getByRole } = render(
       <Router>
         <Profile {...mockProps} />

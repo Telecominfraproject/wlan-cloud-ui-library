@@ -105,9 +105,9 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
   return (
     <Container>
       <Header>
-        <h1>Accounts</h1>
+        <h1>Users</h1>
         <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
-          Add Account
+          Add User
         </Button>
       </Header>
       <Modal
@@ -119,7 +119,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the account: <i>{activeUser.email}</i>
+            Are you sure you want to delete the User: <i>{activeUser.email}</i>
           </p>
         }
       />
@@ -127,7 +127,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         onCancel={() => setEditModal(false)}
         visible={editModal}
         onSubmit={editUser}
-        title="Edit Account"
+        title="Edit User"
         userRole={activeUser.role}
         userEmail={activeUser.email}
       />
@@ -135,7 +135,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addUser}
-        title="Add Account"
+        title="Add User"
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (

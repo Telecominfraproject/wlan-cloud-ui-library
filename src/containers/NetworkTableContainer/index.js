@@ -43,7 +43,7 @@ const NetworkTableContainer = ({
         <ToggleButton activeTab={activeTab} />
 
         {activeTab === '/network/client-devices' && (
-          <Link to="/system/blockedlist" className={styles.BlockedListButton}>
+          <Link to="/configure/system/blockedlist" className={styles.BlockedListButton}>
             <Button>Blocked List</Button>
           </Link>
         )}

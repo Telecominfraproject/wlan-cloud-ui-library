@@ -40,11 +40,11 @@ const INVALID_PASSWORDS = 'The two passwords do not match';
 describe('<Accounts />', () => {
   afterEach(cleanup);
 
-  it('delete account button click should show modal', async () => {
+  it('delete user button click should show modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
     fireEvent.click(getByRole('button', { name: /delete/i }));
 
-    const paragraph = getByText('Are you sure you want to delete the account:');
+    const paragraph = getByText('Are you sure you want to delete the User:');
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.data[0].email)).toBeVisible();
   });
@@ -54,7 +54,7 @@ describe('<Accounts />', () => {
 
     fireEvent.click(getByRole('button', { name: /edit/i }));
 
-    expect(getByText('Edit Account')).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
   });
 
   it('add account button click should show FormModal', async () => {
@@ -62,7 +62,7 @@ describe('<Accounts />', () => {
 
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
 
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
   });
 
   it('onDeleteUser should be called when modal is submitted', async () => {
@@ -82,7 +82,7 @@ describe('<Accounts />', () => {
     const { getByText, getByRole } = render(<Accounts {...mockProps} onEditUser={submitSpy} />);
     fireEvent.click(getByRole('button', { name: /edit/i }));
 
-    expect(getByText('Edit Account')).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -99,7 +99,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onEditUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /edit/i }));
-    expect(getByText('Edit Account')).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
@@ -111,31 +111,31 @@ describe('<Accounts />', () => {
     });
   });
 
-  it('cancel button click should hide Add Account modal', async () => {
+  it('cancel button click should hide Add User modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Account', { selector: 'div' })).not.toBeVisible();
+      expect(getByText('Add User', { selector: 'div' })).not.toBeVisible();
     });
   });
 
-  it('cancel button click should hide Edit Account Modal', async () => {
+  it('cancel button click should hide Edit User Modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /edit/i }));
-    expect(getByText('Edit Account')).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Edit Account')).not.toBeVisible();
+      expect(getByText('Edit User')).not.toBeVisible();
     });
   });
 
-  it('cancel button click should hide Delete Account Modal', async () => {
+  it('cancel button click should hide Delete User Modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /delete/i }));
@@ -151,7 +151,7 @@ describe('<Accounts />', () => {
     const submitSpy = jest.fn();
     const { getByText, getByRole } = render(<Accounts {...mockProps} onCreateUser={submitSpy} />);
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -169,7 +169,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
@@ -187,7 +187,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
@@ -206,7 +206,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password' } });
@@ -225,7 +225,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -243,7 +243,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
@@ -262,7 +262,7 @@ describe('<Accounts />', () => {
       <Accounts {...mockProps} onCreateUser={submitSpy} />
     );
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
-    expect(getByText('Add Account', { selector: 'div' })).toBeVisible();
+    expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });

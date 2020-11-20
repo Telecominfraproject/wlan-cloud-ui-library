@@ -25,12 +25,7 @@ const Navbar = ({
   const theme = useContext(ThemeContext);
   const location = useLocation();
 
-  const selectedKeys = [];
-  menuItems.forEach(item => {
-    if (locationState.pathname.startsWith(item.path)) {
-      selectedKeys.push(item.key.toString());
-    }
-  });
+  const selectedKeys = locationState.pathname.split('/');
 
   return (
     <Header className={`${styles.Navbar}`}>
