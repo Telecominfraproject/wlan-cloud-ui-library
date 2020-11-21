@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'tests/utils';
+import { render, ROUTES } from 'tests/utils';
 import ProfileDetails from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -528,7 +528,7 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
     await waitFor(() => {
-      expect(window.location.pathname).toEqual('/profiles');
+      expect(window.location.pathname).toEqual(ROUTES.profiles);
     });
   });
 
@@ -544,7 +544,7 @@ describe('<ProfileDetails />', () => {
     fireEvent.click(getByRole('button', { name: 'Back' }));
 
     await waitFor(() => {
-      expect(window.location.pathname).toEqual('/profiles');
+      expect(window.location.pathname).toEqual(ROUTES.profiles);
     });
   });
 

@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import { Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
+
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
-import FormModal from './components/FormModal';
+import ThemeContext from 'contexts/ThemeContext';
 
+import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
+  const { routes } = useContext(ThemeContext);
   const [addModal, setAddModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
@@ -39,7 +42,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
       dataIndex: 'macAddress',
       width: 900,
       render: value => (
-        <Link className={styles.Link} to={`/network/client-devices/${value}`}>
+        <Link className={styles.Link} to={`${routes.clientDevices}/${value}`}>
           {value}
         </Link>
       ),

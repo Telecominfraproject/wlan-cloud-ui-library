@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Card, Alert } from 'antd';
@@ -8,6 +8,7 @@ import moment from 'moment';
 import { formatBytes, formatBitsPerSecond } from 'utils/bytes';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
+import ThemeContext from 'contexts/ThemeContext';
 
 import DeviceDetailCard from './components/DeviceDetailCard';
 import DeviceStatsCard from './components/DeviceStatsCard';
@@ -21,6 +22,8 @@ const ClientDeviceDetails = ({
   metricsData,
   historyDate,
 }) => {
+  const { routes } = useContext(ThemeContext);
+
   const {
     macAddress,
     ipAddress,
@@ -95,7 +98,7 @@ const ClientDeviceDetails = ({
   return (
     <>
       <div className={styles.topBtns}>
-        <Link to="/network/client-devices">
+        <Link to={routes.clientDevices}>
           <Button icon={<LeftOutlined />}>Back</Button>
         </Link>
         <Button icon={<ReloadOutlined />} onClick={onRefresh} />

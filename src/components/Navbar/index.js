@@ -22,17 +22,17 @@ const Navbar = ({
   onLogout,
   totalAlarms,
 }) => {
-  const theme = useContext(ThemeContext);
+  const { company, logo, logoMobile, routes } = useContext(ThemeContext);
   const location = useLocation();
 
   const selectedKeys = locationState.pathname.split('/');
 
   return (
     <Header className={`${styles.Navbar}`}>
-      <Link className={styles.LogoContainer} to="/">
+      <Link className={styles.LogoContainer} to={routes.root}>
         <img
-          src={`${isMobile ? theme.logoMobile : theme.logo}`}
-          alt={theme.company}
+          src={`${isMobile ? logoMobile : logo}`}
+          alt={company}
           width={`${isMobile ? '32' : '200'}`}
         />
       </Link>
@@ -46,8 +46,8 @@ const Navbar = ({
           bodyStyle={{ padding: 0 }}
           width={256}
         >
-          <Link className={styles.LogoContainer} to="/">
-            <img src={theme.logo} alt={theme.company} width="200" />
+          <Link className={styles.LogoContainer} to={routes.root}>
+            <img src={logo} alt={company} width="200" />
           </Link>
           <Menu
             mode="inline"
@@ -60,9 +60,9 @@ const Navbar = ({
         <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
-        <Link to="/alarms">
+        <Link to={routes.alarms}>
           <Badge count={totalAlarms} showZero>
-            {location.pathname === '/alarms' ? (
+            {location.pathname === routes.alarms ? (
               <BellFilled className={styles.BellIconActive} />
             ) : (
               <BellOutlined className={styles.BellIcon} />

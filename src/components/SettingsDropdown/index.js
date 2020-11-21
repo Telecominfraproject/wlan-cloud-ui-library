@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Popover, Row } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 
+import ThemeContext from 'contexts/ThemeContext';
 import styles from './index.module.scss';
 
 const SettingsDropdown = ({ onLogout }) => {
+  const { routes } = useContext(ThemeContext);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
   const hidePopover = () => {
@@ -20,12 +22,12 @@ const SettingsDropdown = ({ onLogout }) => {
   const userOptions = (
     <>
       <Row>
-        <Link onClick={hidePopover} to="/account/edit">
+        <Link onClick={hidePopover} to={routes.account}>
           Edit User
         </Link>
       </Row>
       <Row>
-        <Link onClick={onLogout} to="/">
+        <Link onClick={onLogout} to={routes.root}>
           Log Out
         </Link>
       </Row>

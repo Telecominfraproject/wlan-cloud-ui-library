@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
@@ -7,6 +7,7 @@ import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 import { getLocationPath } from 'utils/locations';
 
 import General from './components/General';
@@ -56,6 +57,7 @@ const AccessPointDetails = ({
   errorFirmware,
   onFetchMoreProfiles,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
   const history = useHistory();
 
@@ -112,7 +114,7 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange(routes.accessPoints)}>
           BACK
         </Button>
       </Header>
@@ -148,7 +150,7 @@ const AccessPointDetails = ({
           </div>
         }
         tabList={TAB_LIST}
-        onTabChange={key => handlePageChange(`/network/access-points/${id}/${key}`)}
+        onTabChange={key => handlePageChange(`${routes.accessPoints}/${id}/${key}`)}
         activeTabKey={tab}
         bodyStyle={{ marginBottom: '-48px' }}
       />

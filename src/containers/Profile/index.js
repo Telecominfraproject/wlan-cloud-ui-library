@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Table } from 'antd';
 import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import styles from './index.module.scss';
 
 const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) => {
+  const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [deleteModal, setDeleteModal] = useState(false);
   const [activeProfile, setActiveProfile] = useState({
@@ -85,7 +88,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
         <Header>
           <h1>Profiles</h1>
           <div className={styles.Buttons}>
-            <Link to="/configure/addprofile">
+            <Link to={routes.addprofile}>
               <Button className={styles.AddProfile}> Add Profile </Button>
             </Link>
             <Button icon={<ReloadOutlined />} onClick={onReload} title="reload" />
@@ -101,7 +104,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           onRow={record => {
             return {
               onClick: () => {
-                history.push(`/profiles/${record.id}`);
+                history.push(`${routes.profiles}/${record.id}`);
               },
             };
           }}
