@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "ConnectUs",
   "description": "React UI Library",
   "engines": {
