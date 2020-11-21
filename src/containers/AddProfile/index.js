@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Card, Select, notification } from 'antd';
@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import {
   formatSsidProfileForm,
@@ -32,6 +33,7 @@ const { Item } = Form;
 const { Option } = Select;
 
 const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
+  const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -55,7 +57,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(`/profiles`);
+      history.push(routes.profiles);
     }
   };
 
@@ -121,7 +123,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
       <div className={styles.AddProfile}>
         <Modal
           onCancel={() => setConfirmModal(false)}
-          onSuccess={() => history.push(`/profiles`)}
+          onSuccess={() => history.push(routes.profiles)}
           visible={confirmModal}
           buttonText="Back"
           title="Leave Form?"

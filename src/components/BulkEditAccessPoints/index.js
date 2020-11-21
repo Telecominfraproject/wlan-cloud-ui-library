@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
 
+import ThemeContext from 'contexts/ThemeContext';
 import Button from 'components/Button';
 
 import BulkEditAPTable from './components/BulkEditAPTable';
@@ -17,12 +18,13 @@ const BulkEditAccessPoints = ({
   isLastPage,
   breadcrumbPath,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [editedRows, setEditedRows] = useState([]);
   const [resetEditedRows, setRestEditedRows] = useState(false);
 
   const handleBackClick = () => {
-    history.push('/network/access-points');
+    history.push(routes.accessPoints);
   };
 
   const handleEditedRows = rows => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Card, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 
@@ -43,6 +44,7 @@ const ProfileDetails = ({
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -65,7 +67,7 @@ const ProfileDetails = ({
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(`/profiles`);
+      history.push(routes.profiles);
     }
   };
 
@@ -130,7 +132,7 @@ const ProfileDetails = ({
     <Container>
       <Modal
         onCancel={() => setConfirmModal(false)}
-        onSuccess={() => history.push(`/profiles`)}
+        onSuccess={() => history.push(routes.profiles)}
         visible={confirmModal}
         buttonText="Back"
         title="Leave Form?"

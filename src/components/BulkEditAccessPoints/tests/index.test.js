@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup, fireEvent } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'tests/utils';
+import { render, ROUTES } from 'tests/utils';
 import BulkEditAccessPoints from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -32,7 +32,7 @@ const mockProps = {
 };
 describe('<BulkEditAccessPoints />', () => {
   afterEach(cleanup);
-  const URL = '/network/access-points';
+  const URL = ROUTES.accessPoints;
 
   it('URL should change back to /network/access-points when Back button is clicked', () => {
     const { getByRole } = render(

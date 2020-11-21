@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'tests/utils';
+import { render, ROUTES } from 'tests/utils';
 import { screen } from '@testing-library/dom';
 import Profile from '..';
 
@@ -68,7 +68,7 @@ describe('<Profile />', () => {
   });
 
   it('URL should changes to /configure/addprofile when Add Profile button is clicked', () => {
-    const URL = '/configure/addprofile';
+    const URL = ROUTES.addprofile;
     const { getByRole } = render(
       <Router>
         <Profile {...mockProps} />
@@ -125,7 +125,7 @@ describe('<Profile />', () => {
     });
   });
 
-  it('Clicking on table row should change url to /profiles/:id', async () => {
+  it('Clicking on table row should change url to /configure/profiles/:id', async () => {
     render(
       <Router>
         <Profile {...mockProps} />
@@ -133,7 +133,7 @@ describe('<Profile />', () => {
     );
 
     fireEvent.click(screen.getByText(mockProps.data[0].name));
-    expect(window.location.pathname).toEqual(`/profiles/${mockProps.data[0].id}`);
+    expect(window.location.pathname).toEqual(`${ROUTES.profiles}/${mockProps.data[0].id}`);
   });
 
   it('onDeleteProfile default prop test', async () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,8 @@ import Button from 'components/Button';
 import Loading from 'components/Loading';
 import ToggleButton from 'components/ToggleButton';
 import NetworkTable from 'components/NetworkTable';
+import ThemeContext from 'contexts/ThemeContext';
+
 import styles from './index.module.scss';
 
 const NetworkTableContainer = ({
@@ -20,6 +22,8 @@ const NetworkTableContainer = ({
   loading,
   error,
 }) => {
+  const { routes } = useContext(ThemeContext);
+
   const renderContent = () => {
     if (loading) {
       return <Loading />;
@@ -42,8 +46,8 @@ const NetworkTableContainer = ({
       <div className={styles.headerBtnContent}>
         <ToggleButton activeTab={activeTab} />
 
-        {activeTab === '/network/client-devices' && (
-          <Link to="/configure/system/blockedlist" className={styles.BlockedListButton}>
+        {activeTab === routes.clientDevices && (
+          <Link to={routes.blockedlist} className={styles.BlockedListButton}>
             <Button>Blocked List</Button>
           </Link>
         )}
@@ -56,7 +60,7 @@ const NetworkTableContainer = ({
 
 NetworkTableContainer.propTypes = {
   tableColumns: PropTypes.instanceOf(Array).isRequired,
-  activeTab: PropTypes.string,
+  activeTab: PropTypes.string.isRequired,
   tableData: PropTypes.instanceOf(Array),
   onRefresh: PropTypes.func,
   onLoadMore: PropTypes.func,
@@ -67,7 +71,6 @@ NetworkTableContainer.propTypes = {
 
 NetworkTableContainer.defaultProps = {
   tableData: [],
-  activeTab: '/network/access-points',
   onRefresh: () => {},
   onLoadMore: () => {},
   isLastPage: true,
