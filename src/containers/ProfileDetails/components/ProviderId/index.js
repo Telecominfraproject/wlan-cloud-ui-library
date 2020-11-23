@@ -1,14 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Input, Form, Button, Collapse, Switch, Table, Select } from 'antd';
+import { Card, Form, Input, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import Modal from 'components/Modal';
+import OsuForm from './components/OsuForm';
+// import _ from 'lodash';
+
 import styles from '../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
-const { Panel } = Collapse;
 
 const ProviderIdForm = ({ form, details }) => {
+  const [data, setData] = useState({ ...details });
+
+  const [plmnModal, setPlmnModal] = useState(false);
+  const [plmnForm] = Form.useForm();
+
+  const [osuForm] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue({
+      domainName: details.domainName || '',
+      roamingOi: details.roamingOi.join(', ') || '',
+      mccMncList: data.mccMncList || [],
+      osuFriendlyName: data.osuFriendlyName || [],
+      osuServerUri: data.osuServerUri || [],
+      osuServiceDescription: data.osuServiceDescription || [],
+      osuIconList: data.osuIconList || [],
+    });
+  }, [form, details, data]);
+
+  useEffect(() => {
+    setData({ ...details });
+  }, [details]);
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 15 },
+  };
+
   const columnsPlmn = [
     {
       title: 'MCC',
@@ -29,68 +59,95 @@ const ProviderIdForm = ({ form, details }) => {
     {
       title: '',
       width: 80,
-      render: () => (
+      render: item => (
         <Button
           title="removePlmn"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
-          // onClick={() => handleRemove(row id)}
+          onClick={() => {
+            setData({
+              ...data,
+              mccMncList: data.mccMncList.filter(i => i !== item),
+            });
+          }}
         />
       ),
     },
   ];
 
-  const columnsRealm = [
-    {
-      title: 'Method',
-      dataIndex: 'mcc',
-    },
-    {
-      title: 'Authentication',
-      dataIndex: 'mnc',
-    },
-    {
-      title: '',
-      width: 80,
-      render: () => (
-        <Button
-          title="removeRealm"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          // onClick={() => handleRemove(row id)}
-        />
-      ),
-    },
-  ];
-
-  const [activeKey, setActiveKey] = useState('2');
-
-  useEffect(() => {
-    form.resetFields(['domainName', 'osuServerUri'], []);
-    form.setFieldsValue({
-      domainName: details.domainName || '',
-    });
-
-    if (activeKey === '1') {
-      form.setFieldsValue({
-        osuServerUri: details.osuServerUri || '',
+  const handleSubmitForm = (dataIndex, values) => {
+    if (dataIndex === 'osuFriendlyName') {
+      setData({
+        ...data,
+        osuFriendlyName: [...data.osuFriendlyName, values],
       });
     }
-  }, [form, details, activeKey]);
-
-  // Obj is the data being sent, option is the column keys
-  const renderTable = (arr, columns) => {
-    return <Table dataSource={arr} columns={columns} pagination={false} />;
+    if (dataIndex === 'osuServiceDescription') {
+      setData({
+        ...data,
+        osuServiceDescription: [...data.osuServiceDescription, values],
+      });
+    }
+    if (dataIndex === 'osuIconList') {
+      setData({
+        ...data,
+        osuIconList: [...data.osuIconList, values],
+      });
+    }
   };
+
+  const handleRemoveItem = item => {
+    if (data.osuFriendlyName.includes(item)) {
+      setData({
+        ...data,
+        osuFriendlyName: data.osuFriendlyName.filter(i => i !== item),
+      });
+    }
+
+    if (data.osuServiceDescription.includes(item)) {
+      setData({
+        ...data,
+        osuServiceDescription: data.osuServiceDescription.filter(i => i !== item),
+      });
+    }
+
+    if (data.osuIconList.includes(item)) {
+      setData({
+        ...data,
+        osuIconList: data.osuIconList.filter(i => i !== item),
+      });
+    }
+  };
+  // const renderTable = (arr, columns) => {
+  //   return <Table dataSource={arr} columns={columns} pagination={false} />;
+  // };
 
   return (
     <div className={styles.ProfilePage}>
       <Card title="Network Identifier">
-        <Item label="Domain Name:" name="domainName" placeholder="Enter a domain name">
-          <Input />
+        <Item
+          label="Domain Name:"
+          name="domainName"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a domain name',
+            },
+          ]}
+        >
+          <Input placeholder="Enter a domain name" />
         </Item>
-        <Item label="Roaming OI:" placeholder="Enter roaming oi">
-          <Input />
+        <Item
+          label="Roaming OI:"
+          name="roamingOi"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter roaming oi',
+            },
+          ]}
+        >
+          <Input placeholder="Enter roaming oi" />
         </Item>
       </Card>
 
@@ -99,180 +156,98 @@ const ProviderIdForm = ({ form, details }) => {
         extra={
           <Button
             type="solid"
-            // onClick={() => ()}
+            onClick={() => {
+              setPlmnModal(true);
+            }}
           >
             Add
           </Button>
         }
       >
         <Table
-          dataSource={details?.mccMncList}
+          dataSource={data?.mccMncList}
           columns={columnsPlmn}
           pagination={false}
-          rowKey={details?.mccMncList}
+          rowKey={data?.mccMncList}
         />
       </Card>
 
-      <Card title="Network Access Identifier (NAI) Realm">
-        <Item label="Encoding:" name="serverOnlyAuthenticatedL2EncryptionNetwork">
-          <Select>
-            <Option value="true">Enabled</Option>
-            <Option value="false">Disabled</Option>
-          </Select>
-        </Item>
-        <Table
-          dataSource={details?.mccMncList}
-          columns={columnsRealm}
-          pagination={false}
-          rowKey={details?.naiRealmList}
-        />
-      </Card>
+      <OsuForm
+        data={data}
+        osuForm={osuForm}
+        layout={layout}
+        onSubmit={handleSubmitForm}
+        removeItem={handleRemoveItem}
+      />
 
-      {/* <Card
-        title="Online Sign Up (OSU)"
-        extra={<Switch onChange={() => setToggleOsu(() => !toggleOsu)} />}
-      >
-
-        {toggleOsu && <Collapse.Panel>Hi</Collapse.Panel>}
-      </Card> */}
-      <Collapse accordion activeKey={[activeKey]}>
-        <Panel
-          header={
-            <>
-              <p>
-                Online Sign Up (OSU){' '}
-                <Switch
-                  onChange={() => {
-                    setActiveKey(prev => {
-                      if (prev === '1') {
-                        return '2';
-                      }
-                      return '1';
-                    });
-                  }}
-                />
-              </p>
-            </>
+      <Item name="mccMncList">
+        <Modal
+          visible={plmnModal}
+          onSuccess={() => {
+            plmnForm.validateFields().then(values => {
+              setData({
+                ...data,
+                mccMncList: [...data.mccMncList, values],
+              });
+              setPlmnModal(false);
+            });
+          }}
+          onCancel={() => setPlmnModal(false)}
+          title="Add Public Land Mobile Network (PLMN)"
+          content={
+            <Form {...layout} form={plmnForm}>
+              <Item
+                name="mcc"
+                label="Mcc:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a value for mcc',
+                  },
+                ]}
+              >
+                <Input placeholder="Enter a value for mcc" />
+              </Item>
+              <Item
+                name="mnc"
+                label="Mnc:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a value for mnc',
+                  },
+                ]}
+              >
+                <Input placeholder="Enter a value for mnc" />
+              </Item>
+              <Item
+                name="country"
+                label="Country:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a country',
+                  },
+                ]}
+              >
+                <Input placeholder="Enter a value for country" />
+              </Item>
+              <Item
+                name="network"
+                label="Network:"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter a network',
+                  },
+                ]}
+              >
+                <Input placeholder="Enter a value for network" />
+              </Item>
+            </Form>
           }
-          showArrow={false}
-          key="1"
-        >
-          <Item label="Server URI:" name="osuServerUri" placeholder="Enter a server uri">
-            <Input />
-          </Item>
-
-          <Card
-            title="Name:"
-            bordered={false}
-            extra={
-              <Button
-                type="solid"
-                // onClick={() => console.log('')}
-              >
-                Add
-              </Button>
-            }
-          >
-            {renderTable(details?.osuFriendlyName, [
-              {
-                title: 'Name',
-                dataIndex: 'dupleName',
-                width: 415,
-              },
-              {
-                title: 'Locale',
-                dataIndex: 'locale',
-              },
-              {
-                title: '',
-                width: 80,
-                render: () => (
-                  <Button
-                    title="removeSsid"
-                    icon={<DeleteOutlined />}
-                    className={styles.iconButton}
-                    // onClick={() => handleRemove(row id)}
-                  />
-                ),
-              },
-            ])}
-          </Card>
-
-          <Card
-            title="Description:"
-            bordered={false}
-            extra={
-              <Button
-                type="solid"
-                // onClick={() => console.log('')}
-              >
-                Add
-              </Button>
-            }
-          >
-            {renderTable(details?.osuServiceDescription, [
-              {
-                title: 'Name',
-                dataIndex: 'dupleName',
-                width: 415,
-              },
-              {
-                title: 'Locale',
-                dataIndex: 'locale',
-              },
-              {
-                title: '',
-                width: 80,
-                render: () => (
-                  <Button
-                    title="removeDesc"
-                    icon={<DeleteOutlined />}
-                    className={styles.iconButton}
-                    // onClick={() => handleRemove(row id)}
-                  />
-                ),
-              },
-            ])}
-          </Card>
-
-          <Card
-            title="Icons:"
-            bordered={false}
-            extra={
-              <Button
-                type="solid"
-                // onClick={() => console.log('h')}
-              >
-                Add
-              </Button>
-            }
-          >
-            {renderTable(details?.osuIconList, [
-              {
-                title: 'URL',
-                dataIndex: 'imageUrl',
-                width: 415,
-              },
-              {
-                title: 'Locale',
-                dataIndex: 'iconLocale',
-              },
-              {
-                title: '',
-                width: 80,
-                render: () => (
-                  <Button
-                    title="removeIcon"
-                    icon={<DeleteOutlined />}
-                    className={styles.iconButton}
-                    // onClick={() => handleRemove(row id)}
-                  />
-                ),
-              },
-            ])}
-          </Card>
-        </Panel>
-      </Collapse>
+        />
+      </Item>
     </div>
   );
 };

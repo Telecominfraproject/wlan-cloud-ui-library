@@ -186,3 +186,25 @@ export const formatRfProfileForm = values => {
 
   return formattedData;
 };
+
+export const formatProviderProfileForm = values => {
+  const formattedData = { ...values };
+  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
+
+  if (!formattedData.osuServerUri) {
+    formattedData.osuServerUri = '';
+  }
+
+  if (!formattedData.osuFriendlyName && !formattedData.osuServerUri) {
+    formattedData.osuFriendlyName = [];
+  }
+
+  if (!formattedData.osuServiceDescription && !formattedData.osuServerUri) {
+    formattedData.osuServiceDescription = [];
+  }
+
+  if (!formattedData.osuIconList && !formattedData.osuServerUri) {
+    formattedData.osuIconList = [];
+  }
+  return formattedData;
+};
