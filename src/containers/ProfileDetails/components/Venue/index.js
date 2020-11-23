@@ -10,6 +10,44 @@ const { Item } = Form;
 const { Option } = Select;
 
 const VenueForm = ({ form, details }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [nameForm] = Form.useForm();
+  const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
+    details.venueTypeAssignment?.venueGroupId || 0
+  );
+  const [venueNameList, setVenueNameList] = useState(details.venueNameSet || []);
+
+  useEffect(() => {
+    const formData = {
+      venueTypeAssignment: {
+        venueGroupId: details.venueTypeAssignment?.venueGroupId || 0,
+        venueTypeId: details.venueTypeAssignment?.venueTypeId || 0,
+      },
+    };
+
+    form.setFieldsValue({ ...formData });
+  }, [form, details]);
+
+  useEffect(() => {
+    form.setFieldsValue({ venueNameSet: venueNameList });
+  }, [venueNameList]);
+
+  const handleNameSave = () => {
+    nameForm
+      .validateFields()
+      .then(values => {
+        const newVenue = { ...values, venueUrl: values.venueUrl.toLowerCase() };
+        setVenueNameList([...venueNameList, newVenue]);
+        nameForm.resetFields();
+        setModalVisible(false);
+      })
+      .catch(() => {});
+  };
+
+  const handleRemove = item => {
+    setVenueNameList(venueNameList.filter(i => i.dupleName !== item.dupleName));
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -26,45 +64,34 @@ const VenueForm = ({ form, details }) => {
     {
       title: '',
       width: 80,
-      render: () => (
+      render: (_, record) => (
         <Button
           title="remove"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
           type="danger"
-          // onClick={() => handleRemove(row id)}
+          onClick={() => handleRemove(record)}
         />
       ),
     },
   ];
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [nameForm] = Form.useForm();
-
-  useEffect(() => {
-    form.setFieldsValue({
-      venueGroupId: details.venueTypeAssignment.venueGroupId || 0,
-    });
-  }, [form, details]);
-
-  const handleNameSave = () => {
-    nameForm
-      .validateFields()
-      .then(() => {
-        nameForm.resetFields();
-      })
-      .catch(() => {});
-  };
-
   return (
     <div className={styles.ProfilePage}>
       <Card title="Venue Type">
-        <Item label="Group:" name="venueGroupId">
-          <Select className={globalStyles.field} placeholder="Select Venue Group">
+        <Item label="Group:" name={['venueTypeAssignment', 'venueGroupId']}>
+          <Select
+            className={globalStyles.field}
+            placeholder="Select Venue Group"
+            onChange={value => {
+              setCurrentVenueGroupId(value);
+              form.setFieldsValue({ venueTypeAssignment: { venueTypeId: 0 } });
+            }}
+          >
             <Option value={0}>Unspecified</Option>
             <Option value={1}>Assembly</Option>
             <Option value={2}>Business</Option>
-            <Option value={3}>Assembly</Option>
+            <Option value={3}>Educational</Option>
             <Option value={4}>Factory and Industrial</Option>
             <Option value={5}>Institutional</Option>
             <Option value={6}>Mercantile</Option>
@@ -75,11 +102,122 @@ const VenueForm = ({ form, details }) => {
             <Option value={11}>Outdoor</Option>
           </Select>
         </Item>
-        <Item label="Type:">
-          <Select>
-            <Option value={1}>Research and Development Facility</Option>
-            <Option value={1}>Research and Development Facility</Option>
-          </Select>
+        <Item label="Type:" name={['venueTypeAssignment', 'venueTypeId']}>
+          {(currentVenueGroupId === 0 && (
+            <Select className={globalStyles.field} placeholder="Select Venue Type">
+              <Option value={0}>Unspecified</Option>
+            </Select>
+          )) ||
+            (currentVenueGroupId === 1 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Assembly</Option>
+                <Option value={1}>Areana</Option>
+                <Option value={2}>Stadium</Option>
+                <Option value={3}>Passenger Terminal</Option>
+                <Option value={4}>Amphitheatre</Option>
+                <Option value={5}>Amusement Park</Option>
+                <Option value={6}>Place of Worship</Option>
+                <Option value={7}>Convention Center</Option>
+                <Option value={8}>Library</Option>
+                <Option value={9}>Museum</Option>
+                <Option value={10}>Restaurant</Option>
+                <Option value={11}>Theatre</Option>
+                <Option value={12}>Bar</Option>
+                <Option value={13}>Coffee Shop</Option>
+                <Option value={14}>Zoo or Aquarium</Option>
+                <Option value={15}>Emergency Coordination Center</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 2 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Business</Option>
+                <Option value={1}>Doctor or Dentist office</Option>
+                <Option value={2}>Bank</Option>
+                <Option value={3}>Fire Station</Option>
+                <Option value={4}>Police Station</Option>
+                {/* <Option value={5}></Option> */}
+                <Option value={6}>Post Office</Option>
+                <Option value={7}>Professional Office</Option>
+                <Option value={8}>Research and Development Facility</Option>
+                <Option value={9}>Attorney Office</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 3 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Educational</Option>
+                <Option value={1}>School, Primary</Option>
+                <Option value={2}>School, Secondary</Option>
+                <Option value={3}>University or College</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 4 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Factory and Industrial</Option>
+                <Option value={1}>Factory</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 5 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Institutional</Option>
+                <Option value={1}>Hospital</Option>
+                <Option value={2}>Long-Term Care Facility</Option>
+                <Option value={3}>Alcohol and Drug Re-habilitation Center</Option>
+                <Option value={4}>Group Home</Option>
+                <Option value={5}>Prison or Jail</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 6 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Mercantile</Option>
+                <Option value={1}>Retail Store</Option>
+                <Option value={2}>Grocery Market</Option>
+                <Option value={3}>Automotive Service Station</Option>
+                <Option value={4}>Shopping Mall</Option>
+                <Option value={5}>Gas Station</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 7 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Residential</Option>
+                <Option value={1}>Pivate Residence</Option>
+                <Option value={2}>Hotel or Model</Option>
+                <Option value={3}>Dormitory</Option>
+                <Option value={4}>Boarding House</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 8 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Storage</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 9 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Utility and Miscellaneous</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 10 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Vehicular</Option>
+                <Option value={1}>Automobile or Truck</Option>
+                <Option value={2}>Airplane</Option>
+                <Option value={3}>Bus</Option>
+                <Option value={4}>Ferry</Option>
+                <Option value={5}>Ship or Boat</Option>
+                <Option value={6}>Train</Option>
+                <Option value={7}>Motor Bike</Option>
+              </Select>
+            )) ||
+            (currentVenueGroupId === 11 && (
+              <Select className={globalStyles.field} placeholder="Select Venue Type">
+                <Option value={0}>Unspecified Outdoor</Option>
+                <Option value={1}>Muni-mesh Network</Option>
+                <Option value={2}>City Park</Option>
+                <Option value={3}>Rest Area</Option>
+                <Option value={4}>Traffic Control</Option>
+                <Option value={5}>Bus Stop</Option>
+                <Option value={6}>Kiosk</Option>
+              </Select>
+            ))}
         </Item>
       </Card>
 
@@ -91,22 +229,20 @@ const VenueForm = ({ form, details }) => {
           </Button>
         }
       >
-        <Table
-          dataSource={details?.venueNameSet}
-          columns={columns}
-          pagination={false}
-          rowKey={details?.venueNameSet}
-        />
+        <Item noStyle name="venueNameSet">
+          <Table
+            dataSource={venueNameList}
+            columns={columns}
+            pagination={false}
+            rowKey="dupleName"
+          />
+        </Item>
       </Card>
 
       <Modal
         onCancel={() => setModalVisible(false)}
-        onSuccess={() => {
-          handleNameSave();
-          // setModalVisible(false);
-        }}
+        onSuccess={() => handleNameSave()}
         visible={modalVisible}
-        buttonText="Save"
         title="Add name"
         content={
           <Form form={nameForm} layout="vertical">
@@ -127,7 +263,13 @@ const VenueForm = ({ form, details }) => {
             <Item
               name="venueUrl"
               label="Url"
-              rules={[{ required: true, message: 'Url field cannot be empty' }]}
+              rules={[
+                {
+                  required: true,
+                  type: 'url',
+                  message: 'Please enter URL in the format http://... or https://...',
+                },
+              ]}
             >
               <Input />
             </Item>
