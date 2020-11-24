@@ -13,15 +13,15 @@ const VenueForm = ({ form, details }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [nameForm] = Form.useForm();
   const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
-    details.venueTypeAssignment?.venueGroupId || 0
+    details?.venueTypeAssignment?.venueGroupId || 0
   );
-  const [venueNameList, setVenueNameList] = useState(details.venueNameSet || []);
+  const [venueNameList, setVenueNameList] = useState(details?.venueNameSet || []);
 
   useEffect(() => {
     const formData = {
       venueTypeAssignment: {
-        venueGroupId: details.venueTypeAssignment?.venueGroupId || 0,
-        venueTypeId: details.venueTypeAssignment?.venueTypeId || 0,
+        venueGroupId: details?.venueTypeAssignment?.venueGroupId || 0,
+        venueTypeId: details?.venueTypeAssignment?.venueTypeId || 0,
       },
     };
 
@@ -81,6 +81,7 @@ const VenueForm = ({ form, details }) => {
       <Card title="Venue Type">
         <Item label="Group:" name={['venueTypeAssignment', 'venueGroupId']}>
           <Select
+            data-testid="venueGroup"
             className={globalStyles.field}
             placeholder="Select Venue Group"
             onChange={value => {
