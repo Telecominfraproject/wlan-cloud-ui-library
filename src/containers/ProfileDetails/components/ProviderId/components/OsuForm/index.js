@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch, Form, Input, Button, Table } from 'antd';
+import { Card, Switch, Form, Input, Button, Table, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import FormModal from '../FormModal';
 
 import styles from '../../../index.module.scss';
+
+const { Option } = Select;
 
 const OsuForm = ({ data, onSubmit, removeItem }) => {
   const { Item } = Form;
@@ -15,12 +17,12 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
 
   const [nameModal, setNameModal] = useState(false);
   const [descModal, setDescModal] = useState(false);
-  const [iconsModal, setIconsModal] = useState(false);
+  const [iconModal, setIconModal] = useState(false);
 
   const [nameForm] = Form.useForm();
   const [iconForm] = Form.useForm();
 
-  const osuCols = [
+  const osuNameCols = [
     {
       title: 'Name',
       dataIndex: 'dupleName',
@@ -39,14 +41,40 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
           icon={<DeleteOutlined />}
           className={styles.iconButton}
           onClick={() => {
-            removeItem(item);
+            removeItem('osuFriendlyName', item);
           }}
         />
       ),
     },
   ];
 
-  const handleClose = index => {
+  const osuDescCols = [
+    {
+      title: 'Name',
+      dataIndex: 'dupleName',
+      width: 500,
+    },
+    {
+      title: 'Locale',
+      dataIndex: 'locale',
+    },
+    {
+      title: '',
+      width: 80,
+      render: item => (
+        <Button
+          title="removePlmn"
+          icon={<DeleteOutlined />}
+          className={styles.iconButton}
+          onClick={() => {
+            removeItem('osuServiceDescription', item);
+          }}
+        />
+      ),
+    },
+  ];
+
+  const handleCloseModal = index => {
     if (index === 'osuFriendlyName') {
       setNameModal(false);
     }
@@ -54,7 +82,7 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
       setDescModal(false);
     }
     if (index === 'osuIconList') {
-      setIconsModal(false);
+      setIconModal(false);
     }
   };
 
@@ -101,19 +129,19 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
           >
             <Table
               dataSource={data?.osuFriendlyName}
-              columns={osuCols}
+              columns={osuNameCols}
               pagination={false}
               rowKey={data?.osuFriendlyName}
             />
           </Card>
-          <Item name="osuFriendlyName">
+          <Item name="osuFriendlyName" style={{ height: '0' }}>
             <FormModal
               title="Add Name"
               fieldName="osuFriendlyName"
               onSubmit={onSubmit}
               visible={nameModal}
               form={nameForm}
-              closeModal={handleClose}
+              closeModal={handleCloseModal}
             />
           </Item>
 
@@ -124,26 +152,26 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
           >
             <Table
               dataSource={data?.osuServiceDescription}
-              columns={osuCols}
+              columns={osuDescCols}
               pagination={false}
               rowKey={data?.osuServiceDescription}
             />
           </Card>
-          <Item name="osuServiceDescription">
+          <Item name="osuServiceDescription" style={{ height: '0' }}>
             <FormModal
               title="Add Description"
               fieldName="osuServiceDescription"
               onSubmit={onSubmit}
               visible={descModal}
               form={nameForm}
-              closeModal={handleClose}
+              closeModal={handleCloseModal}
             />
           </Item>
 
           <Card
             title="Icons:"
             bordered={false}
-            extra={<Button onClick={() => setIconsModal(true)}>Add</Button>}
+            extra={<Button onClick={() => setIconModal(true)}>Add</Button>}
           >
             <Table
               dataSource={data?.osuIconList}
@@ -162,11 +190,11 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
                   width: 80,
                   render: item => (
                     <Button
-                      title="removePlmn"
+                      title="removeIcon"
                       icon={<DeleteOutlined />}
                       className={styles.iconButton}
                       onClick={() => {
-                        removeItem(item);
+                        removeItem('osuIconList', item);
                       }}
                     />
                   ),
@@ -177,17 +205,21 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
             />
           </Card>
 
-          <Item name="osuIconList">
+          <Item name="osuIconList" style={{ height: '0' }}>
             <Modal
               onSuccess={() => {
                 iconForm.validateFields().then(values => {
                   onSubmit('osuIconList', values);
-                  setIconsModal(false);
+                  iconForm.resetFields();
+                  setIconModal(false);
                 });
               }}
-              onCancel={() => setIconsModal(false)}
+              onCancel={() => {
+                iconForm.resetFields();
+                setIconModal(false);
+              }}
               title="Add Icon"
-              visible={iconsModal}
+              visible={iconModal}
               content={
                 <Form {...layout} form={iconForm}>
                   <Item
@@ -213,7 +245,10 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
                       },
                     ]}
                   >
-                    <Input placeholder="Enter a value for locale" />
+                    <Select placeholder="Please select">
+                      <Option value="en_CA">English</Option>
+                      <Option value="fr_CA">Francais</Option>
+                    </Select>
                   </Item>
                 </Form>
               }

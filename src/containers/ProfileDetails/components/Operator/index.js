@@ -9,8 +9,9 @@ const { Item } = Form;
 const { Option } = Select;
 
 const OperatorForm = ({ details, form }) => {
+  const [data, setData] = useState({ ...details });
+
   const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState(details);
   const [nameForm] = Form.useForm();
 
   useEffect(() => {
@@ -22,12 +23,9 @@ const OperatorForm = ({ details, form }) => {
     });
   }, [form, details, data]);
 
-  const removeName = item => {
-    setData({
-      ...data,
-      operatorFriendlyName: data.operatorFriendlyName.filter(i => i !== item),
-    });
-  };
+  useEffect(() => {
+    setData({ ...details });
+  }, [details]);
 
   const columns = [
     {
@@ -47,7 +45,12 @@ const OperatorForm = ({ details, form }) => {
           title="removeName"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
-          onClick={() => removeName(item)}
+          onClick={() => {
+            setData({
+              ...data,
+              operatorFriendlyName: data.operatorFriendlyName.filter(i => i !== item),
+            });
+          }}
         />
       ),
     },
@@ -61,7 +64,16 @@ const OperatorForm = ({ details, form }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card title="Security">
-        <Item label="OSEN:" name="serverOnlyAuthenticatedL2EncryptionNetwork">
+        <Item
+          label="OSEN:"
+          name="serverOnlyAuthenticatedL2EncryptionNetwork"
+          rules={[
+            {
+              required: true,
+              message: 'OSEN field cannot be empty',
+            },
+          ]}
+        >
           <Select>
             <Option value="true">enabled</Option>
             <Option value="false">disabled</Option>
@@ -85,7 +97,7 @@ const OperatorForm = ({ details, form }) => {
         />
       </Card>
 
-      <Item name="operatorFriendlyName">
+      <Item name="operatorFriendlyName" style={{ height: '0' }}>
         <Modal
           onSuccess={() => {
             nameForm.validateFields().then(values => {
@@ -125,7 +137,10 @@ const OperatorForm = ({ details, form }) => {
                   },
                 ]}
               >
-                <Input placeholder="Enter a value for locale" />
+                <Select placeholder="Please select">
+                  <Option value="en_CA">English</Option>
+                  <Option value="fr_CA">Francais</Option>
+                </Select>
               </Item>
             </Form>
           }

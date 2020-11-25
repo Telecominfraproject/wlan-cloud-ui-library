@@ -117,7 +117,6 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
-
         if (profileType === 'passpoint_osu_id_provider') {
           formattedData.model_type = 'PasspointOsuProviderProfile';
           formattedData = Object.assign(formattedData, formatProviderProfileForm(values));

@@ -193,18 +193,23 @@ export const formatProviderProfileForm = values => {
 
   if (!formattedData.osuServerUri) {
     formattedData.osuServerUri = '';
-  }
-
-  if (!formattedData.osuFriendlyName && !formattedData.osuServerUri) {
     formattedData.osuFriendlyName = [];
-  }
-
-  if (!formattedData.osuServiceDescription && !formattedData.osuServerUri) {
     formattedData.osuServiceDescription = [];
-  }
-
-  if (!formattedData.osuIconList && !formattedData.osuServerUri) {
     formattedData.osuIconList = [];
   }
+
+  Object.keys(formattedData.eapMap).forEach(i => {
+    if (formattedData?.eapMap[i].length === 0) {
+      // eslint-disable-next-line no-param-reassign
+      delete formattedData?.eapMap[i];
+    }
+  });
+  formattedData.naiRealmList = [
+    {
+      eapMap: formattedData.eapMap || {},
+      encoding: formattedData.encoding || 0,
+    },
+  ];
+
   return formattedData;
 };

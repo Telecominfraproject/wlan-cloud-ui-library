@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Form } from 'antd';
+import { Input, Form, Select } from 'antd';
 import Modal from 'components/Modal';
+
+const { Option } = Select;
 
 const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) => {
   const { Item } = Form;
@@ -16,10 +18,14 @@ const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) =>
       onSuccess={() => {
         form.validateFields().then(values => {
           onSubmit(fieldName, values);
+          form.resetFields();
           closeModal(fieldName);
         });
       }}
-      onCancel={() => closeModal(fieldName)}
+      onCancel={() => {
+        form.resetFields();
+        closeModal(fieldName);
+      }}
       visible={visible}
       title={title}
       content={
@@ -47,7 +53,10 @@ const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) =>
               },
             ]}
           >
-            <Input placeholder="Enter a value for locale" />
+            <Select placeholder="Please select">
+              <Option value="en_CA">English</Option>
+              <Option value="fr_CA">Francais</Option>
+            </Select>
           </Item>
         </Form>
       }

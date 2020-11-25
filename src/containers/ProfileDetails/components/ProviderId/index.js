@@ -4,9 +4,9 @@ import { Card, Form, Input, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import OsuForm from './components/OsuForm';
-// import _ from 'lodash';
 
 import styles from '../index.module.scss';
+import NaiRealm from './components/NaiRealm';
 
 const { Item } = Form;
 
@@ -15,7 +15,7 @@ const ProviderIdForm = ({ form, details }) => {
 
   const [plmnModal, setPlmnModal] = useState(false);
   const [plmnForm] = Form.useForm();
-
+  const [naiForm] = Form.useForm();
   const [osuForm] = Form.useForm();
 
   useEffect(() => {
@@ -27,6 +27,8 @@ const ProviderIdForm = ({ form, details }) => {
       osuServerUri: data.osuServerUri || [],
       osuServiceDescription: data.osuServiceDescription || [],
       osuIconList: data.osuIconList || [],
+      encoding: data?.naiRealmList[0]?.encoding || 0,
+      eapMap: data?.naiRealmList[0]?.eapMap || {},
     });
   }, [form, details, data]);
 
@@ -75,52 +77,47 @@ const ProviderIdForm = ({ form, details }) => {
     },
   ];
 
-  const handleSubmitForm = (dataIndex, values) => {
-    if (dataIndex === 'osuFriendlyName') {
-      setData({
-        ...data,
-        osuFriendlyName: [...data.osuFriendlyName, values],
-      });
-    }
-    if (dataIndex === 'osuServiceDescription') {
-      setData({
-        ...data,
-        osuServiceDescription: [...data.osuServiceDescription, values],
-      });
-    }
-    if (dataIndex === 'osuIconList') {
-      setData({
-        ...data,
-        osuIconList: [...data.osuIconList, values],
-      });
-    }
+  const handleAddOsuItem = (dataIndex, obj) => {
+    setData({
+      ...data,
+      [dataIndex]: [...data[dataIndex], obj],
+    });
   };
 
-  const handleRemoveItem = item => {
-    if (data.osuFriendlyName.includes(item)) {
-      setData({
-        ...data,
-        osuFriendlyName: data.osuFriendlyName.filter(i => i !== item),
-      });
-    }
-
-    if (data.osuServiceDescription.includes(item)) {
-      setData({
-        ...data,
-        osuServiceDescription: data.osuServiceDescription.filter(i => i !== item),
-      });
-    }
-
-    if (data.osuIconList.includes(item)) {
-      setData({
-        ...data,
-        osuIconList: data.osuIconList.filter(i => i !== item),
-      });
-    }
+  const handleRemoveOsuItem = (dataIndex, obj) => {
+    setData({
+      ...data,
+      [dataIndex]: data[dataIndex].filter(i => i !== obj),
+    });
   };
-  // const renderTable = (arr, columns) => {
-  //   return <Table dataSource={arr} columns={columns} pagination={false} />;
-  // };
+
+  const handleAddEapMethod = obj => {
+    setData({
+      ...data,
+      naiRealmList: [
+        {
+          ...data.naiRealmList[0],
+          eapMap: obj,
+        },
+      ],
+    });
+  };
+
+  const handleRemoveEapMethod = obj => {
+    const field = obj.method;
+    const cloneEap = { ...data.naiRealmList[0].eapMap };
+    cloneEap[field] = [];
+
+    setData({
+      ...data,
+      naiRealmList: [
+        {
+          ...data.naiRealmList[0],
+          eapMap: cloneEap,
+        },
+      ],
+    });
+  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -143,7 +140,7 @@ const ProviderIdForm = ({ form, details }) => {
           rules={[
             {
               required: true,
-              message: 'Please enter roaming oi',
+              message: 'Roaming oi field cannot be empty',
             },
           ]}
         >
@@ -170,84 +167,94 @@ const ProviderIdForm = ({ form, details }) => {
           pagination={false}
           rowKey={data?.mccMncList}
         />
+        <Item name="mccMncList" style={{ height: '0' }}>
+          <Modal
+            visible={plmnModal}
+            onSuccess={() => {
+              plmnForm.validateFields().then(values => {
+                setData({
+                  ...data,
+                  mccMncList: [...data.mccMncList, values],
+                });
+                setPlmnModal(false);
+                plmnForm.resetFields();
+              });
+            }}
+            onCancel={() => {
+              setPlmnModal(false);
+              plmnForm.resetFields();
+            }}
+            title="Add Public Land Mobile Network (PLMN)"
+            content={
+              <Form {...layout} form={plmnForm}>
+                <Item
+                  name="mcc"
+                  label="Mcc:"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Mcc field cannot be empty',
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter a value for mcc" type="number" />
+                </Item>
+                <Item
+                  name="mnc"
+                  label="Mnc:"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Mnc field cannot be empty',
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter a value for mnc" type="number" />
+                </Item>
+                <Item
+                  name="country"
+                  label="Country:"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Country field cannot be empty',
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter a value for country" />
+                </Item>
+                <Item
+                  name="network"
+                  label="Network:"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Network field cannot be empty',
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter a value for network" />
+                </Item>
+              </Form>
+            }
+          />
+        </Item>
       </Card>
+
+      <NaiRealm
+        data={data}
+        form={naiForm}
+        addEap={handleAddEapMethod}
+        removeEap={handleRemoveEapMethod}
+      />
 
       <OsuForm
         data={data}
         osuForm={osuForm}
         layout={layout}
-        onSubmit={handleSubmitForm}
-        removeItem={handleRemoveItem}
+        onSubmit={handleAddOsuItem}
+        removeItem={handleRemoveOsuItem}
       />
-
-      <Item name="mccMncList">
-        <Modal
-          visible={plmnModal}
-          onSuccess={() => {
-            plmnForm.validateFields().then(values => {
-              setData({
-                ...data,
-                mccMncList: [...data.mccMncList, values],
-              });
-              setPlmnModal(false);
-            });
-          }}
-          onCancel={() => setPlmnModal(false)}
-          title="Add Public Land Mobile Network (PLMN)"
-          content={
-            <Form {...layout} form={plmnForm}>
-              <Item
-                name="mcc"
-                label="Mcc:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter a value for mcc',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter a value for mcc" />
-              </Item>
-              <Item
-                name="mnc"
-                label="Mnc:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter a value for mnc',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter a value for mnc" />
-              </Item>
-              <Item
-                name="country"
-                label="Country:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter a country',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter a value for country" />
-              </Item>
-              <Item
-                name="network"
-                label="Network:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter a network',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter a value for network" />
-              </Item>
-            </Form>
-          }
-        />
-      </Item>
     </div>
   );
 };
