@@ -26,6 +26,7 @@ import RadiusForm from './components/Radius';
 import CaptivePortalForm from './components/CaptivePortal';
 import BonjourGatewayForm from './components/BonjourGateway';
 import RFForm from './components/RF';
+import PasspointProfileForm from './components/PasspointProfile';
 
 import styles from './index.module.scss';
 
@@ -38,10 +39,16 @@ const ProfileDetails = ({
   ssidProfiles,
   radiusProfiles,
   captiveProfiles,
+  venueProfiles,
+  operatorProfiles,
+  idProviderProfiles,
   fileUpload,
   onFetchMoreProfiles,
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
+  onFetchMoreVenueProfiles,
+  onFetchMoreOperatorProfiles,
+  onFetchMoreIdProviderProfiles,
 }) => {
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
@@ -193,6 +200,19 @@ const ProfileDetails = ({
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
         {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
         {profileType === 'rf' && <RFForm details={details} form={form} />}
+        {profileType === 'passpoint' && (
+          <PasspointProfileForm 
+            form={form}
+            details={details}
+            childProfileIds={childProfileIds}
+            venueProfiles={venueProfiles}
+            operatorProfiles={operatorProfiles}
+            idProviderProfiles={idProviderProfiles}
+            onFetchMoreVenueProfiles={onFetchMoreVenueProfiles}
+            onFetchMoreOperatorProfiles={onFetchMoreOperatorProfiles}
+            onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}
+          />
+        )}
       </Form>
     </Container>
   );
@@ -207,10 +227,16 @@ ProfileDetails.propTypes = {
   ssidProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  venueProfiles: PropTypes.instanceOf(Array),
+  operatorProfiles: PropTypes.instanceOf(Array),
+  idProviderProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
+  onFetchMoreVenueProfiles: PropTypes.func,
+  onFetchMoreOperatorProfiles: PropTypes.func,
+  onFetchMoreIdProviderProfiles: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -220,10 +246,16 @@ ProfileDetails.defaultProps = {
   ssidProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
+  venueProfiles: [],
+  operatorProfiles: [],
+  idProviderProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},
+  onFetchMoreVenueProfiles: () => {},
+  onFetchMoreOperatorProfiles: () => {},
+  onFetchMoreIdProviderProfiles: () => {},
 };
 
 export default ProfileDetails;

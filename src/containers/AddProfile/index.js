@@ -32,7 +32,17 @@ import PasspointProfileForm from '../ProfileDetails/components/PasspointProfile'
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
+const AddProfile = ({ 
+  onCreateProfile, 
+  ssidProfiles, 
+  venueProfiles, 
+  operatorProfiles,
+  idProviderProfiles,
+  onFetchMoreProfiles,
+  onFetchMoreVenueProfiles,
+  onFetchMoreOperatorProfiles,
+  onFetchMoreIdProviderProfiles,
+}) => {
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -186,7 +196,17 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
-          {profileType === 'passpoint' && <PasspointProfileForm form={form} />}
+          {profileType === 'passpoint' && (
+            <PasspointProfileForm 
+              form={form} 
+              venueProfiles={venueProfiles}
+              operatorProfiles={operatorProfiles}
+              idProviderProfiles={idProviderProfiles}
+              onFetchMoreVenueProfiles={onFetchMoreVenueProfiles}
+              onFetchMoreOperatorProfiles={onFetchMoreOperatorProfiles}
+              onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}
+            />
+          )}
         </Form>
       </div>
     </Container>
@@ -196,12 +216,24 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
+  venueProfiles: PropTypes.instanceOf(Array),
+  operatorProfiles: PropTypes.instanceOf(Array),
+  idProviderProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreVenueProfiles: PropTypes.func,
+  onFetchMoreOperatorProfiles: PropTypes.func,
+  onFetchMoreIdProviderProfiles: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
+  venueProfiles: [],
+  operatorProfiles: [],
+  idProviderProfiles: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreVenueProfiles: () => {},
+  onFetchMoreOperatorProfiles: () => {},
+  onFetchMoreIdProviderProfiles: () => {},
 };
 
 export default AddProfile;

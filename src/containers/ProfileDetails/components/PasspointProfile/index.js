@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Select, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
@@ -19,11 +19,86 @@ const formatFile = file => {
   };
 };
 
-// eslint-disable-next-line no-unused-vars
-const PasspointProfileForm = ({ form, details }) => {
+const PasspointProfileForm = ({ 
+  form, 
+  details, 
+  childProfileIds,
+  venueProfiles,
+  operatorProfiles,
+  idProviderProfiles,
+  onFetchMoreVenueProfiles,
+  onFetchMoreOperatorProfiles,
+  onFetchMoreIdProviderProfiles,
+}) => {
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
-    (details.termsAndConditionsFile && [formatFile(details.termsAndConditionsFile)]) || []
+    (details?.termsAndConditionsFile && [formatFile(details.termsAndConditionsFile)]) || []
   );
+  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
+
+  useEffect(() => {
+    setSelectdChildProfiles(childProfileIds);
+    form.setFieldsValue({
+      passpointVenueProfileName: details?.passpointVenueProfileName || null,
+      passpointOperatorProfileName: details?.passpointOperatorProfileName || null,
+      idProviderProfileNames: details?.idProviderProfileNames || [],
+      enableInterworkingAndHs20: details?.enableInterworkingAndHs20 || 'true',
+      hessid: {
+        addressAsString: details?.hessid?.addressAsString || null,
+      },
+      accessNetworkType: details?.accessNetworkType || 'private_network',
+      networkAuthenticationType: details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
+
+      emergencyServicesReachable: details?.emergencyServicesReachable || 'true',
+      unauthenticatedEmergencyServiceAccessible: details?.unauthenticatedEmergencyServiceAccessible || 'true',
+
+      anqpDomainId: details?.anqpDomainId || 0,
+      gasAddr3Behaviour: details?.gasAddr3Behaviour || 'p2pSpecWorkaroundFromRequest',
+      disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding || 'true',
+      childProfileIds,
+    });
+  }, [form, details, childProfileIds]);
+
+  const handleOnChangeVenue = (_selectedItem, option) => {
+    form.setFieldsValue({
+      childProfileIds: [...selectedChildProfiles, option.key],
+    });
+    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+  };
+
+  // const handleRemoveVenue = id => {
+  //   form.setFieldsValue({
+  //     childProfileIds: selectedChildProfiles.filter(i => i !== id),
+  //   });
+  //   setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+  // };
+
+  const handleOnChangeOperator = (_selectedItem, option) => {
+    form.setFieldsValue({
+      childProfileIds: [...selectedChildProfiles, option.key],
+    });
+    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+  };
+
+  // const handleRemoveOperator = id => {
+  //   form.setFieldsValue({
+  //     childProfileIds: selectedChildProfiles.filter(i => i !== id),
+  //   });
+  //   setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+  // };
+
+  const handleOnChangeIdProvider = (_selectedItem, option) => {
+    form.setFieldsValue({
+      childProfileIds: [...selectedChildProfiles, option.key],
+    });
+    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+  };
+
+  const handleRemoveIdProvider = (_selectedItem, option) => {
+    form.setFieldsValue({
+      childProfileIds: selectedChildProfiles.filter(i => i !== option.key),
+    });
+    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== option.key));
+  };
 
   const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
@@ -43,7 +118,7 @@ const PasspointProfileForm = ({ form, details }) => {
     return true;
   };
 
-  const handleOnChange = (file, fileList) => {
+  const handleOnFileChange = (file, fileList) => {
     if (validateFile(file)) {
       let list = [...fileList];
 
@@ -59,7 +134,7 @@ const PasspointProfileForm = ({ form, details }) => {
     if (fileList.length === 0) {
       setTermsAndConditionsFileList([]);
     }
-    const list = handleOnChange(file, fileList);
+    const list = handleOnFileChange(file, fileList);
     if (list) setTermsAndConditionsFileList(list);
   };
 
@@ -74,33 +149,85 @@ const PasspointProfileForm = ({ form, details }) => {
     <div className={styles.ProfilePage}>
       <Card title="General">
         <Item label="Venue" name="passpointVenueProfileName">
-          <Select>
-            <Option value="test">test</Option>
+        <Select
+            onPopupScroll={onFetchMoreVenueProfiles}
+            data-testid="venueProfile"
+            showSearch
+            placeholder="Select a Venue Profile"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            onChange={handleOnChangeVenue}
+            // TODO when profile changed removed previous profile from childProfile list
+          >
+            {venueProfiles.map(i => (
+              <Option key={i.id} value={i.name}>
+                {i.name}
+              </Option>
+            ))}
           </Select>
         </Item>
         <Item label="Operator" name="passpointOperatorProfileName">
-          <Select>
-            <Option value="test">test</Option>
+        <Select
+            onPopupScroll={onFetchMoreOperatorProfiles}
+            data-testid="operatorProfile"
+            showSearch
+            placeholder="Select an Operator Profile"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            onChange={handleOnChangeOperator}
+            // TODO when profile changed removed previous profile from childProfile list
+          >
+            {operatorProfiles.map(i => (
+              <Option key={i.id} value={i.name}>
+                {i.name}
+              </Option>
+            ))}
           </Select>
         </Item>
         <Item label="ID Provider" name="idProviderProfileNames">
           <Select
-            placeholder="Select ID Provider (check to select all)"
+            onPopupScroll={onFetchMoreIdProviderProfiles}
+            data-testid="idProviderProfile"
+            showSearch
+            showArrow
             mode="multiple"
             allowClear
-            showArrow
+            placeholder="Select ID Providers (check to select)"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            onChange={handleOnChangeIdProvider}
+            onDeselect={handleRemoveIdProvider}
           >
-            <Option value="test">test</Option>
+            {idProviderProfiles.map(i => (
+              <Option key={i.id} value={i.name}>
+                {i.name}
+              </Option>
+            ))}
           </Select>
         </Item>
         <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
           {defaultOptions}
         </Item>
-        <Item label="HESSID" name={['hessid', 'addressAsString']}>
-          <Input
-            className={globalStyles.field}
-            rules={/* to add validation for MAC address */ console.log('')}
-          />
+        <Item 
+          label="HESSID" 
+          name={['hessid', 'addressAsString']}
+          rules={[
+            {
+              pattern: new RegExp(/^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/),
+              message: "Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F"
+            }
+          ]}
+        >
+          <Input placeholder="Enter MAC Address" className={globalStyles.field} />
+        </Item>
+        <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Input />
         </Item>
       </Card>
       <Card title="Access Network">
@@ -157,7 +284,25 @@ const PasspointProfileForm = ({ form, details }) => {
         </Item>
       </Card>
       <Card title="Advanced">
-        <Item label="ANQP Domain ID" name="anqpDomainId">
+        <Item 
+          label="ANQP Domain ID" 
+          name="anqpDomainId" 
+          rules={[
+            {},
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (
+                  !value ||
+                  (getFieldValue('anqpDomainId') <= 65535 &&
+                    getFieldValue('anqpDomainId') >= 0)
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('Enter an ANQP Domain ID between 0 and 65535'));
+              },
+            }),
+          ]}
+        >
           <Input type='number' min={0} max={65535} />
         </Item>
         <Item label="GAS Address 3 Behaviour" name="gasAddr3Behaviour">
@@ -187,11 +332,25 @@ const PasspointProfileForm = ({ form, details }) => {
 PasspointProfileForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  childProfileIds: PropTypes.instanceOf(Array),
+  venueProfiles: PropTypes.instanceOf(Array),
+  operatorProfiles: PropTypes.instanceOf(Array),
+  idProviderProfiles: PropTypes.instanceOf(Array),
+  onFetchMoreVenueProfiles: PropTypes.func,
+  onFetchMoreOperatorProfiles: PropTypes.func,
+  onFetchMoreIdProviderProfiles: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
   form: {},
   details: {},
+  childProfileIds: [],
+  venueProfiles: [],
+  operatorProfiles: [],
+  idProviderProfiles: [],
+  onFetchMoreVenueProfiles: () => {},
+  onFetchMoreOperatorProfiles: () => {},
+  onFetchMoreIdProviderProfiles: () => {},
 };
 
 export default PasspointProfileForm;
