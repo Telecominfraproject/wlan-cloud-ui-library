@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Card, Button, Form, Input, Select, Table, Upload, message } from 'antd';
+import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 
-import Button from 'components/Button';
+import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
 
 import styles from '../index.module.scss';
@@ -19,13 +19,14 @@ const formatFile = file => {
   };
 };
 
-const PasspointProfileForm = ({ 
-  form, 
-  details, 
+const PasspointProfileForm = ({
+  form,
+  details,
   childProfileIds,
   venueProfiles,
   operatorProfiles,
   idProviderProfiles,
+  fileUpload,
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
@@ -34,6 +35,11 @@ const PasspointProfileForm = ({
     (details?.termsAndConditionsFile && [formatFile(details.termsAndConditionsFile)]) || []
   );
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [connectionCapabilitySetList, setConnectionCapabilitySetList] = useState(
+    details?.connectionCapabilitySet || []
+  );
+  const [connectionForm] = Form.useForm();
 
   useEffect(() => {
     setSelectdChildProfiles(childProfileIds);
@@ -46,17 +52,26 @@ const PasspointProfileForm = ({
         addressAsString: details?.hessid?.addressAsString || null,
       },
       accessNetworkType: details?.accessNetworkType || 'private_network',
-      networkAuthenticationType: details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
+      networkAuthenticationType:
+        details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
 
       emergencyServicesReachable: details?.emergencyServicesReachable || 'true',
-      unauthenticatedEmergencyServiceAccessible: details?.unauthenticatedEmergencyServiceAccessible || 'true',
-
+      unauthenticatedEmergencyServiceAccessible:
+        details?.unauthenticatedEmergencyServiceAccessible || 'true',
+      internetConnectivity: details?.internetConnectivity || 'true',
+      ipAddressTypeAvailability: details?.ipAddressTypeAvailability || 'address_type_not_available',
+      qosMapSetConfiguration: details?.qosMapSetConfiguration || [],
       anqpDomainId: details?.anqpDomainId || 0,
       gasAddr3Behaviour: details?.gasAddr3Behaviour || 'p2pSpecWorkaroundFromRequest',
-      disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding || 'true',
+      disableDownstreamGroupAddressedForwarding:
+        details?.disableDownstreamGroupAddressedForwarding || 'true',
       childProfileIds,
     });
   }, [form, details, childProfileIds]);
+
+  useEffect(() => {
+    form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
+  }, [connectionCapabilitySetList]);
 
   const handleOnChangeVenue = (_selectedItem, option) => {
     form.setFieldsValue({
@@ -138,6 +153,60 @@ const PasspointProfileForm = ({
     if (list) setTermsAndConditionsFileList(list);
   };
 
+  const handleFileUpload = file => {
+    if (validateFile(file, true)) {
+      fileUpload(file.name, file);
+    }
+    return false;
+  };
+
+  const handleConnectionSave = () => {
+    connectionForm
+      .validateFields()
+      .then(newConnection => {
+        setConnectionCapabilitySetList([...connectionCapabilitySetList, newConnection]);
+        connectionForm.resetFields();
+        setModalVisible(false);
+      })
+      .catch(() => {});
+  };
+
+  const handleConnectionRemove = item => {
+    setConnectionCapabilitySetList(
+      connectionCapabilitySetList.filter(
+        i => i.connectionCapabilitiesPortNumber !== item.connectionCapabilitiesPortNumber
+      )
+    );
+  };
+
+  const columns = [
+    {
+      title: 'Status',
+      dataIndex: 'connectionCapabilitiesStatus',
+    },
+    {
+      title: 'Protocol',
+      dataIndex: 'connectionCapabilitiesIpProtocol',
+    },
+    {
+      title: 'Port',
+      dataIndex: 'connectionCapabilitiesPortNumber',
+    },
+    {
+      title: '',
+      width: 80,
+      render: (_, record) => (
+        <Button
+          title="remove"
+          icon={<DeleteOutlined />}
+          className={styles.iconButton}
+          type="danger"
+          onClick={() => handleConnectionRemove(record)}
+        />
+      ),
+    },
+  ];
+
   const defaultOptions = (
     <Select className={styles.Field}>
       <Option value="true">Enabled</Option>
@@ -149,15 +218,11 @@ const PasspointProfileForm = ({
     <div className={styles.ProfilePage}>
       <Card title="General">
         <Item label="Venue" name="passpointVenueProfileName">
-        <Select
+          <Select
             onPopupScroll={onFetchMoreVenueProfiles}
             data-testid="venueProfile"
             showSearch
             placeholder="Select a Venue Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
             onChange={handleOnChangeVenue}
             // TODO when profile changed removed previous profile from childProfile list
           >
@@ -169,15 +234,11 @@ const PasspointProfileForm = ({
           </Select>
         </Item>
         <Item label="Operator" name="passpointOperatorProfileName">
-        <Select
+          <Select
             onPopupScroll={onFetchMoreOperatorProfiles}
             data-testid="operatorProfile"
             showSearch
             placeholder="Select an Operator Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
             onChange={handleOnChangeOperator}
             // TODO when profile changed removed previous profile from childProfile list
           >
@@ -197,10 +258,6 @@ const PasspointProfileForm = ({
             mode="multiple"
             allowClear
             placeholder="Select ID Providers (check to select)"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
             onChange={handleOnChangeIdProvider}
             onDeselect={handleRemoveIdProvider}
           >
@@ -214,14 +271,14 @@ const PasspointProfileForm = ({
         <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
           {defaultOptions}
         </Item>
-        <Item 
-          label="HESSID" 
+        <Item
+          label="HESSID"
           name={['hessid', 'addressAsString']}
           rules={[
             {
               pattern: new RegExp(/^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/),
-              message: "Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F"
-            }
+              message: 'Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F',
+            },
           ]}
         >
           <Input placeholder="Enter MAC Address" className={globalStyles.field} />
@@ -259,6 +316,7 @@ const PasspointProfileForm = ({
             accept="image/*"
             data-testid="termsAndConditionsUpload"
             fileList={termsAndConditionsFileList}
+            beforeUpload={handleFileUpload}
             onChange={handleOnChangeTermsAndConditions}
           >
             <Button icon={<UploadOutlined />}>File Upload</Button>
@@ -279,22 +337,72 @@ const PasspointProfileForm = ({
           {defaultOptions}
         </Item>
         <Item label="IP Address Type" name="ipAddressTypeAvailability">
-          {defaultOptions}
+          <Select>
+            <Option value="address_type_not_available">Address Type Not Available</Option>
+            <Option value="public_IPv4_address_available">Public IPv4 Address Available</Option>
+            <Option value="port_restricted_IPv4_address_available">
+              Port Restricted IPv4 Address Available
+            </Option>
+            <Option value="single_NATed_private_IPv4_address_available">
+              Single NATed private IPv4 Address Available
+            </Option>
+            <Option value="double_NATed_private_IPv4_address_available">
+              Double NATed private IPv4 Address Available
+            </Option>
+            <Option value="port_restricted_IPv4_address_and_single_NATed_IPv4_address_available">
+              Port Restricted IPv4 Address and Single NATed IPv4 Address Available
+            </Option>
+            <Option value="port_restricted_IPv4_address_and_double_NATed_IPv4_address_available">
+              Port Restricted IPv4 Address and Double NATed IPv4 Address Available
+            </Option>
+            <Option value="availability_of_the_address_type_is_unknown">
+              Availablity of the Address Type is Unknown
+            </Option>
+
+            {/* <Option value="address_type_not_available">Address Type Not Available</Option>
+            <Option value="address_type_available">Address Type Available</Option>
+            <Option value="availability_of_the_address_type_is_unknown">
+              Availablity of the Address Type is Unknown
+            </Option> */}
+          </Select>
           {/* TODO there are two arrays */}
+        </Item>
+        <Item label="Connection Capability">
+          <Button type="solid" onClick={() => setModalVisible(true)}>
+            Add Name
+          </Button>
+        </Item>
+        <Item noStyle name="connectionCapabilitySet">
+          <Table
+            dataSource={connectionCapabilitySetList}
+            columns={columns}
+            pagination={false}
+            rowKey="connectionCapabilitiesPortNumber"
+          />
+        </Item>
+        <Item label="QOS Map Set" name="qosMapSetConfiguration">
+            <Select 
+              showArrow
+              mode="multiple"
+              allowClear
+              placeholder="Select QOS Map Set (check to select)"
+            >
+              <Option value="12">12</Option>
+              <Option value="53">53</Option>
+            </Select>
         </Item>
       </Card>
       <Card title="Advanced">
-        <Item 
-          label="ANQP Domain ID" 
-          name="anqpDomainId" 
+        <Item
+          label="ANQP Domain ID"
+          name="anqpDomainId"
           rules={[
             {},
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
                   !value ||
-                  (getFieldValue('anqpDomainId') <= 65535 &&
-                    getFieldValue('anqpDomainId') >= 0)
+                  (getFieldValue('anqpDomainId') <= 65535 && getFieldValue('anqpDomainId') >= 0)
                 ) {
                   return Promise.resolve();
                 }
@@ -303,18 +411,16 @@ const PasspointProfileForm = ({
             }),
           ]}
         >
-          <Input type='number' min={0} max={65535} />
+          <Input type="number" min={0} max={65535} />
         </Item>
         <Item label="GAS Address 3 Behaviour" name="gasAddr3Behaviour">
           <Select>
-            <Option value="p2pSpecWorkaroundFromRequest">
-                P2P Spec Workaround From Request
-            </Option>
+            <Option value="p2pSpecWorkaroundFromRequest">P2P Spec Workaround From Request</Option>
             <Option value="ieee80211StandardCompliantOnly">
-                IEEE 80211 Standard Compliant Only
+              IEEE 80211 Standard Compliant Only
             </Option>
             <Option value="forceNonCompliantBehaviourFromRequest">
-                Force Non-Compliant Behaviour From Request
+              Force Non-Compliant Behaviour From Request
             </Option>
           </Select>
         </Item>
@@ -325,6 +431,63 @@ const PasspointProfileForm = ({
           </Select>
         </Item>
       </Card>
+
+      <Modal
+        onCancel={() => setModalVisible(false)}
+        onSuccess={() => handleConnectionSave()}
+        visible={modalVisible}
+        title="Add Connection Capability"
+        content={
+          <Form form={connectionForm} layout="vertical">
+            <Item
+              label="Status"
+              name="connectionCapabilitiesStatus"
+              rules={[{ required: true, message: 'Status field cannot be empty' }]}
+            >
+              <Select placeholder="Select a status">
+                <Option value="open">Open</Option>
+                <Option value="closed">Closed</Option>
+                <Option value="unknown">Unknown</Option>
+              </Select>
+            </Item>
+            <Item
+              label="Protocol"
+              name="connectionCapabilitiesIpProtocol"
+              rules={[{ required: true, message: 'Protocol field cannot be empty' }]}
+            >
+              <Select placeholder="Select a protocol">
+                <Option value="ICMP">ICMP</Option>
+                <Option value="TCP">TCP</Option>
+                <Option value="UDP">UDP</Option>
+              </Select>
+            </Item>
+            <Item
+              label="Port"
+              name="connectionCapabilitiesPortNumber"
+              rules={[
+                {
+                  required: true,
+                  message: 'Port field cannot be empty',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (
+                      !value ||
+                      (getFieldValue('connectionCapabilitiesPortNumber') <= 65535 &&
+                        getFieldValue('connectionCapabilitiesPortNumber') >= 0)
+                    ) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Enter a port number between 0 - 65535'));
+                  },
+                }),
+              ]}
+            >
+              <Input type="number" min={0} max={65535} />
+            </Item>
+          </Form>
+        }
+      />
     </div>
   );
 };
@@ -336,6 +499,7 @@ PasspointProfileForm.propTypes = {
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
+  fileUpload: PropTypes.func,
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
@@ -348,6 +512,7 @@ PasspointProfileForm.defaultProps = {
   venueProfiles: [],
   operatorProfiles: [],
   idProviderProfiles: [],
+  fileUpload: () => {},
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},

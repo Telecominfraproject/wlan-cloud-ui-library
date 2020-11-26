@@ -201,13 +201,14 @@ const ProfileDetails = ({
         {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
         {profileType === 'rf' && <RFForm details={details} form={form} />}
         {profileType === 'passpoint' && (
-          <PasspointProfileForm 
+          <PasspointProfileForm
             form={form}
             details={details}
             childProfileIds={childProfileIds}
             venueProfiles={venueProfiles}
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}
+            fileUpload={fileUpload}
             onFetchMoreVenueProfiles={onFetchMoreVenueProfiles}
             onFetchMoreOperatorProfiles={onFetchMoreOperatorProfiles}
             onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}

@@ -32,10 +32,10 @@ import PasspointProfileForm from '../ProfileDetails/components/PasspointProfile'
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ 
-  onCreateProfile, 
-  ssidProfiles, 
-  venueProfiles, 
+const AddProfile = ({
+  onCreateProfile,
+  ssidProfiles,
+  venueProfiles,
   operatorProfiles,
   idProviderProfiles,
   onFetchMoreProfiles,
@@ -197,8 +197,8 @@ const AddProfile = ({
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
           {profileType === 'passpoint' && (
-            <PasspointProfileForm 
-              form={form} 
+            <PasspointProfileForm
+              form={form}
               venueProfiles={venueProfiles}
               operatorProfiles={operatorProfiles}
               idProviderProfiles={idProviderProfiles}
