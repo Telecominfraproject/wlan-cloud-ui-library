@@ -54,7 +54,8 @@ const PasspointProfileForm = ({
       accessNetworkType: details?.accessNetworkType || 'private_network',
       networkAuthenticationType:
         details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
-
+      termsAndConditionsFile: 
+        details?.termsAndConditionsFile && formatFile(details?.termsAndConditionsFile),
       emergencyServicesReachable: details?.emergencyServicesReachable || 'true',
       unauthenticatedEmergencyServiceAccessible:
         details?.unauthenticatedEmergencyServiceAccessible || 'true',
@@ -214,6 +215,11 @@ const PasspointProfileForm = ({
     </Select>
   );
 
+  const qosMapSetOptions = [];
+  for (let i = 1; i < 65; i+=1) {
+    qosMapSetOptions.push(<Option key={i}>{i}</Option>);
+  }
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="General">
@@ -310,7 +316,7 @@ const PasspointProfileForm = ({
             <Option value="dns_redirection">DNS Redirection</Option>
           </Select>
         </Item>
-        <Item label="Terms & Conditions" name={['termsAndConditionsFile']}>
+        <Item label="Terms & Conditions" name='termsAndConditionsFile'>
           {/* TODO: check type and set for this upload ! */}
           <Upload
             accept="image/*"
@@ -339,6 +345,7 @@ const PasspointProfileForm = ({
         <Item label="IP Address Type" name="ipAddressTypeAvailability">
           <Select>
             <Option value="address_type_not_available">Address Type Not Available</Option>
+            <Option value="address_type_available">Address Type Available</Option>
             <Option value="public_IPv4_address_available">Public IPv4 Address Available</Option>
             <Option value="port_restricted_IPv4_address_available">
               Port Restricted IPv4 Address Available
@@ -358,14 +365,7 @@ const PasspointProfileForm = ({
             <Option value="availability_of_the_address_type_is_unknown">
               Availablity of the Address Type is Unknown
             </Option>
-
-            {/* <Option value="address_type_not_available">Address Type Not Available</Option>
-            <Option value="address_type_available">Address Type Available</Option>
-            <Option value="availability_of_the_address_type_is_unknown">
-              Availablity of the Address Type is Unknown
-            </Option> */}
           </Select>
-          {/* TODO there are two arrays */}
         </Item>
         <Item label="Connection Capability">
           <Button type="solid" onClick={() => setModalVisible(true)}>
@@ -387,9 +387,9 @@ const PasspointProfileForm = ({
               allowClear
               placeholder="Select QOS Map Set (check to select)"
             >
-              <Option value="12">12</Option>
-              <Option value="53">53</Option>
+              {qosMapSetOptions}
             </Select>
+            {/* TODO confirm the options of qosMapSet */}
         </Item>
       </Card>
       <Card title="Advanced">
@@ -471,6 +471,11 @@ const PasspointProfileForm = ({
                 },
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
+                    if (
+                      connectionCapabilitySetList.filter(i => i.connectionCapabilitiesPortNumber === value.toString()).length > 0
+                    ) {
+                      return Promise.reject(new Error('Port number is already used'));
+                    } 
                     if (
                       !value ||
                       (getFieldValue('connectionCapabilitiesPortNumber') <= 65535 &&
