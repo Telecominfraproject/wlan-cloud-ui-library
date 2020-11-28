@@ -13,7 +13,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
 
   useEffect(() => {
     form.resetFields();
-    form.setFieldsValue({ email: userEmail, role: userRole });
+    form.setFieldsValue({ email: userEmail, roles: userRole });
   }, [visible]);
 
   const layout = {
@@ -40,7 +40,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
         <Input className={styles.field} />
       </Item>
 
-      <Item label="Role" name="role" rules={[{ required: true, message: 'Please select a role' }]}>
+      <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
         <Select placeholder="Select role">
           <Option value="SuperUser">SuperUser</Option>
           <Option value="CustomerIT">CustomerIT</Option>

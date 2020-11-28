@@ -17,7 +17,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
   const [activeUser, setActiveUser] = useState({
     id: 0,
     email: '',
-    role: '',
+    roles: [],
     customerId: '',
     lastModifiedTimestamp: 0,
   });
@@ -28,14 +28,14 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
     setDeleteModal(false);
   };
 
-  const addUser = ({ email, role, password }) => {
-    onCreateUser(email, password, role);
+  const addUser = ({ email, roles, password }) => {
+    onCreateUser(email, password, roles);
     setAddModal(false);
   };
 
-  const editUser = ({ email, role, password }) => {
+  const editUser = ({ email, roles, password }) => {
     const { id, lastModifiedTimestamp } = activeUser;
-    onEditUser(id, email, password, role, lastModifiedTimestamp);
+    onEditUser(id, email, password, roles, lastModifiedTimestamp);
     setEditModal(false);
   };
 
@@ -47,10 +47,11 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
       width: 620,
     },
     {
-      title: 'ROLE',
-      dataIndex: 'role',
-      key: 'role',
+      title: 'ROLES',
+      dataIndex: 'roles',
+      key: 'roles',
       width: 120,
+      render: r => r?.join(',  '),
     },
     {
       title: '',
@@ -68,7 +69,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
             setActiveUser({
               id: record.id,
               email: record.email,
-              role: record.role,
+              roles: record.roles,
               customerId: record.customerId,
               lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
@@ -92,7 +93,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
             setActiveUser({
               id: record.id,
               email: record.email,
-              role: record.role,
+              roles: record.roles,
               customerId: record.customerId,
               lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
@@ -128,7 +129,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         visible={editModal}
         onSubmit={editUser}
         title="Edit User"
-        userRole={activeUser.role}
+        userRole={activeUser?.roles?.[0]}
         userEmail={activeUser.email}
       />
       <FormModal

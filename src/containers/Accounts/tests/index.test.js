@@ -26,7 +26,7 @@ const mockProps = {
   data: [
     {
       email: 'support@mail.com',
-      role: 'SuperUser',
+      roles: ['SuperUser'],
     },
   ],
 };
