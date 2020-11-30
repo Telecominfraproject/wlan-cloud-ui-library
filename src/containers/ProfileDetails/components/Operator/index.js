@@ -40,7 +40,7 @@ const OperatorForm = ({ details, form }) => {
   };
 
   const removeName = obj => {
-    setOperatorFriendlyName([...operatorFriendlyName.filter(i => i.dupleName !== obj.dupleName)]);
+    setOperatorFriendlyName([...operatorFriendlyName.filter(i => i !== obj)]);
   };
 
   const cancelModal = () => {
