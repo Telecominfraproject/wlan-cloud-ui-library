@@ -32,7 +32,7 @@ const PasspointNameTable = ({ tableData, dataIndex, removeName }) => {
   return (
     <Table
       dataSource={tableData}
-      columns={formatCols(dataIndex)}
+      columns={formatCols()}
       pagination={false}
       rowKey={record => record.dupleName + record.locale}
     />
