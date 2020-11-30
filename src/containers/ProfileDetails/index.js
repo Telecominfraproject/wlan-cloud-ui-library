@@ -37,10 +37,12 @@ const ProfileDetails = ({
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  rfProfiles,
   radiusProfiles,
   captiveProfiles,
   fileUpload,
   onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
 }) => {
@@ -84,8 +86,18 @@ const ProfileDetails = ({
         if (profileType === 'ssid') {
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
-        if (profileType === 'equipment_ap') {
-          formattedData = Object.assign(formattedData, formatApProfileForm(values));
+        if (profileType === 'equipment_ap') {        
+          const rfProfileIds = [];
+          rfProfiles.map(profile => rfProfileIds.push(profile.id));
+          const hasRfProfile = values.childProfileIds.filter(id => rfProfileIds.includes(id));
+          if (hasRfProfile.length <= 0) {
+            notification.error({
+              message: 'Error',
+              description: 'One Rf Profile is required.',
+            });
+              return;
+          }
+          formattedData = Object.assign(formattedData, formatApProfileForm(values, rfProfiles));
         }
         if (profileType === 'radius') {
           if (values.services.length === 0) {
@@ -179,8 +191,10 @@ const ProfileDetails = ({
             form={form}
             details={details}
             ssidProfiles={ssidProfiles}
+            rfProfiles={rfProfiles}
             childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
+            onFetchMoreRfProfiles={onFetchMoreRfProfiles}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -207,10 +221,12 @@ ProfileDetails.propTypes = {
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
 };
@@ -220,10 +236,12 @@ ProfileDetails.defaultProps = {
   profileType: null,
   details: {},
   ssidProfiles: [],
+  rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},
 };

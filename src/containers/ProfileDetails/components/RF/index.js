@@ -23,7 +23,7 @@ const RFForm = ({ form, details }) => {
         forceScanDuringVoice: details.rfConfigMap[radio]?.forceScanDuringVoice || 'disabled',
         rtsCtsThreshold: details.rfConfigMap[radio]?.rtsCtsThreshold || 0,
         channelBandwidth: details.rfConfigMap[radio]?.channelBandwidth || 'is20MHz',
-        mimoMode: details.rfConfigMap[radio]?.channelBandwidth || 'none',
+        mimoMode: details.rfConfigMap[radio]?.mimoMode || 'none',
         maxNumClients: details.rfConfigMap[radio]?.maxNumClients || 0,
         multicastRate: details.rfConfigMap[radio]?.multicastRate || 'rate6mbps',
         activeScanSettings: {

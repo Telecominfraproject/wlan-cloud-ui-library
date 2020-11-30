@@ -7,7 +7,15 @@ import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
-const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetchMoreProfiles }) => {
+const AccessPointForm = ({ 
+    form, 
+    details, 
+    childProfileIds, 
+    ssidProfiles, 
+    rfProfiles,
+    onFetchMoreProfiles,
+    onFetchMoreRfProfiles, 
+  }) => {
   const { Item } = Form;
   const { Option } = Select;
 
@@ -21,6 +29,18 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetch
 
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
 
+  const previousRfProfile = () => {
+    const rfProfileIds = [];
+    rfProfiles.map(profile => rfProfileIds.push(profile.id));
+    const hasRfProfile = childProfileIds.filter(id => rfProfileIds.includes(id));
+    if (hasRfProfile.length > 0){
+      return hasRfProfile[0];
+    }
+    return null;
+  };
+
+  const [previousRf, setPreviousRf] = useState(previousRfProfile);
+
   const handleOnChangeSsid = selectedItem => {
     form.setFieldsValue({
       childProfileIds: [...selectedChildProfiles, selectedItem],
@@ -33,6 +53,20 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetch
       childProfileIds: selectedChildProfiles.filter(i => i !== id),
     });
     setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+  };
+  
+  const handleOnChangeRf = selectedItem => {
+    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousRf);
+
+    form.setFieldsValue({
+      childProfileIds: [...newChildProfileList, selectedItem],
+    });
+    setSelectdChildProfiles([...newChildProfileList, selectedItem]);
+    setPreviousRf(selectedItem);
+  };
+
+  const getInitialRfProfile = () => {
+    return rfProfiles.filter(i => i.id === previousRf)[0]?.name;
   };
 
   useEffect(() => {
@@ -343,6 +377,23 @@ const AccessPointForm = ({ form, details, childProfileIds, ssidProfiles, onFetch
           {enabledRadioOptions()}
         </Item>
       </Card>
+      <Card title="RF Enabled on This Profile">
+          <Item>
+            <Select
+              onPopupScroll={onFetchMoreRfProfiles}
+              showSearch
+              placeholder="Select a RF Profile"
+              onChange={handleOnChangeRf}
+              defaultValue={getInitialRfProfile}
+            >
+              {rfProfiles.map(i => (
+                <Option key={i.id} value={i.id}>
+                  {i.name}
+                </Option>
+              ))}
+            </Select>
+          </Item>
+      </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
@@ -378,7 +429,9 @@ AccessPointForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -386,7 +439,9 @@ AccessPointForm.defaultProps = {
   details: {},
   childProfileIds: [],
   ssidProfiles: [],
+  rfProfiles: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
 };
 
 export default AccessPointForm;
