@@ -16,6 +16,7 @@ import {
   formatCaptiveForm,
   formatRadiusForm,
   formatRfProfileForm,
+  formatProviderProfileForm,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -27,6 +28,8 @@ import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 import CaptivePortalForm from '../ProfileDetails/components/CaptivePortal';
 import RadiusForm from '../ProfileDetails/components/Radius';
 import RFForm from '../ProfileDetails/components/RF';
+import ProviderIdForm from '../ProfileDetails/components/ProviderId';
+import OperatorForm from '../ProfileDetails/components/Operator';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -110,6 +113,16 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
 
+        if (profileType === 'passpoint_operator') {
+          formattedData.model_type = 'PasspointOperatorProfile';
+          formattedData = Object.assign(formattedData, values);
+        }
+
+        if (profileType === 'passpoint_osu_id_provider') {
+          formattedData.model_type = 'PasspointOsuProviderProfile';
+          formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
+        }
+
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -161,6 +174,8 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
                 <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
+                <Option value="passpoint_osu_id_provider">Passpoint ID Provider</Option>
+                <Option value="passpoint_operator">Passpoint Operator</Option>
               </Select>
             </Item>
             <Item
@@ -184,6 +199,8 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
           {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
+          {profileType === 'passpoint_osu_id_provider' && <ProviderIdForm form={form} />}
+          {profileType === 'passpoint_operator' && <OperatorForm form={form} />}
         </Form>
       </div>
     </Container>

@@ -1,16 +1,17 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useMemo, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Button, Table, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import _ from 'lodash';
+import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
 
 const { Item } = Form;
 const { Option } = Select;
 
-const NaiRealm = ({ data, form, addEap, removeEap }) => {
+const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
   const [eapModal, setEapModal] = useState(false);
 
   const columnsNai = [
@@ -47,127 +48,46 @@ const NaiRealm = ({ data, form, addEap, removeEap }) => {
     },
   ];
 
-  const credType = [
-    {
-      value: 'SIM',
-      label: 'SIM',
-    },
-    {
-      value: 'USIM',
-      label: 'USIM',
-    },
-    {
-      value: 'NFC Secure Element',
-      label: 'NFC Secure Element',
-    },
-    {
-      value: 'Hardware Token',
-      label: 'Hardware Token',
-    },
-    {
-      value: 'Softoken',
-      label: 'Softoken',
-    },
-    {
-      value: 'Certificate',
-      label: 'Certificate',
-    },
-    {
-      value: 'username/password',
-      label: 'username/password',
-    },
-    {
-      value: 'none (server-side authentication only)',
-      label: 'none (server-side authentication only)',
-    },
-    {
-      value: 'Anonymous',
-      label: 'Anonymous',
-    },
-    {
-      value: 'Vendor Specific',
-      label: 'Vendor Specific',
-    },
-  ];
-
-  const nonEapCredType = [
-    {
-      value: 'PAP',
-      label: 'PAP',
-    },
-    {
-      value: 'CHAP',
-      label: 'CHAP',
-    },
-    {
-      value: 'MSCHAP',
-      label: 'MSCHAP',
-    },
-    {
-      value: 'MSCHAPV2',
-      label: 'MSCHAPV2',
-    },
-  ];
-
-  const authOptions = [
-    {
-      value: 'Expanded EAP Method',
-      label: 'Expanded EAP Method',
-      children: credType,
-    },
-    {
-      value: 'Non-EAP Inner Authentication Type',
-      label: 'Non-EAP Inner Authentication Type',
-      children: nonEapCredType,
-    },
-    {
-      value: 'Inner Authentication EAP Method Type',
-      label: 'Inner Authentication EAP Method Type',
-      children: credType,
-    },
-    {
-      value: 'Expanded Inner EAP Method',
-      label: 'Expanded Inner EAP Method',
-      children: credType,
-    },
-    {
-      value: 'Credential Type',
-      label: 'Credential Type',
-      children: credType,
-    },
-    {
-      value: 'Tunneled EAP Method Credential Type',
-      label: 'Tunneled EAP Method Credential Type',
-      children: credType,
-    },
-    {
-      value: 'Nai Realm EAP Auth Vendor Specific',
-      label: 'Nai Realm EAP Auth Vendor Specific',
-      children: credType,
-    },
-  ];
-
   const naiLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 20 },
   };
 
-  const formatRealmList = list => {
-    if (!list || list === undefined) {
-      return [];
-    }
-
-    const formattedData = [];
-    Object.keys(list).forEach(i => {
-      if (list[i].length !== 0) {
-        formattedData.push({
-          method: i,
-          authentication: list[i],
-        });
+  const formatRealmList = list =>
+    useMemo(() => {
+      if (!list || list === undefined) {
+        return [];
       }
-    });
+      const formattedData = [];
+      Object.keys(list).forEach(i => {
+        if (list[i].length !== 0) {
+          formattedData.push({
+            method: i,
+            authentication: list[i],
+          });
+        }
+      });
 
-    return formattedData;
+      return formattedData;
+    }, [list]);
+
+  const addEapMethod = () => {
+    form.validateFields().then(values => {
+      const i = _.cloneDeep(eapMap || {});
+      if (!(values.method in i)) {
+        i[values.method] = [];
+      }
+      i[values.method].push(values.auth.join(': '));
+      addEap(i);
+
+      form.resetFields();
+      setEapModal(false);
+    });
+  };
+
+  const canceledModal = () => {
+    form.resetFields();
+    setEapModal(false);
   };
 
   return (
@@ -194,32 +114,16 @@ const NaiRealm = ({ data, form, addEap, removeEap }) => {
         extra={<Button onClick={() => setEapModal(true)}>Add</Button>}
       >
         <Table
-          dataSource={formatRealmList(data?.naiRealmList[0]?.eapMap)}
+          dataSource={formatRealmList(eapMap)}
           columns={columnsNai}
           pagination={false}
-          rowKey={data?.naiRealmList}
+          rowKey="method"
         />
       </Card>
-      <Item name="eapMap" style={{ height: '0' }}>
+      <Item name="eapMap" noStyle>
         <Modal
-          onSuccess={() => {
-            form.validateFields().then(values => {
-              const i = _.cloneDeep(data.naiRealmList[0].eapMap);
-
-              if (!(values.method in i)) {
-                i[values.method] = [];
-              }
-
-              i[values.method].push(values.auth.join(': '));
-              addEap(i);
-              form.resetFields();
-              setEapModal(false);
-            });
-          }}
-          onCancel={() => {
-            form.resetFields();
-            setEapModal(false);
-          }}
+          onSuccess={() => addEapMethod()}
+          onCancel={() => canceledModal()}
           visible={eapModal}
           title="Add EAP Method"
           content={
@@ -265,14 +169,14 @@ const NaiRealm = ({ data, form, addEap, removeEap }) => {
 };
 
 NaiRealm.propTypes = {
-  data: PropTypes.instanceOf(Object),
+  eapMap: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
   addEap: PropTypes.func.isRequired,
   removeEap: PropTypes.func.isRequired,
 };
 
 NaiRealm.defaultProps = {
-  data: {},
+  eapMap: {},
   form: null,
 };
 

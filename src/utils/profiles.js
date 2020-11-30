@@ -198,18 +198,20 @@ export const formatProviderProfileForm = values => {
     formattedData.osuIconList = [];
   }
 
-  Object.keys(formattedData.eapMap).forEach(i => {
-    if (formattedData?.eapMap[i].length === 0) {
-      // eslint-disable-next-line no-param-reassign
-      delete formattedData?.eapMap[i];
-    }
-  });
-  formattedData.naiRealmList = [
-    {
-      eapMap: formattedData.eapMap || {},
-      encoding: formattedData.encoding || 0,
-    },
-  ];
+  if (typeof formattedData.eapMap !== 'undefined') {
+    Object.keys(formattedData.eapMap).forEach(i => {
+      if (formattedData?.eapMap[i].length === 0) {
+        // eslint-disable-next-line no-param-reassign
+        delete formattedData?.eapMap[i];
+      }
+    });
+    formattedData.naiRealmList = [
+      {
+        eapMap: formattedData.eapMap || {},
+        encoding: formattedData.encoding || 0,
+      },
+    ];
+  }
 
   return formattedData;
 };

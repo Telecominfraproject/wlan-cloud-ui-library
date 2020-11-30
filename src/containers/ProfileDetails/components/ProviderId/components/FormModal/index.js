@@ -1,31 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Form, Select } from 'antd';
+import { Input, Form } from 'antd';
 import Modal from 'components/Modal';
+import LocaleItem from 'components/LocaleItem';
 
-const { Option } = Select;
+const { Item } = Form;
 
-const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) => {
-  const { Item } = Form;
+const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
+  const [form] = Form.useForm();
 
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 15 },
   };
 
+  const addItem = () => {
+    form.validateFields().then(values => {
+      onSubmit(fieldName, values);
+      form.resetFields();
+      closeModal(fieldName);
+    });
+  };
+
+  const canceledModal = () => {
+    form.resetFields();
+    closeModal(fieldName);
+  };
+
   return (
     <Modal
-      onSuccess={() => {
-        form.validateFields().then(values => {
-          onSubmit(fieldName, values);
-          form.resetFields();
-          closeModal(fieldName);
-        });
-      }}
-      onCancel={() => {
-        form.resetFields();
-        closeModal(fieldName);
-      }}
+      onSuccess={addItem}
+      onCancel={canceledModal}
       visible={visible}
       title={title}
       content={
@@ -42,22 +47,7 @@ const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) =>
           >
             <Input placeholder="Enter a name" />
           </Item>
-
-          <Item
-            name="locale"
-            label="Locale:"
-            rules={[
-              {
-                required: true,
-                message: 'Locale field cannot be empty',
-              },
-            ]}
-          >
-            <Select placeholder="Please select">
-              <Option value="en_CA">English</Option>
-              <Option value="fr_CA">Francais</Option>
-            </Select>
-          </Item>
+          <LocaleItem name="locale" />
         </Form>
       }
     />
@@ -65,7 +55,6 @@ const FormModal = ({ form, visible, closeModal, onSubmit, fieldName, title }) =>
 };
 
 FormModal.propTypes = {
-  form: PropTypes.instanceOf(Object).isRequired,
   visible: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,

@@ -4,37 +4,60 @@ import { Card, Form, Input, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import OsuForm from './components/OsuForm';
+import NaiRealm from './components/NaiRealm';
 
 import styles from '../index.module.scss';
-import NaiRealm from './components/NaiRealm';
 
 const { Item } = Form;
 
 const ProviderIdForm = ({ form, details }) => {
-  const [data, setData] = useState({ ...details });
-
   const [plmnModal, setPlmnModal] = useState(false);
   const [plmnForm] = Form.useForm();
+  const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
+
+  const [naiRealm, setNaiRealm] = useState(details?.naiRealmList?.[0]);
   const [naiForm] = Form.useForm();
+
+  const [osuDetails, setOsuDetails] = useState({
+    osuServerUri: details?.osuServerUri || '',
+    osuFriendlyName: details?.osuFriendlyName || [],
+    osuServiceDescription: details?.osuServiceDescription || [],
+    osuIconList: details?.osuIconList || [],
+  });
   const [osuForm] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue({
-      domainName: details.domainName || '',
-      roamingOi: details.roamingOi.join(', ') || '',
-      mccMncList: data.mccMncList || [],
-      osuFriendlyName: data.osuFriendlyName || [],
-      osuServerUri: data.osuServerUri || [],
-      osuServiceDescription: data.osuServiceDescription || [],
-      osuIconList: data.osuIconList || [],
-      encoding: data?.naiRealmList[0]?.encoding || 0,
-      eapMap: data?.naiRealmList[0]?.eapMap || {},
+      domainName: details?.domainName || '',
+      roamingOi: details?.roamingOi?.join(', ') || '',
+      mccMncList: mccMncList || [],
+      encoding: naiRealm?.encoding || 0,
+      eapMap: naiRealm?.eapMap || {},
+      osuServerUri: osuDetails?.osuServerUri || '',
+      osuFriendlyName: osuDetails?.osuFriendlyName || [],
+      osuServiceDescription: osuDetails?.osuServiceDescription || [],
+      osuIconList: osuDetails?.osuIconList || [],
     });
-  }, [form, details, data]);
+  }, [form, details, mccMncList, naiRealm, osuDetails]);
 
   useEffect(() => {
-    setData({ ...details });
-  }, [details]);
+    setOsuDetails({
+      ...osuDetails,
+      osuServerUri: details?.osuServerUri || '',
+      osuFriendlyName: details?.osuFriendlyName || [],
+      osuServiceDescription: details?.osuServiceDescription || [],
+      osuIconList: details?.osuIconList || [],
+    });
+  }, [
+    details?.osuServerUri,
+    details?.osuFriendlyName,
+    details?.osuServiceDescription,
+    details?.osuIconList,
+  ]);
+
+  useEffect(() => {
+    setNaiRealm(details?.naiRealmList?.[0]);
+  }, [details?.naiRealmList?.[0]]);
 
   const layout = {
     labelCol: { span: 8 },
@@ -67,55 +90,62 @@ const ProviderIdForm = ({ form, details }) => {
           icon={<DeleteOutlined />}
           className={styles.iconButton}
           onClick={() => {
-            setData({
-              ...data,
-              mccMncList: data.mccMncList.filter(i => i !== item),
-            });
+            setMccMncList([...mccMncList.filter(i => i !== item)]);
           }}
         />
       ),
     },
   ];
 
-  const handleAddOsuItem = (dataIndex, obj) => {
-    setData({
-      ...data,
-      [dataIndex]: [...data[dataIndex], obj],
+  const handleAddPlmnItem = () => {
+    plmnForm.validateFields().then(values => {
+      setMccMncList([...mccMncList, values]);
+      setPlmnModal(false);
+      plmnForm.resetFields();
     });
   };
 
-  const handleRemoveOsuItem = (dataIndex, obj) => {
-    setData({
-      ...data,
-      [dataIndex]: data[dataIndex].filter(i => i !== obj),
+  const handleClosePlmnModal = () => {
+    setPlmnModal(false);
+    plmnForm.resetFields();
+  };
+
+  const handleAddOsuItem = (dataIndex, obj) => {
+    if (dataIndex in osuDetails) {
+      setOsuDetails({
+        ...osuDetails,
+        [dataIndex]: [...osuDetails[dataIndex], obj],
+      });
+    } else {
+      setOsuDetails({
+        ...osuDetails,
+        [dataIndex]: [obj],
+      });
+    }
+  };
+
+  const handleRemoveOsuItem = (obj, dataIndex) => {
+    setOsuDetails({
+      ...osuDetails,
+      [dataIndex]: osuDetails[dataIndex].filter(i => i !== obj),
     });
   };
 
   const handleAddEapMethod = obj => {
-    setData({
-      ...data,
-      naiRealmList: [
-        {
-          ...data.naiRealmList[0],
-          eapMap: obj,
-        },
-      ],
+    setNaiRealm({
+      ...naiRealm,
+      eapMap: obj,
     });
   };
 
   const handleRemoveEapMethod = obj => {
     const field = obj.method;
-    const cloneEap = { ...data.naiRealmList[0].eapMap };
+    const cloneEap = { ...naiRealm?.eapMap };
     cloneEap[field] = [];
 
-    setData({
-      ...data,
-      naiRealmList: [
-        {
-          ...data.naiRealmList[0],
-          eapMap: cloneEap,
-        },
-      ],
+    setNaiRealm({
+      ...naiRealm,
+      eapMap: cloneEap,
     });
   };
 
@@ -151,39 +181,22 @@ const ProviderIdForm = ({ form, details }) => {
       <Card
         title="Public Land Mobile Networks (PLMN)"
         extra={
-          <Button
-            type="solid"
-            onClick={() => {
-              setPlmnModal(true);
-            }}
-          >
+          <Button type="solid" onClick={() => setPlmnModal(true)}>
             Add
           </Button>
         }
       >
         <Table
-          dataSource={data?.mccMncList}
+          dataSource={mccMncList}
           columns={columnsPlmn}
           pagination={false}
-          rowKey={data?.mccMncList}
+          rowKey={mccMncList}
         />
-        <Item name="mccMncList" style={{ height: '0' }}>
+        <Item name="mccMncList" noStyle>
           <Modal
             visible={plmnModal}
-            onSuccess={() => {
-              plmnForm.validateFields().then(values => {
-                setData({
-                  ...data,
-                  mccMncList: [...data.mccMncList, values],
-                });
-                setPlmnModal(false);
-                plmnForm.resetFields();
-              });
-            }}
-            onCancel={() => {
-              setPlmnModal(false);
-              plmnForm.resetFields();
-            }}
+            onSuccess={handleAddPlmnItem}
+            onCancel={handleClosePlmnModal}
             title="Add Public Land Mobile Network (PLMN)"
             content={
               <Form {...layout} form={plmnForm}>
@@ -242,14 +255,14 @@ const ProviderIdForm = ({ form, details }) => {
       </Card>
 
       <NaiRealm
-        data={data}
+        eapMap={naiRealm?.eapMap}
         form={naiForm}
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
       />
 
       <OsuForm
-        data={data}
+        osuDetails={osuDetails}
         osuForm={osuForm}
         layout={layout}
         onSubmit={handleAddOsuItem}

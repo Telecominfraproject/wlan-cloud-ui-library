@@ -1,60 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Table, Input } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Card, Select, Form, Button, Input } from 'antd';
+import LocaleItem from 'components/LocaleItem';
 import Modal from 'components/Modal';
+import PasspointNameTable from 'components/PasspointNameTable';
+
 import styles from '../index.module.scss';
 
 const { Item } = Form;
 const { Option } = Select;
 
 const OperatorForm = ({ details, form }) => {
-  const [data, setData] = useState({ ...details });
+  const [operatorFriendlyName, setOperatorFriendlyName] = useState(
+    [...details?.operatorFriendlyName] || []
+  );
 
   const [modalVisible, setModalVisible] = useState(false);
   const [nameForm] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue({
-      serverOnlyAuthenticatedL2EncryptionNetwork: details.serverOnlyAuthenticatedL2EncryptionNetwork
+      serverOnlyAuthenticatedL2EncryptionNetwork: details?.serverOnlyAuthenticatedL2EncryptionNetwork
         ? 'true'
         : 'false',
-      operatorFriendlyName: data.operatorFriendlyName || [],
+      operatorFriendlyName: operatorFriendlyName || [],
     });
-  }, [form, details, data]);
+  }, [form, details, operatorFriendlyName]);
 
   useEffect(() => {
-    setData({ ...details });
-  }, [details]);
+    setOperatorFriendlyName(details?.operatorFriendlyName || []);
+  }, [details?.operatorFriendlyName]);
 
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'dupleName',
-      width: 500,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'locale',
-    },
-    {
-      title: '',
-      width: 80,
-      render: item => (
-        <Button
-          title="removeName"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          onClick={() => {
-            setData({
-              ...data,
-              operatorFriendlyName: data.operatorFriendlyName.filter(i => i !== item),
-            });
-          }}
-        />
-      ),
-    },
-  ];
+  const addName = () => {
+    nameForm.validateFields().then(values => {
+      setOperatorFriendlyName([...operatorFriendlyName, values]);
+      nameForm.resetFields();
+      setModalVisible(false);
+    });
+  };
+
+  const removeName = obj => {
+    setOperatorFriendlyName([...operatorFriendlyName.filter(i => i.dupleName !== obj.dupleName)]);
+  };
+
+  const cancelModal = () => {
+    nameForm.resetFields();
+    setModalVisible(false);
+  };
 
   const layout = {
     labelCol: { span: 8 },
@@ -89,27 +81,17 @@ const OperatorForm = ({ details, form }) => {
           </Button>
         }
       >
-        <Table
-          dataSource={data?.operatorFriendlyName}
-          columns={columns}
-          pagination={false}
-          rowKey={data?.operatorFriendlyName}
+        <PasspointNameTable
+          tableData={operatorFriendlyName}
+          dataIndex="operatorFriendlyName"
+          removeName={removeName}
         />
       </Card>
 
-      <Item name="operatorFriendlyName" style={{ height: '0' }}>
+      <Item name="operatorFriendlyName" noStyle>
         <Modal
-          onSuccess={() => {
-            nameForm.validateFields().then(values => {
-              setData({
-                ...data,
-                operatorFriendlyName: [...data.operatorFriendlyName, values],
-              });
-              nameForm.resetFields();
-              setModalVisible(false);
-            });
-          }}
-          onCancel={() => setModalVisible(false)}
+          onSuccess={addName}
+          onCancel={cancelModal}
           title="Add Operator Name"
           visible={modalVisible}
           content={
@@ -126,22 +108,7 @@ const OperatorForm = ({ details, form }) => {
               >
                 <Input placeholder="Enter a value for name" />
               </Item>
-
-              <Item
-                name="locale"
-                label="Locale:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Locale field cannot be empty',
-                  },
-                ]}
-              >
-                <Select placeholder="Please select">
-                  <Option value="en_CA">English</Option>
-                  <Option value="fr_CA">Francais</Option>
-                </Select>
-              </Item>
+              <LocaleItem name="locale" />
             </Form>
           }
         />

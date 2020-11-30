@@ -1,73 +1,47 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch, Form, Input, Button, Table, Select } from 'antd';
+import { Card, Switch, Form, Input, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import LocaleItem from 'components/LocaleItem';
+import PasspointNameTable from 'components/PasspointNameTable';
 import Modal from 'components/Modal';
 import FormModal from '../FormModal';
 
 import styles from '../../../index.module.scss';
 
-const { Option } = Select;
+const { Item } = Form;
 
-const OsuForm = ({ data, onSubmit, removeItem }) => {
-  const { Item } = Form;
+const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
   const [osuEnabled, setOsuEnabled] = useState(
-    data.osuServerUri !== null && data.osuServerUri !== ''
+    osuDetails?.osuServerUri !== null && osuDetails?.osuServerUri !== ''
   );
 
   const [nameModal, setNameModal] = useState(false);
   const [descModal, setDescModal] = useState(false);
   const [iconModal, setIconModal] = useState(false);
 
-  const [nameForm] = Form.useForm();
   const [iconForm] = Form.useForm();
 
-  const osuNameCols = [
+  const osuIconCols = [
     {
-      title: 'Name',
-      dataIndex: 'dupleName',
+      title: 'URL',
+      dataIndex: 'imageUrl',
       width: 500,
     },
     {
       title: 'Locale',
-      dataIndex: 'locale',
+      dataIndex: 'iconLocale',
     },
     {
       title: '',
       width: 80,
       render: item => (
         <Button
-          title="removePlmn"
+          title="removeIcon"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
           onClick={() => {
-            removeItem('osuFriendlyName', item);
-          }}
-        />
-      ),
-    },
-  ];
-
-  const osuDescCols = [
-    {
-      title: 'Name',
-      dataIndex: 'dupleName',
-      width: 500,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'locale',
-    },
-    {
-      title: '',
-      width: 80,
-      render: item => (
-        <Button
-          title="removePlmn"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          onClick={() => {
-            removeItem('osuServiceDescription', item);
+            removeItem(item, 'osuIconList');
           }}
         />
       ),
@@ -82,6 +56,7 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
       setDescModal(false);
     }
     if (index === 'osuIconList') {
+      iconForm.resetFields();
       setIconModal(false);
     }
   };
@@ -89,6 +64,14 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 15 },
+  };
+
+  const handleAddIcon = () => {
+    iconForm.validateFields().then(values => {
+      onSubmit('osuIconList', values);
+      iconForm.resetFields();
+      setIconModal(false);
+    });
   };
 
   return (
@@ -127,20 +110,18 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
             bordered={false}
             extra={<Button onClick={() => setNameModal(true)}>Add</Button>}
           >
-            <Table
-              dataSource={data?.osuFriendlyName}
-              columns={osuNameCols}
-              pagination={false}
-              rowKey={data?.osuFriendlyName}
+            <PasspointNameTable
+              tableData={osuDetails?.osuFriendlyName}
+              dataIndex="osuFriendlyName"
+              removeName={removeItem}
             />
           </Card>
-          <Item name="osuFriendlyName" style={{ height: '0' }}>
+          <Item name="osuFriendlyName" noStyle>
             <FormModal
               title="Add Name"
               fieldName="osuFriendlyName"
               onSubmit={onSubmit}
               visible={nameModal}
-              form={nameForm}
               closeModal={handleCloseModal}
             />
           </Item>
@@ -150,20 +131,18 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
             bordered={false}
             extra={<Button onClick={() => setDescModal(true)}>Add</Button>}
           >
-            <Table
-              dataSource={data?.osuServiceDescription}
-              columns={osuDescCols}
-              pagination={false}
-              rowKey={data?.osuServiceDescription}
+            <PasspointNameTable
+              tableData={osuDetails?.osuServiceDescription}
+              dataIndex="osuServiceDescription"
+              removeName={removeItem}
             />
           </Card>
-          <Item name="osuServiceDescription" style={{ height: '0' }}>
+          <Item name="osuServiceDescription" noStyle>
             <FormModal
               title="Add Description"
               fieldName="osuServiceDescription"
               onSubmit={onSubmit}
               visible={descModal}
-              form={nameForm}
               closeModal={handleCloseModal}
             />
           </Item>
@@ -174,50 +153,17 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
             extra={<Button onClick={() => setIconModal(true)}>Add</Button>}
           >
             <Table
-              dataSource={data?.osuIconList}
-              columns={[
-                {
-                  title: 'URL',
-                  dataIndex: 'imageUrl',
-                  width: 500,
-                },
-                {
-                  title: 'Locale',
-                  dataIndex: 'iconLocale',
-                },
-                {
-                  title: '',
-                  width: 80,
-                  render: item => (
-                    <Button
-                      title="removeIcon"
-                      icon={<DeleteOutlined />}
-                      className={styles.iconButton}
-                      onClick={() => {
-                        removeItem('osuIconList', item);
-                      }}
-                    />
-                  ),
-                },
-              ]}
+              dataSource={osuDetails?.osuIconList}
+              columns={osuIconCols}
               pagination={false}
-              rowKey={data?.osuIconList}
+              rowKey={record => record.imageUrl + record.iconLocale}
             />
           </Card>
 
-          <Item name="osuIconList" style={{ height: '0' }}>
+          <Item name="osuIconList" noStyle>
             <Modal
-              onSuccess={() => {
-                iconForm.validateFields().then(values => {
-                  onSubmit('osuIconList', values);
-                  iconForm.resetFields();
-                  setIconModal(false);
-                });
-              }}
-              onCancel={() => {
-                iconForm.resetFields();
-                setIconModal(false);
-              }}
+              onSuccess={handleAddIcon}
+              onCancel={() => handleCloseModal('osuIconList')}
               title="Add Icon"
               visible={iconModal}
               content={
@@ -234,22 +180,7 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
                   >
                     <Input placeholder="Enter the image url" />
                   </Item>
-
-                  <Item
-                    name="iconLocale"
-                    label="Locale:"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Locale field cannot be empty',
-                      },
-                    ]}
-                  >
-                    <Select placeholder="Please select">
-                      <Option value="en_CA">English</Option>
-                      <Option value="fr_CA">Francais</Option>
-                    </Select>
-                  </Item>
+                  <LocaleItem name="iconLocale" />
                 </Form>
               }
             />
@@ -261,13 +192,13 @@ const OsuForm = ({ data, onSubmit, removeItem }) => {
 };
 
 OsuForm.propTypes = {
-  data: PropTypes.instanceOf(Object),
+  osuDetails: PropTypes.instanceOf(Object),
   onSubmit: PropTypes.func.isRequired,
   removeItem: PropTypes.func.isRequired,
 };
 
 OsuForm.defaultProps = {
-  data: {},
+  osuDetails: {},
 };
 
 export default OsuForm;
