@@ -34,6 +34,7 @@ const ProfileDetails = ({
   profileType,
   name,
   details,
+  childProfiles,
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
@@ -192,6 +193,7 @@ const ProfileDetails = ({
             details={details}
             ssidProfiles={ssidProfiles}
             rfProfiles={rfProfiles}
+            childProfiles={childProfiles}
             childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
             onFetchMoreRfProfiles={onFetchMoreRfProfiles}
@@ -224,6 +226,7 @@ ProfileDetails.propTypes = {
   rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRfProfiles: PropTypes.func,
@@ -239,6 +242,7 @@ ProfileDetails.defaultProps = {
   rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
+  childProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreRfProfiles: () => {},

@@ -9,7 +9,8 @@ import styles from '../index.module.scss';
 
 const AccessPointForm = ({ 
     form, 
-    details, 
+    details,
+    childProfiles, 
     childProfileIds, 
     ssidProfiles, 
     rfProfiles,
@@ -29,18 +30,6 @@ const AccessPointForm = ({
 
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
 
-  const previousRfProfile = () => {
-    const rfProfileIds = [];
-    rfProfiles.map(profile => rfProfileIds.push(profile.id));
-    const hasRfProfile = childProfileIds.filter(id => rfProfileIds.includes(id));
-    if (hasRfProfile.length > 0){
-      return hasRfProfile[0];
-    }
-    return null;
-  };
-
-  const [previousRf, setPreviousRf] = useState(previousRfProfile);
-
   const handleOnChangeSsid = selectedItem => {
     form.setFieldsValue({
       childProfileIds: [...selectedChildProfiles, selectedItem],
@@ -56,17 +45,16 @@ const AccessPointForm = ({
   };
   
   const handleOnChangeRf = selectedItem => {
-    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousRf);
+    const newChildProfileList = childProfiles.filter(i => i.profileType !== 'rf').map(o => o.id);
 
     form.setFieldsValue({
       childProfileIds: [...newChildProfileList, selectedItem],
     });
     setSelectdChildProfiles([...newChildProfileList, selectedItem]);
-    setPreviousRf(selectedItem);
   };
 
   const getInitialRfProfile = () => {
-    return rfProfiles.filter(i => i.id === previousRf)[0]?.name;
+    return childProfiles.filter(i => i.profileType === 'rf')[0]?.name || null;
   };
 
   useEffect(() => {
@@ -429,6 +417,7 @@ AccessPointForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRfProfiles: PropTypes.func,
@@ -437,6 +426,7 @@ AccessPointForm.propTypes = {
 AccessPointForm.defaultProps = {
   form: null,
   details: {},
+  childProfiles: [],
   childProfileIds: [],
   ssidProfiles: [],
   rfProfiles: [],
