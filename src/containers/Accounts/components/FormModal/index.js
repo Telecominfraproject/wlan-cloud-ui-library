@@ -8,6 +8,10 @@ import styles from 'styles/index.scss';
 const { Item } = Form;
 const { Option } = Select;
 
+const strongRegex = new RegExp(
+  /(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])).*/
+);
+
 const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) => {
   const [form] = Form.useForm();
 
@@ -55,6 +59,18 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
             required: true,
             message: 'Please input your password',
           },
+          () => ({
+            validator(_rule, value) {
+              if (!value || strongRegex.test(value)) {
+                return Promise.resolve();
+              }
+              return Promise.reject(
+                new Error(
+                  'Password must be at least 8 characters in length and contain a Lower case letter, a Upper case letter, a Number, and a Special character.'
+                )
+              );
+            },
+          }),
         ]}
       >
         <Input.Password visibilityToggle className={styles.field} />
