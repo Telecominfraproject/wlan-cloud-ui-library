@@ -41,6 +41,28 @@ const PasspointProfileForm = ({
   );
   const [connectionForm] = Form.useForm();
 
+  const previousVenueProfile = () => {
+    const venueProfilesIds = venueProfiles.map(i => i.id);
+    const hasVenueProfile = childProfileIds.filter(id => venueProfilesIds.includes(id));
+    if (hasVenueProfile.length > 0){
+      return hasVenueProfile[0];
+    }
+    return null;
+  };
+
+  const previousOperatorProfile = () => {
+    const operatorProfileIds = [];
+    operatorProfiles.map(profile => operatorProfileIds.push(profile.id));
+    const hasOperatorProfile = childProfileIds.filter(id => operatorProfileIds.includes(id));
+    if (hasOperatorProfile.length > 0) {
+      return hasOperatorProfile[0];
+    }
+    return null;
+  };
+
+  const [previousVenueId, setPreviousVenueId] = useState(previousVenueProfile);
+  const [previousOperatorId, setPreviousOperatorId] = useState(previousOperatorProfile);
+
   useEffect(() => {
     setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
@@ -75,45 +97,35 @@ const PasspointProfileForm = ({
   }, [connectionCapabilitySetList]);
 
   const handleOnChangeVenue = (_selectedItem, option) => {
+    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousVenueId);
     form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, option.key],
+      childProfileIds: [...newChildProfileList, option.key],
     });
-    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+    setSelectdChildProfiles([...newChildProfileList, option.key]);
+    setPreviousVenueId(option.key);
   };
-
-  // const handleRemoveVenue = id => {
-  //   form.setFieldsValue({
-  //     childProfileIds: selectedChildProfiles.filter(i => i !== id),
-  //   });
-  //   setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
-  // };
 
   const handleOnChangeOperator = (_selectedItem, option) => {
+    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousOperatorId);
     form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, option.key],
+      childProfileIds: [...newChildProfileList, option.key],
     });
-    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+    setSelectdChildProfiles([...newChildProfileList, option.key]);
+    setPreviousOperatorId(option.key);
   };
-
-  // const handleRemoveOperator = id => {
-  //   form.setFieldsValue({
-  //     childProfileIds: selectedChildProfiles.filter(i => i !== id),
-  //   });
-  //   setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
-  // };
 
   const handleOnChangeIdProvider = (_selectedItem, option) => {
     form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, option.key],
+      childProfileIds: [...selectedChildProfiles, option[option.length - 1]?.key],
     });
-    setSelectdChildProfiles([...selectedChildProfiles, option.key]);
+    setSelectdChildProfiles([...selectedChildProfiles, option[option.length - 1]?.key]);
   };
 
   const handleRemoveIdProvider = (_selectedItem, option) => {
     form.setFieldsValue({
-      childProfileIds: selectedChildProfiles.filter(i => i !== option.key),
+      childProfileIds: selectedChildProfiles.filter(i => i !== option[option.length - 1].key),
     });
-    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== option.key));
+    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== option[option.length - 1].key));
   };
 
   const validateFile = (file, showMessages = false) => {
@@ -230,7 +242,7 @@ const PasspointProfileForm = ({
             showSearch
             placeholder="Select a Venue Profile"
             onChange={handleOnChangeVenue}
-            // TODO when profile changed removed previous profile from childProfile list
+            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {venueProfiles.map(i => (
               <Option key={i.id} value={i.name}>
@@ -246,7 +258,7 @@ const PasspointProfileForm = ({
             showSearch
             placeholder="Select an Operator Profile"
             onChange={handleOnChangeOperator}
-            // TODO when profile changed removed previous profile from childProfile list
+            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {operatorProfiles.map(i => (
               <Option key={i.id} value={i.name}>
@@ -266,6 +278,7 @@ const PasspointProfileForm = ({
             placeholder="Select ID Providers (check to select)"
             onChange={handleOnChangeIdProvider}
             onDeselect={handleRemoveIdProvider}
+            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {idProviderProfiles.map(i => (
               <Option key={i.id} value={i.name}>
@@ -472,9 +485,9 @@ const PasspointProfileForm = ({
                 ({ getFieldValue }) => ({
                   validator(_rule, value) {
                     if (
-                      connectionCapabilitySetList.filter(i => i.connectionCapabilitiesPortNumber === value.toString()).length > 0
+                      connectionCapabilitySetList.filter(i => i.connectionCapabilitiesPortNumber === value?.toString()).length > 0
                     ) {
-                      return Promise.reject(new Error('Port number is already used'));
+                      return Promise.reject(new Error('Port is already used'));
                     } 
                     if (
                       !value ||
@@ -483,12 +496,12 @@ const PasspointProfileForm = ({
                     ) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Enter a port number between 0 - 65535'));
+                    return Promise.reject(new Error('Port expected between 1 - 6553'));
                   },
                 }),
               ]}
             >
-              <Input type="number" min={0} max={65535} />
+              <Input type="number" min={0} max={65535} placeholder="Enter a port"/>
             </Item>
           </Form>
         }
