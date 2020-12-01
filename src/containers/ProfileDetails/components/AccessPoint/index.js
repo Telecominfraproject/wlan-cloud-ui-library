@@ -53,10 +53,6 @@ const AccessPointForm = ({
     setSelectdChildProfiles([...newChildProfileList, selectedItem]);
   };
 
-  const getInitialRfProfile = () => {
-    return childProfiles.filter(i => i.profileType === 'rf')[0]?.name || null;
-  };
-
   useEffect(() => {
     setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
@@ -80,6 +76,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
+      rfProfileId: childProfiles.filter(i => i.profileType === 'rf')[0]?.name || null,
       childProfileIds,
     });
   }, [form, details, childProfileIds]);
@@ -366,13 +363,12 @@ const AccessPointForm = ({
         </Item>
       </Card>
       <Card title="RF Enabled on This Profile">
-          <Item>
+          <Item name="rfProfileId">
             <Select
               onPopupScroll={onFetchMoreRfProfiles}
               showSearch
               placeholder="Select a RF Profile"
               onChange={handleOnChangeRf}
-              defaultValue={getInitialRfProfile}
             >
               {rfProfiles.map(i => (
                 <Option key={i.id} value={i.id}>

@@ -79,13 +79,10 @@ const AddProfile = ({
         }
 
         if (profileType === 'equipment_ap') {
-          const rfProfileIds = [];
-          rfProfiles.map(profile => rfProfileIds.push(profile.id));
-          const hasRfProfile = values.childProfileIds.filter(id => rfProfileIds.includes(id));
-          if (hasRfProfile.length <= 0) {
+          if (values.rfProfileId === null) {
             notification.error({
               message: 'Error',
-              description: 'One Rf Profile is required.',
+              description: 'A Rf Profile is required.',
             });
               return;
           }
