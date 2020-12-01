@@ -88,14 +88,14 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === 'equipment_ap') {        
-          if (values.rfProfileId === null) {
+          if (!values.rfProfileId) {
             notification.error({
               message: 'Error',
               description: 'A Rf Profile is required.',
             });
               return;
           }
-          formattedData = Object.assign(formattedData, formatApProfileForm(values, rfProfiles));
+          formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === 'radius') {
           if (values.services.length === 0) {

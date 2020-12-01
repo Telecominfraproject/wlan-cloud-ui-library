@@ -29,6 +29,7 @@ const AccessPointForm = ({
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
 
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
+  const [previousRfId, setPreviousRfId] = useState(childProfiles.filter(i => i.profileType === 'rf')[0]?.id);
 
   const handleOnChangeSsid = selectedItem => {
     form.setFieldsValue({
@@ -45,12 +46,13 @@ const AccessPointForm = ({
   };
   
   const handleOnChangeRf = selectedItem => {
-    const newChildProfileList = childProfiles.filter(i => i.profileType !== 'rf').map(o => o.id);
+    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousRfId);
 
     form.setFieldsValue({
       childProfileIds: [...newChildProfileList, selectedItem],
     });
     setSelectdChildProfiles([...newChildProfileList, selectedItem]);
+    setPreviousRfId(selectedItem);
   };
 
   useEffect(() => {
@@ -76,7 +78,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
-      rfProfileId: childProfiles.filter(i => i.profileType === 'rf')[0]?.name || null,
+      rfProfileId: previousRfId,
       childProfileIds,
     });
   }, [form, details, childProfileIds]);

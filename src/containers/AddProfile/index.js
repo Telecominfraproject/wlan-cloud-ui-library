@@ -79,7 +79,7 @@ const AddProfile = ({
         }
 
         if (profileType === 'equipment_ap') {
-          if (values.rfProfileId === null) {
+          if (!values.rfProfileId) {
             notification.error({
               message: 'Error',
               description: 'A Rf Profile is required.',
