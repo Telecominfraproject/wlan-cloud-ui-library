@@ -65,20 +65,17 @@ const AccessPointDetails = ({
 
   const [confirmModal, setConfirmModal] = useState(false);
 
-  const [redirectURL, setRedirectURL] = useState();
-
   const handleOnFormChange = () => {
     if (!isFormDirty) {
       setIsFormDirty(true);
     }
   };
 
-  const handlePageChange = path => {
+  const handlePageChange = () => {
     if (isFormDirty) {
-      setRedirectURL(path);
       setConfirmModal(true);
     } else {
-      history.push(path);
+      history.goBack();
     }
   };
 
@@ -105,7 +102,7 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          history.push(redirectURL);
+          history.goBack();
         }}
         visible={confirmModal}
         buttonText="OK"
@@ -114,7 +111,7 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange(routes.accessPoints)}>
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
           BACK
         </Button>
       </Header>
