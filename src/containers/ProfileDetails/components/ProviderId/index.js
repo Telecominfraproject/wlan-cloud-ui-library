@@ -110,7 +110,7 @@ const ProviderIdForm = ({ form, details }) => {
     plmnForm.resetFields();
   };
 
-  const handleAddOsuItem = (dataIndex, obj) => {
+  const handleAddOsuItem = (obj, dataIndex) => {
     if (dataIndex in osuDetails) {
       setOsuDetails({
         ...osuDetails,
@@ -186,12 +186,7 @@ const ProviderIdForm = ({ form, details }) => {
           </Button>
         }
       >
-        <Table
-          dataSource={mccMncList}
-          columns={columnsPlmn}
-          pagination={false}
-          rowKey={mccMncList}
-        />
+        <Table dataSource={mccMncList} columns={columnsPlmn} pagination={false} rowKey="mcc" />
         <Item name="mccMncList" noStyle>
           <Modal
             visible={plmnModal}

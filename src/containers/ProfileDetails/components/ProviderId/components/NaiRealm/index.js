@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Fragment } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Button, Table, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -24,12 +24,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       title: 'Authentication',
       dataIndex: ['authentication'],
       render: obj => {
-        return obj.map(i => (
-          <Fragment key={i}>
-            {i}
-            <br />
-          </Fragment>
-        ));
+        return obj.map(i => <div key={i}>{i}</div>);
       },
     },
     {
@@ -53,23 +48,22 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
     wrapperCol: { span: 20 },
   };
 
-  const formatRealmList = list =>
-    useMemo(() => {
-      if (!list || list === undefined) {
-        return [];
+  const formatRealmList = useMemo(() => {
+    if (!eapMap || eapMap === undefined) {
+      return [];
+    }
+    const formattedData = [];
+    Object.keys(eapMap).forEach(i => {
+      if (eapMap[i].length !== 0) {
+        formattedData.push({
+          method: i,
+          authentication: eapMap[i],
+        });
       }
-      const formattedData = [];
-      Object.keys(list).forEach(i => {
-        if (list[i].length !== 0) {
-          formattedData.push({
-            method: i,
-            authentication: list[i],
-          });
-        }
-      });
+    });
 
-      return formattedData;
-    }, [list]);
+    return formattedData;
+  }, [eapMap]);
 
   const addEapMethod = () => {
     form.validateFields().then(values => {
@@ -114,7 +108,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         extra={<Button onClick={() => setEapModal(true)}>Add</Button>}
       >
         <Table
-          dataSource={formatRealmList(eapMap)}
+          dataSource={formatRealmList}
           columns={columnsNai}
           pagination={false}
           rowKey="method"
@@ -122,8 +116,8 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       </Card>
       <Item name="eapMap" noStyle>
         <Modal
-          onSuccess={() => addEapMethod()}
-          onCancel={() => canceledModal()}
+          onSuccess={addEapMethod}
+          onCancel={canceledModal}
           visible={eapModal}
           title="Add EAP Method"
           content={

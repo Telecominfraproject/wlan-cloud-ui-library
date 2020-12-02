@@ -16,7 +16,7 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
 
   const addItem = () => {
     form.validateFields().then(values => {
-      onSubmit(fieldName, values);
+      onSubmit(values, fieldName);
       form.resetFields();
       closeModal(fieldName);
     });

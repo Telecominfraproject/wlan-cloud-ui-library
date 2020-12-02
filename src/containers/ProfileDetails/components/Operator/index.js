@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Input } from 'antd';
-import LocaleItem from 'components/LocaleItem';
-import Modal from 'components/Modal';
+import { Card, Select, Form, Button } from 'antd';
 import PasspointNameTable from 'components/PasspointNameTable';
+import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
 
@@ -12,7 +11,7 @@ const { Option } = Select;
 
 const OperatorForm = ({ details, form }) => {
   const [operatorFriendlyName, setOperatorFriendlyName] = useState(
-    [...details?.operatorFriendlyName] || []
+    details?.operatorFriendlyName ? [...details?.operatorFriendlyName] : []
   );
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,16 +26,8 @@ const OperatorForm = ({ details, form }) => {
     });
   }, [form, details, operatorFriendlyName]);
 
-  useEffect(() => {
-    setOperatorFriendlyName(details?.operatorFriendlyName || []);
-  }, [details?.operatorFriendlyName]);
-
-  const addName = () => {
-    nameForm.validateFields().then(values => {
-      setOperatorFriendlyName([...operatorFriendlyName, values]);
-      nameForm.resetFields();
-      setModalVisible(false);
-    });
+  const addName = values => {
+    setOperatorFriendlyName([...operatorFriendlyName, values]);
   };
 
   const removeName = obj => {
@@ -46,11 +37,6 @@ const OperatorForm = ({ details, form }) => {
   const cancelModal = () => {
     nameForm.resetFields();
     setModalVisible(false);
-  };
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
   };
 
   return (
@@ -89,28 +75,12 @@ const OperatorForm = ({ details, form }) => {
       </Card>
 
       <Item name="operatorFriendlyName" noStyle>
-        <Modal
-          onSuccess={addName}
-          onCancel={cancelModal}
+        <FormModal
           title="Add Operator Name"
+          fieldName="operatorFriendlyName"
+          onSubmit={addName}
           visible={modalVisible}
-          content={
-            <Form {...layout} form={nameForm}>
-              <Item
-                name="dupleName"
-                label="Name:"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Name field cannot be empty',
-                  },
-                ]}
-              >
-                <Input placeholder="Enter a value for name" />
-              </Item>
-              <LocaleItem name="locale" />
-            </Form>
-          }
+          closeModal={cancelModal}
         />
       </Item>
     </div>
