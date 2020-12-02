@@ -77,8 +77,10 @@ const AccessPointDetails = ({
     if (isFormDirty) {
       setRedirectURL(path);
       setConfirmModal(true);
-    } else {
+    } else if (path) {
       history.push(path);
+    } else {
+      history.goBack();
     }
   };
 
@@ -105,7 +107,11 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          history.push(redirectURL);
+          if (redirectURL) {
+            history.push(redirectURL);
+          } else {
+            history.goBack();
+          }
         }}
         visible={confirmModal}
         buttonText="OK"
@@ -114,8 +120,8 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange(routes.accessPoints)}>
-          BACK
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
+          Back
         </Button>
       </Header>
       <Card
