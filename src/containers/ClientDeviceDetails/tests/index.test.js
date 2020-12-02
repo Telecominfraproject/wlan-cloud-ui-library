@@ -8,8 +8,6 @@ import { render } from 'tests/utils';
 import ClientDeviceDetails from '..';
 
 describe('<ClientDeviceDetails />', () => {
-  const URL = '/network/client-devices';
-
   it('URL should change back to /network/client-devices when Back button is clicked', () => {
     const mockData = {
       details: {
@@ -24,7 +22,7 @@ describe('<ClientDeviceDetails />', () => {
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual(URL);
+    expect(window.location.pathname).toEqual('/');
   });
 
   it('should use default refresh function if one is not provided with', async () => {
