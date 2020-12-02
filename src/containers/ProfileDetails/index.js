@@ -87,7 +87,7 @@ const ProfileDetails = ({
         if (profileType === 'ssid') {
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
-        if (profileType === 'equipment_ap') {        
+        if (profileType === 'equipment_ap') {
           if (!values.rfProfileId) {
             notification.error({
               message: 'Error',

@@ -69,7 +69,7 @@ const AccessPointForm = ({
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: childProfiles.find( i => i. profileType === 'rf')?.id,
-      childProfileIds,
+      childProfileIds: selectedChildProfiles,
     });
   }, [form, details, childProfileIds]);
 
