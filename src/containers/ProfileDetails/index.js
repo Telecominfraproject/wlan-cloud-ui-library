@@ -95,6 +95,7 @@ const ProfileDetails = ({
             });
               return;
           }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === 'radius') {

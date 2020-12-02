@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
@@ -28,8 +28,8 @@ const AccessPointForm = ({
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
 
-  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
-  const [previousRfId, setPreviousRfId] = useState(childProfiles.filter(i => i.profileType === 'rf')[0]?.id);
+  const currentRfId = useMemo(() => childProfiles.find( i => i. profileType === 'rf')?.id, [childProfiles]);
+  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds.filter(i => i !== currentRfId ));
 
   const handleOnChangeSsid = selectedItem => {
     form.setFieldsValue({
@@ -43,16 +43,6 @@ const AccessPointForm = ({
       childProfileIds: selectedChildProfiles.filter(i => i !== id),
     });
     setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
-  };
-  
-  const handleOnChangeRf = selectedItem => {
-    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousRfId);
-
-    form.setFieldsValue({
-      childProfileIds: [...newChildProfileList, selectedItem],
-    });
-    setSelectdChildProfiles([...newChildProfileList, selectedItem]);
-    setPreviousRfId(selectedItem);
   };
 
   useEffect(() => {
@@ -78,7 +68,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
-      rfProfileId: previousRfId,
+      rfProfileId: childProfiles.find( i => i. profileType === 'rf')?.id,
       childProfileIds,
     });
   }, [form, details, childProfileIds]);
@@ -370,7 +360,6 @@ const AccessPointForm = ({
               onPopupScroll={onFetchMoreRfProfiles}
               showSearch
               placeholder="Select a RF Profile"
-              onChange={handleOnChangeRf}
             >
               {rfProfiles.map(i => (
                 <Option key={i.id} value={i.id}>

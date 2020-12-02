@@ -86,7 +86,7 @@ const AddProfile = ({
             });
               return;
           }
-
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
@@ -125,7 +125,7 @@ const AddProfile = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
-
+        
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
