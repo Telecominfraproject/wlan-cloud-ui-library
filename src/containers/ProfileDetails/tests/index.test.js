@@ -432,6 +432,22 @@ const mockProps = {
     }
   ],
   childProfileIds: [1, 5],
+  childProfiles: [
+    {
+      details: {},
+      id: "1",
+      name: "TipWlan-cloud-1-radios",
+      profileType: "ssid",
+      __typename: "Profile",
+    },
+    {
+      details: {},
+      id: "5",
+      name: "TipWlan-rf",
+      profileType: "rf",
+      __typename: "Profile",
+    }
+  ],
 };
 
 describe('<ProfileDetails />', () => {
