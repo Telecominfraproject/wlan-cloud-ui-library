@@ -18,6 +18,7 @@ import {
   formatCaptiveForm,
   formatBonjourGatewayForm,
   formatRfProfileForm,
+  formatPasspointForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -121,6 +122,34 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
+        if (profileType === 'passpoint'){
+          if (!values.passpointVenueProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Venue Profile is required.',
+            });
+            return;
+          }
+          if (!values.passpointOperatorProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Operator Profile is required.',
+            });
+            return;
+          }
+          if (values.passpointOsuProviderProfileIds.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 ID Provider Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.passpointVenueProfileId);
+          formattedData.childProfileIds.push(values.passpointOperatorProfileId);
+          values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
+          formattedData.model_type = 'PasspointProfile';
+          formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
+        };
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -204,7 +233,6 @@ const ProfileDetails = ({
           <PasspointProfileForm
             form={form}
             details={details}
-            childProfileIds={childProfileIds}
             venueProfiles={venueProfiles}
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Card, Button, Form, Input, Select, Table, Upload, message } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 
-import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
 
 import styles from '../index.module.scss';
+import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -22,7 +22,6 @@ const formatFile = file => {
 const PasspointProfileForm = ({
   form,
   details,
-  childProfileIds,
   venueProfiles,
   operatorProfiles,
   idProviderProfiles,
@@ -32,101 +31,47 @@ const PasspointProfileForm = ({
   onFetchMoreIdProviderProfiles,
 }) => {
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
-    (details?.termsAndConditionsFile && [formatFile(details.termsAndConditionsFile)]) || []
+    (details?.termsAndConditionsFile && [formatFile(details?.termsAndConditionsFile)]) || []
   );
-  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds);
   const [modalVisible, setModalVisible] = useState(false);
   const [connectionCapabilitySetList, setConnectionCapabilitySetList] = useState(
     details?.connectionCapabilitySet || []
   );
-  const [connectionForm] = Form.useForm();
-
-  const previousVenueProfile = () => {
-    const venueProfilesIds = venueProfiles.map(i => i.id);
-    const hasVenueProfile = childProfileIds.filter(id => venueProfilesIds.includes(id));
-    if (hasVenueProfile.length > 0){
-      return hasVenueProfile[0];
-    }
-    return null;
-  };
-
-  const previousOperatorProfile = () => {
-    const operatorProfileIds = [];
-    operatorProfiles.map(profile => operatorProfileIds.push(profile.id));
-    const hasOperatorProfile = childProfileIds.filter(id => operatorProfileIds.includes(id));
-    if (hasOperatorProfile.length > 0) {
-      return hasOperatorProfile[0];
-    }
-    return null;
-  };
-
-  const [previousVenueId, setPreviousVenueId] = useState(previousVenueProfile);
-  const [previousOperatorId, setPreviousOperatorId] = useState(previousOperatorProfile);
 
   useEffect(() => {
-    setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
-      passpointVenueProfileName: details?.passpointVenueProfileName || null,
-      passpointOperatorProfileName: details?.passpointOperatorProfileName || null,
-      idProviderProfileNames: details?.idProviderProfileNames || [],
-      enableInterworkingAndHs20: details?.enableInterworkingAndHs20 || 'true',
+      passpointVenueProfileId: details?.passpointVenueProfileId?.toString(),
+      passpointOperatorProfileId: details?.passpointOperatorProfileId?.toString(),
+      passpointOsuProviderProfileIds:
+        details?.passpointOsuProviderProfileIds?.map(i => i?.toString()) || [],
+      enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || null,
       },
       accessNetworkType: details?.accessNetworkType || 'private_network',
       networkAuthenticationType:
         details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
-      termsAndConditionsFile: 
+      termsAndConditionsFile:
         details?.termsAndConditionsFile && formatFile(details?.termsAndConditionsFile),
-      emergencyServicesReachable: details?.emergencyServicesReachable || 'true',
-      unauthenticatedEmergencyServiceAccessible:
-        details?.unauthenticatedEmergencyServiceAccessible || 'true',
-      internetConnectivity: details?.internetConnectivity || 'true',
+      emergencyServicesReachable: details?.emergencyServicesReachable ? 'true' : 'false',
+      unauthenticatedEmergencyServiceAccessible: details?.unauthenticatedEmergencyServiceAccessible
+        ? 'true'
+        : 'false',
+      internetConnectivity: details?.internetConnectivity ? 'true' : 'false',
       ipAddressTypeAvailability: details?.ipAddressTypeAvailability || 'address_type_not_available',
-      qosMapSetConfiguration: details?.qosMapSetConfiguration || [],
-      anqpDomainId: details?.anqpDomainId || 0,
+      anqpDomainId: details?.anqpDomainId ? details?.anqpDomainId?.toString() : '0',
       gasAddr3Behaviour: details?.gasAddr3Behaviour || 'p2pSpecWorkaroundFromRequest',
-      disableDownstreamGroupAddressedForwarding:
-        details?.disableDownstreamGroupAddressedForwarding || 'true',
-      childProfileIds,
+      disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding
+        ? 'true'
+        : 'false',
+      associatedAccessSsidProfileIds: details?.associatedAccessSsidProfileIds || [],
+      childProfileIds: [],
     });
-  }, [form, details, childProfileIds]);
+  }, [form, details]);
 
   useEffect(() => {
     form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
   }, [connectionCapabilitySetList]);
-
-  const handleOnChangeVenue = (_selectedItem, option) => {
-    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousVenueId);
-    form.setFieldsValue({
-      childProfileIds: [...newChildProfileList, option.key],
-    });
-    setSelectdChildProfiles([...newChildProfileList, option.key]);
-    setPreviousVenueId(option.key);
-  };
-
-  const handleOnChangeOperator = (_selectedItem, option) => {
-    const newChildProfileList = selectedChildProfiles.filter(i => i !== previousOperatorId);
-    form.setFieldsValue({
-      childProfileIds: [...newChildProfileList, option.key],
-    });
-    setSelectdChildProfiles([...newChildProfileList, option.key]);
-    setPreviousOperatorId(option.key);
-  };
-
-  const handleOnChangeIdProvider = (_selectedItem, option) => {
-    form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, option[option.length - 1]?.key],
-    });
-    setSelectdChildProfiles([...selectedChildProfiles, option[option.length - 1]?.key]);
-  };
-
-  const handleRemoveIdProvider = (_selectedItem, option) => {
-    form.setFieldsValue({
-      childProfileIds: selectedChildProfiles.filter(i => i !== option[option.length - 1].key),
-    });
-    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== option[option.length - 1].key));
-  };
 
   const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
@@ -173,15 +118,12 @@ const PasspointProfileForm = ({
     return false;
   };
 
-  const handleConnectionSave = () => {
-    connectionForm
-      .validateFields()
-      .then(newConnection => {
-        setConnectionCapabilitySetList([...connectionCapabilitySetList, newConnection]);
-        connectionForm.resetFields();
-        setModalVisible(false);
-      })
-      .catch(() => {});
+  const handlCancelConnectionModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleSaveConnection = newConnection => {
+    setConnectionCapabilitySetList([...connectionCapabilitySetList, newConnection]);
   };
 
   const handleConnectionRemove = item => {
@@ -196,14 +138,17 @@ const PasspointProfileForm = ({
     {
       title: 'Status',
       dataIndex: 'connectionCapabilitiesStatus',
+      width: 300,
     },
     {
       title: 'Protocol',
       dataIndex: 'connectionCapabilitiesIpProtocol',
+      width: 300,
     },
     {
       title: 'Port',
       dataIndex: 'connectionCapabilitiesPortNumber',
+      width: 300,
     },
     {
       title: '',
@@ -227,61 +172,49 @@ const PasspointProfileForm = ({
     </Select>
   );
 
-  const qosMapSetOptions = [];
-  for (let i = 1; i < 65; i+=1) {
-    qosMapSetOptions.push(<Option key={i}>{i}</Option>);
-  }
-
   return (
     <div className={styles.ProfilePage}>
       <Card title="General">
-        <Item label="Venue" name="passpointVenueProfileName">
+        <Item label="Venue" name="passpointVenueProfileId">
           <Select
             onPopupScroll={onFetchMoreVenueProfiles}
             data-testid="venueProfile"
             showSearch
             placeholder="Select a Venue Profile"
-            onChange={handleOnChangeVenue}
-            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {venueProfiles.map(i => (
-              <Option key={i.id} value={i.name}>
+              <Option key={i.id} value={i.id}>
                 {i.name}
               </Option>
             ))}
           </Select>
         </Item>
-        <Item label="Operator" name="passpointOperatorProfileName">
+        <Item label="Operator" name="passpointOperatorProfileId">
           <Select
             onPopupScroll={onFetchMoreOperatorProfiles}
             data-testid="operatorProfile"
             showSearch
             placeholder="Select an Operator Profile"
-            onChange={handleOnChangeOperator}
-            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {operatorProfiles.map(i => (
-              <Option key={i.id} value={i.name}>
+              <Option key={i.id} value={i.id}>
                 {i.name}
               </Option>
             ))}
           </Select>
         </Item>
-        <Item label="ID Provider" name="idProviderProfileNames">
+        <Item label="ID Provider" name="passpointOsuProviderProfileIds">
           <Select
             onPopupScroll={onFetchMoreIdProviderProfiles}
-            data-testid="idProviderProfile"
+            data-testid="idProviderProfiles"
             showSearch
             showArrow
             mode="multiple"
             allowClear
             placeholder="Select ID Providers (check to select)"
-            onChange={handleOnChangeIdProvider}
-            onDeselect={handleRemoveIdProvider}
-            // TODO adding and removing previous profile from childProfile list changed in YAML
           >
             {idProviderProfiles.map(i => (
-              <Option key={i.id} value={i.name}>
+              <Option key={i.id} value={i.id}>
                 {i.name}
               </Option>
             ))}
@@ -301,9 +234,6 @@ const PasspointProfileForm = ({
           ]}
         >
           <Input placeholder="Enter MAC Address" className={globalStyles.field} />
-        </Item>
-        <Item name="childProfileIds" style={{ display: 'none' }}>
-          <Input />
         </Item>
       </Card>
       <Card title="Access Network">
@@ -329,8 +259,7 @@ const PasspointProfileForm = ({
             <Option value="dns_redirection">DNS Redirection</Option>
           </Select>
         </Item>
-        <Item label="Terms & Conditions" name='termsAndConditionsFile'>
-          {/* TODO: check type and set for this upload ! */}
+        <Item label="Terms & Conditions" name="termsAndConditionsFile">
           <Upload
             accept="image/*"
             data-testid="termsAndConditionsUpload"
@@ -385,25 +314,12 @@ const PasspointProfileForm = ({
             Add Name
           </Button>
         </Item>
-        <Item noStyle name="connectionCapabilitySet">
-          <Table
-            dataSource={connectionCapabilitySetList}
-            columns={columns}
-            pagination={false}
-            rowKey="connectionCapabilitiesPortNumber"
-          />
-        </Item>
-        <Item label="QOS Map Set" name="qosMapSetConfiguration">
-            <Select 
-              showArrow
-              mode="multiple"
-              allowClear
-              placeholder="Select QOS Map Set (check to select)"
-            >
-              {qosMapSetOptions}
-            </Select>
-            {/* TODO confirm the options of qosMapSet */}
-        </Item>
+        <Table
+          dataSource={connectionCapabilitySetList}
+          columns={columns}
+          pagination={false}
+          rowKey="connectionCapabilitiesPortNumber"
+        />
       </Card>
       <Card title="Advanced">
         <Item
@@ -443,69 +359,24 @@ const PasspointProfileForm = ({
             <Option value="false">False</Option>
           </Select>
         </Item>
+
+        <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Input />
+        </Item>
+        <Item name="associatedAccessSsidProfileIds" style={{ display: 'none' }}>
+          <Input />
+        </Item>
       </Card>
 
-      <Modal
-        onCancel={() => setModalVisible(false)}
-        onSuccess={() => handleConnectionSave()}
-        visible={modalVisible}
-        title="Add Connection Capability"
-        content={
-          <Form form={connectionForm} layout="vertical">
-            <Item
-              label="Status"
-              name="connectionCapabilitiesStatus"
-              rules={[{ required: true, message: 'Status field cannot be empty' }]}
-            >
-              <Select placeholder="Select a status">
-                <Option value="open">Open</Option>
-                <Option value="closed">Closed</Option>
-                <Option value="unknown">Unknown</Option>
-              </Select>
-            </Item>
-            <Item
-              label="Protocol"
-              name="connectionCapabilitiesIpProtocol"
-              rules={[{ required: true, message: 'Protocol field cannot be empty' }]}
-            >
-              <Select placeholder="Select a protocol">
-                <Option value="ICMP">ICMP</Option>
-                <Option value="TCP">TCP</Option>
-                <Option value="UDP">UDP</Option>
-              </Select>
-            </Item>
-            <Item
-              label="Port"
-              name="connectionCapabilitiesPortNumber"
-              rules={[
-                {
-                  required: true,
-                  message: 'Port field cannot be empty',
-                },
-                ({ getFieldValue }) => ({
-                  validator(_rule, value) {
-                    if (
-                      connectionCapabilitySetList.filter(i => i.connectionCapabilitiesPortNumber === value?.toString()).length > 0
-                    ) {
-                      return Promise.reject(new Error('Port is already used'));
-                    } 
-                    if (
-                      !value ||
-                      (getFieldValue('connectionCapabilitiesPortNumber') <= 65535 &&
-                        getFieldValue('connectionCapabilitiesPortNumber') >= 0)
-                    ) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('Port expected between 1 - 6553'));
-                  },
-                }),
-              ]}
-            >
-              <Input type="number" min={0} max={65535} placeholder="Enter a port"/>
-            </Item>
-          </Form>
-        }
-      />
+      <Item name="connectionCapabilitySet">
+        <FormModal
+          visible={modalVisible}
+          onCancel={handlCancelConnectionModal}
+          onSubmit={handleSaveConnection}
+          currentPortList={connectionCapabilitySetList}
+          title="Add Connection Capability"
+        />
+      </Item>
     </div>
   );
 };
@@ -513,7 +384,6 @@ const PasspointProfileForm = ({
 PasspointProfileForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
-  childProfileIds: PropTypes.instanceOf(Array),
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
@@ -526,7 +396,6 @@ PasspointProfileForm.propTypes = {
 PasspointProfileForm.defaultProps = {
   form: {},
   details: {},
-  childProfileIds: [],
   venueProfiles: [],
   operatorProfiles: [],
   idProviderProfiles: [],

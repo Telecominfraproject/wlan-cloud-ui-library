@@ -186,3 +186,52 @@ export const formatRfProfileForm = values => {
 
   return formattedData;
 };
+
+export const formatPasspointForm = (values, details) => {
+  const formattedData = { ...values };
+
+  const getFileType = type => {
+    if (type.startsWith('image/')) {
+      return type === 'image/png' ? 'PNG' : 'JPG';
+    }
+    return type;
+  };
+
+  if (
+    !values.termsAndConditionsFile ||
+    (values.termsAndConditionsFile &&
+      values.termsAndConditionsFile.fileList &&
+      values.termsAndConditionsFile.fileList.length === 0)
+  ) {
+    // Deleted File
+    formattedData.termsAndConditionsFile = null;
+  } else if (values.termsAndConditionsFile && values.termsAndConditionsFile.file) {
+    // New File
+    formattedData.termsAndConditionsFile = {
+      apExportUrl: values.termsAndConditionsFile.file.name,
+      fileType: getFileType(values.termsAndConditionsFile.file.type),
+      fileCategory: 'ExternalPolicyConfiguration',
+    };
+  } else if (values.termsAndConditionsFile) {
+    // Same File
+    formattedData.termsAndConditionsFile = details.termsAndConditionsFile;
+  }
+
+  formattedData.passpointVenueProfileId = parseInt(values.passpointVenueProfileId, 10);
+  formattedData.passpointOperatorProfileId = parseInt(values.passpointOperatorProfileId, 10);
+  formattedData.passpointOsuProviderProfileIds = values.passpointOsuProviderProfileIds.map(i =>
+    parseInt(i, 10)
+  );
+  formattedData.anqpDomainId = parseInt(values.anqpDomainId, 10);
+  formattedData.enableInterworkingAndHs20 = isBool(values.enableInterworkingAndHs20);
+  formattedData.emergencyServicesReachable = isBool(values.emergencyServicesReachable);
+  formattedData.unauthenticatedEmergencyServiceAccessible = isBool(
+    values.unauthenticatedEmergencyServiceAccessible
+  );
+  formattedData.internetConnectivity = isBool(values.internetConnectivity);
+  formattedData.disableDownstreamGroupAddressedForwarding = isBool(
+    values.disableDownstreamGroupAddressedForwarding
+  );
+
+  return formattedData;
+};
