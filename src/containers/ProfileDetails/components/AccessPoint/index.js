@@ -72,7 +72,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
-      rfProfileId: childProfiles.find(i => i.profileType === 'rf')?.id,
+      rfProfileId: currentRfId,
       childProfileIds: selectedChildProfiles,
     });
   }, [form, details, childProfileIds]);
