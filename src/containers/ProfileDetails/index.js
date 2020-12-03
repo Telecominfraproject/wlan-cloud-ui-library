@@ -151,7 +151,7 @@ const ProfileDetails = ({
       />
       <Header>
         <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-          BACK
+          Back
         </Button>
         <div>
           <Button type="primary" onClick={handleOnSave}>

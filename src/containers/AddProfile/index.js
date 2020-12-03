@@ -145,7 +145,7 @@ const AddProfile = ({
         />
         <Header>
           <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
-            BACK
+            Back
           </Button>
           <div>
             <Button type="primary" onClick={handleOnSave}>
