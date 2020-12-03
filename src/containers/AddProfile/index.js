@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Card, Select, notification } from 'antd';
@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import {
   formatSsidProfileForm,
@@ -34,7 +35,14 @@ import OperatorForm from '../ProfileDetails/components/Operator';
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
+const AddProfile = ({
+  onCreateProfile,
+  ssidProfiles,
+  rfProfiles,
+  onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
+}) => {
+  const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -58,7 +66,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(`/profiles`);
+      history.push(routes.profiles);
     }
   };
 
@@ -74,6 +82,14 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         }
 
         if (profileType === 'equipment_ap') {
+          if (!values.rfProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
@@ -134,7 +150,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
       <div className={styles.AddProfile}>
         <Modal
           onCancel={() => setConfirmModal(false)}
-          onSuccess={() => history.push(`/profiles`)}
+          onSuccess={() => history.push(routes.profiles)}
           visible={confirmModal}
           buttonText="Back"
           title="Leave Form?"
@@ -142,7 +158,7 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         />
         <Header>
           <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
-            BACK
+            Back
           </Button>
           <div>
             <Button type="primary" onClick={handleOnSave}>
@@ -192,7 +208,9 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             <AccessPointForm
               form={form}
               ssidProfiles={ssidProfiles}
+              rfProfiles={rfProfiles}
               onFetchMoreProfiles={onFetchMoreProfiles}
+              onFetchMoreRfProfiles={onFetchMoreRfProfiles}
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
@@ -210,12 +228,16 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
+  rfProfiles: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
 };
 
 export default AddProfile;

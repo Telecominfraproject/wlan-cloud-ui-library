@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Card, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 
@@ -36,16 +37,20 @@ const ProfileDetails = ({
   profileType,
   name,
   details,
+  childProfiles,
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  rfProfiles,
   radiusProfiles,
   captiveProfiles,
   fileUpload,
   onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -68,7 +73,7 @@ const ProfileDetails = ({
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(`/profiles`);
+      history.push(routes.profiles);
     }
   };
 
@@ -86,6 +91,14 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === 'equipment_ap') {
+          if (!values.rfProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === 'radius') {
@@ -137,7 +150,7 @@ const ProfileDetails = ({
     <Container>
       <Modal
         onCancel={() => setConfirmModal(false)}
-        onSuccess={() => history.push(`/profiles`)}
+        onSuccess={() => history.push(routes.profiles)}
         visible={confirmModal}
         buttonText="Back"
         title="Leave Form?"
@@ -145,7 +158,7 @@ const ProfileDetails = ({
       />
       <Header>
         <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-          BACK
+          Back
         </Button>
         <div>
           <Button type="primary" onClick={handleOnSave}>
@@ -184,8 +197,11 @@ const ProfileDetails = ({
             form={form}
             details={details}
             ssidProfiles={ssidProfiles}
+            rfProfiles={rfProfiles}
+            childProfiles={childProfiles}
             childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
+            onFetchMoreRfProfiles={onFetchMoreRfProfiles}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -216,10 +232,13 @@ ProfileDetails.propTypes = {
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
 };
@@ -229,10 +248,13 @@ ProfileDetails.defaultProps = {
   profileType: null,
   details: {},
   ssidProfiles: [],
+  rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
+  childProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},
 };
