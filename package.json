@@ -92,7 +92,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,scss}": [
+    "*.{js,jsx}": [
       "eslint --fix 'src/**/*.js' --max-warnings=0",
       "prettier --write"
     ]
