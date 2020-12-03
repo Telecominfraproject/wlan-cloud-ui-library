@@ -40,6 +40,7 @@ const TAB_LIST = [
     tab: 'Firmware',
   },
 ];
+
 const AccessPointDetails = ({
   data,
   profiles,
