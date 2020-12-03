@@ -7,16 +7,16 @@ import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
-const AccessPointForm = ({ 
-    form, 
-    details,
-    childProfiles, 
-    childProfileIds, 
-    ssidProfiles, 
-    rfProfiles,
-    onFetchMoreProfiles,
-    onFetchMoreRfProfiles, 
-  }) => {
+const AccessPointForm = ({
+  form,
+  details,
+  childProfiles,
+  childProfileIds,
+  ssidProfiles,
+  rfProfiles,
+  onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
+}) => {
   const { Item } = Form;
   const { Option } = Select;
 
@@ -28,8 +28,12 @@ const AccessPointForm = ({
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
 
-  const currentRfId = useMemo(() => childProfiles.find( i => i. profileType === 'rf')?.id, [childProfiles]);
-  const [selectedChildProfiles, setSelectdChildProfiles] = useState(childProfileIds.filter(i => i !== currentRfId ));
+  const currentRfId = useMemo(() => childProfiles.find(i => i.profileType === 'rf')?.id, [
+    childProfiles,
+  ]);
+  const [selectedChildProfiles, setSelectdChildProfiles] = useState(
+    childProfileIds.filter(i => i !== currentRfId)
+  );
 
   const handleOnChangeSsid = selectedItem => {
     form.setFieldsValue({
@@ -68,7 +72,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
-      rfProfileId: childProfiles.find( i => i. profileType === 'rf')?.id,
+      rfProfileId: childProfiles.find(i => i.profileType === 'rf')?.id,
       childProfileIds: selectedChildProfiles,
     });
   }, [form, details, childProfileIds]);
@@ -355,19 +359,19 @@ const AccessPointForm = ({
         </Item>
       </Card>
       <Card title="RF Enabled on This Profile">
-          <Item name="rfProfileId">
-            <Select
-              onPopupScroll={onFetchMoreRfProfiles}
-              showSearch
-              placeholder="Select a RF Profile"
-            >
-              {rfProfiles.map(i => (
-                <Option key={i.id} value={i.id}>
-                  {i.name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
+        <Item name="rfProfileId">
+          <Select
+            onPopupScroll={onFetchMoreRfProfiles}
+            showSearch
+            placeholder="Select a RF Profile"
+          >
+            {rfProfiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>

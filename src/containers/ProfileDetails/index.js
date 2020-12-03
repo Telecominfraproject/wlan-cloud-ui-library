@@ -93,7 +93,7 @@ const ProfileDetails = ({
               message: 'Error',
               description: 'A Rf Profile is required.',
             });
-              return;
+            return;
           }
           formattedData.childProfileIds.push(values.rfProfileId);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));

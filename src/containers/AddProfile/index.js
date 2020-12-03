@@ -32,13 +32,13 @@ import RFForm from '../ProfileDetails/components/RF';
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ 
-    onCreateProfile, 
-    ssidProfiles, 
-    rfProfiles, 
-    onFetchMoreProfiles, 
-    onFetchMoreRfProfiles, 
-  }) => {
+const AddProfile = ({
+  onCreateProfile,
+  ssidProfiles,
+  rfProfiles,
+  onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
+}) => {
   const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -84,7 +84,7 @@ const AddProfile = ({
               message: 'Error',
               description: 'A Rf Profile is required.',
             });
-              return;
+            return;
           }
           formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
@@ -125,7 +125,7 @@ const AddProfile = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
-        
+
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
