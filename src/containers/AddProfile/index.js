@@ -32,7 +32,13 @@ import RFForm from '../ProfileDetails/components/RF';
 const { Item } = Form;
 const { Option } = Select;
 
-const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
+const AddProfile = ({
+  onCreateProfile,
+  ssidProfiles,
+  rfProfiles,
+  onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
+}) => {
   const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const history = useHistory();
@@ -73,6 +79,14 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
         }
 
         if (profileType === 'equipment_ap') {
+          if (!values.rfProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
@@ -179,7 +193,9 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
             <AccessPointForm
               form={form}
               ssidProfiles={ssidProfiles}
+              rfProfiles={rfProfiles}
               onFetchMoreProfiles={onFetchMoreProfiles}
+              onFetchMoreRfProfiles={onFetchMoreRfProfiles}
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
@@ -195,12 +211,16 @@ const AddProfile = ({ onCreateProfile, ssidProfiles, onFetchMoreProfiles }) => {
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
   ssidProfiles: [],
+  rfProfiles: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
 };
 
 export default AddProfile;

@@ -34,13 +34,16 @@ const ProfileDetails = ({
   profileType,
   name,
   details,
+  childProfiles,
   childProfileIds,
   onUpdateProfile,
   ssidProfiles,
+  rfProfiles,
   radiusProfiles,
   captiveProfiles,
   fileUpload,
   onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
 }) => {
@@ -85,6 +88,14 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === 'equipment_ap') {
+          if (!values.rfProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === 'radius') {
@@ -179,8 +190,11 @@ const ProfileDetails = ({
             form={form}
             details={details}
             ssidProfiles={ssidProfiles}
+            rfProfiles={rfProfiles}
+            childProfiles={childProfiles}
             childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
+            onFetchMoreRfProfiles={onFetchMoreRfProfiles}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -207,10 +221,13 @@ ProfileDetails.propTypes = {
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
   ssidProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
 };
@@ -220,10 +237,13 @@ ProfileDetails.defaultProps = {
   profileType: null,
   details: {},
   ssidProfiles: [],
+  rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
+  childProfiles: [],
   childProfileIds: [],
   onFetchMoreProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},
 };
