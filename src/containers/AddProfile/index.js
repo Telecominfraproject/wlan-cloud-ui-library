@@ -185,7 +185,11 @@ const AddProfile = ({
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input className={globalStyles.field} placeholder="Enter profile name" />
+              <Input
+                id="profileName"
+                className={globalStyles.field}
+                placeholder="Enter profile name"
+              />
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
