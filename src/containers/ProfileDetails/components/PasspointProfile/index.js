@@ -311,7 +311,7 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="Connection Capability">
           <Button type="solid" onClick={() => setModalVisible(true)}>
-            Add Name
+            Add
           </Button>
         </Item>
         <Table
