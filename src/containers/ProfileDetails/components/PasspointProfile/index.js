@@ -73,7 +73,7 @@ const PasspointProfileForm = ({
       childProfileIds: [],
       associatedAccessSsidProfileIds,
     });
-  }, [form, details]);
+  }, [form, details, associatedAccessSsidProfileIds]);
 
   useEffect(() => {
     form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
@@ -179,17 +179,16 @@ const PasspointProfileForm = ({
   );
 
   const handleOnChangeSsid = selectedItem => {
-    form.setFieldsValue({
-      associatedAccessSsidProfileIds: [...associatedAccessSsidProfileIds, selectedItem],
-    });
-    setAssociatedAccessSsidProfileIds([...associatedAccessSsidProfileIds, selectedItem]);
+    setAssociatedAccessSsidProfileIds([
+      ...associatedAccessSsidProfileIds,
+      parseInt(selectedItem, 10),
+    ]);
   };
 
   const handleRemoveSsid = id => {
-    form.setFieldsValue({
-      associatedAccessSsidProfileIds: associatedAccessSsidProfileIds.filter(i => i !== id),
-    });
-    setAssociatedAccessSsidProfileIds(associatedAccessSsidProfileIds.filter(i => i !== id));
+    setAssociatedAccessSsidProfileIds(
+      associatedAccessSsidProfileIds.filter(i => i !== parseInt(id, 10))
+    );
   };
 
   const columnsSsid = [
@@ -223,8 +222,12 @@ const PasspointProfileForm = ({
     },
   ];
 
-  const filteredOptions = ssidProfiles.filter(o => !associatedAccessSsidProfileIds.includes(o.id));
-  const tableData = ssidProfiles.filter(o => associatedAccessSsidProfileIds.includes(o.id));
+  const filteredOptions = ssidProfiles.filter(
+    o => !associatedAccessSsidProfileIds.includes(parseInt(o.id, 10))
+  );
+  const tableData = ssidProfiles.filter(o =>
+    associatedAccessSsidProfileIds.includes(parseInt(o.id, 10))
+  );
 
   return (
     <div className={styles.ProfilePage}>

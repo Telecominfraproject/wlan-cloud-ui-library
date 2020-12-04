@@ -233,11 +233,5 @@ export const formatPasspointForm = (values, details) => {
     values.disableDownstreamGroupAddressedForwarding
   );
 
-  formattedData.associatedAccessSsidProfileIds = values.associatedAccessSsidProfileIds.forEach(
-    i => {
-      return parseInt(i, 10);
-    }
-  );
-
   return formattedData;
 };
