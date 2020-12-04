@@ -24,8 +24,10 @@ const PasspointProfileForm = ({
   details,
   venueProfiles,
   operatorProfiles,
+  ssidProfiles,
   idProviderProfiles,
   fileUpload,
+  onFetchMoreProfiles,
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
@@ -36,6 +38,10 @@ const PasspointProfileForm = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [connectionCapabilitySetList, setConnectionCapabilitySetList] = useState(
     details?.connectionCapabilitySet || []
+  );
+
+  const [associatedAccessSsidProfileIds, setAssociatedAccessSsidProfileIds] = useState(
+    details?.associatedAccessSsidProfileIds || []
   );
 
   useEffect(() => {
@@ -64,8 +70,8 @@ const PasspointProfileForm = ({
       disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding
         ? 'true'
         : 'false',
-      associatedAccessSsidProfileIds: details?.associatedAccessSsidProfileIds || [],
       childProfileIds: [],
+      associatedAccessSsidProfileIds,
     });
   }, [form, details]);
 
@@ -171,6 +177,54 @@ const PasspointProfileForm = ({
       <Option value="false">Disabled</Option>
     </Select>
   );
+
+  const handleOnChangeSsid = selectedItem => {
+    form.setFieldsValue({
+      associatedAccessSsidProfileIds: [...associatedAccessSsidProfileIds, selectedItem],
+    });
+    setAssociatedAccessSsidProfileIds([...associatedAccessSsidProfileIds, selectedItem]);
+  };
+
+  const handleRemoveSsid = id => {
+    form.setFieldsValue({
+      associatedAccessSsidProfileIds: associatedAccessSsidProfileIds.filter(i => i !== id),
+    });
+    setAssociatedAccessSsidProfileIds(associatedAccessSsidProfileIds.filter(i => i !== id));
+  };
+
+  const columnsSsid = [
+    {
+      title: 'Profile Name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'SSID',
+      dataIndex: ['details', 'ssid'],
+    },
+    {
+      title: 'Security Mode',
+      dataIndex: ['details', 'secureMode'],
+    },
+    {
+      title: 'Radio',
+      dataIndex: ['details', 'appliedRadios'],
+      render: appliedRadios => appliedRadios?.join(',  '),
+    },
+    {
+      title: '',
+      width: 80,
+      render: (_, record) => (
+        <Button
+          title="removeSsid"
+          icon={<DeleteOutlined />}
+          onClick={() => handleRemoveSsid(record.id)}
+        />
+      ),
+    },
+  ];
+
+  const filteredOptions = ssidProfiles.filter(o => !associatedAccessSsidProfileIds.includes(o.id));
+  const tableData = ssidProfiles.filter(o => associatedAccessSsidProfileIds.includes(o.id));
 
   return (
     <div className={styles.ProfilePage}>
@@ -321,6 +375,34 @@ const PasspointProfileForm = ({
           rowKey="connectionCapabilitiesPortNumber"
         />
       </Card>
+
+      <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
+        <Item>
+          <Select
+            onPopupScroll={onFetchMoreProfiles}
+            data-testid="ssidProfile"
+            showSearch
+            placeholder="Select a SSID Profile"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            onChange={handleOnChangeSsid}
+            value="Select a SSID Profile"
+          >
+            {filteredOptions.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Table dataSource={tableData} columns={columnsSsid} pagination={false} rowKey="id" />
+        <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Input />
+        </Item>
+      </Card>
+
       <Card title="Advanced">
         <Item
           label="ANQP Domain ID"
@@ -386,8 +468,10 @@ PasspointProfileForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
+  ssidProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
@@ -398,8 +482,10 @@ PasspointProfileForm.defaultProps = {
   details: {},
   venueProfiles: [],
   operatorProfiles: [],
+  ssidProfiles: [],
   idProviderProfiles: [],
   fileUpload: () => {},
+  onFetchMoreProfiles: () => {},
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},
