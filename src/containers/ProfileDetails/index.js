@@ -122,7 +122,7 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
-        if (profileType === 'passpoint'){
+        if (profileType === 'passpoint') {
           if (!values.passpointVenueProfileId) {
             notification.error({
               message: 'Error',
@@ -149,7 +149,7 @@ const ProfileDetails = ({
           values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
-        };
+        }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
