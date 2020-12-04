@@ -19,7 +19,7 @@ const EditAccount = ({ email, onSubmit }) => {
   return (
     <div className={styles.Container}>
       <Card className={styles.Card}>
-        <h1>Edit Account</h1>
+        <h1>Edit User</h1>
 
         <Form {...layout} name="editAccount" data-testid="editAccount" onFinish={handleSubmit}>
           <Item className={styles.Email} label="E-mail">

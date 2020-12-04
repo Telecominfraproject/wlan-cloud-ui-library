@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { render } from 'tests/utils';
+import { render, ROUTES } from 'tests/utils';
 import ProfileDetails from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -236,7 +236,218 @@ const mockProps = {
       __typename: 'Profile',
     },
   ],
-  childProfileIds: [1],
+  rfProfiles: [
+    {
+      id: 5,
+      name: 'TipWlan-rf',
+      profileType: 'rf',
+      details: {
+        rfConfigMap: {
+          is2dot4GHz: {
+            activeScanSettings: {
+              enabled: true,
+              model_type: 'ActiveScanSettings',
+              scanDurationMillis: 65,
+              scanFrequencySeconds: 10,
+            },
+            autoChannelSelection: false,
+            beaconInterval: 100,
+            bestApEnabled: null,
+            bestApSettings: {
+              dropInSnrPercentage: 20,
+              minLoadFactor: 50,
+              mlComputed: true,
+              model_type: 'RadioBestApSettings',
+            },
+            channelBandwidth: 'is20MHz',
+            channelHopSettings: {
+              model_type: 'ChannelHopSettings',
+              noiseFloorThresholdInDB: -75,
+              noiseFloorThresholdTimeInSeconds: 180,
+              nonWifiThresholdInPercentage: 50,
+              nonWifiThresholdTimeInSeconds: 180,
+              obssHopMode: 'NON_WIFI',
+            },
+            clientDisconnectThresholdDb: 0,
+            eirpTxPower: 0,
+            forceScanDuringVoice: 'disabled',
+            managementRate: 'rate1mbps',
+            maxNumClients: 0,
+            mimoMode: 'none',
+            minAutoCellSize: null,
+            model_type: 'RfElementConfiguration',
+            multicastRate: 'rate6mbps',
+            neighbouringListApConfig: {
+              maxAps: 25,
+              minSignal: -85,
+              model_type: 'NeighbouringAPListConfiguration',
+            },
+            perimeterDetectionEnabled: true,
+            probeResponseThresholdDb: -90,
+            radioMode: 'modeN',
+            rf: null,
+            rtsCtsThreshold: 0,
+            rxCellSizeDb: -90,
+          },
+          is5GHz: {
+            activeScanSettings: {
+              enabled: true,
+              model_type: 'ActiveScanSettings',
+              scanDurationMillis: 65,
+              scanFrequencySeconds: 10,
+            },
+            autoChannelSelection: false,
+            beaconInterval: 100,
+            bestApEnabled: null,
+            bestApSettings: {
+              dropInSnrPercentage: 20,
+              minLoadFactor: 50,
+              mlComputed: true,
+              model_type: 'RadioBestApSettings',
+            },
+            channelBandwidth: 'is20MHz',
+            channelHopSettings: {
+              model_type: 'ChannelHopSettings',
+              noiseFloorThresholdInDB: -75,
+              noiseFloorThresholdTimeInSeconds: 180,
+              nonWifiThresholdInPercentage: 50,
+              nonWifiThresholdTimeInSeconds: 180,
+              obssHopMode: 'NON_WIFI',
+            },
+            clientDisconnectThresholdDb: 0,
+            eirpTxPower: 0,
+            forceScanDuringVoice: 'disabled',
+            managementRate: 'rate1mbps',
+            maxNumClients: 0,
+            mimoMode: 'none',
+            minAutoCellSize: null,
+            model_type: 'RfElementConfiguration',
+            multicastRate: 'rate6mbps',
+            neighbouringListApConfig: {
+              maxAps: 25,
+              minSignal: -85,
+              model_type: 'NeighbouringAPListConfiguration',
+            },
+            perimeterDetectionEnabled: true,
+            probeResponseThresholdDb: -90,
+            radioMode: 'modeN',
+            rf: null,
+            rtsCtsThreshold: 0,
+            rxCellSizeDb: -90,
+          },
+          is5GHzL: {
+            activeScanSettings: {
+              enabled: true,
+              model_type: 'ActiveScanSettings',
+              scanDurationMillis: 65,
+              scanFrequencySeconds: 10,
+            },
+            autoChannelSelection: false,
+            beaconInterval: 100,
+            bestApEnabled: null,
+            bestApSettings: {
+              dropInSnrPercentage: 20,
+              minLoadFactor: 50,
+              mlComputed: true,
+              model_type: 'RadioBestApSettings',
+            },
+            channelBandwidth: 'is20MHz',
+            channelHopSettings: {
+              model_type: 'ChannelHopSettings',
+              noiseFloorThresholdInDB: -75,
+              noiseFloorThresholdTimeInSeconds: 180,
+              nonWifiThresholdInPercentage: 50,
+              nonWifiThresholdTimeInSeconds: 180,
+              obssHopMode: 'NON_WIFI',
+            },
+            clientDisconnectThresholdDb: 0,
+            eirpTxPower: 0,
+            forceScanDuringVoice: 'disabled',
+            managementRate: 'rate1mbps',
+            maxNumClients: 0,
+            mimoMode: 'none',
+            minAutoCellSize: null,
+            model_type: 'RfElementConfiguration',
+            multicastRate: 'rate6mbps',
+            neighbouringListApConfig: {
+              maxAps: 25,
+              minSignal: -85,
+              model_type: 'NeighbouringAPListConfiguration',
+            },
+            perimeterDetectionEnabled: true,
+            probeResponseThresholdDb: -90,
+            radioMode: 'modeN',
+            rf: null,
+            rtsCtsThreshold: 0,
+            rxCellSizeDb: -90,
+          },
+          is5GHzU: {
+            activeScanSettings: {
+              enabled: true,
+              model_type: 'ActiveScanSettings',
+              scanDurationMillis: 65,
+              scanFrequencySeconds: 10,
+            },
+            autoChannelSelection: false,
+            beaconInterval: 100,
+            bestApEnabled: null,
+            bestApSettings: {
+              dropInSnrPercentage: 20,
+              minLoadFactor: 50,
+              mlComputed: true,
+              model_type: 'RadioBestApSettings',
+            },
+            channelBandwidth: 'is20MHz',
+            channelHopSettings: {
+              model_type: 'ChannelHopSettings',
+              noiseFloorThresholdInDB: -75,
+              noiseFloorThresholdTimeInSeconds: 180,
+              nonWifiThresholdInPercentage: 50,
+              nonWifiThresholdTimeInSeconds: 180,
+              obssHopMode: 'NON_WIFI',
+            },
+            clientDisconnectThresholdDb: 0,
+            eirpTxPower: 0,
+            forceScanDuringVoice: 'disabled',
+            managementRate: 'rate1mbps',
+            maxNumClients: 0,
+            mimoMode: 'none',
+            minAutoCellSize: null,
+            model_type: 'RfElementConfiguration',
+            multicastRate: 'rate6mbps',
+            neighbouringListApConfig: {
+              maxAps: 25,
+              minSignal: -85,
+              model_type: 'NeighbouringAPListConfiguration',
+            },
+            perimeterDetectionEnabled: true,
+            probeResponseThresholdDb: -90,
+            radioMode: 'modeN',
+            rf: null,
+            rtsCtsThreshold: 0,
+            rxCellSizeDb: -90,
+          },
+        },
+      },
+    },
+  ],
+  childProfileIds: [1, 5],
+  childProfiles: [
+    {
+      details: {},
+      id: '1',
+      name: 'TipWlan-cloud-1-radios',
+      profileType: 'ssid',
+      __typename: 'Profile',
+    },
+    {
+      details: {},
+      id: '5',
+      name: 'TipWlan-rf',
+      profileType: 'rf',
+      __typename: 'Profile',
+    },
+  ],
 };
 
 describe('<ProfileDetails />', () => {
@@ -528,7 +739,7 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
     await waitFor(() => {
-      expect(window.location.pathname).toEqual('/profiles');
+      expect(window.location.pathname).toEqual(ROUTES.profiles);
     });
   });
 
@@ -544,7 +755,7 @@ describe('<ProfileDetails />', () => {
     fireEvent.click(getByRole('button', { name: 'Back' }));
 
     await waitFor(() => {
-      expect(window.location.pathname).toEqual('/profiles');
+      expect(window.location.pathname).toEqual(ROUTES.profiles);
     });
   });
 

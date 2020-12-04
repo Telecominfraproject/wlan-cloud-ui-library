@@ -286,7 +286,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByRole('button', { name: /confirm/i }));
   });
 
-  it('URL changes to /network/access-points on clicking the back button', () => {
+  it('URL changes to / on clicking the back button', () => {
     const history = createMemoryHistory();
 
     const { getByRole } = render(
@@ -296,6 +296,6 @@ describe('<AccessPointDetails />', () => {
     );
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual('/network/access-points');
+    expect(window.location.pathname).toEqual('/');
   });
 });

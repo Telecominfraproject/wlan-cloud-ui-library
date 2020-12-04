@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
@@ -7,6 +7,7 @@ import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 import { getLocationPath } from 'utils/locations';
 
 import General from './components/General';
@@ -39,6 +40,7 @@ const TAB_LIST = [
     tab: 'Firmware',
   },
 ];
+
 const AccessPointDetails = ({
   data,
   profiles,
@@ -56,6 +58,7 @@ const AccessPointDetails = ({
   errorFirmware,
   onFetchMoreProfiles,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
   const history = useHistory();
 
@@ -75,8 +78,10 @@ const AccessPointDetails = ({
     if (isFormDirty) {
       setRedirectURL(path);
       setConfirmModal(true);
-    } else {
+    } else if (path) {
       history.push(path);
+    } else {
+      history.goBack();
     }
   };
 
@@ -103,7 +108,11 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          history.push(redirectURL);
+          if (redirectURL) {
+            history.push(redirectURL);
+          } else {
+            history.goBack();
+          }
         }}
         visible={confirmModal}
         buttonText="OK"
@@ -112,8 +121,8 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange('/network/access-points')}>
-          BACK
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
+          Back
         </Button>
       </Header>
       <Card
@@ -148,7 +157,7 @@ const AccessPointDetails = ({
           </div>
         }
         tabList={TAB_LIST}
-        onTabChange={key => handlePageChange(`/network/access-points/${id}/${key}`)}
+        onTabChange={key => handlePageChange(`${routes.accessPoints}/${id}/${key}`)}
         activeTabKey={tab}
         bodyStyle={{ marginBottom: '-48px' }}
       />

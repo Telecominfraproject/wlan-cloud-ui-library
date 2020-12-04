@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
+
+import ThemeContext from 'contexts/ThemeContext';
 import styles from './index.module.scss';
 
 const PopoverMenuContent = ({
@@ -13,10 +15,11 @@ const PopoverMenuContent = ({
   setApModal,
   hide,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const history = useHistory();
 
   const handleBulkEdit = () => {
-    history.push(`/network/access-points/bulk-edit/${locationId}`);
+    history.push(`${routes.bulkEdit}/${locationId}`);
   };
 
   return (

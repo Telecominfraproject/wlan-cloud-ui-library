@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ReloadOutlined, ExclamationOutlined, WifiOutlined } from '@ant-design/icons';
 import { List, Card, Avatar } from 'antd';
@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
+import ThemeContext from 'contexts/ThemeContext';
 
 import styles from './index.module.scss';
 
@@ -14,6 +15,7 @@ const { Item } = List;
 const { Meta } = Card;
 
 const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
+  const { routes } = useContext(ThemeContext);
   const getBackgroundColor = status => {
     if (status === 'error') {
       return '#FF0000';
@@ -62,7 +64,7 @@ const Alarms = ({ data, onReload, onLoadMore, isLastPage }) => {
                   <div>
                     <div>{item.details.message}</div>
                     {item.equipment && (
-                      <Link to={`/network/access-points/${item.equipment.id}`}>
+                      <Link to={`${routes.accessPoints}/${item.equipment.id}`}>
                         <WifiOutlined className={styles.WifiIcon} />
                         {item.equipment.name}
                       </Link>

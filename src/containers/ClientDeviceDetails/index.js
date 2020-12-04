@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -21,6 +21,8 @@ const ClientDeviceDetails = ({
   metricsData,
   historyDate,
 }) => {
+  const history = useHistory();
+
   const {
     macAddress,
     ipAddress,
@@ -95,9 +97,9 @@ const ClientDeviceDetails = ({
   return (
     <>
       <div className={styles.topBtns}>
-        <Link to="/network/client-devices">
-          <Button icon={<LeftOutlined />}>Back</Button>
-        </Link>
+        <Button icon={<LeftOutlined />} onClick={() => history.goBack()}>
+          Back
+        </Button>
         <Button icon={<ReloadOutlined />} onClick={onRefresh} />
       </div>
       <DeviceDetailCard
