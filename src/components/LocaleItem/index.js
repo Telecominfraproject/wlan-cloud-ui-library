@@ -17,7 +17,7 @@ const LocaleDropdown = ({ name }) => {
         },
       ]}
     >
-      <Select placeholder="Please select">
+      <Select placeholder="Please select" data-testid="localeItem">
         <Option value="en_CA">English</Option>
         <Option value="fr_CA">Francais</Option>
       </Select>

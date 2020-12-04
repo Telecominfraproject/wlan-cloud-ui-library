@@ -98,11 +98,14 @@ const ProviderIdForm = ({ form, details }) => {
   ];
 
   const handleAddPlmnItem = () => {
-    plmnForm.validateFields().then(values => {
-      setMccMncList([...mccMncList, values]);
-      setPlmnModal(false);
-      plmnForm.resetFields();
-    });
+    plmnForm
+      .validateFields()
+      .then(values => {
+        setMccMncList([...mccMncList, values]);
+        setPlmnModal(false);
+        plmnForm.resetFields();
+      })
+      .catch(() => {});
   };
 
   const handleClosePlmnModal = () => {
@@ -164,24 +167,15 @@ const ProviderIdForm = ({ form, details }) => {
         >
           <Input placeholder="Enter a domain name" />
         </Item>
-        <Item
-          label="Roaming OI:"
-          name="roamingOi"
-          rules={[
-            {
-              required: true,
-              message: 'Roaming oi field cannot be empty',
-            },
-          ]}
-        >
-          <Input placeholder="Enter roaming oi" />
+        <Item label="Roaming OI:" name="roamingOi">
+          <Input placeholder="Enter Roaming Oi" />
         </Item>
       </Card>
 
       <Card
         title="Public Land Mobile Networks (PLMN)"
         extra={
-          <Button type="solid" onClick={() => setPlmnModal(true)}>
+          <Button type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
             Add
           </Button>
         }
@@ -218,30 +212,6 @@ const ProviderIdForm = ({ form, details }) => {
                   ]}
                 >
                   <Input placeholder="Enter a value for mnc" type="number" />
-                </Item>
-                <Item
-                  name="country"
-                  label="Country:"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Country field cannot be empty',
-                    },
-                  ]}
-                >
-                  <Input placeholder="Enter a value for country" />
-                </Item>
-                <Item
-                  name="network"
-                  label="Network:"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Network field cannot be empty',
-                    },
-                  ]}
-                >
-                  <Input placeholder="Enter a value for network" />
                 </Item>
               </Form>
             }

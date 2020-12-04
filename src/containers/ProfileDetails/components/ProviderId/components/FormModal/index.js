@@ -15,11 +15,14 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
   };
 
   const addItem = () => {
-    form.validateFields().then(values => {
-      onSubmit(values, fieldName);
-      form.resetFields();
-      closeModal(fieldName);
-    });
+    form
+      .validateFields()
+      .then(values => {
+        onSubmit(values, fieldName);
+        form.resetFields();
+        closeModal(fieldName);
+      })
+      .catch(() => {});
   };
 
   const canceledModal = () => {

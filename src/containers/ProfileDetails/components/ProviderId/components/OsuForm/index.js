@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch, Form, Input, Button, Table } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Card, Switch, Form, Input, Button } from 'antd';
 import LocaleItem from 'components/LocaleItem';
-import PasspointNameTable from 'components/PasspointNameTable';
+import PasspointLocaleTable from 'components/PasspointLocaleTable';
 import Modal from 'components/Modal';
 import FormModal from '../FormModal';
-
-import styles from '../../../index.module.scss';
 
 const { Item } = Form;
 
@@ -21,32 +18,6 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
   const [iconModal, setIconModal] = useState(false);
 
   const [iconForm] = Form.useForm();
-
-  const osuIconCols = [
-    {
-      title: 'URL',
-      dataIndex: 'imageUrl',
-      width: 500,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'iconLocale',
-    },
-    {
-      title: '',
-      width: 80,
-      render: item => (
-        <Button
-          title="removeIcon"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          onClick={() => {
-            removeItem(item, 'osuIconList');
-          }}
-        />
-      ),
-    },
-  ];
 
   const handleCloseModal = index => {
     if (index === 'osuFriendlyName') {
@@ -68,7 +39,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
 
   const handleAddIcon = () => {
     iconForm.validateFields().then(values => {
-      onSubmit('osuIconList', values);
+      onSubmit(values, 'osuIconList');
       iconForm.resetFields();
       setIconModal(false);
     });
@@ -85,6 +56,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
             style={{ marginLeft: '1rem' }}
             onChange={() => setOsuEnabled(!osuEnabled)}
             defaultChecked={osuEnabled}
+            data-testid="switchToggle"
           />
         </>
       }
@@ -108,9 +80,13 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
           <Card
             title="Name:"
             bordered={false}
-            extra={<Button onClick={() => setNameModal(true)}>Add</Button>}
+            extra={
+              <Button onClick={() => setNameModal(true)} data-testid="osuName">
+                Add
+              </Button>
+            }
           >
-            <PasspointNameTable
+            <PasspointLocaleTable
               tableData={osuDetails?.osuFriendlyName}
               dataIndex="osuFriendlyName"
               removeName={removeItem}
@@ -129,9 +105,13 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
           <Card
             title="Description:"
             bordered={false}
-            extra={<Button onClick={() => setDescModal(true)}>Add</Button>}
+            extra={
+              <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
+                Add
+              </Button>
+            }
           >
-            <PasspointNameTable
+            <PasspointLocaleTable
               tableData={osuDetails?.osuServiceDescription}
               dataIndex="osuServiceDescription"
               removeName={removeItem}
@@ -150,13 +130,16 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
           <Card
             title="Icons:"
             bordered={false}
-            extra={<Button onClick={() => setIconModal(true)}>Add</Button>}
+            extra={
+              <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
+                Add
+              </Button>
+            }
           >
-            <Table
-              dataSource={osuDetails?.osuIconList}
-              columns={osuIconCols}
-              pagination={false}
-              rowKey={record => record.imageUrl + record.iconLocale}
+            <PasspointLocaleTable
+              tableData={osuDetails?.osuIconList}
+              dataIndex="osuIconList"
+              removeName={removeItem}
             />
           </Card>
 

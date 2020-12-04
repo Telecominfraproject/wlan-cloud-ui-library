@@ -66,17 +66,20 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
   }, [eapMap]);
 
   const addEapMethod = () => {
-    form.validateFields().then(values => {
-      const i = _.cloneDeep(eapMap || {});
-      if (!(values.method in i)) {
-        i[values.method] = [];
-      }
-      i[values.method].push(values.auth.join(': '));
-      addEap(i);
+    form
+      .validateFields()
+      .then(values => {
+        const i = _.cloneDeep(eapMap || {});
+        if (!(values.method in i)) {
+          i[values.method] = [];
+        }
+        i[values.method].push(values.auth.join(': '));
+        addEap(i);
 
-      form.resetFields();
-      setEapModal(false);
-    });
+        form.resetFields();
+        setEapModal(false);
+      })
+      .catch(() => {});
   };
 
   const canceledModal = () => {
@@ -105,7 +108,11 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       <Card
         title="Extensible Authentication (EAP) Methods:"
         bordered={false}
-        extra={<Button onClick={() => setEapModal(true)}>Add</Button>}
+        extra={
+          <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
+            Add
+          </Button>
+        }
       >
         <Table
           dataSource={formatRealmList}
@@ -132,8 +139,10 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   },
                 ]}
               >
-                <Select placeholder="Please select">
-                  <Option value="EAP-TLS with certificate">EAP-TLS with certificate</Option>
+                <Select placeholder="Please select" data-testid="method">
+                  <Option value="EAP-TLS with certificate" data-testid="eapCertificate">
+                    EAP-TLS with certificate
+                  </Option>
                   <Option value="EAP-TTLS with username/password">
                     EAP-TTLS with username/password
                   </Option>

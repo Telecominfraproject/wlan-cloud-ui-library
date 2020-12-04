@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Select, Form, Button } from 'antd';
-import PasspointNameTable from 'components/PasspointNameTable';
+import PasspointLocaleTable from 'components/PasspointLocaleTable';
 import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
@@ -10,12 +10,11 @@ const { Item } = Form;
 const { Option } = Select;
 
 const OperatorForm = ({ details, form }) => {
-  const [operatorFriendlyName, setOperatorFriendlyName] = useState(
-    details?.operatorFriendlyName ? [...details?.operatorFriendlyName] : []
-  );
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [nameForm] = Form.useForm();
+
+  const [operatorFriendlyName, setOperatorFriendlyName] = useState(
+    details?.operatorFriendlyName ?? []
+  );
 
   useEffect(() => {
     form.setFieldsValue({
@@ -35,7 +34,6 @@ const OperatorForm = ({ details, form }) => {
   };
 
   const cancelModal = () => {
-    nameForm.resetFields();
     setModalVisible(false);
   };
 
@@ -53,8 +51,8 @@ const OperatorForm = ({ details, form }) => {
           ]}
         >
           <Select>
-            <Option value="true">enabled</Option>
-            <Option value="false">disabled</Option>
+            <Option value="true">Enabled</Option>
+            <Option value="false">Disabled</Option>
           </Select>
         </Item>
       </Card>
@@ -67,7 +65,7 @@ const OperatorForm = ({ details, form }) => {
           </Button>
         }
       >
-        <PasspointNameTable
+        <PasspointLocaleTable
           tableData={operatorFriendlyName}
           dataIndex="operatorFriendlyName"
           removeName={removeName}
