@@ -53,30 +53,30 @@ const mockProps = {
   },
   childProfileIds: ['40', '30', '20', '10'],
   childProfiles: [
-      {
-        id: '40',
-        name: 'ssid-profile-1',
-        profileType: 'ssid',
-        details: {},
-      },
-      {
-        id: '30',
-        name: 'Venue-Profile',
-        profileType: 'passpoint_venue',
-        details: {},
-      },
-      {
-        id: '20',
-        name: 'Id-Provider-Profile-1',
-        profileType: 'passpoint_osu_id_provider',
-        details: {},
-      },
-      {
-        id: '10',
-        name: 'Operator-Profile',
-        profileType: 'passpoint_operator',
-        details: {},
-      },
+    {
+      id: '40',
+      name: 'ssid-profile-1',
+      profileType: 'ssid',
+      details: {},
+    },
+    {
+      id: '30',
+      name: 'Venue-Profile',
+      profileType: 'passpoint_venue',
+      details: {},
+    },
+    {
+      id: '20',
+      name: 'Id-Provider-Profile-1',
+      profileType: 'passpoint_osu_id_provider',
+      details: {},
+    },
+    {
+      id: '10',
+      name: 'Operator-Profile',
+      profileType: 'passpoint_operator',
+      details: {},
+    },
   ],
   venueProfiles: [
     {
@@ -330,38 +330,38 @@ describe('<PasspointProfileForm />', () => {
 
   it('HESSID empty error message should appear when field is empty', async () => {
     const PasspointProfileFormComp = () => {
-        const [form] = Form.useForm();
-        return (
-          <Form form={form}>
-            <PasspointProfileForm {...mockProps} form={form} />
-          </Form>
-        );
-      };
-      const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
 
-      fireEvent.change(getByLabelText('HESSID'), { target: { value: '' } });
+    fireEvent.change(getByLabelText('HESSID'), { target: { value: '' } });
 
-      await waitFor(() => {
-          expect(getByText('Mac Address cannot be empty'));
-      });
+    await waitFor(() => {
+      expect(getByText('Mac Address cannot be empty'));
+    });
   });
 
   it('HESSID Mac Address Pattern error message should appear when field input is incorret', async () => {
     const PasspointProfileFormComp = () => {
-        const [form] = Form.useForm();
-        return (
-          <Form form={form}>
-            <PasspointProfileForm {...mockProps} form={form} />
-          </Form>
-        );
-      };
-      const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
 
-      fireEvent.change(getByLabelText('HESSID'), { target: { value: 'test' } });
+    fireEvent.change(getByLabelText('HESSID'), { target: { value: 'test' } });
 
-      await waitFor(() => {
-          expect(getByText('Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F'));
-      });
+    await waitFor(() => {
+      expect(getByText('Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F'));
+    });
   });
 
   it('should work when termsAndConditionsFile is not null ', async () => {
@@ -674,7 +674,7 @@ describe('<PasspointProfileForm />', () => {
 
     const { getByRole, getByText } = render(<PasspointProfileFormComp />);
 
-    fireEvent.click(getByRole('button', { name: /removeSsid/i } ));
+    fireEvent.click(getByRole('button', { name: /removeSsid/i }));
     await waitFor(() => {
       expect(getByText('No Data')).toBeVisible();
     });
