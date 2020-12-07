@@ -43,6 +43,8 @@ const mockProps = {
   },
 };
 
+const DOWN_ARROW = { keyCode: 40 };
+
 describe('<VenueForm />', () => {
   afterEach(cleanup);
 
@@ -168,9 +170,15 @@ describe('<VenueForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Add Name' }));
     expect(getByText('Add Name')).toBeVisible();
 
+    const selectedLocale = getByLabelText('Locale');
+
+    fireEvent.keyDown(selectedLocale, DOWN_ARROW);
+    await waitForElement(() => getByText('English'));
+    fireEvent.click(getByText('English'));
+
     fireEvent.change(getByLabelText('Name'), { target: { value: 'TestName' } });
-    fireEvent.change(getByLabelText('Locale'), { target: { value: 'eng' } });
     fireEvent.change(getByLabelText('Url'), { target: { value: 'http://www.testname.com' } });
+
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
       expect(getByText('TestName')).toBeVisible();
@@ -191,9 +199,15 @@ describe('<VenueForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Add Name' }));
     expect(getByText('Add Name')).toBeVisible();
 
+    const selectedLocale = getByLabelText('Locale');
+
+    fireEvent.keyDown(selectedLocale, DOWN_ARROW);
+    await waitForElement(() => getByText('English'));
+    fireEvent.click(getByText('English'));
+
     fireEvent.change(getByLabelText('Name'), { target: { value: 'TestName' } });
-    fireEvent.change(getByLabelText('Locale'), { target: { value: 'eng' } });
     fireEvent.change(getByLabelText('Url'), { target: { value: 'hTtP://wWw.TeSTnAmE.cOm' } });
+
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
       expect(getByText('http://www.testname.com')).toBeVisible();
@@ -229,7 +243,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -251,7 +264,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -277,7 +289,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -299,7 +310,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -321,7 +331,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -343,7 +352,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -365,7 +373,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -387,7 +394,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -409,7 +415,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -431,7 +436,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 
@@ -453,7 +457,6 @@ describe('<VenueForm />', () => {
     };
     const { getByText, queryByText, container } = render(<VenueFormComp />);
     const selectGroup = container.querySelector('[data-testid=venueGroup] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectGroup);
     fireEvent.keyDown(selectGroup, DOWN_ARROW);
 

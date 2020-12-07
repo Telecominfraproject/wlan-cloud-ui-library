@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Table, Input } from 'antd';
+import { Card, Select, Form, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = Select;
 
 const VenueForm = ({ form, details }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [nameForm] = Form.useForm();
   const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
     details?.venueTypeAssignment?.venueGroupId || 0
   );
@@ -32,16 +31,13 @@ const VenueForm = ({ form, details }) => {
     form.setFieldsValue({ venueNameSet: venueNameList });
   }, [venueNameList]);
 
-  const handleNameSave = () => {
-    nameForm
-      .validateFields()
-      .then(values => {
-        const newVenue = { ...values, venueUrl: values.venueUrl.toLowerCase() };
-        setVenueNameList([...venueNameList, newVenue]);
-        nameForm.resetFields();
-        setModalVisible(false);
-      })
-      .catch(() => {});
+  const handleNameSave = values => {
+    const newVenue = { ...values, venueUrl: values.venueUrl.toLowerCase() };
+    setVenueNameList([...venueNameList, newVenue]);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
   };
 
   const handleRemove = item => {
@@ -69,7 +65,6 @@ const VenueForm = ({ form, details }) => {
           title="remove"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
-          type="danger"
           onClick={() => handleRemove(record)}
         />
       ),
@@ -240,42 +235,11 @@ const VenueForm = ({ form, details }) => {
         </Item>
       </Card>
 
-      <Modal
-        onCancel={() => setModalVisible(false)}
-        onSuccess={() => handleNameSave()}
+      <FormModal 
         visible={modalVisible}
+        closeModal={handleCloseModal}
+        onSubmit={handleNameSave}
         title="Add name"
-        content={
-          <Form form={nameForm} layout="vertical">
-            <Item
-              name="dupleName"
-              label="Name"
-              rules={[{ required: true, message: 'Name field cannot be empty' }]}
-            >
-              <Input />
-            </Item>
-            <Item
-              name="locale"
-              label="Locale"
-              rules={[{ required: true, message: 'Locale field cannot be empty' }]}
-            >
-              <Input />
-            </Item>
-            <Item
-              name="venueUrl"
-              label="Url"
-              rules={[
-                {
-                  required: true,
-                  type: 'url',
-                  message: 'Please enter URL in the format http://... or https://...',
-                },
-              ]}
-            >
-              <Input />
-            </Item>
-          </Form>
-        }
       />
     </div>
   );
