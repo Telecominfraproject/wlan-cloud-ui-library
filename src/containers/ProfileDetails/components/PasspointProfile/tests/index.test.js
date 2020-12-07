@@ -1,3 +1,4 @@
+// test file for passpoint Fom
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
@@ -50,6 +51,33 @@ const mockProps = {
     termsAndConditionsFile: null,
     unauthenticatedEmergencyServiceAccessible: false,
   },
+  childProfileIds: ['40', '30', '20', '10'],
+  childProfiles: [
+      {
+        id: '40',
+        name: 'ssid-profile-1',
+        profileType: 'ssid',
+        details: {},
+      },
+      {
+        id: '30',
+        name: 'Venue-Profile',
+        profileType: 'passpoint_venue',
+        details: {},
+      },
+      {
+        id: '20',
+        name: 'Id-Provider-Profile-1',
+        profileType: 'passpoint_osu_id_provider',
+        details: {},
+      },
+      {
+        id: '10',
+        name: 'Operator-Profile',
+        profileType: 'passpoint_operator',
+        details: {},
+      },
+  ],
   venueProfiles: [
     {
       id: '30',
@@ -106,10 +134,120 @@ const mockProps = {
       details: {},
     },
     {
-      id: '20',
-      name: 'Id-Provider-Profile-1',
+      id: '21',
+      name: 'Id-Provider-Profile-2',
       profileType: 'passpoint_osu_id_provider',
       details: {},
+    },
+  ],
+  ssidProfiles: [
+    {
+      id: '40',
+      name: 'ssid-profile-1',
+      profileType: 'ssid',
+      details: {
+        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
+        bandwidthLimitDown: 0,
+        bandwidthLimitUp: 0,
+        bonjourGatewayProfileId: null,
+        broadcastSsid: 'enabled',
+        captivePortalId: null,
+        enable80211w: null,
+        forwardMode: null,
+        keyRefresh: 0,
+        keyStr: 'testing123',
+        model_type: 'SsidConfiguration',
+        noLocalSubnets: false,
+        profileType: 'ssid',
+        radioBasedConfigs: {
+          is2dot4GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzL: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzU: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+        },
+        radiusServiceName: 'Radius-Profile',
+        secureMode: 'wpaEAP',
+        ssid: 'Default-SSID-1594386919128',
+        ssidAdminState: 'enabled',
+        videoTrafficOnly: false,
+        vlanId: 1,
+        wepConfig: null,
+      },
+      __typename: 'Profile',
+    },
+    {
+      id: '41',
+      name: 'ssid-profile-2',
+      profileType: 'ssid',
+      details: {
+        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
+        bandwidthLimitDown: 0,
+        bandwidthLimitUp: 0,
+        bonjourGatewayProfileId: null,
+        broadcastSsid: 'enabled',
+        captivePortalId: null,
+        enable80211w: null,
+        forwardMode: null,
+        keyRefresh: 0,
+        keyStr: null,
+        model_type: 'SsidConfiguration',
+        noLocalSubnets: false,
+        profileType: 'ssid',
+        radioBasedConfigs: {
+          is2dot4GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzL: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzU: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+        },
+        radiusServiceName: null,
+        secureMode: 'open',
+        ssid: 'TipWlan-cloud-3-radios',
+        ssidAdminState: 'enabled',
+        videoTrafficOnly: false,
+        vlanId: 1,
+        wepConfig: null,
+      },
+      __typename: 'Profile',
     },
   ],
 };
@@ -188,6 +326,42 @@ describe('<PasspointProfileForm />', () => {
     await waitFor(() => {
       expect(getByText('Select ID Providers (check to select)')).toBeInTheDocument();
     });
+  });
+
+  it('HESSID empty error message should appear when field is empty', async () => {
+    const PasspointProfileFormComp = () => {
+        const [form] = Form.useForm();
+        return (
+          <Form form={form}>
+            <PasspointProfileForm {...mockProps} form={form} />
+          </Form>
+        );
+      };
+      const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
+
+      fireEvent.change(getByLabelText('HESSID'), { target: { value: '' } });
+
+      await waitFor(() => {
+          expect(getByText('Mac Address cannot be empty'));
+      });
+  });
+
+  it('HESSID Mac Address Pattern error message should appear when field input is incorret', async () => {
+    const PasspointProfileFormComp = () => {
+        const [form] = Form.useForm();
+        return (
+          <Form form={form}>
+            <PasspointProfileForm {...mockProps} form={form} />
+          </Form>
+        );
+      };
+      const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
+
+      fireEvent.change(getByLabelText('HESSID'), { target: { value: 'test' } });
+
+      await waitFor(() => {
+          expect(getByText('Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F'));
+      });
   });
 
   it('should work when termsAndConditionsFile is not null ', async () => {
@@ -345,7 +519,7 @@ describe('<PasspointProfileForm />', () => {
     const { getByRole, getByText, queryByText } = render(<PasspointProfileFormComp />);
 
     expect(getByText('9000')).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /remove/i }));
+    fireEvent.click(getByRole('button', { name: /removeConnection/i }));
 
     await waitFor(() => {
       expect(queryByText('9000')).not.toBeInTheDocument();
@@ -420,6 +594,89 @@ describe('<PasspointProfileForm />', () => {
 
     await waitFor(() => {
       expect(queryByText('Enter an ANQP Domain ID between 0 and 65535')).not.toBeInTheDocument();
+    });
+  });
+
+  it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {
+    const PasspointProfileFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { container } = render(<PasspointProfileFormComp />);
+    const selectInputFiled = container.querySelector(
+      '[data-testid=ssidProfile] > .ant-select-selector span input'
+    );
+    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
+    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
+  });
+
+  it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {
+    const PasspointProfileFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { container } = render(<PasspointProfileFormComp />);
+    const selectInputFiled = container.querySelector(
+      '[data-testid=ssidProfile] > .ant-select-selector span input'
+    );
+    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
+    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
+  });
+
+  it('changing SSID Profile profile on Wireless Networks (SSIDs) Enabled on This Profile should update the table', async () => {
+    const PasspointProfileFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { queryAllByText, getByText, container } = render(<PasspointProfileFormComp />);
+    const selectInputFiled = container.querySelector(
+      '[data-testid=ssidProfile] > .ant-select-selector span input'
+    );
+    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
+    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
+
+    const selectInput = container.querySelector('[data-testid=ssidProfile] > .ant-select-selector');
+    fireEvent.mouseDown(selectInput);
+    fireEvent.keyDown(selectInput, DOWN_ARROW);
+
+    await waitForElement(() => getByText('ssid-profile-2'));
+    fireEvent.click(getByText('ssid-profile-2'));
+    await waitFor(() => {
+      expect(queryAllByText('ssid-profile-1')[0]).toBeVisible();
+      expect(queryAllByText('ssid-profile-2')[0]).toBeVisible();
+    });
+  });
+
+  it('click delete button sould remove item from Wireless Networks (SSIDs) Enabled on This Profile table', async () => {
+    const PasspointProfileFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByRole, getByText } = render(<PasspointProfileFormComp />);
+
+    fireEvent.click(getByRole('button', { name: /removeSsid/i } ));
+    await waitFor(() => {
+      expect(getByText('No Data')).toBeVisible();
     });
   });
 });
