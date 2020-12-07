@@ -36,6 +36,7 @@ const ProfileDetails = ({
   name,
   details,
   childProfileIds,
+  childProfiles,
   onUpdateProfile,
   ssidProfiles,
   radiusProfiles,
@@ -235,6 +236,7 @@ const ProfileDetails = ({
             form={form}
             details={details}
             venueProfiles={venueProfiles}
+            childProfiles={childProfiles}
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}
             ssidProfiles={ssidProfiles}
@@ -263,6 +265,7 @@ ProfileDetails.propTypes = {
   operatorProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
@@ -282,6 +285,7 @@ ProfileDetails.defaultProps = {
   operatorProfiles: [],
   idProviderProfiles: [],
   childProfileIds: [],
+  childProfiles: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},

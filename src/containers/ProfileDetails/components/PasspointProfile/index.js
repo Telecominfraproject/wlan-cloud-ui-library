@@ -25,6 +25,7 @@ const PasspointProfileForm = ({
   venueProfiles,
   operatorProfiles,
   ssidProfiles,
+  childProfiles,
   idProviderProfiles,
   fileUpload,
   onFetchMoreProfiles,
@@ -40,8 +41,8 @@ const PasspointProfileForm = ({
     details?.connectionCapabilitySet || []
   );
 
-  const [associatedAccessSsidProfileIds, setAssociatedAccessSsidProfileIds] = useState(
-    details?.associatedAccessSsidProfileIds || []
+  const [selectedChildSsids, setSelectedChildSsids] = useState(
+    childProfiles.filter(i => i.profileType === 'ssid') || []
   );
 
   useEffect(() => {
@@ -71,9 +72,9 @@ const PasspointProfileForm = ({
         ? 'true'
         : 'false',
       childProfileIds: [],
-      associatedAccessSsidProfileIds,
+      associatedAccessSsidProfileIds: selectedChildSsids.map(i => i.id),
     });
-  }, [form, details, associatedAccessSsidProfileIds]);
+  }, [form, details, selectedChildSsids]);
 
   useEffect(() => {
     form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
@@ -179,16 +180,11 @@ const PasspointProfileForm = ({
   );
 
   const handleOnChangeSsid = selectedItem => {
-    setAssociatedAccessSsidProfileIds([
-      ...associatedAccessSsidProfileIds,
-      parseInt(selectedItem, 10),
-    ]);
+    setSelectedChildSsids([...selectedChildSsids, ssidProfiles.find(i => i.id === selectedItem)]);
   };
 
   const handleRemoveSsid = id => {
-    setAssociatedAccessSsidProfileIds(
-      associatedAccessSsidProfileIds.filter(i => i !== parseInt(id, 10))
-    );
+    setSelectedChildSsids(selectedChildSsids.filter(i => parseInt(i.id, 10) !== parseInt(id, 10)));
   };
 
   const columnsSsid = [
@@ -223,10 +219,7 @@ const PasspointProfileForm = ({
   ];
 
   const filteredOptions = ssidProfiles.filter(
-    o => !associatedAccessSsidProfileIds.includes(parseInt(o.id, 10))
-  );
-  const tableData = ssidProfiles.filter(o =>
-    associatedAccessSsidProfileIds.includes(parseInt(o.id, 10))
+    i => !selectedChildSsids.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
   );
 
   return (
@@ -265,10 +258,10 @@ const PasspointProfileForm = ({
             onPopupScroll={onFetchMoreIdProviderProfiles}
             data-testid="idProviderProfiles"
             showSearch
-            showArrow
             mode="multiple"
             allowClear
             placeholder="Select ID Providers (check to select)"
+            className={styles.MultipleSelection}
           >
             {idProviderProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -400,7 +393,12 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Table dataSource={tableData} columns={columnsSsid} pagination={false} rowKey="id" />
+        <Table
+          dataSource={selectedChildSsids}
+          columns={columnsSsid}
+          pagination={false}
+          rowKey="id"
+        />
         <Item name="childProfileIds" style={{ display: 'none' }}>
           <Input />
         </Item>
@@ -472,6 +470,7 @@ PasspointProfileForm.propTypes = {
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
+  childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -486,6 +485,7 @@ PasspointProfileForm.defaultProps = {
   venueProfiles: [],
   operatorProfiles: [],
   ssidProfiles: [],
+  childProfiles: [],
   idProviderProfiles: [],
   fileUpload: () => {},
   onFetchMoreProfiles: () => {},
