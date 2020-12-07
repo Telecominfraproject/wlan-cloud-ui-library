@@ -72,13 +72,16 @@ const PasspointProfileForm = ({
         ? 'true'
         : 'false',
       childProfileIds: [],
-      associatedAccessSsidProfileIds: selectedChildSsids.map(i => i.id),
     });
-  }, [form, details, selectedChildSsids]);
+  }, [form, details]);
 
   useEffect(() => {
     form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
   }, [connectionCapabilitySetList]);
+
+  useEffect(() => {
+    form.setFieldsValue({ associatedAccessSsidProfileIds: selectedChildSsids.map(i => i.id) });
+  }, [selectedChildSsids]);
 
   const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
@@ -277,9 +280,24 @@ const PasspointProfileForm = ({
           name={['hessid', 'addressAsString']}
           rules={[
             {
-              pattern: new RegExp(/^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/),
-              message: 'Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F',
+              required: true,
+              message: 'Mac Address cannot be empty',
             },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (
+                  !value ||
+                  getFieldValue(['hessid', 'addressAsString']).match(
+                    /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/
+                  )
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Incorrect MAC Address format e.g. 0A:0B:0C:0D:0E:0F')
+                );
+              },
+            }),
           ]}
         >
           <Input placeholder="Enter MAC Address" className={globalStyles.field} />
