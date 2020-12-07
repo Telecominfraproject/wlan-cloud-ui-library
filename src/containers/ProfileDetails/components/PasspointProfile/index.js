@@ -165,7 +165,6 @@ const PasspointProfileForm = ({
           title="remove"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
-          type="danger"
           onClick={() => handleConnectionRemove(record)}
         />
       ),

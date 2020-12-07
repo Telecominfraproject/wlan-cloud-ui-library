@@ -148,6 +148,7 @@ const AddProfile = ({
           formattedData.childProfileIds.push(values.passpointVenueProfileId);
           formattedData.childProfileIds.push(values.passpointOperatorProfileId);
           values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
+          values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values));
         }
