@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import moment from 'moment';
 import { formatBytes, formatBitsPerSecond } from 'utils/bytes';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
+import ThemeContext from 'contexts/ThemeContext';
 
 import DeviceDetailCard from './components/DeviceDetailCard';
 import DeviceStatsCard from './components/DeviceStatsCard';
@@ -20,8 +21,9 @@ const ClientDeviceDetails = ({
   metricsError,
   metricsData,
   historyDate,
+  goBackRoute,
 }) => {
-  const history = useHistory();
+  const { routes } = useContext(ThemeContext);
 
   const {
     macAddress,
@@ -97,9 +99,9 @@ const ClientDeviceDetails = ({
   return (
     <>
       <div className={styles.topBtns}>
-        <Button icon={<LeftOutlined />} onClick={() => history.goBack()}>
-          Back
-        </Button>
+        <Link to={goBackRoute || routes.clientDevices}>
+          <Button icon={<LeftOutlined />}>Back</Button>
+        </Link>
         <Button icon={<ReloadOutlined />} onClick={onRefresh} />
       </div>
       <DeviceDetailCard
@@ -136,6 +138,7 @@ ClientDeviceDetails.propTypes = {
   metricsData: PropTypes.instanceOf(Array),
   metricsError: PropTypes.instanceOf(Object),
   historyDate: PropTypes.instanceOf(Object),
+  goBackRoute: PropTypes.string,
 };
 
 ClientDeviceDetails.defaultProps = {
@@ -148,6 +151,7 @@ ClientDeviceDetails.defaultProps = {
     toTime: moment(),
     fromTime: moment(),
   },
+  goBackRoute: null,
 };
 
 export default ClientDeviceDetails;
