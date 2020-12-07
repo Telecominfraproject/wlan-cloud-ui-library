@@ -17,7 +17,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
   const [activeUser, setActiveUser] = useState({
     id: 0,
     email: '',
-    role: '',
+    roles: [],
     customerId: '',
     lastModifiedTimestamp: 0,
   });
@@ -28,14 +28,14 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
     setDeleteModal(false);
   };
 
-  const addUser = ({ email, role, password }) => {
-    onCreateUser(email, password, role);
+  const addUser = ({ email, roles, password }) => {
+    onCreateUser(email, password, roles);
     setAddModal(false);
   };
 
-  const editUser = ({ email, role, password }) => {
+  const editUser = ({ email, roles, password }) => {
     const { id, lastModifiedTimestamp } = activeUser;
-    onEditUser(id, email, password, role, lastModifiedTimestamp);
+    onEditUser(id, email, password, roles, lastModifiedTimestamp);
     setEditModal(false);
   };
 
@@ -47,10 +47,11 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
       width: 620,
     },
     {
-      title: 'ROLE',
-      dataIndex: 'role',
-      key: 'role',
+      title: 'ROLES',
+      dataIndex: 'roles',
+      key: 'roles',
       width: 120,
+      render: r => r?.join(',  '),
     },
     {
       title: '',
@@ -68,7 +69,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
             setActiveUser({
               id: record.id,
               email: record.email,
-              role: record.role,
+              roles: record.roles,
               customerId: record.customerId,
               lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
@@ -92,7 +93,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
             setActiveUser({
               id: record.id,
               email: record.email,
-              role: record.role,
+              roles: record.roles,
               customerId: record.customerId,
               lastModifiedTimestamp: record.lastModifiedTimestamp,
             });
@@ -105,9 +106,9 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
   return (
     <Container>
       <Header>
-        <h1>Accounts</h1>
+        <h1>Users</h1>
         <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
-          Add Account
+          Add User
         </Button>
       </Header>
       <Modal
@@ -119,7 +120,7 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         buttonType="danger"
         content={
           <p>
-            Are you sure you want to delete the account: <i>{activeUser.email}</i>
+            Are you sure you want to delete the User: <i>{activeUser.email}</i>
           </p>
         }
       />
@@ -127,15 +128,15 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
         onCancel={() => setEditModal(false)}
         visible={editModal}
         onSubmit={editUser}
-        title="Edit Account"
-        userRole={activeUser.role}
+        title="Edit User"
+        userRole={activeUser?.roles?.[0]}
         userEmail={activeUser.email}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addUser}
-        title="Add Account"
+        title="Add User"
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (

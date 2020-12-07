@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Card, Select, notification } from 'antd';
@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import ThemeContext from 'contexts/ThemeContext';
 
 import {
   formatSsidProfileForm,
@@ -36,14 +37,17 @@ const { Option } = Select;
 const AddProfile = ({
   onCreateProfile,
   ssidProfiles,
+  rfProfiles,
   venueProfiles,
   operatorProfiles,
   idProviderProfiles,
   onFetchMoreProfiles,
+  onFetchMoreRfProfiles,
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
 }) => {
+  const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const history = useHistory();
 
@@ -67,7 +71,7 @@ const AddProfile = ({
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(`/profiles`);
+      history.push(routes.profiles);
     }
   };
 
@@ -83,6 +87,14 @@ const AddProfile = ({
         }
 
         if (profileType === 'equipment_ap') {
+          if (!values.rfProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
@@ -163,7 +175,7 @@ const AddProfile = ({
       <div className={styles.AddProfile}>
         <Modal
           onCancel={() => setConfirmModal(false)}
-          onSuccess={() => history.push(`/profiles`)}
+          onSuccess={() => history.push(routes.profiles)}
           visible={confirmModal}
           buttonText="Back"
           title="Leave Form?"
@@ -171,7 +183,7 @@ const AddProfile = ({
         />
         <Header>
           <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
-            BACK
+            Back
           </Button>
           <div>
             <Button type="primary" onClick={handleOnSave}>
@@ -212,7 +224,11 @@ const AddProfile = ({
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input className={globalStyles.field} placeholder="Enter profile name" />
+              <Input
+                id="profileName"
+                className={globalStyles.field}
+                placeholder="Enter profile name"
+              />
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
@@ -220,7 +236,9 @@ const AddProfile = ({
             <AccessPointForm
               form={form}
               ssidProfiles={ssidProfiles}
+              rfProfiles={rfProfiles}
               onFetchMoreProfiles={onFetchMoreProfiles}
+              onFetchMoreRfProfiles={onFetchMoreRfProfiles}
             />
           )}
           {profileType === 'bonjour' && <BonjourGatewayForm form={form} />}
@@ -252,10 +270,12 @@ AddProfile.propTypes = {
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
+  rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
+  onFetchMoreRfProfiles: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
@@ -263,10 +283,12 @@ AddProfile.defaultProps = {
   venueProfiles: [],
   operatorProfiles: [],
   idProviderProfiles: [],
+  rfProfiles: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},
+  onFetchMoreRfProfiles: () => {},
 };
 
 export default AddProfile;
