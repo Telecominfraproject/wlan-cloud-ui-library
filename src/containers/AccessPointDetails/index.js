@@ -75,12 +75,12 @@ const AccessPointDetails = ({
     }
   };
 
-  const handlePageChange = (path = routes.accessPoints) => {
+  const handlePageChange = path => {
     if (isFormDirty) {
-      setRedirectURL(path);
+      setRedirectURL(path || routes.accessPoints);
       setConfirmModal(true);
     } else {
-      history.push(path);
+      history.push(path || routes.accessPoints);
     }
   };
 
