@@ -46,7 +46,6 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
             <Select placeholder="Select a status">
               <Option value="open">Open</Option>
               <Option value="closed">Closed</Option>
-              <Option value="unknown">Unknown</Option>
             </Select>
           </Item>
           <Item
