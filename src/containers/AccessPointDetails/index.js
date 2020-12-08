@@ -58,6 +58,7 @@ const AccessPointDetails = ({
   errorFirmware,
   onFetchMoreProfiles,
   goBackRoute,
+  onDeleteEquipment,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -66,6 +67,7 @@ const AccessPointDetails = ({
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState(false);
+  const [deleteApModal, setDeleteApModal] = useState(false);
 
   const [redirectURL, setRedirectURL] = useState();
 
@@ -98,6 +100,11 @@ const AccessPointDetails = ({
     <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
   ));
 
+  const handleDeleteProfile = () => {
+    onDeleteEquipment();
+    setDeleteApModal(false);
+  };
+
   return (
     <div className={styles.AccessPointDetails}>
       <Modal
@@ -123,6 +130,28 @@ const AccessPointDetails = ({
         <Button icon={<LeftOutlined />} onClick={() => handlePageChange(goBackRoute)}>
           Back
         </Button>
+        <Button
+          name="delete"
+          danger
+          type="primary"
+          className={styles.deleteButton}
+          onClick={() => setDeleteApModal(true)}
+        >
+          Delete
+        </Button>
+        <Modal
+          onCancel={() => setDeleteApModal(false)}
+          onSuccess={handleDeleteProfile}
+          visible={deleteApModal}
+          title="Are you sure?"
+          buttonText="Delete"
+          buttonType="danger"
+          content={
+            <p>
+              Are you sure you want to delete this Access Point: <strong>{data.inventoryId}</strong>{' '}
+            </p>
+          }
+        />
       </Header>
       <Card
         title={
@@ -215,6 +244,7 @@ AccessPointDetails.propTypes = {
   errorFirmware: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   goBackRoute: PropTypes.string,
+  onDeleteEquipment: PropTypes.func.isRequired,
 };
 
 AccessPointDetails.defaultProps = {
