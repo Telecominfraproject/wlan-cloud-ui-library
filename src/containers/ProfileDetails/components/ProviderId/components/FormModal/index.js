@@ -30,6 +30,42 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
     closeModal(fieldName);
   };
 
+  const renderIconForm = () => (
+    <>
+      <Item
+        name="imageUrl"
+        label="Url:"
+        rules={[
+          {
+            required: true,
+            message: 'Url field cannot be empty',
+          },
+        ]}
+      >
+        <Input placeholder="Enter the image url" />
+      </Item>
+      <LocaleItem name="iconLocale" />
+    </>
+  );
+
+  const renderNameForm = () => (
+    <>
+      <Item
+        name="dupleName"
+        label="Name:"
+        rules={[
+          {
+            required: true,
+            message: 'Name field cannot be empty',
+          },
+        ]}
+      >
+        <Input placeholder="Enter a name" />
+      </Item>
+      <LocaleItem name="locale" />
+    </>
+  );
+
   return (
     <Modal
       onSuccess={addItem}
@@ -38,19 +74,7 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
       title={title}
       content={
         <Form {...layout} form={form}>
-          <Item
-            name="dupleName"
-            label="Name:"
-            rules={[
-              {
-                required: true,
-                message: 'Name field cannot be empty',
-              },
-            ]}
-          >
-            <Input placeholder="Enter a name" />
-          </Item>
-          <LocaleItem name="locale" />
+          {title === 'Add Icon' ? renderIconForm() : renderNameForm()}
         </Form>
       }
     />

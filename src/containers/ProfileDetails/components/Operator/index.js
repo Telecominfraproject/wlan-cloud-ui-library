@@ -68,7 +68,7 @@ const OperatorForm = ({ details, form }) => {
         <PasspointLocaleTable
           tableData={operatorFriendlyName}
           dataIndex="operatorFriendlyName"
-          removeName={removeName}
+          removeRow={removeName}
         />
       </Card>
 

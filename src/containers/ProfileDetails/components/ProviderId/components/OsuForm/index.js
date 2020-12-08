@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Switch, Form, Input, Button } from 'antd';
-import LocaleItem from 'components/LocaleItem';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import Modal from 'components/Modal';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
@@ -30,19 +28,6 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
       iconForm.resetFields();
       setIconModal(false);
     }
-  };
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
-  };
-
-  const handleAddIcon = () => {
-    iconForm.validateFields().then(values => {
-      onSubmit(values, 'osuIconList');
-      iconForm.resetFields();
-      setIconModal(false);
-    });
   };
 
   return (
@@ -89,7 +74,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
             <PasspointLocaleTable
               tableData={osuDetails?.osuFriendlyName}
               dataIndex="osuFriendlyName"
-              removeName={removeItem}
+              removeRow={removeItem}
             />
           </Card>
           <Item name="osuFriendlyName" noStyle>
@@ -114,7 +99,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
             <PasspointLocaleTable
               tableData={osuDetails?.osuServiceDescription}
               dataIndex="osuServiceDescription"
-              removeName={removeItem}
+              removeRow={removeItem}
             />
           </Card>
           <Item name="osuServiceDescription" noStyle>
@@ -139,33 +124,17 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
             <PasspointLocaleTable
               tableData={osuDetails?.osuIconList}
               dataIndex="osuIconList"
-              removeName={removeItem}
+              removeRow={removeItem}
             />
           </Card>
 
           <Item name="osuIconList" noStyle>
-            <Modal
-              onSuccess={handleAddIcon}
-              onCancel={() => handleCloseModal('osuIconList')}
+            <FormModal
               title="Add Icon"
+              fieldName="osuIconList"
+              onSubmit={onSubmit}
               visible={iconModal}
-              content={
-                <Form {...layout} form={iconForm}>
-                  <Item
-                    name="imageUrl"
-                    label="Url:"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Url field cannot be empty',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Enter the image url" />
-                  </Item>
-                  <LocaleItem name="iconLocale" />
-                </Form>
-              }
+              closeModal={handleCloseModal}
             />
           </Item>
         </>

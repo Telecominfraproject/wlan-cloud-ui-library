@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
-const PasspointLocaleTable = ({ tableData, dataIndex, removeName, rowKey }) => {
+const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
   const formatCols = useMemo(() => {
     return [
       {
@@ -23,7 +23,7 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeName, rowKey }) => {
             case 'fr_CA':
               return 'Francais';
             default:
-              return '';
+              return item;
           }
         },
       },
@@ -34,7 +34,7 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeName, rowKey }) => {
           <Button
             title="removeItem"
             icon={<DeleteOutlined />}
-            onClick={() => removeName(item, dataIndex)}
+            onClick={() => removeRow(item, dataIndex)}
           />
         ),
       },
@@ -54,7 +54,7 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeName, rowKey }) => {
 PasspointLocaleTable.propTypes = {
   tableData: PropTypes.instanceOf(Array),
   dataIndex: PropTypes.string.isRequired,
-  removeName: PropTypes.func.isRequired,
+  removeRow: PropTypes.func.isRequired,
   rowKey: PropTypes.string,
 };
 
