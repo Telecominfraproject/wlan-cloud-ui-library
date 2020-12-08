@@ -173,7 +173,7 @@ const AddProfile = ({
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
-                <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="bonjour" disabled>Bonjour Gateway</Option>
                 <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
