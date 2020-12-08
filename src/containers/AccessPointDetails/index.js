@@ -107,11 +107,7 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          if (redirectURL) {
-            history.push(redirectURL);
-          } else {
-            history.goBack();
-          }
+          history.push(redirectURL);
         }}
         visible={confirmModal}
         buttonText="OK"
