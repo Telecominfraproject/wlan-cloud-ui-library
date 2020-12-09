@@ -31,6 +31,7 @@ import RadiusForm from '../ProfileDetails/components/Radius';
 import RFForm from '../ProfileDetails/components/RF';
 import ProviderIdForm from '../ProfileDetails/components/ProviderId';
 import OperatorForm from '../ProfileDetails/components/Operator';
+import VenueForm from '../ProfileDetails/components/Venue';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -139,6 +140,10 @@ const AddProfile = ({
           formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
         }
 
+        if (profileType === 'passpoint_venue') {
+          formattedData.model_type = 'PasspointVenueProfile';
+        }
+
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -186,12 +191,15 @@ const AddProfile = ({
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
-                <Option value="bonjour">Bonjour Gateway</Option>
+                <Option value="bonjour" disabled>
+                  Bonjour Gateway
+                </Option>
                 <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
                 <Option value="passpoint_osu_id_provider">Passpoint ID Provider</Option>
                 <Option value="passpoint_operator">Passpoint Operator</Option>
+                <Option value="passpoint_venue">Passpoint Venue</Option>
               </Select>
             </Item>
             <Item
@@ -200,7 +208,11 @@ const AddProfile = ({
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input className={globalStyles.field} placeholder="Enter profile name" />
+              <Input
+                id="profileName"
+                className={globalStyles.field}
+                placeholder="Enter profile name"
+              />
             </Item>
           </Card>
           {profileType === 'ssid' && <SSIDForm form={form} />}
@@ -219,6 +231,7 @@ const AddProfile = ({
           {profileType === 'rf' && <RFForm form={form} />}
           {profileType === 'passpoint_osu_id_provider' && <ProviderIdForm form={form} />}
           {profileType === 'passpoint_operator' && <OperatorForm form={form} />}
+          {profileType === 'passpoint_venue' && <VenueForm form={form} />}
         </Form>
       </div>
     </Container>

@@ -296,6 +296,6 @@ describe('<AccessPointDetails />', () => {
     );
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual('/');
+    expect(window.location.pathname).toEqual('/network/access-points');
   });
 });
