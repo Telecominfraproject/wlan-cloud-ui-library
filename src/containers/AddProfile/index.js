@@ -17,6 +17,7 @@ import {
   formatCaptiveForm,
   formatRadiusForm,
   formatRfProfileForm,
+  formatProviderProfileForm,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -28,6 +29,8 @@ import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 import CaptivePortalForm from '../ProfileDetails/components/CaptivePortal';
 import RadiusForm from '../ProfileDetails/components/Radius';
 import RFForm from '../ProfileDetails/components/RF';
+import ProviderIdForm from '../ProfileDetails/components/ProviderId';
+import OperatorForm from '../ProfileDetails/components/Operator';
 import VenueForm from '../ProfileDetails/components/Venue';
 
 const { Item } = Form;
@@ -127,7 +130,17 @@ const AddProfile = ({
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
 
-        if (profileType === 'venue') {
+        if (profileType === 'passpoint_operator') {
+          formattedData.model_type = 'PasspointOperatorProfile';
+          formattedData = Object.assign(formattedData, values);
+        }
+
+        if (profileType === 'passpoint_osu_id_provider') {
+          formattedData.model_type = 'PasspointOsuProviderProfile';
+          formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
+        }
+
+        if (profileType === 'passpoint_venue') {
           formattedData.model_type = 'PasspointVenueProfile';
         }
 
@@ -178,11 +191,15 @@ const AddProfile = ({
               >
                 <Option value="ssid">SSID</Option>
                 <Option value="equipment_ap">Access Point</Option>
-                <Option value="bonjour" disabled>Bonjour Gateway</Option>
+                <Option value="bonjour" disabled>
+                  Bonjour Gateway
+                </Option>
                 <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
-                <Option value="venue">Venue</Option>
+                <Option value="passpoint_osu_id_provider">Passpoint ID Provider</Option>
+                <Option value="passpoint_operator">Passpoint Operator</Option>
+                <Option value="passpoint_venue">Passpoint Venue</Option>
               </Select>
             </Item>
             <Item
@@ -212,7 +229,9 @@ const AddProfile = ({
           {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
-          {profileType === 'venue' && <VenueForm form={form} />}
+          {profileType === 'passpoint_osu_id_provider' && <ProviderIdForm form={form} />}
+          {profileType === 'passpoint_operator' && <OperatorForm form={form} />}
+          {profileType === 'passpoint_venue' && <VenueForm form={form} />}
         </Form>
       </div>
     </Container>

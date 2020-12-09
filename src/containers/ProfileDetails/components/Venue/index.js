@@ -235,7 +235,7 @@ const VenueForm = ({ form, details }) => {
         </Item>
       </Card>
 
-      <FormModal 
+      <FormModal
         visible={modalVisible}
         closeModal={handleCloseModal}
         onSubmit={handleNameSave}

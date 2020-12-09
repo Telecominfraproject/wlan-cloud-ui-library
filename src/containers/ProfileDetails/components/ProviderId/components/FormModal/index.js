@@ -6,7 +6,7 @@ import LocaleItem from 'components/LocaleItem';
 
 const { Item } = Form;
 
-const FormModal = ({ visible, closeModal, onSubmit, title }) => {
+const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
   const [form] = Form.useForm();
 
   const layout = {
@@ -18,17 +18,53 @@ const FormModal = ({ visible, closeModal, onSubmit, title }) => {
     form
       .validateFields()
       .then(values => {
-        onSubmit(values);
+        onSubmit(values, fieldName);
         form.resetFields();
-        closeModal();
+        closeModal(fieldName);
       })
       .catch(() => {});
   };
 
   const canceledModal = () => {
     form.resetFields();
-    closeModal();
+    closeModal(fieldName);
   };
+
+  const renderIconForm = () => (
+    <>
+      <Item
+        name="imageUrl"
+        label="Url:"
+        rules={[
+          {
+            required: true,
+            message: 'Url field cannot be empty',
+          },
+        ]}
+      >
+        <Input placeholder="Enter the image url" />
+      </Item>
+      <LocaleItem name="iconLocale" />
+    </>
+  );
+
+  const renderNameForm = () => (
+    <>
+      <Item
+        name="dupleName"
+        label="Name:"
+        rules={[
+          {
+            required: true,
+            message: 'Name field cannot be empty',
+          },
+        ]}
+      >
+        <Input placeholder="Enter a name" />
+      </Item>
+      <LocaleItem name="locale" />
+    </>
+  );
 
   return (
     <Modal
@@ -38,27 +74,7 @@ const FormModal = ({ visible, closeModal, onSubmit, title }) => {
       title={title}
       content={
         <Form {...layout} form={form}>
-          <Item
-            name="dupleName"
-            label="Name"
-            rules={[{ required: true, message: 'Name field cannot be empty' }]}
-          >
-            <Input placeholder="Enter a name" />
-          </Item>
-          <LocaleItem name="locale" />
-          <Item
-            name="venueUrl"
-            label="Url"
-            rules={[
-              {
-                required: true,
-                type: 'url',
-                message: 'Please enter URL in the format http://... or https://...',
-              },
-            ]}
-          >
-            <Input placeholder="Enter an URL" />
-          </Item>
+          {title === 'Add Icon' ? renderIconForm() : renderNameForm()}
         </Form>
       }
     />
@@ -69,6 +85,7 @@ FormModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  fieldName: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
 

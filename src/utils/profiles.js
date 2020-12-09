@@ -186,3 +186,32 @@ export const formatRfProfileForm = values => {
 
   return formattedData;
 };
+
+export const formatProviderProfileForm = values => {
+  const formattedData = { ...values };
+  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
+
+  if (!formattedData.osuServerUri) {
+    formattedData.osuServerUri = '';
+    formattedData.osuFriendlyName = [];
+    formattedData.osuServiceDescription = [];
+    formattedData.osuIconList = [];
+  }
+
+  if (typeof formattedData.eapMap !== 'undefined') {
+    Object.keys(formattedData.eapMap).forEach(i => {
+      if (formattedData?.eapMap[i].length === 0) {
+        // eslint-disable-next-line no-param-reassign
+        delete formattedData?.eapMap[i];
+      }
+    });
+    formattedData.naiRealmList = [
+      {
+        eapMap: formattedData.eapMap || {},
+        encoding: formattedData.encoding || 0,
+      },
+    ];
+  }
+
+  return formattedData;
+};

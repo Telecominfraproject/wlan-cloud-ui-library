@@ -19,6 +19,7 @@ import {
   formatCaptiveForm,
   formatBonjourGatewayForm,
   formatRfProfileForm,
+  formatProviderProfileForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -27,9 +28,10 @@ import RadiusForm from './components/Radius';
 import CaptivePortalForm from './components/CaptivePortal';
 import BonjourGatewayForm from './components/BonjourGateway';
 import RFForm from './components/RF';
+import ProviderIdForm from './components/ProviderId';
+import OperatorForm from './components/Operator';
 
 import styles from './index.module.scss';
-import VenueForm from './components/Venue';
 
 const ProfileDetails = ({
   profileType,
@@ -128,6 +130,13 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
+        if (profileType === 'passpoint_operator') {
+          formattedData.model_type = 'PasspointOperatorProfile';
+        }
+        if (profileType === 'passpoint_osu_id_provider') {
+          formattedData.model_type = 'PasspointOsuProviderProfile';
+          formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
+        }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -176,7 +185,6 @@ const ProfileDetails = ({
             <Input className={globalStyles.field} placeholder="Enter profile name" />
           </Item>
         </Card>
-        {profileType === 'passpoint_venue' && <VenueForm form={form} details={details} />}
         {profileType === 'ssid' && (
           <SSIDForm
             form={form}
@@ -211,6 +219,10 @@ const ProfileDetails = ({
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
         {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
         {profileType === 'rf' && <RFForm details={details} form={form} />}
+        {profileType === 'passpoint_osu_id_provider' && (
+          <ProviderIdForm form={form} details={details} />
+        )}
+        {profileType === 'passpoint_operator' && <OperatorForm form={form} details={details} />}
       </Form>
     </Container>
   );
