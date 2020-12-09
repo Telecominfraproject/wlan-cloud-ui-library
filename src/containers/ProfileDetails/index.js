@@ -32,6 +32,7 @@ import RFForm from './components/RF';
 import PasspointProfileForm from './components/PasspointProfile';
 import ProviderIdForm from './components/ProviderId';
 import OperatorForm from './components/Operator';
+import VenueForm from './components/Venue';
 
 import styles from './index.module.scss';
 
@@ -275,6 +276,7 @@ const ProfileDetails = ({
           <ProviderIdForm form={form} details={details} />
         )}
         {profileType === 'passpoint_operator' && <OperatorForm form={form} details={details} />}
+        {profileType === 'passpoint_venue' && <VenueForm form={form} details={details} />}
       </Form>
     </Container>
   );
