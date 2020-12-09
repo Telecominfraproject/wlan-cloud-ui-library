@@ -21,7 +21,7 @@ const AccessPointForm = ({
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(
-    details?.ntpServer?.auto === undefined ? true : details?.ntpServer?.auto
+    details?.ntpServer?.auto === undefined ? false : details?.ntpServer?.auto
   );
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
