@@ -107,7 +107,7 @@ const mockProps = {
         wepConfig: null,
       },
       __typename: 'Profile',
-    }
+    },
   ],
   ssidProfiles: [
     {
