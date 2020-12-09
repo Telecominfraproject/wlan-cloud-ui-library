@@ -22,7 +22,7 @@ describe('<ClientDeviceDetails />', () => {
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual('/');
+    expect(window.location.pathname).toEqual('/network/client-devices');
   });
 
   it('should use default refresh function if one is not provided with', async () => {
