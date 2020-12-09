@@ -20,6 +20,7 @@ import {
   formatBonjourGatewayForm,
   formatRfProfileForm,
   formatPasspointForm,
+  formatProviderProfileForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -29,6 +30,8 @@ import CaptivePortalForm from './components/CaptivePortal';
 import BonjourGatewayForm from './components/BonjourGateway';
 import RFForm from './components/RF';
 import PasspointProfileForm from './components/PasspointProfile';
+import ProviderIdForm from './components/ProviderId';
+import OperatorForm from './components/Operator';
 
 import styles from './index.module.scss';
 
@@ -134,6 +137,7 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
+
         if (profileType === 'passpoint') {
           if (!values.passpointVenueProfileId) {
             notification.error({
@@ -162,6 +166,13 @@ const ProfileDetails = ({
           values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
+        }
+        if (profileType === 'passpoint_operator') {
+          formattedData.model_type = 'PasspointOperatorProfile';
+        }
+        if (profileType === 'passpoint_osu_id_provider') {
+          formattedData.model_type = 'PasspointOsuProviderProfile';
+          formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
         }
         onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
@@ -260,6 +271,10 @@ const ProfileDetails = ({
             onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}
           />
         )}
+        {profileType === 'passpoint_osu_id_provider' && (
+          <ProviderIdForm form={form} details={details} />
+        )}
+        {profileType === 'passpoint_operator' && <OperatorForm form={form} details={details} />}
       </Form>
     </Container>
   );
