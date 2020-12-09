@@ -57,7 +57,6 @@ const AccessPointDetails = ({
   loadingFirmware,
   errorFirmware,
   onFetchMoreProfiles,
-  goBackRoute,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -77,10 +76,12 @@ const AccessPointDetails = ({
 
   const handlePageChange = path => {
     if (isFormDirty) {
-      setRedirectURL(path || routes.accessPoints);
+      setRedirectURL(path);
       setConfirmModal(true);
+    } else if (path) {
+      history.replace(path);
     } else {
-      history.push(path || routes.accessPoints);
+      history.goBack();
     }
   };
 
@@ -107,7 +108,11 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          history.push(redirectURL);
+          if (redirectURL) {
+            history.replace(redirectURL);
+          } else {
+            history.goBack();
+          }
         }}
         visible={confirmModal}
         buttonText="OK"
@@ -116,7 +121,7 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange(goBackRoute)}>
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
           Back
         </Button>
       </Header>
@@ -210,7 +215,6 @@ AccessPointDetails.propTypes = {
   loadingFirmware: PropTypes.bool,
   errorFirmware: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
-  goBackRoute: PropTypes.string,
 };
 
 AccessPointDetails.defaultProps = {
@@ -223,7 +227,6 @@ AccessPointDetails.defaultProps = {
   loadingFirmware: true,
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
-  goBackRoute: null,
 };
 
 export default AccessPointDetails;
