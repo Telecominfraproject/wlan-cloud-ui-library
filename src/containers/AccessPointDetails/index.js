@@ -148,7 +148,7 @@ const AccessPointDetails = ({
           buttonType="danger"
           content={
             <p>
-              Are you sure you want to delete this access point: <strong>{data.inventoryId}</strong>
+              Are you sure you want to delete this access point: <strong>{data.name}</strong>
             </p>
           }
         />
