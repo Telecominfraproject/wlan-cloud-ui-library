@@ -29,6 +29,7 @@ import BonjourGatewayForm from './components/BonjourGateway';
 import RFForm from './components/RF';
 
 import styles from './index.module.scss';
+import VenueForm from './components/Venue';
 
 const ProfileDetails = ({
   profileType,
@@ -175,6 +176,7 @@ const ProfileDetails = ({
             <Input className={globalStyles.field} placeholder="Enter profile name" />
           </Item>
         </Card>
+        {profileType === 'passpoint_venue' && <VenueForm form={form} details={details} />}
         {profileType === 'ssid' && (
           <SSIDForm
             form={form}

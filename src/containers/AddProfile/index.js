@@ -28,6 +28,7 @@ import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
 import CaptivePortalForm from '../ProfileDetails/components/CaptivePortal';
 import RadiusForm from '../ProfileDetails/components/Radius';
 import RFForm from '../ProfileDetails/components/RF';
+import VenueForm from '../ProfileDetails/components/Venue';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -126,6 +127,10 @@ const AddProfile = ({
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
 
+        if (profileType === 'venue') {
+          formattedData.model_type = 'PasspointVenueProfile';
+        }
+
         onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
@@ -177,6 +182,7 @@ const AddProfile = ({
                 <Option value="captive_portal">Captive Portal</Option>
                 <Option value="radius">Radius</Option>
                 <Option value="rf">RF</Option>
+                <Option value="venue">Venue</Option>
               </Select>
             </Item>
             <Item
@@ -206,6 +212,7 @@ const AddProfile = ({
           {profileType === 'captive_portal' && <CaptivePortalForm form={form} />}
           {profileType === 'radius' && <RadiusForm form={form} />}
           {profileType === 'rf' && <RFForm form={form} />}
+          {profileType === 'venue' && <VenueForm form={form} />}
         </Form>
       </div>
     </Container>
