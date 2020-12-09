@@ -19,6 +19,7 @@ import {
   formatCaptiveForm,
   formatBonjourGatewayForm,
   formatRfProfileForm,
+  formatPasspointForm,
   formatProviderProfileForm,
 } from 'utils/profiles';
 
@@ -28,6 +29,7 @@ import RadiusForm from './components/Radius';
 import CaptivePortalForm from './components/CaptivePortal';
 import BonjourGatewayForm from './components/BonjourGateway';
 import RFForm from './components/RF';
+import PasspointProfileForm from './components/PasspointProfile';
 import ProviderIdForm from './components/ProviderId';
 import OperatorForm from './components/Operator';
 
@@ -38,17 +40,22 @@ const ProfileDetails = ({
   name,
   details,
   childProfiles,
-  childProfileIds,
   onUpdateProfile,
   ssidProfiles,
   rfProfiles,
   radiusProfiles,
   captiveProfiles,
+  venueProfiles,
+  operatorProfiles,
+  idProviderProfiles,
   fileUpload,
   onFetchMoreProfiles,
   onFetchMoreRfProfiles,
   onFetchMoreRadiusProfiles,
   onFetchMoreCaptiveProfiles,
+  onFetchMoreVenueProfiles,
+  onFetchMoreOperatorProfiles,
+  onFetchMoreIdProviderProfiles,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -130,6 +137,36 @@ const ProfileDetails = ({
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
+
+        if (profileType === 'passpoint') {
+          if (!values.passpointVenueProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Venue Profile is required.',
+            });
+            return;
+          }
+          if (!values.passpointOperatorProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'A Operator Profile is required.',
+            });
+            return;
+          }
+          if (values.passpointOsuProviderProfileIds.length === 0) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 ID Provider Profile is required.',
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.passpointVenueProfileId);
+          formattedData.childProfileIds.push(values.passpointOperatorProfileId);
+          values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
+          values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
+          formattedData.model_type = 'PasspointProfile';
+          formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
+        }
         if (profileType === 'passpoint_operator') {
           formattedData.model_type = 'PasspointOperatorProfile';
         }
@@ -202,7 +239,6 @@ const ProfileDetails = ({
             ssidProfiles={ssidProfiles}
             rfProfiles={rfProfiles}
             childProfiles={childProfiles}
-            childProfileIds={childProfileIds}
             onFetchMoreProfiles={onFetchMoreProfiles}
             onFetchMoreRfProfiles={onFetchMoreRfProfiles}
           />
@@ -219,6 +255,22 @@ const ProfileDetails = ({
         {profileType === 'radius' && <RadiusForm details={details} form={form} />}
         {profileType === 'bonjour' && <BonjourGatewayForm details={details} form={form} />}
         {profileType === 'rf' && <RFForm details={details} form={form} />}
+        {profileType === 'passpoint' && (
+          <PasspointProfileForm
+            form={form}
+            details={details}
+            venueProfiles={venueProfiles}
+            childProfiles={childProfiles}
+            operatorProfiles={operatorProfiles}
+            idProviderProfiles={idProviderProfiles}
+            ssidProfiles={ssidProfiles}
+            fileUpload={fileUpload}
+            onFetchMoreProfiles={onFetchMoreProfiles}
+            onFetchMoreVenueProfiles={onFetchMoreVenueProfiles}
+            onFetchMoreOperatorProfiles={onFetchMoreOperatorProfiles}
+            onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}
+          />
+        )}
         {profileType === 'passpoint_osu_id_provider' && (
           <ProviderIdForm form={form} details={details} />
         )}
@@ -238,12 +290,18 @@ ProfileDetails.propTypes = {
   rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  venueProfiles: PropTypes.instanceOf(Array),
+  operatorProfiles: PropTypes.instanceOf(Array),
+  idProviderProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRfProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
   onFetchMoreCaptiveProfiles: PropTypes.func,
+  onFetchMoreVenueProfiles: PropTypes.func,
+  onFetchMoreOperatorProfiles: PropTypes.func,
+  onFetchMoreIdProviderProfiles: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -254,12 +312,18 @@ ProfileDetails.defaultProps = {
   rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
-  childProfiles: [],
+  venueProfiles: [],
+  operatorProfiles: [],
+  idProviderProfiles: [],
   childProfileIds: [],
+  childProfiles: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreRfProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
   onFetchMoreCaptiveProfiles: () => {},
+  onFetchMoreVenueProfiles: () => {},
+  onFetchMoreOperatorProfiles: () => {},
+  onFetchMoreIdProviderProfiles: () => {},
 };
 
 export default ProfileDetails;

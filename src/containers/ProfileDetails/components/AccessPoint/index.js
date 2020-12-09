@@ -11,7 +11,6 @@ const AccessPointForm = ({
   form,
   details,
   childProfiles,
-  childProfileIds,
   ssidProfiles,
   rfProfiles,
   onFetchMoreProfiles,
@@ -32,25 +31,23 @@ const AccessPointForm = ({
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(
-    childProfileIds.filter(i => i !== currentRfId)
+    childProfiles.filter(i => i.profileType === 'ssid') || []
   );
 
   const handleOnChangeSsid = selectedItem => {
-    form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, selectedItem],
-    });
-    setSelectdChildProfiles([...selectedChildProfiles, selectedItem]);
+    setSelectdChildProfiles([
+      ...selectedChildProfiles,
+      ssidProfiles.find(i => i.id === selectedItem),
+    ]);
   };
 
   const handleRemoveSsid = id => {
-    form.setFieldsValue({
-      childProfileIds: selectedChildProfiles.filter(i => i !== id),
-    });
-    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+    setSelectdChildProfiles(
+      selectedChildProfiles.filter(i => parseInt(i.id, 10) !== parseInt(id, 10))
+    );
   };
 
   useEffect(() => {
-    setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
       vlan: details?.vlan,
@@ -73,9 +70,9 @@ const AccessPointForm = ({
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: currentRfId,
-      childProfileIds: selectedChildProfiles,
+      childProfileIds: selectedChildProfiles.map(i => i.id),
     });
-  }, [form, details, childProfileIds]);
+  }, [form, details, selectedChildProfiles]);
 
   const columns = [
     {
@@ -115,8 +112,9 @@ const AccessPointForm = ({
     </Radio.Group>
   );
 
-  const filteredOptions = ssidProfiles.filter(o => !selectedChildProfiles.includes(o.id));
-  const tableData = ssidProfiles.filter(o => selectedChildProfiles.includes(o.id));
+  const filteredOptions = ssidProfiles.filter(
+    i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
+  );
 
   return (
     <div className={styles.ProfilePage}>
@@ -394,7 +392,12 @@ const AccessPointForm = ({
             ))}
           </Select>
         </Item>
-        <Table dataSource={tableData} columns={columns} pagination={false} rowKey="id" />
+        <Table
+          dataSource={selectedChildProfiles}
+          columns={columns}
+          pagination={false}
+          rowKey="id"
+        />
         <Item name="childProfileIds" style={{ display: 'none' }}>
           <Input />
         </Item>
@@ -406,7 +409,6 @@ const AccessPointForm = ({
 AccessPointForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
-  childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
@@ -418,7 +420,6 @@ AccessPointForm.defaultProps = {
   form: null,
   details: {},
   childProfiles: [],
-  childProfileIds: [],
   ssidProfiles: [],
   rfProfiles: [],
   onFetchMoreProfiles: () => {},
