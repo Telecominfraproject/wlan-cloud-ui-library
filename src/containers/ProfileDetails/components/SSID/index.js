@@ -40,28 +40,27 @@ const SSIDForm = ({
 
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
-        radioBasedValues[`${j}${i}`] =
-          (details.radioBasedConfigs && details.radioBasedConfigs[i][j]) || 'auto';
+        radioBasedValues[`${j}${i}`] = details?.radioBasedConfigs[i][j]?.toString() ?? 'auto';
       });
     });
 
     form.setFieldsValue({
-      ssid: details.ssid || '',
-      bandwidthLimitDown: details.bandwidthLimitDown || 0,
-      bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSsid: details.broadcastSsid || 'enabled',
-      appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
-      forwardMode: details.forwardMode || 'BRIDGE',
-      noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
-      captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
-      captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
-      secureMode: details.secureMode || 'open',
-      vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
-      keyStr: details.keyStr,
-      wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
-      wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
-      vlanId: details.vlanId,
-      radiusServiceName: details.radiusServiceName,
+      ssid: details?.ssid || '',
+      bandwidthLimitDown: details?.bandwidthLimitDown || 0,
+      bandwidthLimitUp: details?.bandwidthLimitUp || 0,
+      broadcastSsid: details?.broadcastSsid || 'enabled',
+      appliedRadios: details?.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+      forwardMode: details?.forwardMode || 'BRIDGE',
+      noLocalSubnets: details?.noLocalSubnets ? 'true' : 'false',
+      captivePortal: details?.captivePortalId ? 'usePortal' : 'notPortal',
+      captivePortalId: details?.captivePortalId?.toString(),
+      secureMode: details?.secureMode || 'open',
+      vlan: details?.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
+      keyStr: details?.keyStr,
+      wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
+      wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
+      vlanId: details?.vlanId || null,
+      radiusServiceName: details?.radiusServiceName,
       ...radioBasedValues,
     });
   }, [form, details]);
@@ -289,10 +288,18 @@ const SSIDForm = ({
             <Option value="open">Open (No Encryption)</Option>
             <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpaRadius">WPA Enterprise</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wep">WEP</Option>
+            <Option value="wpaEAP">WPA EAP</Option>
+            <Option value="wpa2EAP">WPA2 EAP (mixed mode)</Option>
+            <Option value="wpa2OnlyEAP">WPA2 EAP</Option>
+            <Option value="wpa3OnlySAE">WPA3 SAE</Option>
+            <Option value="wpa3MixedSAE">WPA3 SAE (mixed mode)</Option>
+            <Option value="wpa3OnlyEAP">WPA3 EAP</Option>
+            <Option value="wpa3MixedEAP">WPA3 EAP (mixed mode)</Option>
           </Select>
         </Item>
 
@@ -305,7 +312,14 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && (
+        {(mode === 'wpaRadius' ||
+          mode === 'wpa2Radius' ||
+          mode === 'wpa2OnlyRadius' ||
+          mode === 'wpaEAP' ||
+          mode === 'wpa2EAP' ||
+          mode === 'wpa2OnlyEAP' ||
+          mode === 'wpa3OnlyEAP' ||
+          mode === 'wpa3MixedEAP') && (
           <Item
             name="radiusServiceName"
             label="RADIUS Service"
@@ -330,7 +344,11 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpaPSK' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK') && (
+        {(mode === 'wpaPSK' ||
+          mode === 'wpa2PSK' ||
+          mode === 'wpa2OnlyPSK' ||
+          mode === 'wpa3OnlySAE' ||
+          mode === 'wpa3MixedSAE') && (
           <Item
             label="Security Key"
             name="keyStr"
@@ -458,9 +476,9 @@ const SSIDForm = ({
                 >
                   <Input
                     className={globalStyles.field}
-                    placeholder="2-4095"
+                    placeholder="1-4095"
                     type="number"
-                    min={2}
+                    min={1}
                     max={4095}
                     maxLength={4}
                   />
@@ -471,57 +489,61 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      {mode !== 'wpaPSK' && mode !== 'wep' && (
-        <Card title="Roaming">
-          <Item label="Advanced Settings" colon={false}>
-            <div className={styles.InlineDiv}>
-              <span>2.4GHz</span>
-              <span>5GHz</span>
-              <span>5GHzU</span>
-              <span>5GHzL</span>
-            </div>
-          </Item>
+      {mode !== 'wpaPSK' &&
+        mode !== 'wep' &&
+        mode !== 'wpa2PSK' &&
+        mode !== 'wpa2OnlyPSK' &&
+        mode !== 'wpa3OnlySAE' && (
+          <Card title="Roaming">
+            <Item label="Advanced Settings" colon={false}>
+              <div className={styles.InlineDiv}>
+                <span>2.4GHz</span>
+                <span>5GHz</span>
+                <span>5GHzU</span>
+                <span>5GHzL</span>
+              </div>
+            </Item>
 
-          {mode !== 'open' && (
-            <Item
-              label={
-                <Tooltip
-                  title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
-                  text="Fast BSS Transition (802.11r)"
-                />
-              }
-            >
+            {mode !== 'open' && (
+              <Item
+                label={
+                  <Tooltip
+                    title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
+                    text="Fast BSS Transition (802.11r)"
+                  />
+                }
+              >
+                <div className={styles.InlineDiv}>
+                  {RADIOS.map(i => (
+                    <Item key={i} name={`enable80211r${i}`}>
+                      {dropdownOptions}
+                    </Item>
+                  ))}
+                </div>
+              </Item>
+            )}
+
+            <Item label="802.11k">
               <div className={styles.InlineDiv}>
                 {RADIOS.map(i => (
-                  <Item key={i} name={`enable80211r${i}`}>
+                  <Item key={i} name={`enable80211k${i}`}>
                     {dropdownOptions}
                   </Item>
                 ))}
               </div>
             </Item>
-          )}
 
-          <Item label="802.11k">
-            <div className={styles.InlineDiv}>
-              {RADIOS.map(i => (
-                <Item key={i} name={`enable80211k${i}`}>
-                  {dropdownOptions}
-                </Item>
-              ))}
-            </div>
-          </Item>
-
-          <Item label="802.11v">
-            <div className={styles.InlineDiv}>
-              {RADIOS.map(i => (
-                <Item key={i} name={`enable80211v${i}`}>
-                  {dropdownOptions}
-                </Item>
-              ))}
-            </div>
-          </Item>
-        </Card>
-      )}
+            <Item label="802.11v">
+              <div className={styles.InlineDiv}>
+                {RADIOS.map(i => (
+                  <Item key={i} name={`enable80211v${i}`}>
+                    {dropdownOptions}
+                  </Item>
+                ))}
+              </div>
+            </Item>
+          </Card>
+        )}
     </div>
   );
 };

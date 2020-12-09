@@ -10,6 +10,10 @@ export const formatSsidProfileForm = values => {
     childProfileIds: [],
   };
 
+  if (values.vlan === 'defaultVLAN') {
+    formattedData.vlanId = 0;
+  }
+
   if (values.wepKey) {
     const wepKeyType = values.wepKey.length === 26 ? 'wep128' : 'wep64';
     const wepConfig = {
