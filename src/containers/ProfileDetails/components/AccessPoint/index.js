@@ -174,7 +174,7 @@ const AccessPointForm = ({
           </Item>
         )}
         <Item label="LED Status" name="ledControlEnabled" valuePropName="checked">
-          <Checkbox>Show LED indicators on APs</Checkbox>
+          <Checkbox disabled>Show LED indicators on APs</Checkbox>
         </Item>
 
         <Item
@@ -187,7 +187,7 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <Radio.Group disabled>
             <Radio value="false" onChange={() => setRtls(false)}>
               Disabled
             </Radio>
