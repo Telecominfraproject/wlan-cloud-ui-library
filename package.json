@@ -1,7 +1,7 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
   "version": "0.7.0",
-  "author": "ConnectUs",
+  "author": "NetExperience",
   "description": "React UI Library",
   "engines": {
     "npm": ">=5",
