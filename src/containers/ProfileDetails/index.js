@@ -163,6 +163,7 @@ const ProfileDetails = ({
           }
           formattedData.childProfileIds.push(values.passpointVenueProfileId);
           formattedData.childProfileIds.push(values.passpointOperatorProfileId);
+          formattedData.childProfileIds.push(values.osuSsidProfileId);
           values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';

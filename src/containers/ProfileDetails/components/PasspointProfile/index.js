@@ -45,19 +45,24 @@ const PasspointProfileForm = ({
     childProfiles.filter(i => i.profileType === 'ssid') || []
   );
 
+  const [authType, setAuthType] = useState(
+    details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions'
+  );
+
   useEffect(() => {
     form.setFieldsValue({
       passpointVenueProfileId: details?.passpointVenueProfileId?.toString(),
       passpointOperatorProfileId: details?.passpointOperatorProfileId?.toString(),
       passpointOsuProviderProfileIds:
         details?.passpointOsuProviderProfileIds?.map(i => i?.toString()) || [],
+      osuSsidProfileId:
+        childProfiles.find(o => o.id === details?.osuSsidProfileId.toString()).name || '',
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || null,
       },
       accessNetworkType: details?.accessNetworkType || 'private_network',
-      networkAuthenticationType:
-        details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions',
+      networkAuthenticationType: authType,
       termsAndConditionsFile:
         details?.termsAndConditionsFile && formatFile(details?.termsAndConditionsFile),
       emergencyServicesReachable: details?.emergencyServicesReachable ? 'true' : 'false',
@@ -272,6 +277,20 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
+        <Item label="SSID" name="osuSsidProfileId">
+          <Select
+            onPopupScroll={onFetchMoreProfiles}
+            data-testid="idProviderProfiles"
+            showSearch
+            placeholder="Select an SSID Profile"
+          >
+            {ssidProfiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
         <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
           {defaultOptions}
         </Item>
@@ -317,7 +336,7 @@ const PasspointProfileForm = ({
           </Select>
         </Item>
         <Item label="Authentication Type" name="networkAuthenticationType">
-          <Select>
+          <Select onChange={value => setAuthType(value)}>
             <Option value="acceptance_of_terms_and_conditions">
               Acceptance of Terms & Conditions
             </Option>
@@ -326,17 +345,21 @@ const PasspointProfileForm = ({
             <Option value="dns_redirection">DNS Redirection</Option>
           </Select>
         </Item>
-        <Item label="Terms & Conditions" name="termsAndConditionsFile">
-          <Upload
-            accept="image/*"
-            data-testid="termsAndConditionsUpload"
-            fileList={termsAndConditionsFileList}
-            beforeUpload={handleFileUpload}
-            onChange={handleOnChangeTermsAndConditions}
-          >
-            <Button icon={<UploadOutlined />}>File Upload</Button>
-          </Upload>
-        </Item>
+
+        {authType === 'acceptance_of_terms_and_conditions' && (
+          <Item label="Terms & Conditions" name="termsAndConditionsFile">
+            <Upload
+              accept="image/*"
+              data-testid="termsAndConditionsUpload"
+              fileList={termsAndConditionsFileList}
+              beforeUpload={handleFileUpload}
+              onChange={handleOnChangeTermsAndConditions}
+            >
+              <Button icon={<UploadOutlined />}>File Upload</Button>
+            </Upload>
+          </Item>
+        )}
+
         <Item label="Emergency Services Reachable" name="emergencyServicesReachable">
           {defaultOptions}
         </Item>
