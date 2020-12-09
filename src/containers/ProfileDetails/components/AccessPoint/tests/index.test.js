@@ -53,6 +53,62 @@ const mockProps = {
     vlanNative: true,
   },
   childProfileIds: [3],
+  childProfiles: [
+    {
+      id: 3,
+      name: 'TipWlan-cloud-3-radios',
+      profileType: 'ssid',
+      details: {
+        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
+        bandwidthLimitDown: 0,
+        bandwidthLimitUp: 0,
+        bonjourGatewayProfileId: null,
+        broadcastSsid: 'enabled',
+        captivePortalId: null,
+        enable80211w: null,
+        forwardMode: null,
+        keyRefresh: 0,
+        keyStr: null,
+        model_type: 'SsidConfiguration',
+        noLocalSubnets: false,
+        profileType: 'ssid',
+        radioBasedConfigs: {
+          is2dot4GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzL: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzU: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+        },
+        radiusServiceName: null,
+        secureMode: 'open',
+        ssid: 'TipWlan-cloud-3-radios',
+        ssidAdminState: 'enabled',
+        videoTrafficOnly: false,
+        vlanId: 1,
+        wepConfig: null,
+      },
+      __typename: 'Profile',
+    }
+  ],
   ssidProfiles: [
     {
       id: 2,
