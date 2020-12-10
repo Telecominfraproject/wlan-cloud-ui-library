@@ -208,7 +208,11 @@ const AccessPointForm = ({
                 ]}
                 hasFeedback
               >
-                <Input className={globalStyles.field} placeholder="IP Address" />
+                <Input
+                  className={globalStyles.field}
+                  placeholder="IP Address"
+                  data-testid="svrIpAdress"
+                />
               </Item>
               <Item
                 name={['rtlsSettings', 'srvHostPort']}
@@ -234,6 +238,7 @@ const AccessPointForm = ({
                   type="number"
                   min={1}
                   max={65535}
+                  data-testid="svrPort"
                 />
               </Item>
             </Item>
