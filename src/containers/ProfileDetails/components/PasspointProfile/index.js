@@ -489,9 +489,6 @@ const PasspointProfileForm = ({
         <Item name="childProfileIds" style={{ display: 'none' }}>
           <Input />
         </Item>
-        <Item name="childProfiles" style={{ display: 'none' }}>
-          <Input />
-        </Item>
         <Item name="associatedAccessSsidProfileIds" style={{ display: 'none' }}>
           <Input />
         </Item>

@@ -198,9 +198,9 @@ export const formatPasspointForm = (values, details) => {
   };
 
   const isName = /[a-zA-Z]/g;
-  if (isName.test(values.osuSsidProfileId)) {
+  if (isName.test(values?.osuSsidProfileId)) {
     formattedData.osuSsidProfileId = parseInt(
-      values.childProfiles.find(o => o.name === values.osuSsidProfileId).id,
+      values?.childProfiles?.find(o => o.name === values?.osuSsidProfileId)?.id,
       10
     );
 
