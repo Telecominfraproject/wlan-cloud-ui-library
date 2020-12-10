@@ -20,9 +20,7 @@ const AccessPointForm = ({
   const { Option } = Select;
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
-  const [ntp, setNTP] = useState(
-    details?.ntpServer?.auto === undefined ? false : details?.ntpServer?.auto
-  );
+  const [ntp, setNTP] = useState(details?.ntpServer?.auto);
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
