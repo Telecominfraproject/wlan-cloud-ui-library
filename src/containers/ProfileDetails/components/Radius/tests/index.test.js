@@ -325,7 +325,27 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Add Service Zone modal should hide on click save and cancel buttons', async () => {
+  it('Add Service Zone modal should hide on cancel button', async () => {
+    const RadiusFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <RadiusForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByRole, getByText } = render(<RadiusFormComp />);
+
+    fireEvent.click(getByRole('button', { name: 'Add Service Zone' }));
+    expect(getByText('Add Service Zone Configuration')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    await waitFor(() => {
+      expect(getByText('Add Service Zone Configuration')).not.toBeVisible();
+    });
+  });
+
+  it('Add Service Zone modal should hide on save button', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -335,14 +355,6 @@ describe('<RadiusForm />', () => {
       );
     };
     const { getByRole, getByText, getByLabelText } = render(<RadiusFormComp />);
-
-    fireEvent.click(getByRole('button', { name: 'Add Service Zone' }));
-    expect(getByText('Add Service Zone Configuration')).toBeVisible();
-
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
-    await waitFor(() => {
-      expect(getByText('Add Service Zone Configuration')).not.toBeVisible();
-    });
 
     fireEvent.click(getByRole('button', { name: 'Add Service Zone' }));
     expect(getByText('Add Service Zone Configuration')).toBeVisible();
@@ -375,7 +387,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Edit Service Zone configuration modal should hide when cancel or save button is clicked', async () => {
+  it('Edit Service Zone configuration modal should hide when cancel is clicked', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -398,7 +410,7 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Edit Service Zone configuration modal should hide when cancel or save button is clicked', async () => {
+  it('Edit Service Zone configuration modal should hide when save button is clicked', async () => {
     const RadiusFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -410,15 +422,6 @@ describe('<RadiusForm />', () => {
     const { getByRole, getByText } = render(<RadiusFormComp />);
 
     const listitem = getByRole('listitem', { name: 'serviceZoneItem-Ottawa' });
-
-    fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
-    await waitFor(() => {
-      expect(getByText('Edit Service Zone Configuration', { exact: true })).toBeVisible();
-    });
-    fireEvent.click(getByRole('button', { name: /cancel/i }));
-    await waitFor(() => {
-      expect(getByText('Edit Service Zone Configuration')).not.toBeVisible();
-    });
 
     fireEvent.click(within(listitem).getByRole('button', { name: 'editRadiusServiceZone' }));
     await waitFor(() => {
