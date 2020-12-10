@@ -161,9 +161,15 @@ const ProfileDetails = ({
             });
             return;
           }
+          if (!values.osuSsidProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'An SSID Profile is required.',
+            });
+            return;
+          }
           formattedData.childProfileIds.push(values.passpointVenueProfileId);
           formattedData.childProfileIds.push(values.passpointOperatorProfileId);
-          formattedData.childProfileIds.push(values.osuSsidProfileId);
           values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';

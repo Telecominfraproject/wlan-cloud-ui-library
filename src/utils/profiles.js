@@ -197,6 +197,18 @@ export const formatPasspointForm = (values, details) => {
     return type;
   };
 
+  const isName = /[a-zA-Z]/g;
+  if (isName.test(values.osuSsidProfileId)) {
+    formattedData.osuSsidProfileId = parseInt(
+      values.childProfiles.find(o => o.name === values.osuSsidProfileId).id,
+      10
+    );
+
+    formattedData.childProfileIds.push(formattedData.osuSsidProfileId);
+  } else {
+    formattedData.childProfileIds.push(values.osuSsidProfileId);
+  }
+
   if (
     !values.termsAndConditionsFile ||
     (values.termsAndConditionsFile &&

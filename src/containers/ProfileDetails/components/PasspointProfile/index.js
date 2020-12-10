@@ -42,7 +42,9 @@ const PasspointProfileForm = ({
   );
 
   const [selectedChildSsids, setSelectedChildSsids] = useState(
-    childProfiles.filter(i => i.profileType === 'ssid') || []
+    childProfiles.filter(
+      i => i.profileType === 'ssid' && i.id !== details?.osuSsidProfileId?.toString()
+    ) || []
   );
 
   const [authType, setAuthType] = useState(
@@ -54,9 +56,9 @@ const PasspointProfileForm = ({
       passpointVenueProfileId: details?.passpointVenueProfileId?.toString(),
       passpointOperatorProfileId: details?.passpointOperatorProfileId?.toString(),
       passpointOsuProviderProfileIds:
-        details?.passpointOsuProviderProfileIds?.map(i => i?.toString()) || [],
+        details?.passpointOsuProviderProfileIds?.map(i => i.toString()) || [],
       osuSsidProfileId:
-        childProfiles.find(o => o.id === details?.osuSsidProfileId.toString()).name || '',
+        childProfiles?.find(o => o.id === details?.osuSsidProfileId?.toString())?.name || null,
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || null,
@@ -77,6 +79,7 @@ const PasspointProfileForm = ({
         ? 'true'
         : 'false',
       childProfileIds: [],
+      childProfiles,
     });
   }, [form, details]);
 
@@ -280,7 +283,7 @@ const PasspointProfileForm = ({
         <Item label="SSID" name="osuSsidProfileId">
           <Select
             onPopupScroll={onFetchMoreProfiles}
-            data-testid="idProviderProfiles"
+            data-testid="ssidProfileSelect"
             showSearch
             placeholder="Select an SSID Profile"
           >
@@ -484,6 +487,9 @@ const PasspointProfileForm = ({
         </Item>
 
         <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Input />
+        </Item>
+        <Item name="childProfiles" style={{ display: 'none' }}>
           <Input />
         </Item>
         <Item name="associatedAccessSsidProfileIds" style={{ display: 'none' }}>
