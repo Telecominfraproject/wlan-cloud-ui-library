@@ -521,10 +521,20 @@ describe('<ProfileDetails />', () => {
 
   it('onUpdateProfile should be called when all fields are submitted correctly profileType equipment_ap', async () => {
     const submitSpy = jest.fn();
+    const mockDetails = {
+      ...mockProps,
+      details: {
+        ...mockProps.details,
+        ntpServer: {
+          auto: false,
+          value: "testNtp",
+        },
+      },
+    };
 
     const { getByRole } = render(
       <Router>
-        <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="equipment_ap" />
+        <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} profileType="equipment_ap" />
       </Router>
     );
     fireEvent.click(getByRole('button', { name: 'Save' }));

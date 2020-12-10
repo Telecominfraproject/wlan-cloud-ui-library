@@ -20,9 +20,7 @@ const AccessPointForm = ({
   const { Option } = Select;
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
-  const [ntp, setNTP] = useState(
-    details?.ntpServer?.auto === undefined ? true : details?.ntpServer?.auto
-  );
+  const [ntp, setNTP] = useState(details?.ntpServer?.auto);
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
@@ -210,7 +208,11 @@ const AccessPointForm = ({
                 ]}
                 hasFeedback
               >
-                <Input className={globalStyles.field} placeholder="IP Address" />
+                <Input
+                  className={globalStyles.field}
+                  placeholder="IP Address"
+                  data-testid="svrIpAdress"
+                />
               </Item>
               <Item
                 name={['rtlsSettings', 'srvHostPort']}
@@ -236,6 +238,7 @@ const AccessPointForm = ({
                   type="number"
                   min={1}
                   max={65535}
+                  data-testid="svrPort"
                 />
               </Item>
             </Item>

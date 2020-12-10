@@ -398,16 +398,22 @@ describe('<AccessPoints />', () => {
   it('RTLS Enabled radio button click should show the RTLS input fields', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByTestId } = render(<AccessPointComp />);
-
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
+    const { getByTestId } = render(<AccessPointComp />);
 
     await waitFor(() => {
       expect(getByTestId('rtlsInputFields')).toBeInTheDOM();
@@ -417,19 +423,25 @@ describe('<AccessPoints />', () => {
   it('error message should be displayed when RTLS input fields IP Address and Port have invalid values', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByText, getByPlaceholderText } = render(<AccessPointComp />);
+    const { getByText, getByTestId } = render(<AccessPointComp />);
 
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
-
-    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0' } });
-    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 123456 } });
+    fireEvent.change(getByTestId('svrIpAdress'), { target: { value: '0.0.0' } });
+    fireEvent.change(getByTestId('svrPort'), { target: { value: 123456 } });
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
       expect(getByText('Port expected between 1 - 65535')).toBeVisible();
@@ -439,19 +451,25 @@ describe('<AccessPoints />', () => {
   it('error message should not be displayed when RTLS input fields IP Address and Port have valid values', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+    const { getByTestId, queryByText } = render(<AccessPointComp />);
 
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
-
-    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0.0' } });
-    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 5 } });
+    fireEvent.change(getByTestId('svrIpAdress'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByTestId('svrPort'), { target: { value: 5 } });
     await waitFor(() => {
       expect(
         queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
@@ -482,19 +500,25 @@ describe('<AccessPoints />', () => {
   it('error message should be displayed when Syslog input fields IP Address and Port have invalid values', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByText, getByPlaceholderText } = render(<AccessPointComp />);
+    const { queryAllByText, getByText, getByTestId } = render(<AccessPointComp />);
 
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[1]);
-
-    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0' } });
-    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 123456 } });
+    fireEvent.change(getByTestId('svrIpAdress'), { target: { value: '0.0.0' } });
+    fireEvent.change(getByTestId('svrPort'), { target: { value: 123456 } });
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
       expect(getByText('Port expected between 1 - 65535')).toBeVisible();
@@ -506,19 +530,25 @@ describe('<AccessPoints />', () => {
   it('error message should not be displayed when Syslog input fields IP Address and Port have valid values', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+    const { queryAllByText, getByTestId, queryByText } = render(<AccessPointComp />);
 
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[1]);
-
-    fireEvent.change(getByPlaceholderText('IP Address'), { target: { value: '0.0.0.0' } });
-    fireEvent.change(getByPlaceholderText('Port'), { target: { value: 5 } });
+    fireEvent.change(getByTestId('svrIpAdress'), { target: { value: '0.0.0.0' } });
+    fireEvent.change(getByTestId('svrPort'), { target: { value: 5 } });
     await waitFor(() => {
       expect(
         queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
@@ -532,20 +562,26 @@ describe('<AccessPoints />', () => {
   it('click on disable button should hide input fields for RTLS', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, queryByText, getByPlaceholderText } = render(<AccessPointComp />);
-
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
+    const { queryAllByText, queryByText, getByTestId } = render(<AccessPointComp />);
 
     await waitFor(() => {
-      expect(getByPlaceholderText('IP Address')).toBeVisible();
-      expect(getByPlaceholderText('Port')).toBeVisible();
+      expect(getByTestId('svrIpAdress')).toBeVisible();
+      expect(getByTestId('svrPort')).toBeVisible();
     });
     const disabledRadio = queryAllByText('Disabled');
     fireEvent.click(disabledRadio[0]);
