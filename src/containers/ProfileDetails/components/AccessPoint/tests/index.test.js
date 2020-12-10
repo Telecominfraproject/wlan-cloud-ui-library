@@ -398,16 +398,22 @@ describe('<AccessPoints />', () => {
   it('RTLS Enabled radio button click should show the RTLS input fields', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
-    const { queryAllByText, getByTestId } = render(<AccessPointComp />);
-
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
+    const { getByTestId } = render(<AccessPointComp />);
 
     await waitFor(() => {
       expect(getByTestId('rtlsInputFields')).toBeInTheDOM();
@@ -461,9 +467,6 @@ describe('<AccessPoints />', () => {
       );
     };
     const { getByTestId, queryByText } = render(<AccessPointComp />);
-
-    // const radio = queryAllByText('Enabled');
-    // fireEvent.click(radio[0]);
 
     fireEvent.change(getByTestId('svrIpAdress'), { target: { value: '0.0.0.0' } });
     fireEvent.change(getByTestId('svrPort'), { target: { value: 5 } });
@@ -559,16 +562,22 @@ describe('<AccessPoints />', () => {
   it('click on disable button should hide input fields for RTLS', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
+      const mockData = {
+        ...mockProps,
+        details: {
+          ...mockProps.details,
+          rtlsSettings: {
+            enabled: true
+          } 
+        }
+      };
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockData} form={form} />
         </Form>
       );
     };
     const { queryAllByText, queryByText, getByTestId } = render(<AccessPointComp />);
-
-    const radio = queryAllByText('Enabled');
-    fireEvent.click(radio[0]);
 
     await waitFor(() => {
       expect(getByTestId('svrIpAdress')).toBeVisible();
