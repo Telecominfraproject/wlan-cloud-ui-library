@@ -290,3 +290,10 @@ export const formatProviderProfileForm = values => {
 
   return formattedData;
 };
+
+export const formatOperatorForm = values => {
+  const formattedData = { ...values };
+  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
+
+  return formattedData;
+};

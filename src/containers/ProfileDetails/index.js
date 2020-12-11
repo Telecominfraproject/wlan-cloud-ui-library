@@ -21,6 +21,7 @@ import {
   formatRfProfileForm,
   formatPasspointForm,
   formatProviderProfileForm,
+  formatOperatorForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -174,6 +175,7 @@ const ProfileDetails = ({
         }
         if (profileType === 'passpoint_operator') {
           formattedData.model_type = 'PasspointOperatorProfile';
+          formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
         if (profileType === 'passpoint_osu_id_provider') {
           formattedData.model_type = 'PasspointOsuProviderProfile';

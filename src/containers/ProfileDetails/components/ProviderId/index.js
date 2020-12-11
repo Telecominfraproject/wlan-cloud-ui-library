@@ -156,18 +156,22 @@ const ProviderIdForm = ({ form, details }) => {
     <div className={styles.ProfilePage}>
       <Card title="Network Identifier">
         <Item
-          label="Domain Name:"
-          name="domainName"
+          label="Roaming OI:"
+          name="roamingOi"
           rules={[
-            {
-              required: true,
-              message: 'Please enter a domain name',
-            },
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (
+                  !value ||
+                  getFieldValue('roamingOi').match(/^([a-z0-9\s]+,)*([a-z0-9\s]+){1}$/i)
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('Please enter a comma separated list of strings'));
+              },
+            }),
           ]}
         >
-          <Input placeholder="Enter a domain name" />
-        </Item>
-        <Item label="Roaming OI:" name="roamingOi">
           <Input placeholder="Enter Roaming Oi" />
         </Item>
       </Card>
