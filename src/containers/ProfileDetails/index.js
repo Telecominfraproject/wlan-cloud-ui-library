@@ -179,6 +179,7 @@ const ProfileDetails = ({
           <SSIDForm
             form={form}
             details={details}
+            childProfiles={childProfiles}
             captiveProfiles={captiveProfiles}
             radiusProfiles={radiusProfiles}
             onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}

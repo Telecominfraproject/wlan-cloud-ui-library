@@ -14,12 +14,12 @@ const SSIDForm = ({
   form,
   details,
   captiveProfiles,
+  childProfiles,
   onFetchMoreCaptiveProfiles,
   radiusProfiles,
   onFetchMoreRadiusProfiles,
 }) => {
   const [mode, setMode] = useState(details.secureMode || 'open');
-  const [selectedRadius, setSelectedRadius] = useState({ name: details?.radiusServiceName });
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -61,16 +61,16 @@ const SSIDForm = ({
       wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details?.vlanId || null,
-      radiusServiceName: selectedRadius?.name,
-      radiusServiceId: selectedRadius?.id,
+      radiusServiceName:
+        {
+          value: childProfiles?.[0]?.id || null,
+          key: childProfiles?.[0]?.id || null,
+          label: childProfiles?.[0]?.name || null,
+        } || null,
       ...radioBasedValues,
       childProfileIds: [],
     });
-  }, [form, details, selectedRadius]);
-
-  const handleRadiusChange = (val, key) => {
-    setSelectedRadius({ id: key.key, name: val });
-  };
+  }, [form, details]);
 
   return (
     <div className={styles.ProfilePage}>
@@ -335,10 +335,10 @@ const SSIDForm = ({
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
               onPopupScroll={onFetchMoreRadiusProfiles}
-              onChange={handleRadiusChange}
+              labelInValue
             >
               {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.name}>
+                <Option key={profile.id} value={profile.id}>
                   {profile.name}
                 </Option>
               ))}
@@ -551,9 +551,6 @@ const SSIDForm = ({
       <Item name="childProfileIds" style={{ display: 'none' }}>
         <Input />
       </Item>
-      <Item name="radiusServiceId" style={{ display: 'none' }}>
-        <Input />
-      </Item>
     </div>
   );
 };
@@ -561,6 +558,7 @@ const SSIDForm = ({
 SSIDForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  childProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   onFetchMoreCaptiveProfiles: PropTypes.func,
@@ -570,6 +568,7 @@ SSIDForm.propTypes = {
 SSIDForm.defaultProps = {
   form: null,
   details: {},
+  childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
   onFetchMoreCaptiveProfiles: () => {},
