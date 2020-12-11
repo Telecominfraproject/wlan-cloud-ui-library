@@ -19,6 +19,7 @@ const SSIDForm = ({
   onFetchMoreRadiusProfiles,
 }) => {
   const [mode, setMode] = useState(details.secureMode || 'open');
+  const [selectedRadius, setSelectedRadius] = useState({ name: details?.radiusServiceName });
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -60,10 +61,16 @@ const SSIDForm = ({
       wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details?.vlanId || null,
-      radiusServiceName: details?.radiusServiceName,
+      radiusServiceName: selectedRadius?.name,
+      radiusServiceId: selectedRadius?.id,
       ...radioBasedValues,
+      childProfileIds: [],
     });
-  }, [form, details]);
+  }, [form, details, selectedRadius]);
+
+  const handleRadiusChange = (val, key) => {
+    setSelectedRadius({ id: key.key, name: val });
+  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -287,19 +294,16 @@ const SSIDForm = ({
           >
             <Option value="open">Open (No Encryption)</Option>
             <Option value="wpaPSK">WPA Personal</Option>
-            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
             <Option value="wpaRadius">WPA Enterprise</Option>
+            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wep">WEP</Option>
-            <Option value="wpaEAP">WPA EAP</Option>
-            <Option value="wpa2EAP">WPA2 EAP (mixed mode)</Option>
-            <Option value="wpa2OnlyEAP">WPA2 EAP</Option>
-            <Option value="wpa3OnlySAE">WPA3 SAE</Option>
-            <Option value="wpa3MixedSAE">WPA3 SAE (mixed mode)</Option>
-            <Option value="wpa3OnlyEAP">WPA3 EAP</Option>
-            <Option value="wpa3MixedEAP">WPA3 EAP (mixed mode)</Option>
+            <Option value="wpa3OnlySAE">WPA3 Enterprise</Option>
+            <Option value="wpa3MixedSAE">WPA3 Enterprise (mixed mode)</Option>
+            <Option value="wpa3OnlyEAP">WPA3 Personal</Option>
+            <Option value="wpa3MixedEAP">WPA3 Personal (mixed mode)</Option>
           </Select>
         </Item>
 
@@ -315,9 +319,6 @@ const SSIDForm = ({
         {(mode === 'wpaRadius' ||
           mode === 'wpa2Radius' ||
           mode === 'wpa2OnlyRadius' ||
-          mode === 'wpaEAP' ||
-          mode === 'wpa2EAP' ||
-          mode === 'wpa2OnlyEAP' ||
           mode === 'wpa3OnlyEAP' ||
           mode === 'wpa3MixedEAP') && (
           <Item
@@ -334,6 +335,7 @@ const SSIDForm = ({
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
               onPopupScroll={onFetchMoreRadiusProfiles}
+              onChange={handleRadiusChange}
             >
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
@@ -493,6 +495,7 @@ const SSIDForm = ({
         mode !== 'wep' &&
         mode !== 'wpa2PSK' &&
         mode !== 'wpa2OnlyPSK' &&
+        mode !== 'wpa3MixedSAE' &&
         mode !== 'wpa3OnlySAE' && (
           <Card title="Roaming">
             <Item label="Advanced Settings" colon={false}>
@@ -544,6 +547,13 @@ const SSIDForm = ({
             </Item>
           </Card>
         )}
+
+      <Item name="childProfileIds" style={{ display: 'none' }}>
+        <Input />
+      </Item>
+      <Item name="radiusServiceId" style={{ display: 'none' }}>
+        <Input />
+      </Item>
     </div>
   );
 };
