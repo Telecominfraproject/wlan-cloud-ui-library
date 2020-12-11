@@ -10,7 +10,15 @@ import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
 
-const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, isLastPage }) => {
+const Accounts = ({
+  data,
+  currentUser,
+  onCreateUser,
+  onEditUser,
+  onDeleteUser,
+  onLoadMore,
+  isLastPage,
+}) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -82,24 +90,27 @@ const Accounts = ({ data, onCreateUser, onEditUser, onDeleteUser, onLoadMore, is
       dataIndex: 'delete',
       key: 'delete',
       width: 64,
-      render: (_, record) => (
-        <Button
-          title="delete"
-          className={styles.InfoButton}
-          type="primary"
-          icon={<DeleteFilled />}
-          onClick={() => {
-            setDeleteModal(true);
-            setActiveUser({
-              id: record.id,
-              email: record.email,
-              roles: record.roles,
-              customerId: record.customerId,
-              lastModifiedTimestamp: record.lastModifiedTimestamp,
-            });
-          }}
-        />
-      ),
+      render: (_, record) =>
+        currentUser?.id === record.id ? (
+          <></>
+        ) : (
+          <Button
+            title="delete"
+            className={styles.InfoButton}
+            type="primary"
+            icon={<DeleteFilled />}
+            onClick={() => {
+              setDeleteModal(true);
+              setActiveUser({
+                id: record.id,
+                email: record.email,
+                roles: record.roles,
+                customerId: record.customerId,
+                lastModifiedTimestamp: record.lastModifiedTimestamp,
+              });
+            }}
+          />
+        ),
     },
   ];
 
@@ -155,12 +166,14 @@ Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
+  currentUser: PropTypes.shape({}),
 };
 
 Accounts.defaultProps = {
   data: [],
   onLoadMore: () => {},
   isLastPage: true,
+  currentUser: {},
 };
 
 export default Accounts;
