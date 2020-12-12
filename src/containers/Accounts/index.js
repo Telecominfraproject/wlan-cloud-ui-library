@@ -12,7 +12,7 @@ import FormModal from './components/FormModal';
 
 const Accounts = ({
   data,
-  currentUser,
+  userId,
   onCreateUser,
   onEditUser,
   onDeleteUser,
@@ -91,9 +91,7 @@ const Accounts = ({
       key: 'delete',
       width: 64,
       render: (_, record) =>
-        currentUser?.id === record.id ? (
-          <></>
-        ) : (
+        userId.toString() !== record.id && (
           <Button
             title="delete"
             className={styles.InfoButton}
@@ -166,14 +164,14 @@ Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
-  currentUser: PropTypes.shape({}),
+  userId: PropTypes.number,
 };
 
 Accounts.defaultProps = {
   data: [],
   onLoadMore: () => {},
   isLastPage: true,
-  currentUser: {},
+  userId: null,
 };
 
 export default Accounts;
