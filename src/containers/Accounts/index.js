@@ -91,7 +91,7 @@ const Accounts = ({
       key: 'delete',
       width: 64,
       render: (_, record) =>
-        currentUserId.toString() !== record.id && (
+        currentUserId?.toString() !== record.id && (
           <Button
             title="delete"
             className={styles.InfoButton}
