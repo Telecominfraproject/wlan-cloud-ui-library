@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Card, Form, Table } from 'antd';
 import PropTypes from 'prop-types';
-
+import ThemeContext from 'contexts/ThemeContext';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 
 import styles from '../../index.module.scss';
@@ -9,6 +9,7 @@ import styles from '../../index.module.scss';
 const { Item } = Form;
 
 const Status = ({ data }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 12 },
@@ -46,12 +47,19 @@ const Status = ({ data }) => {
     status = {},
   } = data;
 
+  const renderData = (obj, dataIndex, i) => {
+    if (dataIndex === 'radioType') {
+      return radioTypes[obj?.[i]?.[dataIndex]];
+    }
+    return obj?.[i]?.[dataIndex];
+  };
+
   const renderSpanItem = (label, obj, dataIndex) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(radioMap)).map(i => (
           <span key={i} className={styles.spanStyle}>
-            {(dataIndex ? obj?.[i]?.[dataIndex] : obj?.[i]) ?? 'N/A'}
+            {(dataIndex ? renderData(obj, dataIndex, i) : obj?.[i]) ?? 'N/A'}
           </span>
         ))}
       </div>

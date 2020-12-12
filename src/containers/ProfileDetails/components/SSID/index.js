@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
 import Tooltip from 'components/Tooltip';
+import ThemeContext from 'contexts/ThemeContext';
+
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
@@ -18,6 +20,7 @@ const SSIDForm = ({
   radiusProfiles,
   onFetchMoreRadiusProfiles,
 }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || 'open');
 
   const hexadecimalRegex = e => {
@@ -50,7 +53,7 @@ const SSIDForm = ({
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
       broadcastSsid: details.broadcastSsid || 'enabled',
-      appliedRadios: details.appliedRadios || ['is5GHz', 'is5GHzU', 'is5GHzL', 'is2dot4GHz'],
+      appliedRadios: details.appliedRadios || Object.keys(radioTypes),
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
@@ -164,10 +167,10 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <Checkbox.Group>
-            <Checkbox value="is2dot4GHz">2.4 GHz</Checkbox>
-            <Checkbox value="is5GHz">5 GHz</Checkbox>
-            <Checkbox value="is5GHzU">5 GHzU</Checkbox>
-            <Checkbox value="is5GHzL">5 GHzL</Checkbox>
+            <Checkbox value="is2dot4GHz">{radioTypes.is2dot4GHz}</Checkbox>
+            <Checkbox value="is5GHz">{radioTypes.is5GHz}</Checkbox>
+            <Checkbox value="is5GHzU">{radioTypes.is5GHzU}</Checkbox>
+            <Checkbox value="is5GHzL">{radioTypes.is5GHzL}</Checkbox>
           </Checkbox.Group>
         </Item>
       </Card>
@@ -475,10 +478,10 @@ const SSIDForm = ({
         <Card title="Roaming">
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
-              <span>2.4GHz</span>
-              <span>5GHz</span>
-              <span>5GHzU</span>
-              <span>5GHzL</span>
+              <span>{radioTypes.is2dot4GHz}</span>
+              <span>{radioTypes.is5GHz}</span>
+              <span>{radioTypes.is5GHzU}</span>
+              <span>{radioTypes.is5GHzL}</span>
             </div>
           </Item>
 

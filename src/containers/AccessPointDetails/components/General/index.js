@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, notification, Alert } from 'antd';
 import _ from 'lodash';
+import ThemeContext from 'contexts/ThemeContext';
 
 import Loading from 'components/Loading';
 import Button from 'components/Button';
@@ -22,6 +23,7 @@ const General = ({
   errorProfiles,
   onFetchMoreProfiles,
 }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const columns = [
     {
@@ -43,7 +45,8 @@ const General = ({
       title: 'Radio(s)',
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
-      render: appliedRadios => appliedRadios?.join(',  '),
+      width: 100,
+      render: appliedRadios => appliedRadios?.map(i => radioTypes[i])?.join(',  '),
     },
   ];
 
@@ -193,7 +196,7 @@ const General = ({
             renderInput(dataIndex, i, label, options)
           ) : (
             <span key={i} className={styles.spanStyle}>
-              {dataIndex ? obj[i]?.[dataIndex] : obj[i]}
+              {dataIndex === 'radioType' ? radioTypes[obj[i]?.[dataIndex]] : obj[i]?.[dataIndex]}
             </span>
           )
         )}
@@ -286,13 +289,13 @@ const General = ({
         >
           <Input className={styles.Field} placeholder="Enter Access Point Name" />
         </Item>
-        <Item label="Model"> {data.model}</Item>
-        <Item label="Serial Number">{data.serial} </Item>
-        <Item label="SKU"> {data.status.protocol.reportedSku}</Item>
-        <Item label="Country Code"> {data.status.protocol.countryCode}</Item>
-        <Item label="Ethernet MAC Address"> {data.status.protocol.details.reportedMacAddr}</Item>
-        <Item label="Manufacturer"> {data.status.protocol.details.manufacturer}</Item>
-        <Item label="Asset ID"> {data.inventoryId}</Item>
+        <Item label="Model"> {data?.model}</Item>
+        <Item label="Serial Number">{data?.serial} </Item>
+        <Item label="SKU"> {data?.status?.protocol?.reportedSku}</Item>
+        <Item label="Country Code"> {data?.status?.protocol?.countryCode}</Item>
+        <Item label="Ethernet MAC Address">{data?.status?.protocol?.details?.reportedMacAddr}</Item>
+        <Item label="Manufacturer"> {data?.status?.protocol?.details?.manufacturer}</Item>
+        <Item label="Asset ID"> {data?.inventoryId}</Item>
       </Card>
 
       <Card title="Profile">
@@ -325,7 +328,7 @@ const General = ({
           <Item>
             <Table
               rowKey="id"
-              scroll={{ x: true }}
+              scroll={{ x: 'max-content' }}
               dataSource={selectedProfile?.childProfiles}
               columns={columns}
               pagination={false}
