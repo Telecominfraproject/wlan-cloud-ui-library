@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button } from 'antd';
+import { Card, Select, Form, Button, Input } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
 import FormModal from '../ProviderId/components/FormModal';
 
@@ -22,6 +22,7 @@ const OperatorForm = ({ details, form }) => {
         ? 'true'
         : 'false',
       operatorFriendlyName: operatorFriendlyName || [],
+      domainNameList: details?.domainNameList || [],
     });
   }, [form, details, operatorFriendlyName]);
 
@@ -54,6 +55,25 @@ const OperatorForm = ({ details, form }) => {
             <Option value="true">Enabled</Option>
             <Option value="false">Disabled</Option>
           </Select>
+        </Item>
+        <Item
+          label="Domain Name List:"
+          name="domainNameList"
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_rule, value) {
+                if (
+                  !value ||
+                  getFieldValue('domainNameList').match(/^([a-z0-9\s]+,)*([a-z0-9\s]+){1}$/i)
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('Please enter a comma separated list of strings'));
+              },
+            }),
+          ]}
+        >
+          <Input placeholder="Enter Domain Name List" />
         </Item>
       </Card>
 

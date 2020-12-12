@@ -21,6 +21,7 @@ import {
   formatRfProfileForm,
   formatPasspointForm,
   formatProviderProfileForm,
+  formatOperatorForm,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -161,15 +162,20 @@ const ProfileDetails = ({
             });
             return;
           }
-          formattedData.childProfileIds.push(values.passpointVenueProfileId);
-          formattedData.childProfileIds.push(values.passpointOperatorProfileId);
-          values.passpointOsuProviderProfileIds.forEach(i => formattedData.childProfileIds.push(i));
+          if (!values.osuSsidProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'An SSID Profile is required.',
+            });
+            return;
+          }
           values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
         }
         if (profileType === 'passpoint_operator') {
           formattedData.model_type = 'PasspointOperatorProfile';
+          formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
         if (profileType === 'passpoint_osu_id_provider') {
           formattedData.model_type = 'PasspointOsuProviderProfile';

@@ -48,6 +48,7 @@ const mockProps = {
     passpointOperatorProfileId: 10,
     passpointOsuProviderProfileIds: [20, 21],
     passpointVenueProfileId: 30,
+    osuSsidProfileId: 2,
     termsAndConditionsFile: null,
     unauthenticatedEmergencyServiceAccessible: false,
   },
@@ -325,6 +326,29 @@ describe('<PasspointProfileForm />', () => {
 
     await waitFor(() => {
       expect(getByText('Select ID Providers (check to select)')).toBeInTheDocument();
+    });
+  });
+
+  it('Should still work when osuSsidProfileId is null', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      details: {
+        osuSsidProfileId: null,
+      },
+    };
+
+    const PasspointProfileFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <PasspointProfileForm {...mockDetails} form={form} />
+        </Form>
+      );
+    };
+    const { getByText } = render(<PasspointProfileFormComp />);
+
+    await waitFor(() => {
+      expect(getByText('Select an SSID Profile')).toBeInTheDocument();
     });
   });
 

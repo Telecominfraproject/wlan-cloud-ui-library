@@ -197,6 +197,38 @@ export const formatPasspointForm = (values, details) => {
     return type;
   };
 
+  if (typeof values?.osuSsidProfileId === 'object') {
+    formattedData.osuSsidProfileId = values?.osuSsidProfileId?.value;
+    formattedData.childProfileIds.push(formattedData.osuSsidProfileId);
+  } else {
+    formattedData.childProfileIds.push(values?.osuSsidProfileId);
+  }
+
+  if (typeof values?.passpointVenueProfileId === 'object') {
+    formattedData.passpointVenueProfileId = values?.passpointVenueProfileId?.value;
+    formattedData.childProfileIds.push(formattedData.passpointVenueProfileId);
+  } else {
+    formattedData.childProfileIds.push(values.passpointVenueProfileId);
+  }
+
+  if (typeof values?.passpointOperatorProfileId === 'object') {
+    formattedData.passpointOperatorProfileId = values?.passpointOperatorProfileId?.value;
+    formattedData.childProfileIds.push(formattedData.passpointOperatorProfileId);
+  } else {
+    formattedData.childProfileIds.push(values.passpointOperatorProfileId);
+  }
+
+  if (typeof values?.passpointOsuProviderProfileIds === 'object') {
+    formattedData.passpointOsuProviderProfileIds = values?.passpointOsuProviderProfileIds?.map(
+      i => i.value
+    );
+    formattedData.passpointOsuProviderProfileIds.forEach(i =>
+      formattedData?.childProfileIds?.push(i)
+    );
+  } else {
+    formattedData.childProfileIds.push(values?.passpointOsuProviderProfileIds);
+  }
+
   if (
     !values.termsAndConditionsFile ||
     (values.termsAndConditionsFile &&
@@ -217,11 +249,6 @@ export const formatPasspointForm = (values, details) => {
     formattedData.termsAndConditionsFile = details.termsAndConditionsFile;
   }
 
-  formattedData.passpointVenueProfileId = parseInt(values.passpointVenueProfileId, 10);
-  formattedData.passpointOperatorProfileId = parseInt(values.passpointOperatorProfileId, 10);
-  formattedData.passpointOsuProviderProfileIds = values.passpointOsuProviderProfileIds.map(i =>
-    parseInt(i, 10)
-  );
   formattedData.anqpDomainId = parseInt(values.anqpDomainId, 10);
   formattedData.enableInterworkingAndHs20 = isBool(values.enableInterworkingAndHs20);
   formattedData.emergencyServicesReachable = isBool(values.emergencyServicesReachable);
@@ -260,6 +287,13 @@ export const formatProviderProfileForm = values => {
       },
     ];
   }
+
+  return formattedData;
+};
+
+export const formatOperatorForm = values => {
+  const formattedData = { ...values };
+  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
 
   return formattedData;
 };
