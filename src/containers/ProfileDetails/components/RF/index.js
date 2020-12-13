@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Select, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import ThemeContext from 'contexts/ThemeContext';
+
 import styles from '../index.module.scss';
 import { RADIOS } from '../../constants';
 
@@ -9,6 +11,7 @@ const { Item } = Form;
 const { Option } = Select;
 
 const RFForm = ({ form, details }) => {
+  const { radioTypes } = useContext(ThemeContext);
   useEffect(() => {
     const formData = {
       rfConfigMap: {},
@@ -131,7 +134,7 @@ const RFForm = ({ form, details }) => {
           <div className={styles.InlineDiv}>
             {Object.keys(details.rfConfigMap).map(radio => (
               <span key={radio} className={styles.spanStyle}>
-                {radio}
+                {radioTypes?.[radio]}
               </span>
             ))}
           </div>
