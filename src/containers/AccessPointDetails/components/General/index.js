@@ -46,7 +46,7 @@ const General = ({
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
       width: 100,
-      render: appliedRadios => appliedRadios?.map(i => radioTypes[i])?.join(',  '),
+      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
   ];
 
@@ -196,7 +196,7 @@ const General = ({
             renderInput(dataIndex, i, label, options)
           ) : (
             <span key={i} className={styles.spanStyle}>
-              {dataIndex === 'radioType' ? radioTypes[obj[i]?.[dataIndex]] : obj[i]?.[dataIndex]}
+              {dataIndex === 'radioType' ? radioTypes?.[obj[i]?.[dataIndex]] : obj[i]?.[dataIndex]}
             </span>
           )
         )}

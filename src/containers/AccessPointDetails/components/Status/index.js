@@ -49,7 +49,7 @@ const Status = ({ data }) => {
 
   const renderData = (obj, dataIndex, i) => {
     if (dataIndex === 'radioType') {
-      return radioTypes[obj?.[i]?.[dataIndex]];
+      return radioTypes?.[obj?.[i]?.[dataIndex]];
     }
     return obj?.[i]?.[dataIndex];
   };

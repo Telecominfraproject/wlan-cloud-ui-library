@@ -23,7 +23,7 @@ const ClientDeviceDetails = ({
   historyDate,
   goBackRoute,
 }) => {
-  const { routes } = useContext(ThemeContext);
+  const { routes, radioTypes } = useContext(ThemeContext);
 
   const {
     macAddress,
@@ -71,7 +71,7 @@ const ClientDeviceDetails = ({
     'Associated On': moment(details?.assocTimestamp).format('llll'),
     'Access Point': equipment?.name,
     SSID: ssid,
-    'Radio Band': radioType,
+    'Radio Band': radioTypes?.[radioType],
     'Signal Strength': `${signal} dBm`,
     'Tx Rate': `${formatBitsPerSecond(txRateKbps * 1000)}`,
     'Rx Rate': `${formatBitsPerSecond(rxRateKbps * 1000)}`,

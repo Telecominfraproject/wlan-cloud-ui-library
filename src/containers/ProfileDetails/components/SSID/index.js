@@ -53,7 +53,7 @@ const SSIDForm = ({
       bandwidthLimitDown: details.bandwidthLimitDown || 0,
       bandwidthLimitUp: details.bandwidthLimitUp || 0,
       broadcastSsid: details.broadcastSsid || 'enabled',
-      appliedRadios: details.appliedRadios || Object.keys(radioTypes),
+      appliedRadios: details.appliedRadios || Object.keys(radioTypes || []),
       forwardMode: details.forwardMode || 'BRIDGE',
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
@@ -167,10 +167,9 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <Checkbox.Group>
-            <Checkbox value="is2dot4GHz">{radioTypes.is2dot4GHz}</Checkbox>
-            <Checkbox value="is5GHz">{radioTypes.is5GHz}</Checkbox>
-            <Checkbox value="is5GHzU">{radioTypes.is5GHzU}</Checkbox>
-            <Checkbox value="is5GHzL">{radioTypes.is5GHzL}</Checkbox>
+            {Object.keys(radioTypes || [])?.map(i => (
+              <Checkbox value={i}>{radioTypes?.[i]}</Checkbox>
+            ))}
           </Checkbox.Group>
         </Item>
       </Card>
@@ -478,10 +477,9 @@ const SSIDForm = ({
         <Card title="Roaming">
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
-              <span>{radioTypes.is2dot4GHz}</span>
-              <span>{radioTypes.is5GHz}</span>
-              <span>{radioTypes.is5GHzU}</span>
-              <span>{radioTypes.is5GHzL}</span>
+              {Object.keys(radioTypes || [])?.map(i => (
+                <span>{radioTypes?.[i]}</span>
+              ))}
             </div>
           </Item>
 

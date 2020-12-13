@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
+import ThemeContext from 'contexts/ThemeContext';
 
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
@@ -16,6 +17,7 @@ const AccessPointForm = ({
   onFetchMoreProfiles,
   onFetchMoreRfProfiles,
 }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
   const { Option } = Select;
 
@@ -88,7 +90,7 @@ const AccessPointForm = ({
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios?.join(',  '),
+      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
     {
       title: '',
@@ -97,7 +99,7 @@ const AccessPointForm = ({
         <Button
           title="removeSsid"
           icon={<DeleteFilled />}
-          onClick={() => handleRemoveSsid(record.id)}
+          onClick={() => handleRemoveSsid(record?.id)}
         />
       ),
     },

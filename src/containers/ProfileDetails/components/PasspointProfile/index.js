@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Button, Form, Input, Select, Table, Upload, message } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 
@@ -33,6 +34,7 @@ const PasspointProfileForm = ({
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
 }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
     (details?.termsAndConditionsFile && [formatFile(details?.termsAndConditionsFile)]) || []
   );
@@ -205,7 +207,7 @@ const PasspointProfileForm = ({
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios?.join(',  '),
+      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
     {
       title: '',
