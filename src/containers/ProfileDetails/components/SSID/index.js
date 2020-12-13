@@ -64,7 +64,6 @@ const SSIDForm = ({
       radiusServiceName:
         {
           value: childProfiles?.[0]?.id || null,
-          key: childProfiles?.[0]?.id || null,
           label: childProfiles?.[0]?.name || null,
         } || null,
       ...radioBasedValues,
@@ -110,7 +109,7 @@ const SSIDForm = ({
                 },
                 () => ({
                   validator(_rule, value) {
-                    if (!value || value <= 100) {
+                    if (!value || (value <= 100 && value >= 0)) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -144,7 +143,7 @@ const SSIDForm = ({
                 },
                 () => ({
                   validator(_rule, value) {
-                    if (!value || value <= 100) {
+                    if (!value || (value <= 100 && value >= 0)) {
                       return Promise.resolve();
                     }
                     return Promise.reject(

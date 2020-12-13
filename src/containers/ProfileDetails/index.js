@@ -85,6 +85,13 @@ const ProfileDetails = ({
         });
 
         if (profileType === 'ssid') {
+          if (!values.radiusServiceName.value || !values.radiusServiceName.label) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service is required.',
+            });
+            return;
+          }
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === 'equipment_ap') {

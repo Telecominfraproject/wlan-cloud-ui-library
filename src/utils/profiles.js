@@ -60,7 +60,7 @@ export const formatSsidProfileForm = values => {
   } else {
     formattedData.captivePortalId = null;
   }
-  formattedData.childProfileIds.push(values.radiusServiceName.key);
+  formattedData.childProfileIds.push(values.radiusServiceName.value);
   formattedData.radiusServiceName = values.radiusServiceName.label;
   return formattedData;
 };
