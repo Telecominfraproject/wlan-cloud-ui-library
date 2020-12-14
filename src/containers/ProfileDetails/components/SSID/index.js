@@ -107,7 +107,7 @@ const SSIDForm = ({
                 },
                 () => ({
                   validator(_rule, value) {
-                    if (!value || value <= 100) {
+                    if (!value || (value <= 100 && value >= 0)) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
@@ -141,7 +141,7 @@ const SSIDForm = ({
                 },
                 () => ({
                   validator(_rule, value) {
-                    if (!value || value <= 100) {
+                    if (!value || (value <= 100 && value >= 0)) {
                       return Promise.resolve();
                     }
                     return Promise.reject(
