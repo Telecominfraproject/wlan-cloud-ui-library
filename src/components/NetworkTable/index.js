@@ -21,7 +21,7 @@ const NetworkTable = ({ tableColumns, tableData, onLoadMore, isLastPage }) => {
         onRow={record => {
           return {
             onClick: () => {
-              history.push(`${url}/${record.id}`);
+              history.push(`${url}/${record.macAddress}`);
             },
           };
         }}
