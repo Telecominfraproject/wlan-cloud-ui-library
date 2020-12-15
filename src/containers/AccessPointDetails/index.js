@@ -181,7 +181,7 @@ const AccessPointDetails = ({
             </div>
             <div>
               <strong>MAC:</strong> &nbsp;
-              {data.status.protocol.details && data.status.protocol.details.reportedMacAddr}
+              {data.baseMacAddress}
             </div>
           </div>
         }
