@@ -132,13 +132,14 @@ FormModal.propTypes = {
   title: PropTypes.string,
   userEmail: PropTypes.string,
   userRole: PropTypes.string,
-  isAuth0Enabled: PropTypes.bool.isRequired,
+  isAuth0Enabled: PropTypes.bool,
 };
 
 FormModal.defaultProps = {
   title: '',
   userEmail: '',
   userRole: 'CustomerIT',
+  isAuth0Enabled: false,
 };
 
 export default FormModal;
