@@ -168,7 +168,7 @@ Accounts.propTypes = {
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
   currentUserId: PropTypes.number,
-  isAuth0Enabled: PropTypes.bool.isRequired,
+  isAuth0Enabled: PropTypes.bool,
 };
 
 Accounts.defaultProps = {
@@ -176,6 +176,7 @@ Accounts.defaultProps = {
   onLoadMore: () => {},
   isLastPage: true,
   currentUserId: null,
+  isAuth0Enabled: false,
 };
 
 export default Accounts;
