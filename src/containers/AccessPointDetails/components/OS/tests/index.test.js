@@ -8,6 +8,7 @@ const mockProps = {
   data: {
     alarms: [],
     alarmsCount: 0,
+    baseMacAddress: '74:9c:e3:44:03:8c',
     customerId: '2',
     details: {
       advancedRadioMap: {
@@ -246,6 +247,7 @@ const mockProps = {
     latitude: null,
     locationId: '4',
     longitude: null,
+    manufacturer: 'KodaCloud Canada Inc.',
     model: 'ecw5211',
     name: 'AP 1',
     profile: { name: 'ApProfile-3-radios', childProfiles: Array(1), __typename: 'Profile' },
