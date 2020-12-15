@@ -19,6 +19,7 @@ import {
   formatRfProfileForm,
   formatPasspointForm,
   formatProviderProfileForm,
+  formatOperatorForm,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -171,7 +172,7 @@ const AddProfile = ({
 
         if (profileType === 'passpoint_operator') {
           formattedData.model_type = 'PasspointOperatorProfile';
-          formattedData = Object.assign(formattedData, values);
+          formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
 
         if (profileType === 'passpoint_osu_id_provider') {
