@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Popover, Row } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 
 import ThemeContext from 'contexts/ThemeContext';
 import styles from './index.module.scss';
@@ -23,7 +23,7 @@ const SettingsDropdown = ({ onLogout }) => {
     <>
       <Row>
         <Link onClick={hidePopover} to={routes.account}>
-          Edit User
+          Account
         </Link>
       </Row>
       <Row>
@@ -44,7 +44,7 @@ const SettingsDropdown = ({ onLogout }) => {
       placement="bottomRight"
       arrowPointAtCenter
     >
-      <SettingOutlined className={styles.MenuIcon} />
+      <UserOutlined className={styles.MenuIcon} />
     </Popover>
   );
 };
