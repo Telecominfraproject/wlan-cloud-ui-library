@@ -8,7 +8,7 @@ import { render } from 'tests/utils';
 import ClientDeviceDetails from '..';
 
 describe('<ClientDeviceDetails />', () => {
-  it('URL should change back to /network/client-devices when Back button is clicked', () => {
+  it('URL should change back to / when Back button is clicked', () => {
     const mockData = {
       details: {
         dhcpDetails: {
@@ -22,7 +22,7 @@ describe('<ClientDeviceDetails />', () => {
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(window.location.pathname).toEqual('/network/client-devices');
+    expect(window.location.pathname).toEqual('/');
   });
 
   it('should use default refresh function if one is not provided with', async () => {
