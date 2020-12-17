@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
@@ -12,7 +12,17 @@ const strongRegex = new RegExp(
   /(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])).*/
 );
 
-const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole, isAuth0Enabled }) => {
+const FormModal = ({
+  onCancel,
+  onSubmit,
+  visible,
+  title,
+  userEmail,
+  userRole,
+  userId,
+  isAuth0Enabled,
+  onResetUserPassword,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -101,6 +111,11 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole, is
           </Item>
         </>
       )}
+      {isAuth0Enabled && title === 'Edit User' && (
+        <Item label="Password">
+          <Button onClick={() => onResetUserPassword(userId)}>Reset Password</Button>
+        </Item>
+      )}
     </Form>
   );
 
@@ -132,14 +147,18 @@ FormModal.propTypes = {
   title: PropTypes.string,
   userEmail: PropTypes.string,
   userRole: PropTypes.string,
+  userId: PropTypes.number,
   isAuth0Enabled: PropTypes.bool,
+  onResetUserPassword: PropTypes.func,
 };
 
 FormModal.defaultProps = {
   title: '',
   userEmail: '',
   userRole: 'CustomerIT',
+  userId: 0,
   isAuth0Enabled: false,
+  onResetUserPassword: () => {},
 };
 
 export default FormModal;
