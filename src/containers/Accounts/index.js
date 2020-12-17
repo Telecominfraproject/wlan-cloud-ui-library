@@ -16,6 +16,7 @@ const Accounts = ({
   onCreateUser,
   onEditUser,
   onDeleteUser,
+  onResetUserPassword,
   onLoadMore,
   isLastPage,
   isAuth0Enabled,
@@ -141,7 +142,9 @@ const Accounts = ({
         title="Edit User"
         userRole={activeUser?.roles?.[0]}
         userEmail={activeUser.email}
+        userId={activeUser?.id}
         isAuth0Enabled={isAuth0Enabled}
+        onResetUserPassword={onResetUserPassword}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
@@ -164,6 +167,7 @@ Accounts.propTypes = {
   onCreateUser: PropTypes.func.isRequired,
   onEditUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
+  onResetUserPassword: PropTypes.func,
   data: PropTypes.instanceOf(Array),
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
@@ -174,6 +178,7 @@ Accounts.propTypes = {
 Accounts.defaultProps = {
   data: [],
   onLoadMore: () => {},
+  onResetUserPassword: () => {},
   isLastPage: true,
   currentUserId: null,
   isAuth0Enabled: false,
