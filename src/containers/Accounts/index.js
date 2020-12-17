@@ -142,7 +142,7 @@ const Accounts = ({
         title="Edit User"
         userRole={activeUser?.roles?.[0]}
         userEmail={activeUser.email}
-        userId={parseInt(activeUser?.id, 10)}
+        userId={activeUser?.id}
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
       />

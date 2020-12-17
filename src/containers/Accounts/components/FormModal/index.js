@@ -147,7 +147,7 @@ FormModal.propTypes = {
   title: PropTypes.string,
   userEmail: PropTypes.string,
   userRole: PropTypes.string,
-  userId: PropTypes.number,
+  userId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
 };
@@ -156,7 +156,7 @@ FormModal.defaultProps = {
   title: '',
   userEmail: '',
   userRole: 'CustomerIT',
-  userId: 0,
+  userId: '',
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
 };
