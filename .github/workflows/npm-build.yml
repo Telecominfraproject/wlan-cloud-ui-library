@@ -51,7 +51,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
+        with:  
+          token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.ref }} 
       - name: "cat package.json"
         run: cat ./package.json
