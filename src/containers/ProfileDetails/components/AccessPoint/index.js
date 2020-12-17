@@ -142,7 +142,7 @@ const AccessPointForm = ({
     {
       title: 'Remote MAC Address',
       dataIndex: ['greRemoteMacAddr', 'addressAsString'],
-      render: item => item ?? 'N/A',
+      render: item => (item !== '00:00:00:00:00:00' ? item : 'N/A') ?? 'N/A',
     },
     {
       title: '',
