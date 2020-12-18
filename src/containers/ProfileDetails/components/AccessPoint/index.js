@@ -4,10 +4,11 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
-import Modal from 'components/Modal';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+
+import FormModal from './components/FormModal';
 
 const AccessPointForm = ({
   form,
@@ -24,7 +25,6 @@ const AccessPointForm = ({
 
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
-  const [greForm] = Form.useForm();
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(details?.ntpServer?.auto);
@@ -52,15 +52,19 @@ const AccessPointForm = ({
     );
   };
 
-  const handleAddGre = () => {
-    greForm
-      .validateFields()
-      .then(values => {
-        setGreList([...greList, values]);
-        setGreModalVisible(false);
-        greForm.resetFields();
-      })
-      .catch(() => {});
+  const handleAddGre = values => {
+    setGreList([
+      ...greList,
+      {
+        ...values,
+        vlanIdsInGreTunnel: values?.vlanIdsInGreTunnel?.replace(/\s/g, '').split(',') || [],
+        greRemoteMacAddr:
+          typeof values.greRemoteMacAddr.addressAsString === 'undefined'
+            ? null
+            : { addressAsString: values.greRemoteMacAddr.addressAsString },
+      },
+    ]);
+    setGreModalVisible(false);
   };
 
   const handleRemoveGre = item => {
@@ -140,9 +144,20 @@ const AccessPointForm = ({
       dataIndex: 'greRemoteInetAddr',
     },
     {
+      title: 'Local Ip Address',
+      dataIndex: 'greLocalInetAddr',
+      render: item => item ?? 'N/A',
+    },
+    {
       title: 'Remote MAC Address',
       dataIndex: ['greRemoteMacAddr', 'addressAsString'],
-      render: item => (item !== '00:00:00:00:00:00' ? item : 'N/A') ?? 'N/A',
+      render: item => item ?? 'N/A',
+    },
+
+    {
+      title: 'Vlan Ids',
+      dataIndex: 'vlanIdsInGreTunnel',
+      render: items => (!items?.length ? 'N/A' : items?.join(', ')),
     },
     {
       title: '',
@@ -169,11 +184,6 @@ const AccessPointForm = ({
   const filteredOptions = ssidProfiles.filter(
     i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
   );
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
-  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -482,72 +492,11 @@ const AccessPointForm = ({
           rowKey="greTunnelName"
         />
         <Item name="greTunnelConfigurations" noStyle>
-          <Modal
-            visible={greModalVisible}
-            onSuccess={() => handleAddGre()}
-            onCancel={() => {
-              setGreModalVisible(false);
-              greForm.resetFields();
-            }}
+          <FormModal
+            onSubmit={handleAddGre}
             title="Add GRE Configuration"
-            content={
-              <Form form={greForm} {...layout}>
-                <Item
-                  name="greTunnelName"
-                  label="Name"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Name field cannot be empty',
-                    },
-                  ]}
-                >
-                  <Input className={globalStyles.field} placeholder="Enter Name" />
-                </Item>
-                <Item
-                  name="greParentIfName"
-                  label="Parent Interface Name"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Parent Interface Name field cannot be empty',
-                    },
-                  ]}
-                >
-                  <Input className={globalStyles.field} placeholder="Enter Parent Interface Name" />
-                </Item>
-                <Item
-                  name="greRemoteInetAddr"
-                  label="Remote Ip Address"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Remote Ip Address field cannot be empty',
-                    },
-                    {
-                      pattern: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm,
-                      message: 'Please enter a valid Ip Address format.',
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input className={globalStyles.field} placeholder="Enter Remote Ip Address" />
-                </Item>
-                <Item
-                  label="Remote MAC Address"
-                  name={['greRemoteMacAddr', 'addressAsString']}
-                  rules={[
-                    {
-                      pattern: /^([0-9a-fA-F]{2}[:]){5}[0-9a-fA-F]{2}$/,
-                      message: 'Please enter a valid MAC Address.',
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input className={globalStyles.field} placeholder="Enter MAC Address" />
-                </Item>
-              </Form>
-            }
+            visible={greModalVisible}
+            onClose={() => setGreModalVisible(false)}
           />
         </Item>
       </Card>
