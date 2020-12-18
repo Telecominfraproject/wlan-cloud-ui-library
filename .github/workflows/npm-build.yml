@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:  
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ADMIN_TOKEN }}
           ref: ${{ github.ref }} 
       - name: "cat package.json"
         run: cat ./package.json
@@ -85,7 +85,7 @@ jobs:
         with:
           tag-prefix: ''
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
       - name: "cat package.json"
         run: cat ./package.json
       - name: Publish npm module into tip-wlan-cloud-npm-repo
