@@ -44,33 +44,33 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       </Item>
       <Item
         name="greRemoteInetAddr"
-        label="Remote Ip Address"
+        label="Remote IP Address"
         rules={[
           {
             required: true,
-            message: 'Remote Ip Address field cannot be empty',
+            message: 'Remote IP Address field cannot be empty',
           },
           {
             pattern: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm,
-            message: 'Please enter a valid Ip Address format.',
+            message: 'Please enter a valid IP Address format.',
           },
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter Remote Ip Address" />
+        <Input className={globalStyles.field} placeholder="Enter Remote IP Address" />
       </Item>
       <Item
         name="greLocalInetAddr"
-        label="Local Ip Address"
+        label="Local IP Address"
         rules={[
           {
             pattern: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm,
-            message: 'Please enter a valid Ip Address format.',
+            message: 'Please enter a valid IP Address format.',
           },
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter Remote Ip Address" />
+        <Input className={globalStyles.field} placeholder="Enter Local IP Address" />
       </Item>
       <Item
         label="Remote MAC Address"
@@ -87,7 +87,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       </Item>
 
       <Item
-        label="Vlan Ids:"
+        label="VLAN IDs"
         name="vlanIdsInGreTunnel"
         rules={[
           {
@@ -97,7 +97,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter list of Vlan Ids" />
+        <Input className={globalStyles.field} placeholder="Enter list of VLAN IDs" />
       </Item>
     </Form>
   );

@@ -58,17 +58,16 @@ const AccessPointForm = ({
       {
         ...values,
         vlanIdsInGreTunnel: values?.vlanIdsInGreTunnel?.replace(/\s/g, '').split(',') || [],
-        greRemoteMacAddr:
-          typeof values.greRemoteMacAddr.addressAsString === 'undefined'
-            ? null
-            : { addressAsString: values.greRemoteMacAddr.addressAsString },
+        greRemoteMacAddr: values?.greRemoteMacAddr?.addressAsString
+          ? values?.greRemoteMacAddr
+          : null,
       },
     ]);
     setGreModalVisible(false);
   };
 
   const handleRemoveGre = item => {
-    setGreList([...greList.filter(i => i !== item)]);
+    setGreList(greList.filter(i => i !== item));
   };
 
   useEffect(() => {
@@ -140,11 +139,11 @@ const AccessPointForm = ({
       dataIndex: 'greParentIfName',
     },
     {
-      title: 'Remote Ip Address',
+      title: 'Remote IP Address',
       dataIndex: 'greRemoteInetAddr',
     },
     {
-      title: 'Local Ip Address',
+      title: 'Local IP Address',
       dataIndex: 'greLocalInetAddr',
       render: item => item ?? 'N/A',
     },
@@ -155,7 +154,7 @@ const AccessPointForm = ({
     },
 
     {
-      title: 'Vlan Ids',
+      title: 'VLAN IDs',
       dataIndex: 'vlanIdsInGreTunnel',
       render: items => (!items?.length ? 'N/A' : items?.join(', ')),
     },
@@ -478,7 +477,7 @@ const AccessPointForm = ({
       </Card>
 
       <Card
-        title="GRE Configuration"
+        title="GRE Tunnel Configuration"
         extra={
           <Button type="solid" onClick={() => setGreModalVisible(true)} data-testid="addGre">
             Add
