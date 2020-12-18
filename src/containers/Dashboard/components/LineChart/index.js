@@ -59,7 +59,10 @@ const LineChart = ({ title, data, options }) => {
             xDateFormat="%b %e %Y %l:%M%P"
             pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
           />
-          <Legend>
+          <Legend
+            itemStyle={{ color: 'rgba(255, 255, 255, 0.85)' }}
+            itemHoverStyle={{ color: 'rgba(255, 255, 255)' }}
+          >
             <Legend.Title />
           </Legend>
           <YAxis
