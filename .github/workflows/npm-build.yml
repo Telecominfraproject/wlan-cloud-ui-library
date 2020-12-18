@@ -51,11 +51,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:  
-          token: ${{ secrets.ADMIN_TOKEN }}
-          ref: ${{ github.ref }} 
-      - name: "cat package.json"
-        run: cat ./package.json
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
@@ -79,15 +76,6 @@ jobs:
         with:
           node-version: '12.x'
           registry-url: 'https://tip.jfrog.io/artifactory/api/npm/tip-wlan-cloud-npm-repo/'
-      - name: "Automated Version Bump"
-        id: version-bump
-        uses: "phips28/gh-action-bump-version@master"
-        with:
-          tag-prefix: ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-      - name: "cat package.json"
-        run: cat ./package.json
       - name: Publish npm module into tip-wlan-cloud-npm-repo
         run: npm publish
         env:
