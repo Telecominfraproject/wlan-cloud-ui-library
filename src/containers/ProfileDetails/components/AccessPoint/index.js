@@ -70,9 +70,14 @@ const AccessPointForm = ({
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: currentRfId,
+    });
+  }, [form, details]);
+
+  useEffect(() => {
+    form.setFieldsValue({
       childProfileIds: selectedChildProfiles.map(i => i.id),
     });
-  }, [form, details, selectedChildProfiles]);
+  }, [selectedChildProfiles]);
 
   const columns = [
     {
