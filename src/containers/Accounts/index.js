@@ -16,8 +16,10 @@ const Accounts = ({
   onCreateUser,
   onEditUser,
   onDeleteUser,
+  onResetUserPassword,
   onLoadMore,
   isLastPage,
+  isAuth0Enabled,
 }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -140,12 +142,16 @@ const Accounts = ({
         title="Edit User"
         userRole={activeUser?.roles?.[0]}
         userEmail={activeUser.email}
+        userId={activeUser?.id}
+        isAuth0Enabled={isAuth0Enabled}
+        onResetUserPassword={onResetUserPassword}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addUser}
         title="Add User"
+        isAuth0Enabled={isAuth0Enabled}
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
@@ -161,17 +167,21 @@ Accounts.propTypes = {
   onCreateUser: PropTypes.func.isRequired,
   onEditUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
+  onResetUserPassword: PropTypes.func,
   data: PropTypes.instanceOf(Array),
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
   currentUserId: PropTypes.number,
+  isAuth0Enabled: PropTypes.bool,
 };
 
 Accounts.defaultProps = {
   data: [],
   onLoadMore: () => {},
+  onResetUserPassword: () => {},
   isLastPage: true,
   currentUserId: null,
+  isAuth0Enabled: false,
 };
 
 export default Accounts;
