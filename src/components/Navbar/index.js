@@ -22,11 +22,27 @@ const Navbar = ({
   onLogout,
   totalAlarms,
   currentUserEmail,
+  usersDropdown,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
   const location = useLocation();
 
   const selectedKeys = locationState.pathname.split('/');
+
+  const renderRightMenuIcon = () => {
+    if (isMobile) {
+      return <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />;
+    }
+    if (currentUserEmail) {
+      return (
+        <>
+          {usersDropdown}
+          {currentUserEmail}
+        </>
+      );
+    }
+    return <SettingsDropdown onLogout={onLogout} />;
+  };
 
   return (
     <Header className={`${styles.Navbar}`}>
@@ -70,14 +86,7 @@ const Navbar = ({
             )}
           </Badge>
         </Link>
-        {isMobile ? (
-          <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
-        ) : (
-          <>
-            <SettingsDropdown onLogout={onLogout} />
-            {currentUserEmail}
-          </>
-        )}
+        {renderRightMenuIcon()}
       </div>
     </Header>
   );
@@ -94,6 +103,7 @@ Navbar.propTypes = {
   onLogout: PropTypes.func,
   totalAlarms: PropTypes.number,
   currentUserEmail: PropTypes.string,
+  usersDropdown: PropTypes.instanceOf(Object),
 };
 
 Navbar.defaultProps = {
@@ -103,6 +113,7 @@ Navbar.defaultProps = {
   onLogout: () => {},
   totalAlarms: 0,
   currentUserEmail: '',
+  usersDropdown: null,
 };
 
 export default Navbar;
