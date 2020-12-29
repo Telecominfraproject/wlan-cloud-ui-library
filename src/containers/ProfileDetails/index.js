@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Card, notification } from 'antd';
+import { Form, Input, Card, notification, Select } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ import {
   formatPasspointForm,
   formatProviderProfileForm,
   formatOperatorForm,
+  profileTypes,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -221,6 +222,11 @@ const ProfileDetails = ({
         className={styles.ProfileDetails}
       >
         <Card title={`Edit ${name}`}>
+          <Item label="Type">
+            <Select className={globalStyles.field} defaultValue={profileType} disabled>
+              <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
+            </Select>
+          </Item>
           <Item
             name="name"
             label="Profile Name"

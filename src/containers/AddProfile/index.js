@@ -20,6 +20,7 @@ import {
   formatPasspointForm,
   formatProviderProfileForm,
   formatOperatorForm,
+  profileTypes,
 } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
@@ -229,18 +230,11 @@ const AddProfile = ({
                 onChange={value => setType(value)}
                 placeholder="Select Profile Type"
               >
-                <Option value="ssid">SSID</Option>
-                <Option value="equipment_ap">Access Point</Option>
-                <Option value="bonjour" disabled>
-                  Bonjour Gateway
-                </Option>
-                <Option value="captive_portal">Captive Portal</Option>
-                <Option value="radius">Radius</Option>
-                <Option value="rf">RF</Option>
-                <Option value="passpoint">Passpoint </Option>
-                <Option value="passpoint_osu_id_provider">Passpoint ID Provider</Option>
-                <Option value="passpoint_operator">Passpoint Operator</Option>
-                <Option value="passpoint_venue">Passpoint Venue</Option>
+                {Object.keys(profileTypes).map(type => (
+                  <Option value={type} disabled={type === 'bonjour'}>
+                    {profileTypes[type]}
+                  </Option>
+                ))}
               </Select>
             </Item>
             <Item

@@ -13,11 +13,12 @@ const { Option } = Select;
 
 const RFForm = ({ form, details }) => {
   const { radioTypes } = useContext(ThemeContext);
+  const currentRadios = Object.keys(details.rfConfigMap).sort();
+
   useEffect(() => {
     const formData = {
       rfConfigMap: {},
     };
-    const currentRadios = Object.keys(details.rfConfigMap);
 
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
@@ -161,7 +162,7 @@ const RFForm = ({ form, details }) => {
       <Card>
         <Item label={' '} colon={false}>
           <div className={styles.InlineDiv}>
-            {Object.keys(details.rfConfigMap).map(radio => (
+            {currentRadios.map(radio => (
               <span key={radio} className={styles.spanStyle}>
                 {radioTypes?.[radio]}
               </span>
@@ -226,20 +227,21 @@ const RFForm = ({ form, details }) => {
           error: '0 - 65535 (Bytes)',
           addOnText: 'bytes',
         })}
-        {renderItem('Mimo Mode', ['mimoMode'], renderOptionItem, {
+        {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
               <Option value="none">none</Option>
-              <Option value="oneByOne">oneByOne</Option>
-              <Option value="twoByTwo">twoByTwo</Option>
-              <Option value="threeByThree">threeByThree</Option>
-              <Option value="fourByFour">fourByFour</Option>
+              <Option value="oneByOne">1x1</Option>
+              <Option value="twoByTwo">2x2</Option>
+              <Option value="threeByThree">3x3</Option>
+              <Option value="fourByFour">4x4</Option>
             </Select>
           ),
         })}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
+              <Option value="auto">Auto</Option>
               <Option value="rate1mbps">1</Option>
               <Option value="rate2mbps">2</Option>
               <Option value="rate5dot5mbps">5.5</Option>
@@ -255,6 +257,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
+              <Option value="auto">Auto</Option>
               <Option value="rate6mbps">6</Option>
               <Option value="rate9mbps">9</Option>
               <Option value="rate12mbps">12</Option>
