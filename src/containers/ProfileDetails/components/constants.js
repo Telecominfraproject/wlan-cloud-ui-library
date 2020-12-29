@@ -1,4 +1,4 @@
-export default {
+const defaultRfProfile = {
   is5GHz: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHz',
@@ -188,3 +188,148 @@ export default {
     },
   },
 };
+
+const defaultSsidProfile = {
+  model_type: 'Profile',
+  id: 4,
+  customerId: 2,
+  profileType: 'ssid',
+  name: 'SaaS-Cloud-Wifi',
+  details: {
+    model_type: 'SsidConfiguration',
+    ssid: 'SaaS-cloud-wifi',
+    appliedRadios: ['is5GHzU', 'is5GHzL', 'is5GHz', 'is2dot4GHz'],
+    ssidAdminState: 'enabled',
+    secureMode: 'wpa2OnlyPSK',
+    vlanId: 1,
+    keyStr: 'w1r3l3ss-fr33d0m',
+    broadcastSsid: 'enabled',
+    keyRefresh: 0,
+    noLocalSubnets: false,
+    radiusServiceName: null,
+    radiusAccountingServiceName: null,
+    radiusAcountingServiceInterval: null,
+    captivePortalId: null,
+    bandwidthLimitDown: 0,
+    bandwidthLimitUp: 0,
+    clientBandwidthLimitDown: 0,
+    clientBandwidthLimitUp: 0,
+    videoTrafficOnly: false,
+    radioBasedConfigs: {
+      is2dot4GHz: {
+        model_type: 'RadioBasedSsidConfiguration',
+        enable80211r: null,
+        enable80211k: null,
+        enable80211v: null,
+      },
+      is5GHz: {
+        model_type: 'RadioBasedSsidConfiguration',
+        enable80211r: null,
+        enable80211k: null,
+        enable80211v: null,
+      },
+      is5GHzU: {
+        model_type: 'RadioBasedSsidConfiguration',
+        enable80211r: null,
+        enable80211k: null,
+        enable80211v: null,
+      },
+      is5GHzL: {
+        model_type: 'RadioBasedSsidConfiguration',
+        enable80211r: null,
+        enable80211k: null,
+        enable80211v: null,
+      },
+    },
+    bonjourGatewayProfileId: null,
+    enable80211w: null,
+    wepConfig: null,
+    forwardMode: 'NAT',
+    profileType: 'ssid',
+    radiusClientConfiguration: {
+      model_type: 'RadiusNasConfiguration',
+      nasClientId: 'DEFAULT',
+      nasClientIp: 'WAN_IP',
+      userDefinedNasId: null,
+      userDefinedNasIp: null,
+      nasOperatorId: null,
+    },
+  },
+  createdTimestamp: 0,
+  lastModifiedTimestamp: 1604104101587,
+  childProfileIds: [],
+};
+const defaultApProfile = {
+  model_type: 'Profile',
+  id: 5,
+  customerId: 2,
+  profileType: 'equipment_ap',
+  name: 'SaaS-AP-3-Radios',
+  details: {
+    model_type: 'ApNetworkConfiguration',
+    networkConfigVersion: 'AP-1',
+    equipmentType: 'AP',
+    vlanNative: true,
+    vlan: 0,
+    ntpServer: {
+      model_type: 'AutoOrManualString',
+      auto: true,
+      value: null,
+    },
+    syslogRelay: {
+      model_type: 'SyslogRelay',
+      enabled: false,
+      srvHostIp: null,
+      srvHostPort: 514,
+      severity: 'NOTICE',
+    },
+    rtlsSettings: {
+      model_type: 'RtlsSettings',
+      enabled: false,
+      srvHostIp: null,
+      srvHostPort: 0,
+    },
+    syntheticClientEnabled: false,
+    ledControlEnabled: true,
+    equipmentDiscovery: false,
+    radioMap: {
+      is5GHz: {
+        model_type: 'RadioProfileConfiguration',
+        bestApEnabled: true,
+        bestAPSteerType: 'both',
+      },
+      is2dot4GHz: {
+        model_type: 'RadioProfileConfiguration',
+        bestApEnabled: true,
+        bestAPSteerType: 'both',
+      },
+      is5GHzU: {
+        model_type: 'RadioProfileConfiguration',
+        bestApEnabled: true,
+        bestAPSteerType: 'both',
+      },
+      is5GHzL: {
+        model_type: 'RadioProfileConfiguration',
+        bestApEnabled: true,
+        bestAPSteerType: 'both',
+      },
+    },
+    greTunnelConfigurations: [
+      {
+        model_type: 'GreTunnelConfiguration',
+        greTunnelName: null,
+        greParentIfName: null,
+        greLocalInetAddr: null,
+        greRemoteInetAddr: null,
+        greRemoteMacAddr: null,
+        vlanIdsInGreTunnel: [],
+      },
+    ],
+    profileType: 'equipment_ap',
+  },
+  createdTimestamp: 0,
+  lastModifiedTimestamp: 1604104155204,
+  childProfileIds: [4, 10],
+};
+
+export { defaultRfProfile, defaultSsidProfile, defaultApProfile };

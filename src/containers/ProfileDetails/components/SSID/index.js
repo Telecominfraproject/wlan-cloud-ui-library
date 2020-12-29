@@ -6,7 +6,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
-
+import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING } from '../../constants/index';
 
 const { Item } = Form;
@@ -49,18 +49,19 @@ const SSIDForm = ({
     });
 
     form.setFieldsValue({
-      ssid: details.ssid || '',
-      bandwidthLimitDown: details.bandwidthLimitDown || 0,
-      bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSsid: details.broadcastSsid || 'enabled',
-      appliedRadios: details.appliedRadios || Object.keys(radioTypes || []),
-      forwardMode: details.forwardMode || 'BRIDGE',
+      ssid: details.ssid || defaultSsidProfile.details.ssid,
+      bandwidthLimitDown:
+        details.bandwidthLimitDown || defaultSsidProfile.details.bandwidthLimitDown,
+      bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.details.bandwidthLimitUp,
+      broadcastSsid: details.broadcastSsid || defaultSsidProfile.details.broadcastSsid,
+      appliedRadios: details.appliedRadios || defaultSsidProfile.details.appliedRadios,
+      forwardMode: details.forwardMode || defaultSsidProfile.details.forwardMode,
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
       captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
-      secureMode: details.secureMode || 'open',
+      secureMode: details.secureMode || defaultSsidProfile.details.secureMode,
       vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
-      keyStr: details.keyStr,
+      keyStr: details.keyStr || defaultSsidProfile.details.keyStr,
       wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
       wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
       vlanId: details.vlanId,

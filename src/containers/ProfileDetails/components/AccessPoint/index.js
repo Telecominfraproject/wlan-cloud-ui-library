@@ -7,6 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+import { defaultApProfile } from '../constants';
 
 const AccessPointForm = ({
   form,
@@ -50,22 +51,26 @@ const AccessPointForm = ({
   useEffect(() => {
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan,
+      vlan: details?.vlan || defaultApProfile.details.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto,
-        value: details?.ntpServer?.value,
+        auto: details?.ntpServer?.auto || defaultApProfile.details.ntpServer.auto,
+        value: details?.ntpServer?.value || defaultApProfile.details.ntpServer.value,
       },
-      ledControlEnabled: details?.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.details.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp: details?.rtlsSettings?.srvHostIp,
-        srvHostPort: details?.rtlsSettings?.srvHostPort,
+        srvHostIp:
+          details?.rtlsSettings?.srvHostIp || defaultApProfile.details.rtlsSettings.srvHostIp,
+        srvHostPort:
+          details?.rtlsSettings?.srvHostPort || defaultApProfile.details.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp: details?.syslogRelay?.srvHostIp,
-        srvHostPort: details?.syslogRelay?.srvHostPort,
-        severity: details?.syslogRelay?.severity || 'DEBUG',
+        srvHostIp:
+          details?.syslogRelay?.srvHostIp || defaultApProfile.details.syslogRelay.srvHostIp,
+        srvHostPort:
+          details?.syslogRelay?.srvHostPort || defaultApProfile.details.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || defaultApProfile.details.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
