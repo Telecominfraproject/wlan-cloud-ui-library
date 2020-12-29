@@ -291,8 +291,8 @@ const General = ({
         </Item>
         <Item label="Model"> {data?.model}</Item>
         <Item label="Serial Number">{data?.serial} </Item>
-        <Item label="SKU"> {data?.status?.protocol?.reportedSku}</Item>
-        <Item label="Country Code"> {data?.status?.protocol?.countryCode}</Item>
+        <Item label="SKU"> {data?.status?.protocol?.detailsJSON?.reportedSku}</Item>
+        <Item label="Country Code"> {data?.status?.protocol?.detailsJSON?.countryCode}</Item>
         <Item label="Ethernet MAC Address">{data?.baseMacAddress}</Item>
         <Item label="Manufacturer"> {data?.manufacturer}</Item>
         <Item label="Asset ID"> {data?.inventoryId}</Item>
