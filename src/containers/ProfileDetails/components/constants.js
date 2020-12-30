@@ -244,7 +244,7 @@ const defaultSsidProfile = {
     bonjourGatewayProfileId: null,
     enable80211w: null,
     wepConfig: null,
-    forwardMode: 'NAT',
+    forwardMode: 'BRIDGE',
     profileType: 'ssid',
     radiusClientConfiguration: {
       model_type: 'RadiusNasConfiguration',

@@ -64,7 +64,7 @@ const SSIDForm = ({
       keyStr: details.keyStr || defaultSsidProfile.details.keyStr,
       wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
       wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
-      vlanId: details.vlanId,
+      vlanId: details.vlanId || defaultSsidProfile.details.vlanId,
       radiusServiceName: details.radiusServiceName,
       ...radioBasedValues,
     });
