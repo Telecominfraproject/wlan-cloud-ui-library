@@ -332,7 +332,9 @@ const General = ({
           </Select>
         </Item>
 
-        <Item label="RF Profile">{childProfiles.rfs.map(rf => rf.name)}</Item>
+        {childProfiles.rfs.length > 0 && (
+          <Item label="RF Profile">{childProfiles.rfs.map(rf => rf.name)}</Item>
+        )}
         <Item label="Summary">
           <Item>
             <Table
