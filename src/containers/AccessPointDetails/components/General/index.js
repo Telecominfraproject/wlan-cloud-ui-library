@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Table, Collapse, Select, notification, Alert } from 'antd';
 import _ from 'lodash';
@@ -56,6 +56,14 @@ const General = ({
   };
 
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
+
+  const childProfiles = useMemo(() => {
+    const [rfs, other] = _.partition(
+      selectedProfile.childProfiles,
+      profile => profile.details.profileType === 'rf'
+    );
+    return { rfs, other };
+  }, [selectedProfile.childProfiles]);
 
   const handleProfileChange = value => {
     const i = profiles.find(o => {
@@ -324,12 +332,13 @@ const General = ({
           </Select>
         </Item>
 
+        <Item label="RF Profile">{childProfiles.rfs.map(rf => rf.name)}</Item>
         <Item label="Summary">
           <Item>
             <Table
               rowKey="id"
               scroll={{ x: 'max-content' }}
-              dataSource={selectedProfile?.childProfiles}
+              dataSource={childProfiles.other}
               columns={columns}
               pagination={false}
             />
