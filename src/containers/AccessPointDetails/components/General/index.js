@@ -58,12 +58,15 @@ const General = ({
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
   const childProfiles = useMemo(() => {
-    const [rfs, other] = _.partition(
-      selectedProfile.childProfiles,
-      profile => profile.details.profileType === 'rf'
-    );
-    return { rfs, other };
-  }, [selectedProfile.childProfiles]);
+    if (selectedProfile?.childProfiles) {
+      const [rfs, other] = _.partition(
+        selectedProfile.childProfiles,
+        profile => profile.details.profileType === 'rf'
+      );
+      return { rfs, other };
+    }
+    return { rfs: [], other: [] };
+  }, [selectedProfile]);
 
   const handleProfileChange = value => {
     const i = profiles.find(o => {
