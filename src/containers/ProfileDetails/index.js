@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Card, notification } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
@@ -42,6 +42,7 @@ const ProfileDetails = ({
   name,
   details,
   childProfiles,
+  cloneTo,
   onUpdateProfile,
   ssidProfiles,
   rfProfiles,
@@ -208,6 +209,11 @@ const ProfileDetails = ({
           Back
         </Button>
         <div>
+          {cloneTo?.pathname && (
+            <Link to={cloneTo} className={styles.HeaderButton}>
+              <Button type="secondary">Clone</Button>
+            </Link>
+          )}
           <Button type="primary" onClick={handleOnSave}>
             Save
           </Button>
@@ -303,6 +309,7 @@ ProfileDetails.propTypes = {
   idProviderProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
+  cloneTo: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRfProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
@@ -325,6 +332,7 @@ ProfileDetails.defaultProps = {
   idProviderProfiles: [],
   childProfileIds: [],
   childProfiles: [],
+  cloneTo: {},
   onFetchMoreProfiles: () => {},
   onFetchMoreRfProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
