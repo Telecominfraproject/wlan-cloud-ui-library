@@ -341,7 +341,7 @@ const General = ({
           </Select>
         </Item>
 
-        {childProfiles.rf.length > 0 && <Item label="RF Profile">{childProfiles.rf[0].name}</Item>}
+        {childProfiles.rf.length > 0 && <Item label="RF Profile">{childProfiles.rf[0]?.name}</Item>}
         <Item label="Summary">
           <Item>
             <Table
