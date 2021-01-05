@@ -403,9 +403,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>
@@ -428,9 +428,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>
@@ -456,9 +456,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>
@@ -505,9 +505,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>
@@ -535,9 +535,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>
@@ -567,9 +567,9 @@ describe('<AccessPoints />', () => {
         details: {
           ...mockProps.details,
           rtlsSettings: {
-            enabled: true
-          } 
-        }
+            enabled: true,
+          },
+        },
       };
       return (
         <Form form={form}>

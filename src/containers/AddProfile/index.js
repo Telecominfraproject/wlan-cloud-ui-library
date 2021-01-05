@@ -186,7 +186,10 @@ const AddProfile = ({
 
           values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
-          formattedData = Object.assign(formattedData, formatPasspointForm(values, history?.location?.cloneDetails?.details));
+          formattedData = Object.assign(
+            formattedData,
+            formatPasspointForm(values, history?.location?.cloneDetails?.details)
+          );
         }
 
         if (profileType === 'passpoint_operator') {
