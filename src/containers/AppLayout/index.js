@@ -16,8 +16,7 @@ const AppLayout = ({
   locationState,
   onLogout,
   totalAlarms,
-  currentUserEmail,
-  usersDropdown,
+  rightMenuItem,
 }) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -86,8 +85,7 @@ const AppLayout = ({
         onMenuToggle={handleMenuToggle}
         onMenuItemClick={handleMenuItemClick}
         totalAlarms={totalAlarms}
-        currentUserEmail={currentUserEmail}
-        usersDropdown={usersDropdown}
+        rightMenuItem={rightMenuItem}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
@@ -104,16 +102,14 @@ AppLayout.propTypes = {
   menuItems: PropTypes.instanceOf(Array),
   mobileMenuItems: PropTypes.instanceOf(Array),
   totalAlarms: PropTypes.number,
-  currentUserEmail: PropTypes.string,
-  usersDropdown: PropTypes.instanceOf(Object),
+  rightMenuItem: PropTypes.node,
 };
 
 AppLayout.defaultProps = {
   menuItems: [],
   mobileMenuItems: null,
   totalAlarms: 0,
-  currentUserEmail: '',
-  usersDropdown: null,
+  rightMenuItem: null,
 };
 
 export default AppLayout;
