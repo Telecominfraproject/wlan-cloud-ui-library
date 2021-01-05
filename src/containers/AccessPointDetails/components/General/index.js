@@ -58,14 +58,20 @@ const General = ({
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
   const childProfiles = useMemo(() => {
+    const result = {
+      rf: [],
+      ssid: [],
+    };
     if (selectedProfile?.childProfiles) {
-      const [rfs, other] = _.partition(
-        selectedProfile.childProfiles,
-        profile => profile.details.profileType === 'rf'
-      );
-      return { rfs, other };
+      selectedProfile.childProfiles.forEach(profile => {
+        if (profile.details.profileType === 'rf') {
+          result.rf.push(profile);
+        } else if (profile.details.profileType === 'ssid') {
+          result.ssid.push(profile);
+        }
+      });
     }
-    return { rfs: [], other: [] };
+    return result;
   }, [selectedProfile]);
 
   const handleProfileChange = value => {
@@ -335,15 +341,13 @@ const General = ({
           </Select>
         </Item>
 
-        {childProfiles.rfs.length > 0 && (
-          <Item label="RF Profile">{childProfiles.rfs.map(rf => rf.name)}</Item>
-        )}
+        {childProfiles.rf.length > 0 && <Item label="RF Profile">{childProfiles.rf[0].name}</Item>}
         <Item label="Summary">
           <Item>
             <Table
               rowKey="id"
               scroll={{ x: 'max-content' }}
-              dataSource={childProfiles.other}
+              dataSource={childProfiles.ssid}
               columns={columns}
               pagination={false}
             />
