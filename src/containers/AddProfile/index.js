@@ -67,17 +67,11 @@ const AddProfile = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      profileType: history?.location?.cloneDetails?.profileType,
-      name: history?.location?.cloneDetails?.name
-        ? `${history?.location?.cloneDetails?.name} - CLONE`
-        : '',
+      profileType: history?.location?.initialValues?.profileType,
+      name: history?.location?.initialValues?.name ? history?.location?.initialValues?.name : '',
     });
-    setType(history?.location?.cloneDetails?.profileType);
-    setName(
-      history?.location?.cloneDetails?.name
-        ? `${history?.location?.cloneDetails?.name} - CLONE`
-        : ''
-    );
+    setType(history?.location?.initialValues?.profileType);
+    setName(history?.location?.initialValues?.name ? history?.location?.initialValues?.name : '');
   }, [history]);
 
   const layout = {
@@ -132,7 +126,7 @@ const AddProfile = ({
           formattedData.model_type = 'CaptivePortalConfiguration';
           formattedData = Object.assign(
             formattedData,
-            formatCaptiveForm(values, history?.location?.cloneDetails?.details)
+            formatCaptiveForm(values, history?.location?.initialValues?.details)
           );
         }
 
@@ -188,7 +182,7 @@ const AddProfile = ({
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(
             formattedData,
-            formatPasspointForm(values, history?.location?.cloneDetails?.details)
+            formatPasspointForm(values, history?.location?.initialValues?.details)
           );
         }
 
@@ -281,7 +275,7 @@ const AddProfile = ({
           {profileType === 'ssid' && (
             <SSIDForm
               form={form}
-              details={history?.location?.cloneDetails?.details}
+              details={history?.location?.initialValues?.details}
               captiveProfiles={captiveProfiles}
               radiusProfiles={radiusProfiles}
               onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}
@@ -291,36 +285,36 @@ const AddProfile = ({
           {profileType === 'equipment_ap' && (
             <AccessPointForm
               form={form}
-              details={history?.location?.cloneDetails?.details}
+              details={history?.location?.initialValues?.details}
               ssidProfiles={ssidProfiles}
               rfProfiles={rfProfiles}
-              childProfiles={history?.location?.cloneDetails?.childProfiles}
+              childProfiles={history?.location?.initialValues?.childProfiles}
               onFetchMoreProfiles={onFetchMoreProfiles}
               onFetchMoreRfProfiles={onFetchMoreRfProfiles}
             />
           )}
           {profileType === 'bonjour' && (
-            <BonjourGatewayForm form={form} details={history?.location?.cloneDetails?.details} />
+            <BonjourGatewayForm form={form} details={history?.location?.initialValues?.details} />
           )}
           {profileType === 'captive_portal' && (
             <CaptivePortalForm
               form={form}
-              details={history?.location?.cloneDetails?.details}
+              details={history?.location?.initialValues?.details}
               radiusProfiles={radiusProfiles}
               onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
             />
           )}
           {profileType === 'radius' && (
-            <RadiusForm form={form} details={history?.location?.cloneDetails?.details} />
+            <RadiusForm form={form} details={history?.location?.initialValues?.details} />
           )}
           {profileType === 'rf' && (
-            <RFForm form={form} details={history?.location?.cloneDetails?.details} />
+            <RFForm form={form} details={history?.location?.initialValues?.details} />
           )}
           {profileType === 'passpoint' && (
             <PasspointProfileForm
               form={form}
-              details={history?.location?.cloneDetails?.details}
-              childProfiles={history?.location?.cloneDetails?.childProfiles}
+              details={history?.location?.initialValues?.details}
+              childProfiles={history?.location?.initialValues?.childProfiles}
               venueProfiles={venueProfiles}
               operatorProfiles={operatorProfiles}
               idProviderProfiles={idProviderProfiles}
@@ -332,13 +326,13 @@ const AddProfile = ({
             />
           )}
           {profileType === 'passpoint_osu_id_provider' && (
-            <ProviderIdForm form={form} details={history?.location?.cloneDetails?.details} />
+            <ProviderIdForm form={form} details={history?.location?.initialValues?.details} />
           )}
           {profileType === 'passpoint_operator' && (
-            <OperatorForm form={form} details={history?.location?.cloneDetails?.details} />
+            <OperatorForm form={form} details={history?.location?.initialValues?.details} />
           )}
           {profileType === 'passpoint_venue' && (
-            <VenueForm form={form} details={history?.location?.cloneDetails?.details} />
+            <VenueForm form={form} details={history?.location?.initialValues?.details} />
           )}
         </Form>
       </div>
@@ -347,7 +341,6 @@ const AddProfile = ({
 };
 
 AddProfile.propTypes = {
-  cloneDetails: PropTypes.instanceOf(Object),
   onCreateProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
   venueProfiles: PropTypes.instanceOf(Array),
@@ -366,7 +359,6 @@ AddProfile.propTypes = {
 };
 
 AddProfile.defaultProps = {
-  cloneDetails: { default: 'default' },
   ssidProfiles: [],
   venueProfiles: [],
   operatorProfiles: [],
