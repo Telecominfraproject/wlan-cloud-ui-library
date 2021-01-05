@@ -49,7 +49,7 @@ const SSIDForm = ({
     });
 
     form.setFieldsValue({
-      ssid: details.ssid || defaultSsidProfile.ssid,
+      ssid: details.ssid || '',
       bandwidthLimitDown: details.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
       bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
       broadcastSsid: details.broadcastSsid || defaultSsidProfile.broadcastSsid,
