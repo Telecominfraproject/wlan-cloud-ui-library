@@ -297,3 +297,16 @@ export const formatOperatorForm = values => {
 
   return formattedData;
 };
+
+export const profileTypes = {
+  ssid: 'SSID',
+  equipment_ap: 'Access Point',
+  bonjour: 'Bonjour Gateway',
+  captive_portal: 'Captive Portal',
+  radius: 'Radius',
+  rf: 'RF',
+  passpoint: 'Passpoint',
+  passpoint_osu_id_provider: 'Passpoint ID Provider',
+  passpoint_operator: 'Passpoint Operator',
+  passpoint_venue: 'Passpoint Venue',
+};

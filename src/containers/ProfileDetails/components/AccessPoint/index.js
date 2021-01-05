@@ -7,6 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+import { defaultApProfile } from '../constants';
 
 const AccessPointForm = ({
   form,
@@ -50,22 +51,23 @@ const AccessPointForm = ({
   useEffect(() => {
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan,
+      vlan: details?.vlan || defaultApProfile.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto,
-        value: details?.ntpServer?.value,
+        auto: details?.ntpServer?.auto || defaultApProfile.ntpServer.auto,
+        value: details?.ntpServer?.value || defaultApProfile.ntpServer.value,
       },
-      ledControlEnabled: details?.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp: details?.rtlsSettings?.srvHostIp,
-        srvHostPort: details?.rtlsSettings?.srvHostPort,
+        srvHostIp: details?.rtlsSettings?.srvHostIp || defaultApProfile.rtlsSettings.srvHostIp,
+        srvHostPort:
+          details?.rtlsSettings?.srvHostPort || defaultApProfile.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp: details?.syslogRelay?.srvHostIp,
-        srvHostPort: details?.syslogRelay?.srvHostPort,
-        severity: details?.syslogRelay?.severity || 'DEBUG',
+        srvHostIp: details?.syslogRelay?.srvHostIp || defaultApProfile.syslogRelay.srvHostIp,
+        srvHostPort: details?.syslogRelay?.srvHostPort || defaultApProfile.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
