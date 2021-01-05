@@ -51,26 +51,23 @@ const AccessPointForm = ({
   useEffect(() => {
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan || defaultApProfile.details.vlan,
+      vlan: details?.vlan || defaultApProfile.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto || defaultApProfile.details.ntpServer.auto,
-        value: details?.ntpServer?.value || defaultApProfile.details.ntpServer.value,
+        auto: details?.ntpServer?.auto || defaultApProfile.ntpServer.auto,
+        value: details?.ntpServer?.value || defaultApProfile.ntpServer.value,
       },
-      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.details.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp:
-          details?.rtlsSettings?.srvHostIp || defaultApProfile.details.rtlsSettings.srvHostIp,
+        srvHostIp: details?.rtlsSettings?.srvHostIp || defaultApProfile.rtlsSettings.srvHostIp,
         srvHostPort:
-          details?.rtlsSettings?.srvHostPort || defaultApProfile.details.rtlsSettings.srvHostPort,
+          details?.rtlsSettings?.srvHostPort || defaultApProfile.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp:
-          details?.syslogRelay?.srvHostIp || defaultApProfile.details.syslogRelay.srvHostIp,
-        srvHostPort:
-          details?.syslogRelay?.srvHostPort || defaultApProfile.details.syslogRelay.srvHostPort,
-        severity: details?.syslogRelay?.severity || defaultApProfile.details.syslogRelay.severity,
+        srvHostIp: details?.syslogRelay?.srvHostIp || defaultApProfile.syslogRelay.srvHostIp,
+        srvHostPort: details?.syslogRelay?.srvHostPort || defaultApProfile.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',

@@ -49,22 +49,21 @@ const SSIDForm = ({
     });
 
     form.setFieldsValue({
-      ssid: details.ssid || defaultSsidProfile.details.ssid,
-      bandwidthLimitDown:
-        details.bandwidthLimitDown || defaultSsidProfile.details.bandwidthLimitDown,
-      bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.details.bandwidthLimitUp,
-      broadcastSsid: details.broadcastSsid || defaultSsidProfile.details.broadcastSsid,
-      appliedRadios: details.appliedRadios || defaultSsidProfile.details.appliedRadios,
-      forwardMode: details.forwardMode || defaultSsidProfile.details.forwardMode,
+      ssid: details.ssid || defaultSsidProfile.ssid,
+      bandwidthLimitDown: details.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
+      bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
+      broadcastSsid: details.broadcastSsid || defaultSsidProfile.broadcastSsid,
+      appliedRadios: details.appliedRadios || defaultSsidProfile.appliedRadios,
+      forwardMode: details.forwardMode || defaultSsidProfile.forwardMode,
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
       captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
-      secureMode: details.secureMode || defaultSsidProfile.details.secureMode,
+      secureMode: details.secureMode || defaultSsidProfile.secureMode,
       vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
-      keyStr: details.keyStr || defaultSsidProfile.details.keyStr,
+      keyStr: details.keyStr || defaultSsidProfile.keyStr,
       wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
       wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
-      vlanId: details.vlanId || defaultSsidProfile.details.vlanId,
+      vlanId: details.vlanId || defaultSsidProfile.vlanId,
       radiusServiceName: details.radiusServiceName,
       ...radioBasedValues,
     });
