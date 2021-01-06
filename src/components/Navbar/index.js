@@ -23,6 +23,7 @@ const Navbar = ({
   onLogout,
   totalAlarms,
   customerSelect,
+  isAuth0Enabled,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
   const location = useLocation();
@@ -76,7 +77,7 @@ const Navbar = ({
         ) : (
           <>
             <SettingsDropdown onLogout={onLogout} />
-            {customerSelect.length > 0 && <CustomerDropdown customers={customerSelect} />}
+            {isAuth0Enabled && <CustomerDropdown customers={customerSelect} />}
           </>
         )}
       </div>
@@ -95,6 +96,7 @@ Navbar.propTypes = {
   onLogout: PropTypes.func,
   totalAlarms: PropTypes.number,
   customerSelect: PropTypes.instanceOf(Array),
+  isAuth0Enabled: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
@@ -104,6 +106,7 @@ Navbar.defaultProps = {
   onLogout: () => {},
   totalAlarms: 0,
   customerSelect: [],
+  isAuth0Enabled: false,
 };
 
 export default Navbar;
