@@ -1,0 +1,13 @@
+.dropdownContainer {
+  background-color: #141414;
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  :global(.ant-form-item-label) {
+    padding-bottom: 0;
+  }
+}
+
+.dropdownContainer:hover {
+  cursor: pointer;
+}

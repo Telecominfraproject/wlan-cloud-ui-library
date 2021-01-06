@@ -16,6 +16,8 @@ const AppLayout = ({
   locationState,
   onLogout,
   totalAlarms,
+  isAuth0Enabled,
+  customerSelect,
 }) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -84,6 +86,8 @@ const AppLayout = ({
         onMenuToggle={handleMenuToggle}
         onMenuItemClick={handleMenuItemClick}
         totalAlarms={totalAlarms}
+        customerSelect={customerSelect}
+        isAuth0Enabled={isAuth0Enabled}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
@@ -100,12 +104,16 @@ AppLayout.propTypes = {
   menuItems: PropTypes.instanceOf(Array),
   mobileMenuItems: PropTypes.instanceOf(Array),
   totalAlarms: PropTypes.number,
+  isAuth0Enabled: PropTypes.bool,
+  customerSelect: PropTypes.instanceOf(Array),
 };
 
 AppLayout.defaultProps = {
   menuItems: [],
   mobileMenuItems: null,
   totalAlarms: 0,
+  isAuth0Enabled: false,
+  customerSelect: [],
 };
 
 export default AppLayout;

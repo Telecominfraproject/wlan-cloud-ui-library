@@ -5,6 +5,7 @@ import { Layout, Drawer, Badge } from 'antd';
 import { MenuOutlined, BellFilled, BellOutlined } from '@ant-design/icons';
 
 import SettingsDropdown from 'components/SettingsDropdown';
+import CustomerDropdown from 'components/CustomerDropdown';
 import ThemeContext from 'contexts/ThemeContext';
 import Menu from './components/Menu';
 import styles from './index.module.scss';
@@ -21,6 +22,7 @@ const Navbar = ({
   onMenuItemClick,
   onLogout,
   totalAlarms,
+  customerSelect,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
   const location = useLocation();
@@ -72,7 +74,10 @@ const Navbar = ({
         {isMobile ? (
           <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
         ) : (
-          <SettingsDropdown onLogout={onLogout} />
+          <>
+            <SettingsDropdown onLogout={onLogout} />
+            {customerSelect.length > 0 && <CustomerDropdown customers={customerSelect} />}
+          </>
         )}
       </div>
     </Header>
@@ -89,6 +94,7 @@ Navbar.propTypes = {
   onMenuItemClick: PropTypes.func,
   onLogout: PropTypes.func,
   totalAlarms: PropTypes.number,
+  customerSelect: PropTypes.instanceOf(Array),
 };
 
 Navbar.defaultProps = {
@@ -97,6 +103,7 @@ Navbar.defaultProps = {
   onMenuItemClick: () => {},
   onLogout: () => {},
   totalAlarms: 0,
+  customerSelect: [],
 };
 
 export default Navbar;
