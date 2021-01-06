@@ -25,8 +25,8 @@ const mockProps = {
   onDeleteUser: () => {},
   data: [
     {
-      customerId: "2",
-      id: "20",
+      customerId: '2',
+      id: '20',
       email: 'support@mail.com',
       roles: ['SuperUser'],
     },

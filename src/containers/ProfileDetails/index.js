@@ -59,6 +59,7 @@ const ProfileDetails = ({
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
+  extraButtons,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -208,7 +209,9 @@ const ProfileDetails = ({
         <Button icon={<LeftOutlined />} onClick={handleOnBack}>
           Back
         </Button>
-        <div>
+
+        <div className={styles.Header}>
+          <div className={styles.HeaderButton}>{extraButtons}</div>
           <Button type="primary" onClick={handleOnSave}>
             Save
           </Button>
@@ -316,6 +319,7 @@ ProfileDetails.propTypes = {
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
+  extraButtons: PropTypes.node,
 };
 
 ProfileDetails.defaultProps = {
@@ -338,6 +342,7 @@ ProfileDetails.defaultProps = {
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},
+  extraButtons: null,
 };
 
 export default ProfileDetails;
