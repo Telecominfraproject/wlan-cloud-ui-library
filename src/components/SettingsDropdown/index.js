@@ -23,7 +23,7 @@ const SettingsDropdown = ({ onLogout }) => {
     <>
       <Row>
         <Link onClick={hidePopover} to={routes.account}>
-          Edit Account
+          Edit User
         </Link>
       </Row>
       <Row>
