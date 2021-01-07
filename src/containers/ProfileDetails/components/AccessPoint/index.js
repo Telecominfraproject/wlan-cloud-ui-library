@@ -49,10 +49,6 @@ const AccessPointForm = ({
   };
 
   useEffect(() => {
-    console.log('ntp: ', ntp);
-  },[ntp]);
-
-  useEffect(() => {
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
       vlan: details?.vlan || defaultApProfile.vlan,
