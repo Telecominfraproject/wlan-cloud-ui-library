@@ -225,13 +225,14 @@ const AddProfile = ({
           </Button>
           <div>
             <Button type="primary" onClick={handleOnSave}>
-              Save
+              + Add
             </Button>
           </div>
         </Header>
 
         <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
-          <Card title="Profile Settings">
+          <h1>Add Profile</h1>
+          <Card>
             <Item
               label="Type"
               name="profileType"
