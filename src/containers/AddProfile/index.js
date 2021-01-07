@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Card, Select, notification } from 'antd';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined, PlusOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
@@ -56,7 +56,7 @@ const AddProfile = ({
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
-  initialValues
+  initialValues,
 }) => {
   const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -227,8 +227,8 @@ const AddProfile = ({
             <h1>Add Profile</h1>
           </div>
           <div>
-            <Button type="primary" onClick={handleOnSave}>
-              + Add
+            <Button icon={<PlusOutlined />} type="primary" onClick={handleOnSave}>
+              Add
             </Button>
           </div>
         </Header>
@@ -302,12 +302,8 @@ const AddProfile = ({
               onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
             />
           )}
-          {profileType === 'radius' && (
-            <RadiusForm form={form} details={initialValues?.details} />
-          )}
-          {profileType === 'rf' && (
-            <RFForm form={form} details={initialValues?.details} />
-          )}
+          {profileType === 'radius' && <RadiusForm form={form} details={initialValues?.details} />}
+          {profileType === 'rf' && <RFForm form={form} details={initialValues?.details} />}
           {profileType === 'passpoint' && (
             <PasspointProfileForm
               form={form}
