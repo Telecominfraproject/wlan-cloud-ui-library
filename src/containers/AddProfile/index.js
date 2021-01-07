@@ -220,9 +220,12 @@ const AddProfile = ({
           content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
         />
         <Header>
-          <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
-            Back
-          </Button>
+          <div className={styles.HeaderDiv}>
+            <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
+              Back
+            </Button>
+            <h1>Add Profile</h1>
+          </div>
           <div>
             <Button type="primary" onClick={handleOnSave}>
               + Add
@@ -231,7 +234,6 @@ const AddProfile = ({
         </Header>
 
         <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
-          <h1>Add Profile</h1>
           <Card>
             <Item
               label="Type"

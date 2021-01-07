@@ -206,11 +206,13 @@ const ProfileDetails = ({
         content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-          Back
-        </Button>
-
-        <div className={styles.Header}>
+        <div className={styles.HeaderDiv}>
+          <Button icon={<LeftOutlined />} onClick={handleOnBack}>
+            Back
+          </Button>
+          <h1>{`Edit ${name}`}</h1>
+        </div>
+        <div className={styles.HeaderDiv}>
           <div className={styles.HeaderButton}>{extraButtons}</div>
           <Button type="primary" onClick={handleOnSave}>
             Save
@@ -224,7 +226,7 @@ const ProfileDetails = ({
         onValuesChange={handleOnFormChange}
         className={styles.ProfileDetails}
       >
-        <Card title={`Edit ${name}`}>
+        <Card>
           <Item label="Type">
             <Select className={globalStyles.field} defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
