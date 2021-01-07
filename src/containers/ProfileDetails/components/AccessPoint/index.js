@@ -23,7 +23,7 @@ const AccessPointForm = ({
   const { Option } = Select;
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
-  const [ntp, setNTP] = useState(details?.ntpServer?.auto);
+  const [ntp, setNTP] = useState(details?.ntpServer?.auto || defaultApProfile.ntpServer.auto);
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
@@ -47,6 +47,10 @@ const AccessPointForm = ({
       selectedChildProfiles.filter(i => parseInt(i.id, 10) !== parseInt(id, 10))
     );
   };
+
+  useEffect(() => {
+    console.log('ntp: ', ntp);
+  },[ntp]);
 
   useEffect(() => {
     form.setFieldsValue({
