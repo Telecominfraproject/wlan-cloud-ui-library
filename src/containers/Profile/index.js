@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Table } from 'antd';
-import { DeleteFilled, ReloadOutlined } from '@ant-design/icons';
+import { DeleteFilled, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Button from 'components/Button';
@@ -89,7 +89,9 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           <h1>Profiles</h1>
           <div className={styles.Buttons}>
             <Link to={routes.addprofile}>
-              <Button className={styles.AddProfile}> Add Profile </Button>
+              <Button icon={<PlusOutlined />} className={styles.AddProfile}>
+                Add Profile
+              </Button>
             </Link>
             <Button icon={<ReloadOutlined />} onClick={onReload} title="reload" />
           </div>
