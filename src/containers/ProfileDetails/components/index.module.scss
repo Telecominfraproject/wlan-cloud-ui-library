@@ -68,109 +68,110 @@
     align-content: flex-start;
     overflow: auto;
   }
-}
 
-.FlexDiv {
-  display: flex;
-  flex-wrap: wrap;
-  & > * {
-    margin: 0;
-    margin-right: 40px;
+  label {
+    white-space: normal;
   }
-  & > :last-child {
-    margin-right: 0;
+
+  p {
+    font-weight: bold;
+    font-size: 16px;
   }
-}
 
-.InlineDiv {
-  display: flex;
-  justify-content: space-around;
-
-  & > * {
-    margin: 0;
-    margin-right: 10px;
-    width: 100%;
-    overflow: hidden;
-  }
-  & > :last-child {
-    margin-right: 0;
-  }
-}
-
-.InlineCenterDiv {
-  display: flex;
-  justify-content: center;
-}
-
-.InlineCenterDiv > * {
-  margin: -15px 10px 20px 0;
-}
-
-.InlineEndDiv {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.ServiceZones {
-  .RadiusInline {
+  .FlexDiv {
     display: flex;
-    justify-content: space-around;
-    flex: 1;
+    flex-wrap: wrap;
     & > * {
-      margin: 0 5px;
+      margin: 0;
+      margin-right: 40px;
+    }
+    & > :last-child {
+      margin-right: 0;
     }
   }
-  .iconButton {
-    margin: 0;
-    margin-right: 10px;
+
+  .InlineDiv {
+    display: flex;
+    justify-content: space-around;
+
+    & > * {
+      margin: 0;
+      margin-right: 10px;
+      width: 100%;
+      overflow: hidden;
+    }
+    & > :last-child {
+      margin-right: 0;
+    }
   }
-  :global(.ant-list-item-meta) {
-    flex: none;
+
+  .InlineCenterDiv {
+    display: flex;
+    justify-content: center;
   }
-  :global(.ant-card) {
+
+  .InlineCenterDiv > * {
+    margin: -15px 10px 20px 0;
+  }
+
+  .InlineEndDiv {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ServiceZones {
+    .RadiusInline {
+      display: flex;
+      justify-content: space-around;
+      flex: 1;
+      & > * {
+        margin: 0 5px;
+      }
+    }
+    .iconButton {
+      margin: 0;
+      margin-right: 10px;
+    }
+    :global(.ant-list-item-meta) {
+      flex: none;
+    }
+    :global(.ant-card) {
+      flex: 1;
+    }
+  }
+
+  .Whitelist {
+    margin-left: 16.66666667%;
+    max-width: 50%;
+
+    &:global(.ant-list) {
+      padding: 0;
+    }
+  }
+
+  .InfoButton {
+    background-color: transparent;
+    border: none;
+  }
+
+  .DeleteButton {
+    margin: 20px 10px 0 0;
+  }
+
+  .ToolTip {
+    margin: 10px 20px 0 0;
+  }
+
+  .BonjourServices {
+    margin-bottom: 10px;
+  }
+
+  .spanStyle {
     flex: 1;
+    margin-left: 10px;
   }
-}
 
-.Whitelist {
-  margin-left: 16.66666667%;
-  max-width: 50%;
-
-  &:global(.ant-list) {
-    padding: 0;
+  .MultipleSelection {
+    height: 120px;
   }
-}
-
-.InfoButton {
-  background-color: transparent;
-  border: none;
-}
-
-.DeleteButton {
-  margin: 20px 10px 0 0;
-}
-
-.ToolTip {
-  margin: 10px 20px 0 0;
-}
-
-.BonjourServices {
-  margin-bottom: 10px;
-}
-
-label {
-  white-space: normal;
-}
-
-p {
-  font-weight: bold;
-  font-size: 16px;
-}
-.spanStyle {
-  flex: 1;
-  margin-left: 10px;
-}
-
-.MultipleSelection {
-  height: 120px;
 }

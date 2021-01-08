@@ -44,7 +44,7 @@ const BonjourGateway = ({ form, details }) => {
   };
 
   return (
-    <div className={styles.ProfileDetails}>
+    <div className={styles.ProfilePage}>
       <Card title="Bonjour Gateway">
         <Item name="profileDescription" label="Description">
           <TextArea className={globalStyles.field} rows={2} allowClear />

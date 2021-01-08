@@ -158,7 +158,7 @@ const RFForm = ({ form, details }) => {
   );
 
   return (
-    <div className={styles.ProfileDetails}>
+    <div className={styles.ProfilePage}>
       <Card>
         <Item label={' '} colon={false}>
           <div className={styles.InlineDiv}>
