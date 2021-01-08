@@ -45,7 +45,7 @@ const LineChart = ({ title, data, options }) => {
           }}
           colors={COLORS}
         >
-          <Chart type="spline" zoomType="x" backgroundColor="#141414" className={styles.noSelect} />
+          <Chart type="spline" zoomType="x" backgroundColor="none" className={styles.noSelect} />
           <XAxis
             tickPixelInterval={90}
             dateTimeLabelFormats={dateTimeLabelFormats}

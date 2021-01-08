@@ -41,7 +41,7 @@ const SolidGauge = ({ data, title, label }) => {
   return (
     <div className={styles.container}>
       <HighchartsChart gauge plotOptions={plotOptions}>
-        <Chart type="solidgauge" zoomType="x" backgroundColor="#141414" />
+        <Chart type="solidgauge" zoomType="x" backgroundColor="none" />
 
         <Pane
           center={['50%', '55%']}
