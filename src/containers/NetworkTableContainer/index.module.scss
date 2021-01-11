@@ -1,11 +1,16 @@
 .headerBtnContent {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: start;
   padding: 20px 0;
 }
 
 .BlockedListButton {
   margin-left: auto;
   margin-right: 20px;
+}
+
+.RightHeaderDiv {
+  display: flex;
+  margin-left: auto;
 }

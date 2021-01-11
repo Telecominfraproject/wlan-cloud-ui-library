@@ -21,6 +21,7 @@ const NetworkTableContainer = ({
   isLastPage,
   loading,
   error,
+  extraTools,
 }) => {
   const { routes } = useContext(ThemeContext);
 
@@ -46,13 +47,15 @@ const NetworkTableContainer = ({
     <>
       <div className={styles.headerBtnContent}>
         <ToggleButton activeTab={activeTab} />
-
-        {activeTab === routes.clientDevices && (
-          <Link to={routes.blockedlist} className={styles.BlockedListButton}>
-            <Button>Blocked List</Button>
-          </Link>
-        )}
-        <Button onClick={onRefresh} title="reload" icon={<ReloadOutlined />} />
+        {extraTools}
+        <div className={styles.RightHeaderDiv}>
+          {activeTab === routes.clientDevices && (
+            <Link to={routes.blockedlist} className={styles.BlockedListButton}>
+              <Button>Blocked List</Button>
+            </Link>
+          )}
+          <Button onClick={onRefresh} title="reload" icon={<ReloadOutlined />} />
+        </div>
       </div>
       {renderContent()}
     </>
@@ -68,6 +71,7 @@ NetworkTableContainer.propTypes = {
   isLastPage: PropTypes.bool,
   loading: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  extraTools: PropTypes.node,
 };
 
 NetworkTableContainer.defaultProps = {
@@ -77,6 +81,7 @@ NetworkTableContainer.defaultProps = {
   isLastPage: true,
   loading: false,
   error: null,
+  extraTools: null,
 };
 
 export default NetworkTableContainer;
