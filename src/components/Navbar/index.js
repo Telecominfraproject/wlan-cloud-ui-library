@@ -35,6 +35,13 @@ const Navbar = ({
     return rightMenuItem || <SettingsDropdown onLogout={onLogout} />;
   };
 
+  const checkSelectedKeys = () => {
+    if (locationState.pathname === routes.network) return ['network', 'overview'];
+    if (locationState.pathname === routes.accessPoints) return ['network', 'inventory'];
+    if (locationState.pathname === routes.clientDevices) return ['network', 'inventory'];
+    return selectedKeys;
+  };
+
   return (
     <Header className={`${styles.Navbar}`}>
       <Link className={styles.LogoContainer} to={routes.root}>
@@ -60,12 +67,16 @@ const Navbar = ({
           <Menu
             mode="inline"
             menuItems={mobileMenuItems || menuItems}
-            selectedKeys={selectedKeys}
+            selectedKeys={checkSelectedKeys()}
             onMenuItemClick={onMenuItemClick}
           />
         </Drawer>
       ) : (
-        <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
+        <Menu
+          menuItems={menuItems}
+          selectedKeys={checkSelectedKeys()}
+          onMenuItemClick={onMenuItemClick}
+        />
       )}
       <div className={styles.RightMenu}>
         <Link to={routes.alarms}>
