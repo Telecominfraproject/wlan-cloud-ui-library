@@ -226,7 +226,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="auto">auto</Option>
+              <Option value="auto">Auto</Option>
               <Option value="oneByOne">1x1</Option>
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>
