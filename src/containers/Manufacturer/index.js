@@ -74,7 +74,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
   };
 
   const handleOnSearch = value => {
-    onSearchOUI(value.replace(/:/g, ''));
+    onSearchOUI(value.replace(/[:-]/g, ''));
     setCancel(false);
   };
 

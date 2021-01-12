@@ -23,7 +23,7 @@ const PieChart = ({ chartData, title }) => {
     <div className={styles.container}>
       <Card title={title} headStyle={headerStyle} className={styles.pieChart}>
         {pieData.length > 0 ? (
-          <HighchartsChart colors={COLORS}>
+          <HighchartsChart colors={COLORS} backgroundColor="none">
             <PieSeries
               name="Count"
               data={pieData}
@@ -32,12 +32,7 @@ const PieChart = ({ chartData, title }) => {
               dataLabels={{ color: '#fff' }}
             />
 
-            <Tooltip
-              borderWidth={0}
-              backgroundColor="#141414"
-              shadow
-              style={{ color: '#fff', fontSize: '12px' }}
-            />
+            <Tooltip borderWidth={0} shadow style={{ color: '#fff', fontSize: '12px' }} />
           </HighchartsChart>
         ) : (
           <h4>No Data</h4>

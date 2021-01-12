@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ThemeContext from 'contexts/ThemeContext';
 
-const ThemeProvider = ({ children, company, logo, logoMobile, routes }) => (
-  <ThemeContext.Provider value={{ company, logo, logoMobile, routes }}>
+const ThemeProvider = ({ children, company, logo, logoMobile, routes, radioTypes }) => (
+  <ThemeContext.Provider value={{ company, logo, logoMobile, routes, radioTypes }}>
     {children}
   </ThemeContext.Provider>
 );
@@ -14,6 +14,7 @@ ThemeProvider.propTypes = {
   company: PropTypes.string,
   logo: PropTypes.string,
   logoMobile: PropTypes.string,
+  radioTypes: PropTypes.instanceOf(Object).isRequired,
 };
 
 ThemeProvider.defaultProps = {

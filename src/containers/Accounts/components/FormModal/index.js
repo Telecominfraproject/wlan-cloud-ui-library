@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
@@ -12,7 +12,17 @@ const strongRegex = new RegExp(
   /(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])).*/
 );
 
-const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) => {
+const FormModal = ({
+  onCancel,
+  onSubmit,
+  visible,
+  title,
+  userEmail,
+  userRole,
+  userId,
+  isAuth0Enabled,
+  onResetUserPassword,
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -50,54 +60,62 @@ const FormModal = ({ onCancel, onSubmit, visible, title, userEmail, userRole }) 
           <Option value="CustomerIT">CustomerIT</Option>
         </Select>
       </Item>
+      {!isAuth0Enabled && (
+        <>
+          <Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your password',
+              },
+              () => ({
+                validator(_rule, value) {
+                  if (!value || strongRegex.test(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(
+                      'Password must be at least 8 characters in length and contain a Lower case letter, a Upper case letter, a Number, and a Special character.'
+                    )
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password visibilityToggle className={styles.field} />
+          </Item>
 
-      <Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your password',
-          },
-          () => ({
-            validator(_rule, value) {
-              if (!value || strongRegex.test(value)) {
-                return Promise.resolve();
-              }
-              return Promise.reject(
-                new Error(
-                  'Password must be at least 8 characters in length and contain a Lower case letter, a Upper case letter, a Number, and a Special character.'
-                )
-              );
-            },
-          }),
-        ]}
-      >
-        <Input.Password visibilityToggle className={styles.field} />
-      </Item>
-
-      <Item
-        label="Confirm Password"
-        name="confirmedPassword"
-        dependencies={['password']}
-        rules={[
-          {
-            required: true,
-            message: 'Please confirm your password',
-          },
-          ({ getFieldValue }) => ({
-            validator(_rule, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The two passwords do not match'));
-            },
-          }),
-        ]}
-        hasFeedback
-      >
-        <Input.Password className={styles.field} />
-      </Item>
+          <Item
+            label="Confirm Password"
+            name="confirmedPassword"
+            dependencies={['password']}
+            rules={[
+              {
+                required: true,
+                message: 'Please confirm your password',
+              },
+              ({ getFieldValue }) => ({
+                validator(_rule, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('The two passwords do not match'));
+                },
+              }),
+            ]}
+            hasFeedback
+          >
+            <Input.Password className={styles.field} />
+          </Item>
+        </>
+      )}
+      {isAuth0Enabled && title === 'Edit User' && (
+        <Item label="Password">
+          <Button onClick={() => onResetUserPassword(userId)}>Reset Password</Button>
+        </Item>
+      )}
     </Form>
   );
 
@@ -129,12 +147,18 @@ FormModal.propTypes = {
   title: PropTypes.string,
   userEmail: PropTypes.string,
   userRole: PropTypes.string,
+  userId: PropTypes.string,
+  isAuth0Enabled: PropTypes.bool,
+  onResetUserPassword: PropTypes.func,
 };
 
 FormModal.defaultProps = {
   title: '',
   userEmail: '',
   userRole: 'CustomerIT',
+  userId: '',
+  isAuth0Enabled: false,
+  onResetUserPassword: () => {},
 };
 
 export default FormModal;

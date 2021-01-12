@@ -57,7 +57,7 @@ const AccessPointDetails = ({
   loadingFirmware,
   errorFirmware,
   onFetchMoreProfiles,
-  goBackRoute,
+  onDeleteEquipment,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -66,6 +66,7 @@ const AccessPointDetails = ({
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState(false);
+  const [deleteEquipmentModal, setDeleteEquipmentModal] = useState(false);
 
   const [redirectURL, setRedirectURL] = useState();
 
@@ -77,10 +78,12 @@ const AccessPointDetails = ({
 
   const handlePageChange = path => {
     if (isFormDirty) {
-      setRedirectURL(path || routes.accessPoints);
+      setRedirectURL(path);
       setConfirmModal(true);
+    } else if (path) {
+      history.replace(path);
     } else {
-      history.push(path || routes.accessPoints);
+      history.goBack();
     }
   };
 
@@ -98,6 +101,11 @@ const AccessPointDetails = ({
     <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
   ));
 
+  const handleDeleteEquipment = () => {
+    onDeleteEquipment();
+    setDeleteEquipmentModal(false);
+  };
+
   return (
     <div className={styles.AccessPointDetails}>
       <Modal
@@ -107,7 +115,11 @@ const AccessPointDetails = ({
         onSuccess={() => {
           setConfirmModal(false);
           setIsFormDirty(false);
-          history.push(redirectURL);
+          if (redirectURL) {
+            history.replace(redirectURL);
+          } else {
+            history.goBack();
+          }
         }}
         visible={confirmModal}
         buttonText="OK"
@@ -116,9 +128,31 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange(goBackRoute)}>
+        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
           Back
         </Button>
+        <Button
+          name="delete"
+          danger
+          type="primary"
+          className={styles.deleteButton}
+          onClick={() => setDeleteEquipmentModal(true)}
+        >
+          Delete
+        </Button>
+        <Modal
+          onCancel={() => setDeleteEquipmentModal(false)}
+          onSuccess={handleDeleteEquipment}
+          visible={deleteEquipmentModal}
+          title="Are you sure?"
+          buttonText="Delete"
+          buttonType="danger"
+          content={
+            <p>
+              Are you sure you want to delete this access point: <strong>{data.name}</strong>
+            </p>
+          }
+        />
       </Header>
       <Card
         title={
@@ -147,7 +181,7 @@ const AccessPointDetails = ({
             </div>
             <div>
               <strong>MAC:</strong> &nbsp;
-              {data.status.protocol.details && data.status.protocol.details.reportedMacAddr}
+              {data.baseMacAddress}
             </div>
           </div>
         }
@@ -210,7 +244,7 @@ AccessPointDetails.propTypes = {
   loadingFirmware: PropTypes.bool,
   errorFirmware: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
-  goBackRoute: PropTypes.string,
+  onDeleteEquipment: PropTypes.func.isRequired,
 };
 
 AccessPointDetails.defaultProps = {
@@ -223,7 +257,6 @@ AccessPointDetails.defaultProps = {
   loadingFirmware: true,
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
-  goBackRoute: null,
 };
 
 export default AccessPointDetails;
