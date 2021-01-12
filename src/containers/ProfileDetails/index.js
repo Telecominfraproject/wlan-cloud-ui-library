@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Card, notification } from 'antd';
+import { Form, Input, Card, notification, Select } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ import {
   formatPasspointForm,
   formatProviderProfileForm,
   formatOperatorForm,
+  profileTypes,
 } from 'utils/profiles';
 
 import SSIDForm from './components/SSID';
@@ -58,6 +59,7 @@ const ProfileDetails = ({
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
+  extraButtons,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -204,10 +206,14 @@ const ProfileDetails = ({
         content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-          Back
-        </Button>
-        <div>
+        <div className={styles.HeaderDiv}>
+          <Button icon={<LeftOutlined />} onClick={handleOnBack}>
+            Back
+          </Button>
+          <h1>{`Edit ${name}`}</h1>
+        </div>
+        <div className={styles.HeaderDiv}>
+          <div className={styles.HeaderButton}>{extraButtons}</div>
           <Button type="primary" onClick={handleOnSave}>
             Save
           </Button>
@@ -220,7 +226,12 @@ const ProfileDetails = ({
         onValuesChange={handleOnFormChange}
         className={styles.ProfileDetails}
       >
-        <Card title={`Edit ${name}`}>
+        <Card>
+          <Item label="Type">
+            <Select className={globalStyles.field} defaultValue={profileType} disabled>
+              <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
+            </Select>
+          </Item>
           <Item
             name="name"
             label="Profile Name"
@@ -310,6 +321,7 @@ ProfileDetails.propTypes = {
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
+  extraButtons: PropTypes.node,
 };
 
 ProfileDetails.defaultProps = {
@@ -332,6 +344,7 @@ ProfileDetails.defaultProps = {
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},
+  extraButtons: null,
 };
 
 export default ProfileDetails;

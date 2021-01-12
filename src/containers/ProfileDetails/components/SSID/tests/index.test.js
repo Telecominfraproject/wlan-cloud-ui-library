@@ -272,7 +272,6 @@ describe('<SSIDForm />', () => {
       expect(getByText('Use Custom VLAN')).toBeVisible();
       expect(getByText('Use Default VLAN')).toBeVisible();
     });
-
     fireEvent.change(getByPlaceholderText('2-4095'), { target: { value: null } });
     await waitFor(() => {
       expect(getByText('Vlan expected between 1 and 4095')).toBeVisible();

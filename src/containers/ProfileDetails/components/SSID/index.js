@@ -6,7 +6,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
-
+import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING } from '../../constants/index';
 
 const { Item } = Form;
@@ -50,20 +50,20 @@ const SSIDForm = ({
 
     form.setFieldsValue({
       ssid: details.ssid || '',
-      bandwidthLimitDown: details.bandwidthLimitDown || 0,
-      bandwidthLimitUp: details.bandwidthLimitUp || 0,
-      broadcastSsid: details.broadcastSsid || 'enabled',
-      appliedRadios: details.appliedRadios || Object.keys(radioTypes || []),
-      forwardMode: details.forwardMode || 'BRIDGE',
+      bandwidthLimitDown: details.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
+      bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
+      broadcastSsid: details.broadcastSsid || defaultSsidProfile.broadcastSsid,
+      appliedRadios: details.appliedRadios || defaultSsidProfile.appliedRadios,
+      forwardMode: details.forwardMode || defaultSsidProfile.forwardMode,
       noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
       captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
       captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
-      secureMode: details.secureMode || 'open',
+      secureMode: details.secureMode || defaultSsidProfile.secureMode,
       vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
-      keyStr: details.keyStr,
+      keyStr: details.keyStr || defaultSsidProfile.keyStr,
       wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
       wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
-      vlanId: details.vlanId,
+      vlanId: details.vlanId || defaultSsidProfile.vlanId,
       radiusServiceName: details.radiusServiceName,
       ...radioBasedValues,
     });
@@ -168,7 +168,9 @@ const SSIDForm = ({
         <Item name="appliedRadios" label="Use On">
           <Checkbox.Group>
             {Object.keys(radioTypes || [])?.map(i => (
-              <Checkbox value={i}>{radioTypes?.[i]}</Checkbox>
+              <Checkbox key={i} value={i}>
+                {radioTypes?.[i]}
+              </Checkbox>
             ))}
           </Checkbox.Group>
         </Item>
@@ -478,7 +480,7 @@ const SSIDForm = ({
           <Item label="Advanced Settings" colon={false}>
             <div className={styles.InlineDiv}>
               {Object.keys(radioTypes || [])?.map(i => (
-                <span>{radioTypes?.[i]}</span>
+                <span key={i}>{radioTypes?.[i]}</span>
               ))}
             </div>
           </Item>

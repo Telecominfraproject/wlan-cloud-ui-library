@@ -22,7 +22,7 @@ const OperatorForm = ({ details, form }) => {
         ? 'true'
         : 'false',
       operatorFriendlyName: operatorFriendlyName || [],
-      domainNameList: details?.domainNameList || [],
+      domainNameList: details?.domainNameList?.join(', ') || '',
     });
   }, [form, details, operatorFriendlyName]);
 
@@ -60,15 +60,18 @@ const OperatorForm = ({ details, form }) => {
           label="Domain Name List:"
           name="domainNameList"
           rules={[
+            { required: true, message: 'Domain name list cannot be empty' },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
                   !value ||
-                  getFieldValue('domainNameList').match(/^([a-z0-9\s]+,)*([a-z0-9\s]+){1}$/i)
+                  getFieldValue('domainNameList').match(
+                    /^\s*([\w-]+(\.[\w-]+)+\s*,\s*)*[\w-]+(\.[\w-]+)+\s*$/g
+                  )
                 ) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('Please enter a comma separated list of strings'));
+                return Promise.reject(new Error('Please enter a comma separated list of domains'));
               },
             }),
           ]}

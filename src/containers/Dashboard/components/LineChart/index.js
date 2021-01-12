@@ -45,7 +45,7 @@ const LineChart = ({ title, data, options }) => {
           }}
           colors={COLORS}
         >
-          <Chart type="spline" zoomType="x" backgroundColor="#141414" className={styles.noSelect} />
+          <Chart type="spline" zoomType="x" backgroundColor="none" className={styles.noSelect} />
           <XAxis
             tickPixelInterval={90}
             dateTimeLabelFormats={dateTimeLabelFormats}
@@ -59,7 +59,10 @@ const LineChart = ({ title, data, options }) => {
             xDateFormat="%b %e %Y %l:%M%P"
             pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
           />
-          <Legend>
+          <Legend
+            itemStyle={{ color: 'rgba(255, 255, 255, 0.85)' }}
+            itemHoverStyle={{ color: 'rgba(255, 255, 255)' }}
+          >
             <Legend.Title />
           </Legend>
           <YAxis

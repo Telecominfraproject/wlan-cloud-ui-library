@@ -1,9 +1,9 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select, Tooltip } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Form, Input, Select } from 'antd';
 import ThemeContext from 'contexts/ThemeContext';
 
+import { defaultRfProfile } from '../constants';
 import styles from '../index.module.scss';
 import { RADIOS } from '../../constants';
 
@@ -12,55 +12,84 @@ const { Option } = Select;
 
 const RFForm = ({ form, details }) => {
   const { radioTypes } = useContext(ThemeContext);
+  const currentRadios = Object.keys(details.rfConfigMap).sort();
+
   useEffect(() => {
     const formData = {
       rfConfigMap: {},
     };
-    const currentRadios = Object.keys(details.rfConfigMap);
 
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
         radioType: details.rfConfigMap[radio]?.radioType || radio,
-        radioMode: details.rfConfigMap[radio]?.radioMode || 'modeN',
-        beaconInterval: details.rfConfigMap[radio]?.beaconInterval || 0,
-        forceScanDuringVoice: details.rfConfigMap[radio]?.forceScanDuringVoice || 'disabled',
-        rtsCtsThreshold: details.rfConfigMap[radio]?.rtsCtsThreshold || 0,
-        channelBandwidth: details.rfConfigMap[radio]?.channelBandwidth || 'is20MHz',
-        mimoMode: details.rfConfigMap[radio]?.mimoMode || 'none',
-        maxNumClients: details.rfConfigMap[radio]?.maxNumClients || 0,
-        multicastRate: details.rfConfigMap[radio]?.multicastRate || 'rate6mbps',
+        radioMode: details.rfConfigMap[radio]?.radioMode || defaultRfProfile[radio].radioMode,
+        beaconInterval:
+          details.rfConfigMap[radio]?.beaconInterval || defaultRfProfile[radio].beaconInterval,
+        forceScanDuringVoice:
+          details.rfConfigMap[radio]?.forceScanDuringVoice ||
+          defaultRfProfile[radio].forceScanDuringVoice,
+        rtsCtsThreshold:
+          details.rfConfigMap[radio]?.rtsCtsThreshold || defaultRfProfile[radio].rtsCtsThreshold,
+        channelBandwidth:
+          details.rfConfigMap[radio]?.channelBandwidth || defaultRfProfile[radio].channelBandwidth,
+        mimoMode: details.rfConfigMap[radio]?.mimoMode || defaultRfProfile[radio].mimoMode,
+        maxNumClients:
+          details.rfConfigMap[radio]?.maxNumClients || defaultRfProfile[radio].maxNumClients,
+        multicastRate:
+          details.rfConfigMap[radio]?.multicastRate || defaultRfProfile[radio].multicastRate,
+        managementRate:
+          details.rfConfigMap[radio]?.managementRate || defaultRfProfile[radio].managementRate,
+        rxCellSizeDb:
+          details.rfConfigMap[radio]?.rxCellSizeDb || defaultRfProfile[radio].rxCellSizeDb,
+        probeResponseThresholdDb:
+          details.rfConfigMap[radio]?.probeResponseThresholdDb ||
+          defaultRfProfile[radio].probeResponseThresholdDb,
+        clientDisconnectThresholdDb:
+          details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
+          defaultRfProfile[radio].clientDisconnectThresholdDb,
+        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds || 0,
+            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ||
+            defaultRfProfile[radio].activeScanSettings.scanFrequencySeconds,
           scanDurationMillis:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis || 0,
+            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ||
+            defaultRfProfile[radio].activeScanSettings.scanDurationMillis,
         },
-        managementRate: details.rfConfigMap[radio]?.managementRate || 'rate1mbps',
-        rxCellSizeDb: details.rfConfigMap[radio]?.rxCellSizeDb || 0,
-        probeResponseThresholdDb: details.rfConfigMap[radio]?.probeResponseThresholdDb || 0,
-        clientDisconnectThresholdDb: details.rfConfigMap[radio]?.clientDisconnectThresholdDb || 0,
-        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || 0,
         neighbouringListApConfig: {
-          minSignal: details.rfConfigMap[radio]?.neighbouringListApConfig?.minSignal || 0,
-          maxAps: details.rfConfigMap[radio]?.neighbouringListApConfig?.maxAps || 0,
+          minSignal:
+            details.rfConfigMap[radio]?.neighbouringListApConfig?.minSignal ||
+            defaultRfProfile[radio].neighbouringListApConfig.minSignal,
+          maxAps:
+            details.rfConfigMap[radio]?.neighbouringListApConfig?.maxAps ||
+            defaultRfProfile[radio].neighbouringListApConfig.maxAps,
         },
         channelHopSettings: {
           noiseFloorThresholdInDB:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB || -75,
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ||
+            defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdInDB,
           noiseFloorThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds || 180,
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ||
+            defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdTimeInSeconds,
           nonWifiThresholdInPercentage:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage || 50,
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ||
+            defaultRfProfile[radio].channelHopSettings.nonWifiThresholdInPercentage,
           nonWifiThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds || 180,
-          obssHopMode: details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode || 'NON_WIFI',
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ||
+            defaultRfProfile[radio].channelHopSettings.nonWifiThresholdTimeInSeconds,
+          obssHopMode:
+            details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ||
+            defaultRfProfile[radio].channelHopSettings.obssHopMode,
         },
         bestApSettings: {
           mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed || 'true',
           dropInSnrPercentage:
-            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage || 10,
-          minLoadFactor: details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor || 10,
+            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ||
+            defaultRfProfile[radio].bestApSettings.dropInSnrPercentage,
+          minLoadFactor:
+            details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ||
+            defaultRfProfile[radio].bestApSettings.minLoadFactor,
         },
       };
     });
@@ -86,6 +115,7 @@ const RFForm = ({ form, details }) => {
   const renderInputItem = (dataIndex, key, label, options = {}) => (
     <Item
       name={['rfConfigMap', key, ...dataIndex]}
+      key={key}
       rules={[
         { required: true, message: options.error },
         ({ getFieldValue }) => ({
@@ -115,6 +145,7 @@ const RFForm = ({ form, details }) => {
 
   const renderOptionItem = (dataIndex, key, label, options = {}) => (
     <Item
+      key={key}
       name={['rfConfigMap', key, ...dataIndex]}
       rules={[
         {
@@ -128,11 +159,11 @@ const RFForm = ({ form, details }) => {
   );
 
   return (
-    <div className={styles.ProfileDetails}>
+    <div className={styles.ProfilePage}>
       <Card>
         <Item label={' '} colon={false}>
           <div className={styles.InlineDiv}>
-            {Object.keys(details.rfConfigMap).map(radio => (
+            {currentRadios.map(radio => (
               <span key={radio} className={styles.spanStyle}>
                 {radioTypes?.[radio]}
               </span>
@@ -171,12 +202,7 @@ const RFForm = ({ form, details }) => {
           ),
         })}
         {renderItem(
-          <span>
-            <Tooltip title="TU (Time Unit) is 1.024ms ">
-              <InfoCircleOutlined />
-            </Tooltip>
-            &nbsp; Beacon Interval (kusecs)
-          </span>,
+          <span>Beacon Interval (milliseconds)</span>,
           ['beaconInterval'],
           renderOptionItem,
           {
@@ -197,20 +223,21 @@ const RFForm = ({ form, details }) => {
           error: '0 - 65535 (Bytes)',
           addOnText: 'bytes',
         })}
-        {renderItem('Mimo Mode', ['mimoMode'], renderOptionItem, {
+        {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="none">none</Option>
-              <Option value="oneByOne">oneByOne</Option>
-              <Option value="twoByTwo">twoByTwo</Option>
-              <Option value="threeByThree">threeByThree</Option>
-              <Option value="fourByFour">fourByFour</Option>
+              <Option value="auto">Auto</Option>
+              <Option value="oneByOne">1x1</Option>
+              <Option value="twoByTwo">2x2</Option>
+              <Option value="threeByThree">3x3</Option>
+              <Option value="fourByFour">4x4</Option>
             </Select>
           ),
         })}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
+              <Option value="auto">Auto</Option>
               <Option value="rate1mbps">1</Option>
               <Option value="rate2mbps">2</Option>
               <Option value="rate5dot5mbps">5.5</Option>
@@ -226,6 +253,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
+              <Option value="auto">Auto</Option>
               <Option value="rate6mbps">6</Option>
               <Option value="rate9mbps">9</Option>
               <Option value="rate12mbps">12</Option>

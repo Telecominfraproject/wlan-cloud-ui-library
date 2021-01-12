@@ -527,7 +527,7 @@ describe('<ProfileDetails />', () => {
         ...mockProps.details,
         ntpServer: {
           auto: false,
-          value: "testNtp",
+          value: 'testNtp',
         },
       },
     };

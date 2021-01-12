@@ -618,8 +618,8 @@ describe('<AccessPoints />', () => {
     fireEvent.click(radio[1]);
     const select = getByTestId('select');
     fireEvent.mouseDown(select);
-    await waitForElement(() => [getByText('Debug (DEBUG)')], { container });
-    expect(getByText('Debug (DEBUG)')).toBeVisible();
+    await waitForElement(() => [getByText('Notice (NOTICE)')], { container });
+    expect(getByText('Notice (NOTICE)')).toBeVisible();
   });
 
   it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {

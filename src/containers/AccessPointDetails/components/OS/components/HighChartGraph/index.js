@@ -61,7 +61,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         useUTC: false,
       }}
     >
-      <Chart zoomType="x" backgroundColor="#141414" />
+      <Chart zoomType="x" backgroundColor="none" />
       <Tooltip
         split={false}
         shared

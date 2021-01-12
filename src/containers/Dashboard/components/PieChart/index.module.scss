@@ -3,10 +3,10 @@
   text-align: center;
   border: 0;
   margin: 5px;
-}
 
-.pieChart > div rect {
-  fill: #141414;
+  :global(.highcharts-background) {
+    fill: none;
+  }
 }
 
 .container {

@@ -37,6 +37,7 @@ const NetworkTableContainer = ({
         tableData={tableData}
         onLoadMore={onLoadMore}
         isLastPage={isLastPage}
+        activeTab={activeTab}
       />
     );
   };
