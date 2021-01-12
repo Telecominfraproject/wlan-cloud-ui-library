@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select, Tooltip } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Form, Input, Select } from 'antd';
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';
@@ -116,6 +115,7 @@ const RFForm = ({ form, details }) => {
   const renderInputItem = (dataIndex, key, label, options = {}) => (
     <Item
       name={['rfConfigMap', key, ...dataIndex]}
+      key={key}
       rules={[
         { required: true, message: options.error },
         ({ getFieldValue }) => ({
@@ -145,6 +145,7 @@ const RFForm = ({ form, details }) => {
 
   const renderOptionItem = (dataIndex, key, label, options = {}) => (
     <Item
+      key={key}
       name={['rfConfigMap', key, ...dataIndex]}
       rules={[
         {
@@ -201,12 +202,7 @@ const RFForm = ({ form, details }) => {
           ),
         })}
         {renderItem(
-          <span>
-            <Tooltip title="TU (Time Unit) is 1.024ms ">
-              <InfoCircleOutlined />
-            </Tooltip>
-            &nbsp; Beacon Interval (kusecs)
-          </span>,
+          <span>Beacon Interval (milliseconds)</span>,
           ['beaconInterval'],
           renderOptionItem,
           {
@@ -230,7 +226,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="none">none</Option>
+              <Option value="auto">Auto</Option>
               <Option value="oneByOne">1x1</Option>
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>
