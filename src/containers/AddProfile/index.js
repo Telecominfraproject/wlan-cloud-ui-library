@@ -251,7 +251,7 @@ const AddProfile = ({
                 placeholder="Select Profile Type"
               >
                 {Object.keys(profileTypes).map(type => (
-                  <Option value={type} disabled={type === 'bonjour'}>
+                  <Option key={type} value={type} disabled={type === 'bonjour'}>
                     {profileTypes[type]}
                   </Option>
                 ))}
