@@ -9,6 +9,8 @@ import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
 
+import FormModal from './components/FormModal';
+
 const AccessPointForm = ({
   form,
   details,
@@ -21,6 +23,9 @@ const AccessPointForm = ({
   const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
   const { Option } = Select;
+
+  const [greModalVisible, setGreModalVisible] = useState(false);
+  const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
   const [ntp, setNTP] = useState(details?.ntpServer?.auto || defaultApProfile.ntpServer.auto);
@@ -48,6 +53,24 @@ const AccessPointForm = ({
     );
   };
 
+  const handleAddGre = values => {
+    setGreList([
+      ...greList,
+      {
+        ...values,
+        vlanIdsInGreTunnel: values?.vlanIdsInGreTunnel?.replace(/\s/g, '').split(',') || [],
+        greRemoteMacAddr: values?.greRemoteMacAddr?.addressAsString
+          ? values?.greRemoteMacAddr
+          : null,
+      },
+    ]);
+    setGreModalVisible(false);
+  };
+
+  const handleRemoveGre = item => {
+    setGreList(greList.filter(i => i !== item));
+  };
+
   useEffect(() => {
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
@@ -71,6 +94,7 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
+      greTunnelConfigurations: greList,
       rfProfileId: currentRfId,
     });
   }, [form, details]);
@@ -79,7 +103,7 @@ const AccessPointForm = ({
     form.setFieldsValue({
       childProfileIds: selectedChildProfiles.map(i => i.id),
     });
-  }, [selectedChildProfiles]);
+  }, [selectedChildProfiles, greList]);
 
   const columns = [
     {
@@ -107,6 +131,50 @@ const AccessPointForm = ({
           title="removeSsid"
           icon={<DeleteFilled />}
           onClick={() => handleRemoveSsid(record?.id)}
+        />
+      ),
+    },
+  ];
+
+  const columnsGre = [
+    {
+      title: 'Name',
+      dataIndex: 'greTunnelName',
+    },
+    {
+      title: 'Parent Interface Name',
+      dataIndex: 'greParentIfName',
+    },
+    {
+      title: 'Remote IP Address',
+      dataIndex: 'greRemoteInetAddr',
+    },
+    {
+      title: 'Local IP Address',
+      dataIndex: 'greLocalInetAddr',
+      render: item => item ?? 'N/A',
+    },
+    {
+      title: 'Remote MAC Address',
+      dataIndex: ['greRemoteMacAddr', 'addressAsString'],
+      render: item => item ?? 'N/A',
+    },
+
+    {
+      title: 'VLAN IDs',
+      dataIndex: 'vlanIdsInGreTunnel',
+      render: items => (!items?.length ? 'N/A' : items?.join(', ')),
+    },
+    {
+      title: '',
+      width: 80,
+      render: item => (
+        <Button
+          title="removeGre"
+          icon={<DeleteFilled />}
+          onClick={() => {
+            handleRemoveGre(item);
+          }}
         />
       ),
     },
@@ -412,6 +480,30 @@ const AccessPointForm = ({
         />
         <Item name="childProfileIds" style={{ display: 'none' }}>
           <Input />
+        </Item>
+      </Card>
+
+      <Card
+        title="GRE Tunnel Configuration"
+        extra={
+          <Button type="solid" onClick={() => setGreModalVisible(true)} data-testid="addGre">
+            Add
+          </Button>
+        }
+      >
+        <Table
+          dataSource={greList}
+          columns={columnsGre}
+          pagination={false}
+          rowKey="greTunnelName"
+        />
+        <Item name="greTunnelConfigurations" noStyle>
+          <FormModal
+            onSubmit={handleAddGre}
+            title="Add GRE Configuration"
+            visible={greModalVisible}
+            onClose={() => setGreModalVisible(false)}
+          />
         </Item>
       </Card>
     </div>
