@@ -1,29 +1,29 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
+import ThemeContext from 'contexts/ThemeContext';
 
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
+import { defaultApProfile } from '../constants';
 
 const AccessPointForm = ({
   form,
   details,
   childProfiles,
-  childProfileIds,
   ssidProfiles,
   rfProfiles,
   onFetchMoreProfiles,
   onFetchMoreRfProfiles,
 }) => {
+  const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
   const { Option } = Select;
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
-  const [ntp, setNTP] = useState(
-    details?.ntpServer?.auto === undefined ? true : details?.ntpServer?.auto
-  );
+  const [ntp, setNTP] = useState(details?.ntpServer?.auto || defaultApProfile.ntpServer.auto);
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
@@ -32,50 +32,54 @@ const AccessPointForm = ({
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(
-    childProfileIds.filter(i => i !== currentRfId)
+    childProfiles.filter(i => i.profileType === 'ssid') || []
   );
 
   const handleOnChangeSsid = selectedItem => {
-    form.setFieldsValue({
-      childProfileIds: [...selectedChildProfiles, selectedItem],
-    });
-    setSelectdChildProfiles([...selectedChildProfiles, selectedItem]);
+    setSelectdChildProfiles([
+      ...selectedChildProfiles,
+      ssidProfiles.find(i => i.id === selectedItem),
+    ]);
   };
 
   const handleRemoveSsid = id => {
-    form.setFieldsValue({
-      childProfileIds: selectedChildProfiles.filter(i => i !== id),
-    });
-    setSelectdChildProfiles(selectedChildProfiles.filter(i => i !== id));
+    setSelectdChildProfiles(
+      selectedChildProfiles.filter(i => parseInt(i.id, 10) !== parseInt(id, 10))
+    );
   };
 
   useEffect(() => {
-    setSelectdChildProfiles(childProfileIds);
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan,
+      vlan: details?.vlan || defaultApProfile.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto,
-        value: details?.ntpServer?.value,
+        auto: details?.ntpServer?.auto || defaultApProfile.ntpServer.auto,
+        value: details?.ntpServer?.value || defaultApProfile.ntpServer.value,
       },
-      ledControlEnabled: details?.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp: details?.rtlsSettings?.srvHostIp,
-        srvHostPort: details?.rtlsSettings?.srvHostPort,
+        srvHostIp: details?.rtlsSettings?.srvHostIp || defaultApProfile.rtlsSettings.srvHostIp,
+        srvHostPort:
+          details?.rtlsSettings?.srvHostPort || defaultApProfile.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp: details?.syslogRelay?.srvHostIp,
-        srvHostPort: details?.syslogRelay?.srvHostPort,
-        severity: details?.syslogRelay?.severity || 'DEBUG',
+        srvHostIp: details?.syslogRelay?.srvHostIp || defaultApProfile.syslogRelay.srvHostIp,
+        srvHostPort: details?.syslogRelay?.srvHostPort || defaultApProfile.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: currentRfId,
-      childProfileIds: selectedChildProfiles,
     });
-  }, [form, details, childProfileIds]);
+  }, [form, details]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      childProfileIds: selectedChildProfiles.map(i => i.id),
+    });
+  }, [selectedChildProfiles]);
 
   const columns = [
     {
@@ -93,7 +97,7 @@ const AccessPointForm = ({
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios?.join(',  '),
+      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
     {
       title: '',
@@ -102,7 +106,7 @@ const AccessPointForm = ({
         <Button
           title="removeSsid"
           icon={<DeleteFilled />}
-          onClick={() => handleRemoveSsid(record.id)}
+          onClick={() => handleRemoveSsid(record?.id)}
         />
       ),
     },
@@ -115,8 +119,9 @@ const AccessPointForm = ({
     </Radio.Group>
   );
 
-  const filteredOptions = ssidProfiles.filter(o => !selectedChildProfiles.includes(o.id));
-  const tableData = ssidProfiles.filter(o => selectedChildProfiles.includes(o.id));
+  const filteredOptions = ssidProfiles.filter(
+    i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
+  );
 
   return (
     <div className={styles.ProfilePage}>
@@ -176,7 +181,7 @@ const AccessPointForm = ({
           </Item>
         )}
         <Item label="LED Status" name="ledControlEnabled" valuePropName="checked">
-          <Checkbox>Show LED indicators on APs</Checkbox>
+          <Checkbox disabled>Show LED indicators on APs</Checkbox>
         </Item>
 
         <Item
@@ -189,7 +194,7 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <Radio.Group disabled>
             <Radio value="false" onChange={() => setRtls(false)}>
               Disabled
             </Radio>
@@ -212,7 +217,11 @@ const AccessPointForm = ({
                 ]}
                 hasFeedback
               >
-                <Input className={globalStyles.field} placeholder="IP Address" />
+                <Input
+                  className={globalStyles.field}
+                  placeholder="IP Address"
+                  data-testid="svrIpAdress"
+                />
               </Item>
               <Item
                 name={['rtlsSettings', 'srvHostPort']}
@@ -238,6 +247,7 @@ const AccessPointForm = ({
                   type="number"
                   min={1}
                   max={65535}
+                  data-testid="svrPort"
                 />
               </Item>
             </Item>
@@ -394,7 +404,12 @@ const AccessPointForm = ({
             ))}
           </Select>
         </Item>
-        <Table dataSource={tableData} columns={columns} pagination={false} rowKey="id" />
+        <Table
+          dataSource={selectedChildProfiles}
+          columns={columns}
+          pagination={false}
+          rowKey="id"
+        />
         <Item name="childProfileIds" style={{ display: 'none' }}>
           <Input />
         </Item>
@@ -406,7 +421,6 @@ const AccessPointForm = ({
 AccessPointForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
-  childProfileIds: PropTypes.instanceOf(Array),
   ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
@@ -418,7 +432,6 @@ AccessPointForm.defaultProps = {
   form: null,
   details: {},
   childProfiles: [],
-  childProfileIds: [],
   ssidProfiles: [],
   rfProfiles: [],
   onFetchMoreProfiles: () => {},

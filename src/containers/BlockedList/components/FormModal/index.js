@@ -47,9 +47,14 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
       .catch(() => {});
   };
 
+  const handleOnCancel = () => {
+    form.resetFields();
+    onCancel();
+  };
+
   return (
     <Modal
-      onCancel={onCancel}
+      onCancel={handleOnCancel}
       visible={visible}
       onSuccess={handleOnSuccess}
       title={title}

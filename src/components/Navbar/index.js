@@ -21,11 +21,19 @@ const Navbar = ({
   onMenuItemClick,
   onLogout,
   totalAlarms,
+  rightMenuItem,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
   const location = useLocation();
 
   const selectedKeys = locationState.pathname.split('/');
+
+  const renderRightMenuIcon = () => {
+    if (isMobile) {
+      return <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />;
+    }
+    return rightMenuItem || <SettingsDropdown onLogout={onLogout} />;
+  };
 
   return (
     <Header className={`${styles.Navbar}`}>
@@ -69,11 +77,7 @@ const Navbar = ({
             )}
           </Badge>
         </Link>
-        {isMobile ? (
-          <MenuOutlined className={styles.MenuIcon} onClick={onMenuToggle} />
-        ) : (
-          <SettingsDropdown onLogout={onLogout} />
-        )}
+        {renderRightMenuIcon()}
       </div>
     </Header>
   );
@@ -89,6 +93,7 @@ Navbar.propTypes = {
   onMenuItemClick: PropTypes.func,
   onLogout: PropTypes.func,
   totalAlarms: PropTypes.number,
+  rightMenuItem: PropTypes.node,
 };
 
 Navbar.defaultProps = {
@@ -97,6 +102,7 @@ Navbar.defaultProps = {
   onMenuItemClick: () => {},
   onLogout: () => {},
   totalAlarms: 0,
+  rightMenuItem: null,
 };
 
 export default Navbar;
