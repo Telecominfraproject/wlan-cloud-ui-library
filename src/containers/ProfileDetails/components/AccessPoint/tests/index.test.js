@@ -51,6 +51,17 @@ const mockProps = {
     syslogRelay: null,
     vlan: 0,
     vlanNative: true,
+    greTunnelConfigurations: [
+      {
+        model_type: 'GreTunnelConfiguration',
+        greTunnelName: 'gre5',
+        greRemoteInetAddr: '192.168.0.12',
+        greParentIfName: 'wan',
+        greRemoteMacAddr: {
+          addressAsString: '00:0a:95:9d:68:16',
+        },
+      },
+    ],
   },
   childProfileIds: [3],
   childProfiles: [
@@ -659,7 +670,22 @@ describe('<AccessPoints />', () => {
     });
   });
 
-  it('click delete button sould remove item from Wireless Networks (SSIDs) Enabled on This Profile table', async () => {
+  it('should work when greTunnelConfigurations is undefined', () => {
+    const mockDetails = {
+      ...mockProps,
+      details: {
+        ...mockProps.details,
+        greTunnelConfigurations: undefined,
+      },
+    };
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return <AccessPoints {...mockDetails} form={form} />;
+    };
+    render(<AccessPointComp />);
+  });
+
+  it('should show modal form when add gre config is clicked ', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       return (
@@ -669,11 +695,79 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByRole, getByText } = render(<AccessPointComp />);
+    const { getByTestId, getByText } = render(<AccessPointComp />);
 
-    fireEvent.click(getByRole('button', { target: { value: /removeSsid/i } }));
+    fireEvent.click(getByTestId('addGre'));
+    expect(getByText('Add GRE Configuration')).toBeVisible();
+  });
+
+  it('gre config form should show errors on empty fields ', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByRole } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addGre'));
+    expect(getByText('Add GRE Configuration')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
-      expect(getByText('No Data')).toBeVisible();
+      expect(getByText('Name field cannot be empty')).toBeVisible();
+      expect(getByText('Parent Interface Name field cannot be empty')).toBeVisible();
+      expect(getByText('Remote IP Address field cannot be empty')).toBeVisible();
+    });
+  });
+
+  it('cancel button click should hide Add Gre modal', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, getByRole, getByTestId } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addGre'));
+    expect(getByText('Add GRE Configuration')).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+
+    await waitFor(() => {
+      expect(getByText('Add GRE Configuration', { selector: 'div' })).not.toBeVisible();
+    });
+  });
+
+  it('should add a gre config to the table ', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByRole, getByLabelText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addGre'));
+    expect(getByText('Add GRE Configuration')).toBeVisible();
+    fireEvent.change(getByLabelText('Name'), { target: { value: 'gre2' } });
+    fireEvent.change(getByLabelText('Parent Interface Name'), { target: { value: 'wan' } });
+    fireEvent.change(getByLabelText('Remote IP Address'), { target: { value: '192.168.0.13' } });
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(getByText('Add GRE Configuration')).not.toBeVisible();
+      expect(getByText('gre2')).toBeVisible();
     });
   });
 });
