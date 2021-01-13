@@ -13,6 +13,10 @@ export function formatBytes(bytes, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
+export function labelFormatter() {
+  return formatBytes(this.value).replace(/[^\d.-]/g, '');
+}
+
 export function formatBitsPerSecond(bps) {
   if (bps >= 1000000000) {
     return `${_.round(bps / 1000000000, 0)} Gbps`;
