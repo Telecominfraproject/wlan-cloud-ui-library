@@ -11,7 +11,7 @@ import {
   SplineSeries,
   Tooltip,
 } from 'react-jsx-highstock';
-import { formatBytes } from 'utils/bytes';
+import { formatBytes, labelFormatter } from 'utils/bytes';
 
 import Loading from 'components/Loading';
 
@@ -101,6 +101,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
             id={`cpuCore${i}`}
             name={`CPU Core ${i}`}
             data={cpuUsage[i]}
+            color="#7cb5ec"
           />
         ))}
       </YAxis>
@@ -109,6 +110,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         id="free"
         labels={{
           style: { color: '#34AE29' },
+          formatter: labelFormatter,
         }}
         opposite
         visible={visible}
@@ -120,7 +122,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         >
           Free Memory (MB)
         </YAxis.Title>
-        <SplineSeries id="freeMemory" name="Free Memory" data={freeMemory} />
+        <SplineSeries id="freeMemory" name="Free Memory" data={freeMemory} color="#34AE29" />
       </YAxis>
 
       <YAxis
@@ -137,7 +139,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         >
           CPU Temperature (°C)
         </YAxis.Title>
-        <SplineSeries id="cpuTemp" name="CPU Temperature" data={cpuTemp} />
+        <SplineSeries id="cpuTemp" name="CPU Temperature" data={cpuTemp} color="#f7a35c" />
       </YAxis>
     </HighchartsStockChart>
   );
