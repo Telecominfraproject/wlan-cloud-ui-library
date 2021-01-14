@@ -81,6 +81,10 @@ const General = ({
     setSelectedProfile(i);
   };
 
+  const filterOption = (input, { children }) => {
+    return children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  };
+
   const {
     id,
     equipmentType,
@@ -330,8 +334,10 @@ const General = ({
           <Select
             className={styles.Field}
             onChange={handleProfileChange}
-            placeholder="Select access point profile..."
+            placeholder="Select Access Point profile..."
             onPopupScroll={onFetchMoreProfiles}
+            showSearch
+            filterOption={filterOption}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
