@@ -107,7 +107,7 @@ const RFForm = ({ form, details }) => {
   const renderItem = (label, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(details.rfConfigMap).map(i => renderInput(dataIndex, i, label, options))}
+        {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
       </div>
     </Item>
   );
@@ -188,18 +188,20 @@ const RFForm = ({ form, details }) => {
           },
         })}
         {renderItem('Radio Mode', ['radioMode'], renderOptionItem, {
-          dropdown: (
-            <Select className={styles.Field}>
-              <Option value="modeN">N</Option>
-              <Option value="modeAC">AC</Option>
-              <Option value="modeGN">GN</Option>
-              <Option value="modeX">X</Option>
-              <Option value="modeA">A</Option>
-              <Option value="modeB">B</Option>
-              <Option value="modeG">G</Option>
-              <Option value="modeAB">AB</Option>
-            </Select>
-          ),
+          dropdown: key => {
+            return (
+              <Select className={styles.Field}>
+                <Option value="modeN">N</Option>
+                {key === 'is2dot4GHz' ? null : <Option value="modeAC">AC</Option>}
+                {key === 'is2dot4GHz' ? null : <Option value="modeGN">GN</Option>}
+                {key === 'is2dot4GHz' ? null : <Option value="modeX">X</Option>}
+                {key === 'is2dot4GHz' ? null : <Option value="modeA">A</Option>}
+                {key === 'is5GHz' ? null : <Option value="modeB">B</Option>}
+                {key === 'is5GHz' ? null : <Option value="modeG">G</Option>}
+                {key === 'is2dot4GHz' ? null : <Option value="modeAB">AB</Option>}
+              </Select>
+            );
+          },
         })}
         {renderItem(
           <span>Beacon Interval (milliseconds)</span>,
