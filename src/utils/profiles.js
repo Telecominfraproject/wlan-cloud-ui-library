@@ -10,6 +10,10 @@ export const formatSsidProfileForm = values => {
     childProfileIds: [],
   };
 
+  if (values.vlan === 'defaultVLAN') {
+    formattedData.vlanId = 0;
+  }
+
   if (values.wepKey) {
     const wepKeyType = values.wepKey.length === 26 ? 'wep128' : 'wep64';
     const wepConfig = {
@@ -55,6 +59,17 @@ export const formatSsidProfileForm = values => {
     formattedData.childProfileIds.push(parseInt(values.captivePortalId, 10));
   } else {
     formattedData.captivePortalId = null;
+  }
+
+  if (
+    values.secureMode === 'wpaRadius' ||
+    values.secureMode === 'wpa2Radius' ||
+    values.secureMode === 'wpa2OnlyRadius' ||
+    values.secureMode === 'wpa3OnlyEAP' ||
+    values.secureMode === 'wpa3MixedEAP'
+  ) {
+    formattedData.childProfileIds.push(values.radiusServiceName.value);
+    formattedData.radiusServiceName = values.radiusServiceName.label;
   }
 
   return formattedData;
