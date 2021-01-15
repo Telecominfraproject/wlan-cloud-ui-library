@@ -44,7 +44,7 @@ const SSIDForm = ({
 
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
-        radioBasedValues[`${j}${i}`] = details?.radioBasedConfigs[i][j]?.toString() ?? 'auto';
+        radioBasedValues[`${j}${i}`] = details?.radioBasedConfigs?.[i]?.[j]?.toString() ?? 'auto';
       });
     });
 

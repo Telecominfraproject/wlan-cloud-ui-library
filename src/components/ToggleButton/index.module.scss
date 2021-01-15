@@ -2,7 +2,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background: #141414 0% 0% no-repeat padding-box;
+  background: #242526 0% 0% no-repeat padding-box;
   border-radius: 25px;
   margin-right: 15px;
   @media only screen and (max-width: 575px) {
@@ -10,14 +10,10 @@
     background-color: transparent;
   }
   a {
-    padding: 8px 25px;
-    border-radius: 50px;
     color: #fff;
+    padding: 8px 25px;
     display: inline-block;
     border-radius: 25px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
     @media only screen and (max-width: 660px) {
       padding: 8px 16px;
     }
@@ -28,5 +24,6 @@
   }
   .activeBtn {
     background: #35a649 0% 0% no-repeat padding-box;
+    font-weight: bold;
   }
 }
