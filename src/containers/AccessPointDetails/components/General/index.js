@@ -22,6 +22,8 @@ const General = ({
   loadingProfiles,
   errorProfiles,
   onFetchMoreProfiles,
+  isLastProfilesPage,
+  handleSearchProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -83,6 +85,10 @@ const General = ({
 
   const filterOption = (input, { children }) => {
     return children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  };
+
+  const onProfilesSearch = () => {
+    if (!isLastProfilesPage) handleSearchProfiles();
   };
 
   const {
@@ -338,6 +344,7 @@ const General = ({
             onPopupScroll={onFetchMoreProfiles}
             showSearch
             filterOption={filterOption}
+            onSearch={onProfilesSearch}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -518,6 +525,8 @@ General.propTypes = {
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
+  isLastProfilesPage: PropTypes.bool,
+  handleSearchProfiles: PropTypes.func,
 };
 
 General.defaultProps = {
@@ -528,6 +537,8 @@ General.defaultProps = {
   loadingProfiles: true,
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
+  isLastProfilesPage: true,
+  handleSearchProfiles: () => {},
 };
 
 export default General;
