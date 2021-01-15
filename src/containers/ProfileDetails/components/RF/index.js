@@ -180,9 +180,13 @@ const RFForm = ({ form, details }) => {
             return (
               <Select className={styles.Field}>
                 <Option value="is20MHz">20MHz</Option>
-                {key === 'is2dot4GHz' ? null : <Option value="is40MHz">40MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is160MHz">160MHz</Option>}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="is40MHz">40MHz</Option>
+                    <Option value="is80MHz">80MHz</Option>
+                    <Option value="is160MHz">160MHz</Option>
+                  </>
+                )}
               </Select>
             );
           },
@@ -192,13 +196,21 @@ const RFForm = ({ form, details }) => {
             return (
               <Select className={styles.Field}>
                 <Option value="modeN">N</Option>
-                {key === 'is2dot4GHz' ? null : <Option value="modeAC">AC</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="modeGN">GN</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="modeX">X</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="modeA">A</Option>}
-                {key === 'is5GHz' ? null : <Option value="modeB">B</Option>}
-                {key === 'is5GHz' ? null : <Option value="modeG">G</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="modeAB">AB</Option>}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="modeAC">AC</Option>
+                    <Option value="modeGN">GN</Option>
+                    <Option value="modeX">X</Option>
+                    <Option value="modeA">A</Option>
+                    <Option value="modeAB">AB</Option>
+                  </>
+                )}
+                {key !== 'is5GHz' && (
+                  <>
+                    <Option value="modeB">B</Option>
+                    <Option value="modeG">G</Option>
+                  </>
+                )}
               </Select>
             );
           },
