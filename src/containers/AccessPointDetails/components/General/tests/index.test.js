@@ -81,8 +81,11 @@ describe('<General />', () => {
   });
 
   it('loadingProfiles should show loading spinner', async () => {
-    const { getByTestId } = render(<General loadingProfiles />);
+    const { getByTestId, getByLabelText } = render(<General {...defaultProps} loadingProfiles />);
 
+    fireEvent.change(getByLabelText('Access Point Profile'), {
+      target: { value: 'xxx' },
+    });
     await waitFor(() => {
       expect(getByTestId('loadingProfiles')).toBeInTheDocument();
     });

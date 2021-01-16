@@ -323,7 +323,7 @@ const General = ({
           rules={[
             {
               required: true,
-              message: 'Please select your Access Point Profile city.',
+              message: 'Please select your Access Point Profile.',
             },
           ]}
         >
@@ -335,7 +335,7 @@ const General = ({
             showSearch
             filterOption={filterOption}
             onSearch={onSearchProfile}
-            notFoundContent={loadingProfiles && <Spin size="small" />}
+            notFoundContent={loadingProfiles && <Spin data-testid="loadingProfiles" size="small" />}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
