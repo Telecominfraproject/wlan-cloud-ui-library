@@ -295,18 +295,17 @@ const SSIDForm = ({
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
-            <Option value="open">Open (No Encryption)</Option>
-            <Option value="wpaPSK">WPA Personal</Option>
-            <Option value="wpaRadius">WPA Enterprise</Option>
-            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
-            <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
-            <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
-            <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
-            <Option value="wep">WEP</Option>
             <Option value="wpa3OnlySAE">WPA3 Enterprise</Option>
             <Option value="wpa3MixedSAE">WPA3 Enterprise (mixed mode)</Option>
             <Option value="wpa3OnlyEAP">WPA3 Personal</Option>
             <Option value="wpa3MixedEAP">WPA3 Personal (mixed mode)</Option>
+            <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
+            <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
+            <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
+            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpaRadius">WPA Enterprise</Option>
+            <Option value="wep">WEP</Option>
+            <Option value="open">Open (No Encryption)</Option>
           </Select>
         </Item>
 
@@ -349,8 +348,7 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpaPSK' ||
-          mode === 'wpa2PSK' ||
+        {(mode === 'wpa2PSK' ||
           mode === 'wpa2OnlyPSK' ||
           mode === 'wpa3OnlySAE' ||
           mode === 'wpa3MixedSAE') && (
@@ -494,8 +492,7 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      {mode !== 'wpaPSK' &&
-        mode !== 'wep' &&
+      {mode !== 'wep' &&
         mode !== 'wpa2PSK' &&
         mode !== 'wpa2OnlyPSK' &&
         mode !== 'wpa3MixedSAE' &&
