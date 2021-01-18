@@ -80,17 +80,6 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: /settings/i }));
   });
 
-  it('loadingProfiles should show loading spinner', async () => {
-    const { getByTestId, getByLabelText } = render(<General {...defaultProps} loadingProfiles />);
-
-    fireEvent.change(getByLabelText('Access Point Profile'), {
-      target: { value: 'xxx' },
-    });
-    await waitFor(() => {
-      expect(getByTestId('loadingProfiles')).toBeInTheDocument();
-    });
-  });
-
   it('handleSubmit should be called if advanced settings are filled', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<General {...defaultProps} handleOnEquipmentSave={submitSpy} />);

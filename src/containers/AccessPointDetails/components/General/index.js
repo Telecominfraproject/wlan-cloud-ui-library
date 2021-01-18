@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, notification, Alert, Spin } from 'antd';
+import { Card, Form, Input, Table, Collapse, Select, notification, Alert, Empty } from 'antd';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -79,10 +79,6 @@ const General = ({
       return o.id === value;
     });
     setSelectedProfile(i);
-  };
-
-  const filterOption = (input, { children }) => {
-    return children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
 
   const {
@@ -333,9 +329,23 @@ const General = ({
             placeholder="Select Access Point profile..."
             onPopupScroll={onFetchMoreProfiles}
             showSearch
-            filterOption={filterOption}
+            filterOption={false}
             onSearch={onSearchProfile}
-            notFoundContent={loadingProfiles && <Spin data-testid="loadingProfiles" size="small" />}
+            loading={loadingProfiles}
+            notFoundContent={
+              !loadingProfiles && (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={
+                    <div>
+                      No results found.
+                      <br />
+                      Please try another search.
+                    </div>
+                  }
+                />
+              )
+            }
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
