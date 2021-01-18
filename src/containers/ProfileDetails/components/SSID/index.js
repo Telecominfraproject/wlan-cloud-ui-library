@@ -303,7 +303,7 @@ const SSIDForm = ({
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
-            <Option value="wpaRadius">WPA Enterprise</Option>
+            <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wep">WEP</Option>
             <Option value="open">Open (No Encryption)</Option>
           </Select>
@@ -318,8 +318,7 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpaRadius' ||
-          mode === 'wpa2Radius' ||
+        {(mode === 'wpa2Radius' ||
           mode === 'wpa2OnlyRadius' ||
           mode === 'wpa3OnlyEAP' ||
           mode === 'wpa3MixedEAP') && (
@@ -348,7 +347,8 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpa2PSK' ||
+        {(mode === 'wpaPSK' ||
+          mode === 'wpa2PSK' ||
           mode === 'wpa2OnlyPSK' ||
           mode === 'wpa3OnlySAE' ||
           mode === 'wpa3MixedSAE') && (
@@ -492,7 +492,8 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      {mode !== 'wep' &&
+      {mode !== 'wpaPSK' &&
+        mode !== 'wep' &&
         mode !== 'wpa2PSK' &&
         mode !== 'wpa2OnlyPSK' &&
         mode !== 'wpa3MixedSAE' &&
