@@ -68,15 +68,17 @@ const Navbar = ({
         <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
-        <Link to={routes.alarms}>
-          <Badge count={totalAlarms} showZero>
-            {location.pathname === routes.alarms ? (
-              <BellFilled className={styles.BellIconActive} />
-            ) : (
-              <BellOutlined className={styles.BellIcon} />
-            )}
-          </Badge>
-        </Link>
+        {totalAlarms !== null && (
+          <Link to={routes.alarms}>
+            <Badge count={totalAlarms} showZero>
+              {location.pathname === routes.alarms ? (
+                <BellFilled className={styles.BellIconActive} />
+              ) : (
+                <BellOutlined className={styles.BellIcon} />
+              )}
+            </Badge>
+          </Link>
+        )}
         {renderRightMenuIcon()}
       </div>
     </Header>
@@ -101,7 +103,7 @@ Navbar.defaultProps = {
   mobileMenuItems: null,
   onMenuItemClick: () => {},
   onLogout: () => {},
-  totalAlarms: 0,
+  totalAlarms: null,
   rightMenuItem: null,
 };
 
