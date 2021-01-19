@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
+import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -20,6 +20,10 @@ const SSIDForm = ({
   onFetchMoreCaptiveProfiles,
   radiusProfiles,
   onFetchMoreRadiusProfiles,
+  onSearchCaptiveProfile,
+  loadingCaptiveProfiles,
+  onSearchRadiusProfile,
+  loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || 'open');
@@ -265,6 +269,11 @@ const SSIDForm = ({
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
                   onPopupScroll={onFetchMoreCaptiveProfiles}
+                  showSearch
+                  filterOption={false}
+                  onSearch={onSearchCaptiveProfile}
+                  loading={loadingCaptiveProfiles}
+                  notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
                   {captiveProfiles.map(profile => (
                     <Option key={profile.id} value={profile.id}>
@@ -318,7 +327,6 @@ const SSIDForm = ({
             </span>
           </Item>
         )}
-
         {(mode === 'wpaRadius' ||
           mode === 'wpa2Radius' ||
           mode === 'wpa2OnlyRadius' ||
@@ -338,6 +346,11 @@ const SSIDForm = ({
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
               onPopupScroll={onFetchMoreRadiusProfiles}
+              showSearch
+              filterOption={false}
+              onSearch={onSearchRadiusProfile}
+              loading={loadingRadiusProfiles}
+              notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue
             >
               {radiusProfiles.map(profile => (
@@ -565,6 +578,10 @@ SSIDForm.propTypes = {
   radiusProfiles: PropTypes.instanceOf(Array),
   onFetchMoreCaptiveProfiles: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
+  onSearchCaptiveProfile: PropTypes.func,
+  loadingCaptiveProfiles: PropTypes.bool,
+  onSearchRadiusProfile: PropTypes.func,
+  loadingRadiusProfiles: PropTypes.bool,
 };
 
 SSIDForm.defaultProps = {
@@ -575,6 +592,10 @@ SSIDForm.defaultProps = {
   radiusProfiles: [],
   onFetchMoreCaptiveProfiles: () => {},
   onFetchMoreRadiusProfiles: () => {},
+  onSearchCaptiveProfile: () => {},
+  loadingCaptiveProfiles: true,
+  onSearchRadiusProfile: () => {},
+  loadingRadiusProfiles: true,
 };
 
 export default SSIDForm;

@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, List } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Upload,
+  Alert,
+  Collapse,
+  message,
+  List,
+  Empty,
+} from 'antd';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
@@ -43,6 +55,8 @@ const CaptivePortalForm = ({
   fileUpload,
   radiusProfiles,
   onFetchMoreRadiusProfiles,
+  onSearchRadiusProfile,
+  loadingRadiusProfiles,
 }) => {
   const [showTips, setShowTips] = useState(false);
 
@@ -427,6 +441,11 @@ const CaptivePortalForm = ({
               className={globalStyles.field}
               placeholder="RADIUS Services"
               onPopupScroll={onFetchMoreRadiusProfiles}
+              showSearch
+              filterOption={false}
+              onSearch={onSearchRadiusProfile}
+              loading={loadingRadiusProfiles}
+              notFoundContent={!loadingRadiusProfiles && <Empty />}
             >
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
@@ -673,6 +692,8 @@ CaptivePortalForm.propTypes = {
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
   onFetchMoreRadiusProfiles: PropTypes.func,
+  onSearchRadiusProfile: PropTypes.func,
+  loadingRadiusProfiles: PropTypes.bool,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -681,6 +702,8 @@ CaptivePortalForm.defaultProps = {
   radiusProfiles: [],
   fileUpload: () => {},
   onFetchMoreRadiusProfiles: () => {},
+  onSearchRadiusProfile: () => {},
+  loadingRadiusProfiles: true,
 };
 
 export default CaptivePortalForm;

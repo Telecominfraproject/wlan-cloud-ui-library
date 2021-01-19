@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Form, Input, Select, Table, Upload, message } from 'antd';
+import { Card, Button, Form, Input, Select, Table, Upload, message, Empty } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -33,6 +33,14 @@ const PasspointProfileForm = ({
   onFetchMoreVenueProfiles,
   onFetchMoreOperatorProfiles,
   onFetchMoreIdProviderProfiles,
+  onSearchSSIDProfile,
+  loadingSSIDProfiles,
+  onSearchVenueProfile,
+  loadingVenueProfiles,
+  onSearchOperatorProfile,
+  loadingOperatorProfiles,
+  onSearchIdProviderProfiles,
+  loadingIdProviderProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
@@ -272,6 +280,10 @@ const PasspointProfileForm = ({
             data-testid="venueProfile"
             showSearch
             placeholder="Select a Venue Profile"
+            filterOption={false}
+            onSearch={onSearchVenueProfile}
+            loading={loadingVenueProfiles}
+            notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
           >
             {venueProfiles.map(i => (
@@ -287,6 +299,10 @@ const PasspointProfileForm = ({
             data-testid="operatorProfile"
             showSearch
             placeholder="Select an Operator Profile"
+            filterOption={false}
+            onSearch={onSearchOperatorProfile}
+            loading={loadingOperatorProfiles}
+            notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
           >
             {operatorProfiles.map(i => (
@@ -305,6 +321,10 @@ const PasspointProfileForm = ({
             allowClear
             placeholder="Select ID Providers (check to select)"
             className={styles.MultipleSelection}
+            filterOption={false}
+            onSearch={onSearchIdProviderProfiles}
+            loading={loadingIdProviderProfiles}
+            notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
           >
             {idProviderProfiles.map(i => (
@@ -320,6 +340,10 @@ const PasspointProfileForm = ({
             data-testid="ssidProfileSelect"
             showSearch
             placeholder="Select an SSID Profile"
+            filterOption={false}
+            onSearch={onSearchSSIDProfile}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
           >
             {ssidProfiles.map(i => (
@@ -457,10 +481,10 @@ const PasspointProfileForm = ({
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            filterOption={false}
+            onSearch={onSearchSSIDProfile}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
             value="Select a SSID Profile"
           >
@@ -555,6 +579,14 @@ PasspointProfileForm.propTypes = {
   onFetchMoreVenueProfiles: PropTypes.func,
   onFetchMoreOperatorProfiles: PropTypes.func,
   onFetchMoreIdProviderProfiles: PropTypes.func,
+  onSearchSSIDProfile: PropTypes.func,
+  loadingSSIDProfiles: PropTypes.bool,
+  onSearchVenueProfile: PropTypes.func,
+  loadingVenueProfiles: PropTypes.bool,
+  onSearchOperatorProfile: PropTypes.func,
+  loadingOperatorProfiles: PropTypes.bool,
+  onSearchIdProviderProfiles: PropTypes.func,
+  loadingIdProviderProfiles: PropTypes.bool,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -570,6 +602,14 @@ PasspointProfileForm.defaultProps = {
   onFetchMoreVenueProfiles: () => {},
   onFetchMoreOperatorProfiles: () => {},
   onFetchMoreIdProviderProfiles: () => {},
+  onSearchSSIDProfile: () => {},
+  loadingSSIDProfiles: true,
+  onSearchVenueProfile: () => {},
+  loadingVenueProfiles: true,
+  onSearchOperatorProfile: () => {},
+  loadingOperatorProfiles: true,
+  onSearchIdProviderProfiles: () => {},
+  loadingIdProviderProfiles: true,
 };
 
 export default PasspointProfileForm;

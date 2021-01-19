@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
+import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -19,6 +19,10 @@ const AccessPointForm = ({
   rfProfiles,
   onFetchMoreProfiles,
   onFetchMoreRfProfiles,
+  onSearchSSIDProfile,
+  loadingSSIDProfiles,
+  onSearchRFProfile,
+  loadingRFProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
@@ -442,6 +446,10 @@ const AccessPointForm = ({
             onPopupScroll={onFetchMoreRfProfiles}
             showSearch
             placeholder="Select a RF Profile"
+            filterOption={false}
+            onSearch={onSearchRFProfile}
+            loading={loadingRFProfiles}
+            notFoundContent={!loadingRFProfiles && <Empty />}
           >
             {rfProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -458,10 +466,10 @@ const AccessPointForm = ({
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            filterOption={false}
+            onSearch={onSearchSSIDProfile}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
             value="Select a SSID Profile"
           >
@@ -518,6 +526,10 @@ AccessPointForm.propTypes = {
   rfProfiles: PropTypes.instanceOf(Array),
   onFetchMoreProfiles: PropTypes.func,
   onFetchMoreRfProfiles: PropTypes.func,
+  onSearchSSIDProfile: PropTypes.func,
+  loadingSSIDProfiles: PropTypes.bool,
+  onSearchRFProfile: PropTypes.func,
+  loadingRFProfiles: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -528,6 +540,10 @@ AccessPointForm.defaultProps = {
   rfProfiles: [],
   onFetchMoreProfiles: () => {},
   onFetchMoreRfProfiles: () => {},
+  onSearchSSIDProfile: () => {},
+  loadingSSIDProfiles: true,
+  onSearchRFProfile: () => {},
+  loadingRFProfiles: true,
 };
 
 export default AccessPointForm;
