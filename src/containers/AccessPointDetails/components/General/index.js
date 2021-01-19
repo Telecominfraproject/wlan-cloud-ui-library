@@ -332,20 +332,7 @@ const General = ({
             filterOption={false}
             onSearch={onSearchProfile}
             loading={loadingProfiles}
-            notFoundContent={
-              !loadingProfiles && (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={
-                    <div>
-                      No results found.
-                      <br />
-                      Please try another search.
-                    </div>
-                  }
-                />
-              )
-            }
+            notFoundContent={!loadingProfiles && <Empty />}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
