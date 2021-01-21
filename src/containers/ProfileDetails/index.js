@@ -52,28 +52,16 @@ const ProfileDetails = ({
   operatorProfiles,
   idProviderProfiles,
   fileUpload,
-  onFetchMoreProfiles,
-  onFetchMoreRfProfiles,
-  onFetchMoreRadiusProfiles,
-  onFetchMoreCaptiveProfiles,
-  onFetchMoreVenueProfiles,
-  onFetchMoreOperatorProfiles,
-  onFetchMoreIdProviderProfiles,
   extraButtons,
-  onSearchSSIDProfile,
+  onSearchProfile,
+  onFetchMoreProfiles,
   loadingSSIDProfiles,
-  onSearchRadiusProfile,
   loadingRadiusProfiles,
-  onSearchCaptiveProfile,
   loadingCaptiveProfiles,
-  onSearchRFProfile,
-  loadingRFProfiles,
-  onSearchVenueProfile,
   loadingVenueProfiles,
-  onSearchOperatorProfile,
   loadingOperatorProfiles,
-  onSearchIdProviderProfiles,
   loadingIdProviderProfiles,
+  loadingRFProfiles,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -274,13 +262,11 @@ const ProfileDetails = ({
             details={details}
             childProfiles={childProfiles}
             radiusProfiles={radiusProfiles}
-            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
-            onSearchRadiusProfile={onSearchRadiusProfile}
-            loadingRadiusProfiles={loadingRadiusProfiles}
             captiveProfiles={captiveProfiles}
-            onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}
-            onSearchCaptiveProfile={onSearchCaptiveProfile}
+            onSearchProfile={onSearchProfile}
+            onFetchMoreProfiles={onFetchMoreProfiles}
             loadingCaptiveProfiles={loadingCaptiveProfiles}
+            loadingRadiusProfiles={loadingRadiusProfiles}
           />
         )}
         {profileType === 'equipment_ap' && (
@@ -289,13 +275,11 @@ const ProfileDetails = ({
             details={details}
             childProfiles={childProfiles}
             rfProfiles={rfProfiles}
-            onFetchMoreRfProfiles={onFetchMoreRfProfiles}
-            onSearchRFProfile={onSearchRFProfile}
-            loadingRFProfiles={loadingRFProfiles}
             ssidProfiles={ssidProfiles}
+            onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
-            onSearchSSIDProfile={onSearchSSIDProfile}
             loadingSSIDProfiles={loadingSSIDProfiles}
+            loadingRFProfiles={loadingRFProfiles}
           />
         )}
         {profileType === 'captive_portal' && (
@@ -304,8 +288,8 @@ const ProfileDetails = ({
             details={details}
             fileUpload={fileUpload}
             radiusProfiles={radiusProfiles}
-            onFetchMoreRadiusProfiles={onFetchMoreRadiusProfiles}
-            onSearchRadiusProfile={onSearchRadiusProfile}
+            onSearchProfile={onSearchProfile}
+            onFetchMoreProfiles={onFetchMoreProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
           />
         )}
@@ -318,22 +302,16 @@ const ProfileDetails = ({
             details={details}
             childProfiles={childProfiles}
             ssidProfiles={ssidProfiles}
-            onFetchMoreProfiles={onFetchMoreProfiles}
-            onSearchSSIDProfile={onSearchSSIDProfile}
-            loadingSSIDProfiles={loadingSSIDProfiles}
             venueProfiles={venueProfiles}
-            onFetchMoreVenueProfiles={onFetchMoreVenueProfiles}
-            onSearchVenueProfile={onSearchVenueProfile}
-            loadingVenueProfiles={loadingVenueProfiles}
             operatorProfiles={operatorProfiles}
-            onFetchMoreOperatorProfiles={onFetchMoreOperatorProfiles}
-            onSearchOperatorProfile={onSearchOperatorProfile}
-            loadingOperatorProfiles={loadingOperatorProfiles}
             idProviderProfiles={idProviderProfiles}
-            onFetchMoreIdProviderProfiles={onFetchMoreIdProviderProfiles}
-            onSearchIdProviderProfiles={onSearchIdProviderProfiles}
-            loadingIdProviderProfiles={loadingIdProviderProfiles}
             fileUpload={fileUpload}
+            onSearchProfile={onSearchProfile}
+            onFetchMoreProfiles={onFetchMoreProfiles}
+            loadingSSIDProfiles={loadingSSIDProfiles}
+            loadingVenueProfiles={loadingVenueProfiles}
+            loadingOperatorProfiles={loadingOperatorProfiles}
+            loadingIdProviderProfiles={loadingIdProviderProfiles}
           />
         )}
         {profileType === 'passpoint_osu_id_provider' && (
@@ -361,28 +339,16 @@ ProfileDetails.propTypes = {
   idProviderProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
-  onFetchMoreProfiles: PropTypes.func,
-  onFetchMoreRfProfiles: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
-  onFetchMoreCaptiveProfiles: PropTypes.func,
-  onFetchMoreVenueProfiles: PropTypes.func,
-  onFetchMoreOperatorProfiles: PropTypes.func,
-  onFetchMoreIdProviderProfiles: PropTypes.func,
   extraButtons: PropTypes.node,
-  onSearchSSIDProfile: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
-  onSearchRadiusProfile: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
-  onSearchCaptiveProfile: PropTypes.func,
   loadingCaptiveProfiles: PropTypes.bool,
-  onSearchRFProfile: PropTypes.func,
-  loadingRFProfiles: PropTypes.bool,
-  onSearchVenueProfile: PropTypes.func,
   loadingVenueProfiles: PropTypes.bool,
-  onSearchOperatorProfile: PropTypes.func,
   loadingOperatorProfiles: PropTypes.bool,
-  onSearchIdProviderProfiles: PropTypes.func,
   loadingIdProviderProfiles: PropTypes.bool,
+  loadingRFProfiles: PropTypes.bool,
 };
 
 ProfileDetails.defaultProps = {
@@ -398,28 +364,16 @@ ProfileDetails.defaultProps = {
   idProviderProfiles: [],
   childProfileIds: [],
   childProfiles: [],
-  onFetchMoreProfiles: () => {},
-  onFetchMoreRfProfiles: () => {},
-  onFetchMoreRadiusProfiles: () => {},
-  onFetchMoreCaptiveProfiles: () => {},
-  onFetchMoreVenueProfiles: () => {},
-  onFetchMoreOperatorProfiles: () => {},
-  onFetchMoreIdProviderProfiles: () => {},
   extraButtons: null,
-  onSearchSSIDProfile: () => {},
+  onSearchProfile: () => {},
+  onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: true,
-  onSearchRadiusProfile: () => {},
   loadingRadiusProfiles: true,
-  onSearchCaptiveProfile: () => {},
   loadingCaptiveProfiles: true,
-  onSearchRFProfile: () => {},
-  loadingRFProfiles: true,
-  onSearchVenueProfile: () => {},
   loadingVenueProfiles: true,
-  onSearchOperatorProfile: () => {},
   loadingOperatorProfiles: true,
-  onSearchIdProviderProfiles: () => {},
   loadingIdProviderProfiles: true,
+  loadingRFProfiles: true,
 };
 
 export default ProfileDetails;

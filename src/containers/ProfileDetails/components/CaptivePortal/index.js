@@ -54,8 +54,8 @@ const CaptivePortalForm = ({
   form,
   fileUpload,
   radiusProfiles,
-  onFetchMoreRadiusProfiles,
-  onSearchRadiusProfile,
+  onSearchProfile,
+  onFetchMoreProfiles,
   loadingRadiusProfiles,
 }) => {
   const [showTips, setShowTips] = useState(false);
@@ -440,10 +440,10 @@ const CaptivePortalForm = ({
             <Select
               className={globalStyles.field}
               placeholder="RADIUS Services"
-              onPopupScroll={onFetchMoreRadiusProfiles}
+              onPopupScroll={e => onFetchMoreProfiles(e, 'radius')}
               showSearch
               filterOption={false}
-              onSearch={onSearchRadiusProfile}
+              onSearch={name => onSearchProfile(name, 'radius')}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
             >
@@ -691,8 +691,8 @@ CaptivePortalForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
-  onSearchRadiusProfile: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
 };
 
@@ -701,8 +701,8 @@ CaptivePortalForm.defaultProps = {
   details: {},
   radiusProfiles: [],
   fileUpload: () => {},
-  onFetchMoreRadiusProfiles: () => {},
-  onSearchRadiusProfile: () => {},
+  onSearchProfile: () => {},
+  onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: true,
 };
 

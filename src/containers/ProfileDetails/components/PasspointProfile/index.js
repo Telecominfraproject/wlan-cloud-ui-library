@@ -29,17 +29,11 @@ const PasspointProfileForm = ({
   childProfiles,
   idProviderProfiles,
   fileUpload,
+  onSearchProfile,
   onFetchMoreProfiles,
-  onFetchMoreVenueProfiles,
-  onFetchMoreOperatorProfiles,
-  onFetchMoreIdProviderProfiles,
-  onSearchSSIDProfile,
   loadingSSIDProfiles,
-  onSearchVenueProfile,
   loadingVenueProfiles,
-  onSearchOperatorProfile,
   loadingOperatorProfiles,
-  onSearchIdProviderProfiles,
   loadingIdProviderProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
@@ -276,12 +270,12 @@ const PasspointProfileForm = ({
       <Card title="General">
         <Item label="Venue" name="passpointVenueProfileId">
           <Select
-            onPopupScroll={onFetchMoreVenueProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_venue')}
             data-testid="venueProfile"
             showSearch
             placeholder="Select a Venue Profile"
             filterOption={false}
-            onSearch={onSearchVenueProfile}
+            onSearch={name => onSearchProfile(name, 'passpoint_venue')}
             loading={loadingVenueProfiles}
             notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
@@ -295,12 +289,12 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="Operator" name="passpointOperatorProfileId">
           <Select
-            onPopupScroll={onFetchMoreOperatorProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_operator')}
             data-testid="operatorProfile"
             showSearch
             placeholder="Select an Operator Profile"
             filterOption={false}
-            onSearch={onSearchOperatorProfile}
+            onSearch={name => onSearchProfile(name, 'passpoint_operator')}
             loading={loadingOperatorProfiles}
             notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
@@ -314,7 +308,7 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="ID Provider" name="passpointOsuProviderProfileIds">
           <Select
-            onPopupScroll={onFetchMoreIdProviderProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_osu_id_provider')}
             data-testid="idProviderProfiles"
             showSearch
             mode="multiple"
@@ -322,7 +316,7 @@ const PasspointProfileForm = ({
             placeholder="Select ID Providers (check to select)"
             className={styles.MultipleSelection}
             filterOption={false}
-            onSearch={onSearchIdProviderProfiles}
+            onSearch={name => onSearchProfile(name, 'passpoint_osu_id_provider')}
             loading={loadingIdProviderProfiles}
             notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
@@ -336,12 +330,12 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="SSID" name="osuSsidProfileId">
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
             data-testid="ssidProfileSelect"
             showSearch
             placeholder="Select an SSID Profile"
             filterOption={false}
-            onSearch={onSearchSSIDProfile}
+            onSearch={name => onSearchProfile(name, 'ssid')}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
@@ -477,12 +471,12 @@ const PasspointProfileForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={onSearchSSIDProfile}
+            onSearch={name => onSearchProfile(name, 'ssid')}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
@@ -575,17 +569,11 @@ PasspointProfileForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
+  onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
-  onFetchMoreVenueProfiles: PropTypes.func,
-  onFetchMoreOperatorProfiles: PropTypes.func,
-  onFetchMoreIdProviderProfiles: PropTypes.func,
-  onSearchSSIDProfile: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
-  onSearchVenueProfile: PropTypes.func,
   loadingVenueProfiles: PropTypes.bool,
-  onSearchOperatorProfile: PropTypes.func,
   loadingOperatorProfiles: PropTypes.bool,
-  onSearchIdProviderProfiles: PropTypes.func,
   loadingIdProviderProfiles: PropTypes.bool,
 };
 
@@ -598,17 +586,11 @@ PasspointProfileForm.defaultProps = {
   childProfiles: [],
   idProviderProfiles: [],
   fileUpload: () => {},
+  onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  onFetchMoreVenueProfiles: () => {},
-  onFetchMoreOperatorProfiles: () => {},
-  onFetchMoreIdProviderProfiles: () => {},
-  onSearchSSIDProfile: () => {},
   loadingSSIDProfiles: true,
-  onSearchVenueProfile: () => {},
   loadingVenueProfiles: true,
-  onSearchOperatorProfile: () => {},
   loadingOperatorProfiles: true,
-  onSearchIdProviderProfiles: () => {},
   loadingIdProviderProfiles: true,
 };
 

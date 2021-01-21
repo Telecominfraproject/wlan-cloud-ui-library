@@ -17,11 +17,9 @@ const AccessPointForm = ({
   childProfiles,
   ssidProfiles,
   rfProfiles,
+  onSearchProfile,
   onFetchMoreProfiles,
-  onFetchMoreRfProfiles,
-  onSearchSSIDProfile,
   loadingSSIDProfiles,
-  onSearchRFProfile,
   loadingRFProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
@@ -443,11 +441,11 @@ const AccessPointForm = ({
       <Card title="RF Enabled on This Profile">
         <Item name="rfProfileId">
           <Select
-            onPopupScroll={onFetchMoreRfProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'rf')}
             showSearch
             placeholder="Select a RF Profile"
             filterOption={false}
-            onSearch={onSearchRFProfile}
+            onSearch={name => onSearchProfile(name, 'rf')}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
           >
@@ -462,12 +460,12 @@ const AccessPointForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={onSearchSSIDProfile}
+            onSearch={name => onSearchProfile(name, 'ssid')}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
@@ -524,11 +522,9 @@ AccessPointForm.propTypes = {
   ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
+  onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
-  onFetchMoreRfProfiles: PropTypes.func,
-  onSearchSSIDProfile: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
-  onSearchRFProfile: PropTypes.func,
   loadingRFProfiles: PropTypes.bool,
 };
 
@@ -538,11 +534,9 @@ AccessPointForm.defaultProps = {
   childProfiles: [],
   ssidProfiles: [],
   rfProfiles: [],
+  onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  onFetchMoreRfProfiles: () => {},
-  onSearchSSIDProfile: () => {},
   loadingSSIDProfiles: true,
-  onSearchRFProfile: () => {},
   loadingRFProfiles: true,
 };
 

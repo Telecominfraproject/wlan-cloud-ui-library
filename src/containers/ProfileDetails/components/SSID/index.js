@@ -17,12 +17,10 @@ const SSIDForm = ({
   details,
   captiveProfiles,
   childProfiles,
-  onFetchMoreCaptiveProfiles,
   radiusProfiles,
-  onFetchMoreRadiusProfiles,
-  onSearchCaptiveProfile,
+  onSearchProfile,
+  onFetchMoreProfiles,
   loadingCaptiveProfiles,
-  onSearchRadiusProfile,
   loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
@@ -268,10 +266,10 @@ const SSIDForm = ({
                 <Select
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
-                  onPopupScroll={onFetchMoreCaptiveProfiles}
+                  onPopupScroll={e => onFetchMoreProfiles(e, 'captive_portal')}
                   showSearch
                   filterOption={false}
-                  onSearch={onSearchCaptiveProfile}
+                  onSearch={name => onSearchProfile(name, 'captive_portal')}
                   loading={loadingCaptiveProfiles}
                   notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
@@ -345,10 +343,10 @@ const SSIDForm = ({
             <Select
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
-              onPopupScroll={onFetchMoreRadiusProfiles}
+              onPopupScroll={e => onFetchMoreProfiles(e, 'radius')}
               showSearch
               filterOption={false}
-              onSearch={onSearchRadiusProfile}
+              onSearch={name => onSearchProfile(name, 'radius')}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue
@@ -576,11 +574,9 @@ SSIDForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
-  onFetchMoreCaptiveProfiles: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
-  onSearchCaptiveProfile: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
   loadingCaptiveProfiles: PropTypes.bool,
-  onSearchRadiusProfile: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
 };
 
@@ -590,11 +586,9 @@ SSIDForm.defaultProps = {
   childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
-  onFetchMoreCaptiveProfiles: () => {},
-  onFetchMoreRadiusProfiles: () => {},
-  onSearchCaptiveProfile: () => {},
+  onSearchProfile: () => {},
+  onFetchMoreProfiles: () => {},
   loadingCaptiveProfiles: true,
-  onSearchRadiusProfile: () => {},
   loadingRadiusProfiles: true,
 };
 
