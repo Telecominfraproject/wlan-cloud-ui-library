@@ -99,6 +99,20 @@ const ProfileDetails = ({
         });
 
         if (profileType === 'ssid') {
+          if (
+            (values.secureMode === 'wpaRadius' ||
+              values.secureMode === 'wpa2Radius' ||
+              values.secureMode === 'wpa2OnlyRadius' ||
+              values.secureMode === 'wpa3OnlyEAP' ||
+              values.secureMode === 'wpa3MixedEAP') &&
+            (!values?.radiusServiceName?.value || !values?.radiusServiceName?.label)
+          ) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 RADIUS Service is required.',
+            });
+            return;
+          }
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === 'equipment_ap') {
@@ -244,6 +258,7 @@ const ProfileDetails = ({
           <SSIDForm
             form={form}
             details={details}
+            childProfiles={childProfiles}
             captiveProfiles={captiveProfiles}
             radiusProfiles={radiusProfiles}
             onFetchMoreCaptiveProfiles={onFetchMoreCaptiveProfiles}

@@ -58,6 +58,7 @@ const AccessPointDetails = ({
   errorFirmware,
   onFetchMoreProfiles,
   onDeleteEquipment,
+  onSearchProfile,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -200,6 +201,7 @@ const AccessPointDetails = ({
           loadingProfiles={loadingProfiles}
           errorProfiles={errorProfiles}
           onFetchMoreProfiles={onFetchMoreProfiles}
+          onSearchProfile={onSearchProfile}
         />
       )}
       {tab === 'status' && <Status data={data} />}
@@ -245,6 +247,7 @@ AccessPointDetails.propTypes = {
   errorFirmware: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   onDeleteEquipment: PropTypes.func.isRequired,
+  onSearchProfile: PropTypes.func,
 };
 
 AccessPointDetails.defaultProps = {
@@ -257,6 +260,7 @@ AccessPointDetails.defaultProps = {
   loadingFirmware: true,
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
+  onSearchProfile: () => {},
 };
 
 export default AccessPointDetails;

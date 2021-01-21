@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select, Tooltip } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Card, Form, Input, Select } from 'antd';
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';
@@ -108,7 +107,7 @@ const RFForm = ({ form, details }) => {
   const renderItem = (label, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(details.rfConfigMap).map(i => renderInput(dataIndex, i, label, options))}
+        {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
       </div>
     </Item>
   );
@@ -116,6 +115,7 @@ const RFForm = ({ form, details }) => {
   const renderInputItem = (dataIndex, key, label, options = {}) => (
     <Item
       name={['rfConfigMap', key, ...dataIndex]}
+      key={key}
       rules={[
         { required: true, message: options.error },
         ({ getFieldValue }) => ({
@@ -145,6 +145,7 @@ const RFForm = ({ form, details }) => {
 
   const renderOptionItem = (dataIndex, key, label, options = {}) => (
     <Item
+      key={key}
       name={['rfConfigMap', key, ...dataIndex]}
       rules={[
         {
@@ -179,34 +180,43 @@ const RFForm = ({ form, details }) => {
             return (
               <Select className={styles.Field}>
                 <Option value="is20MHz">20MHz</Option>
-                {key === 'is2dot4GHz' ? null : <Option value="is40MHz">40MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is160MHz">160MHz</Option>}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="is40MHz">40MHz</Option>
+                    <Option value="is80MHz">80MHz</Option>
+                    <Option value="is160MHz">160MHz</Option>
+                  </>
+                )}
               </Select>
             );
           },
         })}
         {renderItem('Radio Mode', ['radioMode'], renderOptionItem, {
-          dropdown: (
-            <Select className={styles.Field}>
-              <Option value="modeN">N</Option>
-              <Option value="modeAC">AC</Option>
-              <Option value="modeGN">GN</Option>
-              <Option value="modeX">X</Option>
-              <Option value="modeA">A</Option>
-              <Option value="modeB">B</Option>
-              <Option value="modeG">G</Option>
-              <Option value="modeAB">AB</Option>
-            </Select>
-          ),
+          dropdown: key => {
+            return (
+              <Select className={styles.Field}>
+                <Option value="modeN">N</Option>
+                {key !== 'is5GHz' && (
+                  <>
+                    <Option value="modeB">B</Option>
+                    <Option value="modeG">G</Option>
+                  </>
+                )}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="modeAC">AC</Option>
+                    <Option value="modeGN">GN</Option>
+                    <Option value="modeX">X</Option>
+                    <Option value="modeA">A</Option>
+                    <Option value="modeAB">AB</Option>
+                  </>
+                )}
+              </Select>
+            );
+          },
         })}
         {renderItem(
-          <span>
-            <Tooltip title="TU (Time Unit) is 1.024ms ">
-              <InfoCircleOutlined />
-            </Tooltip>
-            &nbsp; Beacon Interval (kusecs)
-          </span>,
+          <span>Beacon Interval (milliseconds)</span>,
           ['beaconInterval'],
           renderOptionItem,
           {
@@ -230,7 +240,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="none">none</Option>
+              <Option value="none">Auto</Option>
               <Option value="oneByOne">1x1</Option>
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>
