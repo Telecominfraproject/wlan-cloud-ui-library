@@ -58,6 +58,7 @@ const AccessPointDetails = ({
   errorFirmware,
   onFetchMoreProfiles,
   onDeleteEquipment,
+  extraButtons,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -128,31 +129,36 @@ const AccessPointDetails = ({
         mask={false}
       />
       <Header>
-        <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
-          Back
-        </Button>
-        <Button
-          name="delete"
-          danger
-          type="primary"
-          className={styles.deleteButton}
-          onClick={() => setDeleteEquipmentModal(true)}
-        >
-          Delete
-        </Button>
-        <Modal
-          onCancel={() => setDeleteEquipmentModal(false)}
-          onSuccess={handleDeleteEquipment}
-          visible={deleteEquipmentModal}
-          title="Are you sure?"
-          buttonText="Delete"
-          buttonType="danger"
-          content={
-            <p>
-              Are you sure you want to delete this access point: <strong>{data.name}</strong>
-            </p>
-          }
-        />
+        <div className={styles.HeaderDiv}>
+          <Button icon={<LeftOutlined />} onClick={() => handlePageChange()}>
+            Back
+          </Button>
+        </div>
+        <div className={styles.HeaderDiv}>
+          <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
+          <Button
+            name="delete"
+            danger
+            type="primary"
+            className={styles.deleteButton}
+            onClick={() => setDeleteEquipmentModal(true)}
+          >
+            Delete
+          </Button>
+          <Modal
+            onCancel={() => setDeleteEquipmentModal(false)}
+            onSuccess={handleDeleteEquipment}
+            visible={deleteEquipmentModal}
+            title="Are you sure?"
+            buttonText="Delete"
+            buttonType="danger"
+            content={
+              <p>
+                Are you sure you want to delete this access point: <strong>{data.name}</strong>
+              </p>
+            }
+          />
+        </div>
       </Header>
       <Card
         title={
@@ -245,6 +251,7 @@ AccessPointDetails.propTypes = {
   errorFirmware: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   onDeleteEquipment: PropTypes.func.isRequired,
+  extraButtons: PropTypes.node,
 };
 
 AccessPointDetails.defaultProps = {
@@ -257,6 +264,7 @@ AccessPointDetails.defaultProps = {
   loadingFirmware: true,
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
+  extraButtons: null,
 };
 
 export default AccessPointDetails;
