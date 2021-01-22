@@ -176,6 +176,7 @@ const General = ({
           profileId: selectedProfile?.id,
           locationId,
           name: values.access,
+          baseMacAddress: data?.baseMacAddress,
           latitude,
           longitude,
           serial,
