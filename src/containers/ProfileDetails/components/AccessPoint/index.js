@@ -4,6 +4,7 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
+import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
@@ -39,7 +40,7 @@ const AccessPointForm = ({
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(
-    childProfiles.filter(i => i.profileType === 'ssid') || []
+    childProfiles.filter(i => i.profileType === PROFILES.ssid) || []
   );
 
   const handleOnChangeSsid = selectedItem => {
@@ -441,11 +442,11 @@ const AccessPointForm = ({
       <Card title="RF Enabled on This Profile">
         <Item name="rfProfileId">
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'rf')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
             showSearch
             placeholder="Select a RF Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'rf')}
+            onSearch={name => onSearchProfile(name, PROFILES.rf)}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
           >
@@ -460,12 +461,12 @@ const AccessPointForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'ssid')}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
@@ -536,8 +537,8 @@ AccessPointForm.defaultProps = {
   rfProfiles: [],
   onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  loadingSSIDProfiles: true,
-  loadingRFProfiles: true,
+  loadingSSIDProfiles: false,
+  loadingRFProfiles: false,
 };
 
 export default AccessPointForm;

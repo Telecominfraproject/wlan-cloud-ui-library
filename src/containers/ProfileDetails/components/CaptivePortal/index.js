@@ -14,6 +14,7 @@ import {
   Empty,
 } from 'antd';
 import { QuestionCircleFilled } from '@ant-design/icons';
+import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import globalStyles from 'styles/index.scss';
@@ -440,10 +441,10 @@ const CaptivePortalForm = ({
             <Select
               className={globalStyles.field}
               placeholder="RADIUS Services"
-              onPopupScroll={e => onFetchMoreProfiles(e, 'radius')}
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch
               filterOption={false}
-              onSearch={name => onSearchProfile(name, 'radius')}
+              onSearch={name => onSearchProfile(name, PROFILES.radius)}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
             >
@@ -703,7 +704,7 @@ CaptivePortalForm.defaultProps = {
   fileUpload: () => {},
   onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  loadingRadiusProfiles: true,
+  loadingRadiusProfiles: false,
 };
 
 export default CaptivePortalForm;

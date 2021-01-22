@@ -7,7 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING } from '../../constants/index';
+import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -266,10 +266,10 @@ const SSIDForm = ({
                 <Select
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
-                  onPopupScroll={e => onFetchMoreProfiles(e, 'captive_portal')}
+                  onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
                   showSearch
                   filterOption={false}
-                  onSearch={name => onSearchProfile(name, 'captive_portal')}
+                  onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
                   loading={loadingCaptiveProfiles}
                   notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
@@ -343,10 +343,10 @@ const SSIDForm = ({
             <Select
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
-              onPopupScroll={e => onFetchMoreProfiles(e, 'radius')}
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch
               filterOption={false}
-              onSearch={name => onSearchProfile(name, 'radius')}
+              onSearch={name => onSearchProfile(name, PROFILES.radius)}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue
@@ -588,8 +588,8 @@ SSIDForm.defaultProps = {
   radiusProfiles: [],
   onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  loadingCaptiveProfiles: true,
-  loadingRadiusProfiles: true,
+  loadingCaptiveProfiles: false,
+  loadingRadiusProfiles: false,
 };
 
 export default SSIDForm;

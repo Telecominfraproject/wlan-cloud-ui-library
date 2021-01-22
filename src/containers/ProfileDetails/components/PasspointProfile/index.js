@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Button, Form, Input, Select, Table, Upload, message, Empty } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
+import { PROFILES } from 'containers/ProfileDetails/constants';
 
 import globalStyles from 'styles/index.scss';
 
@@ -270,12 +271,12 @@ const PasspointProfileForm = ({
       <Card title="General">
         <Item label="Venue" name="passpointVenueProfileId">
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_venue')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.venue)}
             data-testid="venueProfile"
             showSearch
             placeholder="Select a Venue Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'passpoint_venue')}
+            onSearch={name => onSearchProfile(name, PROFILES.venue)}
             loading={loadingVenueProfiles}
             notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
@@ -289,12 +290,12 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="Operator" name="passpointOperatorProfileId">
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_operator')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.operator)}
             data-testid="operatorProfile"
             showSearch
             placeholder="Select an Operator Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'passpoint_operator')}
+            onSearch={name => onSearchProfile(name, PROFILES.operator)}
             loading={loadingOperatorProfiles}
             notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
@@ -308,7 +309,7 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="ID Provider" name="passpointOsuProviderProfileIds">
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'passpoint_osu_id_provider')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
             data-testid="idProviderProfiles"
             showSearch
             mode="multiple"
@@ -316,7 +317,7 @@ const PasspointProfileForm = ({
             placeholder="Select ID Providers (check to select)"
             className={styles.MultipleSelection}
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'passpoint_osu_id_provider')}
+            onSearch={name => onSearchProfile(name, PROFILES.providerID)}
             loading={loadingIdProviderProfiles}
             notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
@@ -330,12 +331,12 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="SSID" name="osuSsidProfileId">
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
             showSearch
             placeholder="Select an SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'ssid')}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
@@ -471,12 +472,12 @@ const PasspointProfileForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, 'ssid')}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
             showSearch
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, 'ssid')}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
@@ -588,10 +589,10 @@ PasspointProfileForm.defaultProps = {
   fileUpload: () => {},
   onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  loadingSSIDProfiles: true,
-  loadingVenueProfiles: true,
-  loadingOperatorProfiles: true,
-  loadingIdProviderProfiles: true,
+  loadingSSIDProfiles: false,
+  loadingVenueProfiles: false,
+  loadingOperatorProfiles: false,
+  loadingIdProviderProfiles: false,
 };
 
 export default PasspointProfileForm;

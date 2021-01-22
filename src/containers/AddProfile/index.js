@@ -26,6 +26,7 @@ import {
 import globalStyles from 'styles/index.scss';
 import styles from './index.module.scss';
 
+import { PROFILES } from '../ProfileDetails/constants';
 import SSIDForm from '../ProfileDetails/components/SSID';
 import AccessPointForm from '../ProfileDetails/components/AccessPoint';
 import BonjourGatewayForm from '../ProfileDetails/components/BonjourGateway';
@@ -103,12 +104,12 @@ const AddProfile = ({
       .then(values => {
         let formattedData = { ...values };
 
-        if (profileType === 'ssid') {
+        if (profileType === PROFILES.ssid) {
           formattedData.model_type = 'SsidConfiguration';
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
 
-        if (profileType === 'equipment_ap') {
+        if (profileType === PROFILES.accessPoint) {
           if (!values.rfProfileId) {
             notification.error({
               message: 'Error',
@@ -121,12 +122,12 @@ const AddProfile = ({
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
 
-        if (profileType === 'bonjour') {
+        if (profileType === PROFILES.bonjour) {
           formattedData.model_type = 'BonjourGatewayProfile';
           formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
         }
 
-        if (profileType === 'captive_portal') {
+        if (profileType === PROFILES.captivePortal) {
           formattedData.model_type = 'CaptivePortalConfiguration';
           formattedData = Object.assign(
             formattedData,
@@ -134,7 +135,7 @@ const AddProfile = ({
           );
         }
 
-        if (profileType === 'radius') {
+        if (profileType === PROFILES.radius) {
           if (values.services.length === 0) {
             notification.error({
               message: 'Error',
@@ -154,12 +155,12 @@ const AddProfile = ({
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
 
-        if (profileType === 'rf') {
+        if (profileType === PROFILES.rf) {
           formattedData.model_type = 'RfConfiguration';
           formattedData = Object.assign(formattedData, formatRfProfileForm(values));
         }
 
-        if (profileType === 'passpoint') {
+        if (profileType === PROFILES.passpoint) {
           if (!values.passpointVenueProfileId) {
             notification.error({
               message: 'Error',
@@ -190,17 +191,17 @@ const AddProfile = ({
           );
         }
 
-        if (profileType === 'passpoint_operator') {
+        if (profileType === PROFILES.operator) {
           formattedData.model_type = 'PasspointOperatorProfile';
           formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
 
-        if (profileType === 'passpoint_osu_id_provider') {
+        if (profileType === PROFILES.providerID) {
           formattedData.model_type = 'PasspointOsuProviderProfile';
           formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
         }
 
-        if (profileType === 'passpoint_venue') {
+        if (profileType === PROFILES.venue) {
           formattedData.model_type = 'PasspointVenueProfile';
         }
 
@@ -272,7 +273,7 @@ const AddProfile = ({
               />
             </Item>
           </Card>
-          {profileType === 'ssid' && (
+          {profileType === PROFILES.ssid && (
             <SSIDForm
               form={form}
               details={initialValues?.details}
@@ -284,7 +285,7 @@ const AddProfile = ({
               loadingRadiusProfiles={loadingRadiusProfiles}
             />
           )}
-          {profileType === 'equipment_ap' && (
+          {profileType === PROFILES.accessPoint && (
             <AccessPointForm
               form={form}
               details={initialValues?.details}
@@ -297,10 +298,10 @@ const AddProfile = ({
               loadingRFProfiles={loadingRFProfiles}
             />
           )}
-          {profileType === 'bonjour' && (
+          {profileType === PROFILES.bonjour && (
             <BonjourGatewayForm form={form} details={initialValues?.details} />
           )}
-          {profileType === 'captive_portal' && (
+          {profileType === PROFILES.captivePortal && (
             <CaptivePortalForm
               form={form}
               details={initialValues?.details}
@@ -311,9 +312,11 @@ const AddProfile = ({
             />
           )}
 
-          {profileType === 'radius' && <RadiusForm form={form} details={initialValues?.details} />}
-          {profileType === 'rf' && <RFForm form={form} details={initialValues?.details} />}
-          {profileType === 'passpoint' && (
+          {profileType === PROFILES.radius && (
+            <RadiusForm form={form} details={initialValues?.details} />
+          )}
+          {profileType === PROFILES.rf && <RFForm form={form} details={initialValues?.details} />}
+          {profileType === PROFILES.passpoint && (
             <PasspointProfileForm
               form={form}
               details={initialValues?.details}
@@ -330,13 +333,13 @@ const AddProfile = ({
               loadingIdProviderProfiles={loadingIdProviderProfiles}
             />
           )}
-          {profileType === 'passpoint_osu_id_provider' && (
+          {profileType === PROFILES.providerID && (
             <ProviderIdForm form={form} details={initialValues?.details} />
           )}
-          {profileType === 'passpoint_operator' && (
+          {profileType === PROFILES.operator && (
             <OperatorForm form={form} details={initialValues?.details} />
           )}
-          {profileType === 'passpoint_venue' && (
+          {profileType === PROFILES.venue && (
             <VenueForm form={form} details={initialValues?.details} />
           )}
         </Form>
@@ -377,13 +380,13 @@ AddProfile.defaultProps = {
   initialValues: {},
   onSearchProfile: () => {},
   onFetchMoreProfiles: () => {},
-  loadingSSIDProfiles: true,
-  loadingRadiusProfiles: true,
-  loadingCaptiveProfiles: true,
-  loadingVenueProfiles: true,
-  loadingOperatorProfiles: true,
-  loadingIdProviderProfiles: true,
-  loadingRFProfiles: true,
+  loadingSSIDProfiles: false,
+  loadingRadiusProfiles: false,
+  loadingCaptiveProfiles: false,
+  loadingVenueProfiles: false,
+  loadingOperatorProfiles: false,
+  loadingIdProviderProfiles: false,
+  loadingRFProfiles: false,
 };
 
 export default AddProfile;
