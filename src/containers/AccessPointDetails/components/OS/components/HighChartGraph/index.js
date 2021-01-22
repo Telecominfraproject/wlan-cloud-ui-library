@@ -78,7 +78,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         <XAxis.Title>Time</XAxis.Title>
       </XAxis>
 
-      <Legend>
+      <Legend itemStyle={{ color: '#fff' }}>
         <Legend.Title />
       </Legend>
       <YAxis
@@ -93,7 +93,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
             color: '#7cb5ec',
           }}
         >
-          CPU Usage (%)
+          CPU Utilization (%)
         </YAxis.Title>
         {Object.keys(cpuUsage).map(i => (
           <SplineSeries

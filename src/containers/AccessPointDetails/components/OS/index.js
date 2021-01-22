@@ -86,7 +86,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         showIcon
       />
       <div className={styles.InlineDiv} style={{ marginTop: '15px' }}>
-        <SolidGauge data={cpu} title="Current CPU" />
+        <SolidGauge data={cpu} title="Current CPU Utilization" />
         <SolidGauge data={memory} title="Current Free Memory" />
         <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>

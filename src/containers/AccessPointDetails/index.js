@@ -59,6 +59,7 @@ const AccessPointDetails = ({
   onFetchMoreProfiles,
   onDeleteEquipment,
   extraButtons,
+  onSearchProfile,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -206,6 +207,7 @@ const AccessPointDetails = ({
           loadingProfiles={loadingProfiles}
           errorProfiles={errorProfiles}
           onFetchMoreProfiles={onFetchMoreProfiles}
+          onSearchProfile={onSearchProfile}
         />
       )}
       {tab === 'status' && <Status data={data} />}
@@ -252,6 +254,7 @@ AccessPointDetails.propTypes = {
   onFetchMoreProfiles: PropTypes.func,
   onDeleteEquipment: PropTypes.func.isRequired,
   extraButtons: PropTypes.node,
+  onSearchProfile: PropTypes.func,
 };
 
 AccessPointDetails.defaultProps = {
@@ -265,6 +268,7 @@ AccessPointDetails.defaultProps = {
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
   extraButtons: null,
+  onSearchProfile: () => {},
 };
 
 export default AccessPointDetails;
