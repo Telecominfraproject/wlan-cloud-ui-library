@@ -378,7 +378,7 @@ AddProfile.defaultProps = {
   radiusProfiles: [],
   captiveProfiles: [],
   initialValues: {},
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingRadiusProfiles: false,

@@ -273,7 +273,7 @@ const PasspointProfileForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.venue)}
             data-testid="venueProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a Venue Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.venue)}
@@ -292,7 +292,7 @@ const PasspointProfileForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.operator)}
             data-testid="operatorProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select an Operator Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.operator)}
@@ -311,7 +311,7 @@ const PasspointProfileForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
             data-testid="idProviderProfiles"
-            showSearch
+            showSearch={onSearchProfile}
             mode="multiple"
             allowClear
             placeholder="Select ID Providers (check to select)"
@@ -333,7 +333,7 @@ const PasspointProfileForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select an SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.ssid)}
@@ -474,7 +474,7 @@ const PasspointProfileForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.ssid)}
@@ -587,7 +587,7 @@ PasspointProfileForm.defaultProps = {
   childProfiles: [],
   idProviderProfiles: [],
   fileUpload: () => {},
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingVenueProfiles: false,

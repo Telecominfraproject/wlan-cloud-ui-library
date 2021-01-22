@@ -443,7 +443,7 @@ const AccessPointForm = ({
         <Item name="rfProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a RF Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.rf)}
@@ -463,7 +463,7 @@ const AccessPointForm = ({
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(name, PROFILES.ssid)}
@@ -535,7 +535,7 @@ AccessPointForm.defaultProps = {
   childProfiles: [],
   ssidProfiles: [],
   rfProfiles: [],
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingRFProfiles: false,

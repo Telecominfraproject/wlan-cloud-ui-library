@@ -267,7 +267,7 @@ const SSIDForm = ({
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
                   onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
-                  showSearch
+                  showSearch={onSearchProfile}
                   filterOption={false}
                   onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
                   loading={loadingCaptiveProfiles}
@@ -344,7 +344,7 @@ const SSIDForm = ({
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-              showSearch
+              showSearch={onSearchProfile}
               filterOption={false}
               onSearch={name => onSearchProfile(name, PROFILES.radius)}
               loading={loadingRadiusProfiles}
@@ -586,7 +586,7 @@ SSIDForm.defaultProps = {
   childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingCaptiveProfiles: false,
   loadingRadiusProfiles: false,

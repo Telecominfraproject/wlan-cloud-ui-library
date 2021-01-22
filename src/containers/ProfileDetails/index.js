@@ -364,7 +364,7 @@ ProfileDetails.defaultProps = {
   childProfileIds: [],
   childProfiles: [],
   extraButtons: null,
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingRadiusProfiles: false,
