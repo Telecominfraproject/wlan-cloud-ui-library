@@ -442,7 +442,7 @@ const CaptivePortalForm = ({
               className={globalStyles.field}
               placeholder="RADIUS Services"
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-              showSearch
+              showSearch={onSearchProfile}
               filterOption={false}
               onSearch={name => onSearchProfile(name, PROFILES.radius)}
               loading={loadingRadiusProfiles}
@@ -702,7 +702,7 @@ CaptivePortalForm.defaultProps = {
   details: {},
   radiusProfiles: [],
   fileUpload: () => {},
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: false,
 };
