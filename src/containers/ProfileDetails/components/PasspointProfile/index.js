@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Form, Input, Select, Table, Upload, message } from 'antd';
+import { Card, Button, Form, Input, Select, Table, Upload, message, Empty } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
+import { PROFILES } from 'containers/ProfileDetails/constants';
 
 import globalStyles from 'styles/index.scss';
 
@@ -29,10 +30,12 @@ const PasspointProfileForm = ({
   childProfiles,
   idProviderProfiles,
   fileUpload,
+  onSearchProfile,
   onFetchMoreProfiles,
-  onFetchMoreVenueProfiles,
-  onFetchMoreOperatorProfiles,
-  onFetchMoreIdProviderProfiles,
+  loadingSSIDProfiles,
+  loadingVenueProfiles,
+  loadingOperatorProfiles,
+  loadingIdProviderProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
@@ -268,10 +271,14 @@ const PasspointProfileForm = ({
       <Card title="General">
         <Item label="Venue" name="passpointVenueProfileId">
           <Select
-            onPopupScroll={onFetchMoreVenueProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.venue)}
             data-testid="venueProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a Venue Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.venue)}
+            loading={loadingVenueProfiles}
+            notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
           >
             {venueProfiles.map(i => (
@@ -283,10 +290,14 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="Operator" name="passpointOperatorProfileId">
           <Select
-            onPopupScroll={onFetchMoreOperatorProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.operator)}
             data-testid="operatorProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select an Operator Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.operator)}
+            loading={loadingOperatorProfiles}
+            notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
           >
             {operatorProfiles.map(i => (
@@ -298,13 +309,17 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="ID Provider" name="passpointOsuProviderProfileIds">
           <Select
-            onPopupScroll={onFetchMoreIdProviderProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
             data-testid="idProviderProfiles"
-            showSearch
+            showSearch={onSearchProfile}
             mode="multiple"
             allowClear
             placeholder="Select ID Providers (check to select)"
             className={styles.MultipleSelection}
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.providerID)}
+            loading={loadingIdProviderProfiles}
+            notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
           >
             {idProviderProfiles.map(i => (
@@ -316,10 +331,14 @@ const PasspointProfileForm = ({
         </Item>
         <Item label="SSID" name="osuSsidProfileId">
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select an SSID Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
           >
             {ssidProfiles.map(i => (
@@ -453,14 +472,14 @@ const PasspointProfileForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
             value="Select a SSID Profile"
           >
@@ -551,10 +570,12 @@ PasspointProfileForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
+  onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
-  onFetchMoreVenueProfiles: PropTypes.func,
-  onFetchMoreOperatorProfiles: PropTypes.func,
-  onFetchMoreIdProviderProfiles: PropTypes.func,
+  loadingSSIDProfiles: PropTypes.bool,
+  loadingVenueProfiles: PropTypes.bool,
+  loadingOperatorProfiles: PropTypes.bool,
+  loadingIdProviderProfiles: PropTypes.bool,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -566,10 +587,12 @@ PasspointProfileForm.defaultProps = {
   childProfiles: [],
   idProviderProfiles: [],
   fileUpload: () => {},
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
-  onFetchMoreVenueProfiles: () => {},
-  onFetchMoreOperatorProfiles: () => {},
-  onFetchMoreIdProviderProfiles: () => {},
+  loadingSSIDProfiles: false,
+  loadingVenueProfiles: false,
+  loadingOperatorProfiles: false,
+  loadingIdProviderProfiles: false,
 };
 
 export default PasspointProfileForm;

@@ -94,7 +94,7 @@ const AccessPointDetails = ({
   };
 
   const handleOnEquipmentSave = equipment => {
-    onUpdateEquipment(...Object.values(equipment));
+    onUpdateEquipment(equipment);
     setIsFormDirty(false);
   };
 

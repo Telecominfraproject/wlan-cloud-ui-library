@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
+import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING } from '../../constants/index';
+import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -17,9 +17,11 @@ const SSIDForm = ({
   details,
   captiveProfiles,
   childProfiles,
-  onFetchMoreCaptiveProfiles,
   radiusProfiles,
-  onFetchMoreRadiusProfiles,
+  onSearchProfile,
+  onFetchMoreProfiles,
+  loadingCaptiveProfiles,
+  loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || 'open');
@@ -264,7 +266,12 @@ const SSIDForm = ({
                 <Select
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
-                  onPopupScroll={onFetchMoreCaptiveProfiles}
+                  onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
+                  showSearch={onSearchProfile}
+                  filterOption={false}
+                  onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
+                  loading={loadingCaptiveProfiles}
+                  notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
                   {captiveProfiles.map(profile => (
                     <Option key={profile.id} value={profile.id}>
@@ -295,14 +302,15 @@ const SSIDForm = ({
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
-            <Option value="wpa3OnlySAE">WPA3 Enterprise</Option>
-            <Option value="wpa3MixedSAE">WPA3 Enterprise (mixed mode)</Option>
-            <Option value="wpa3OnlyEAP">WPA3 Personal</Option>
-            <Option value="wpa3MixedEAP">WPA3 Personal (mixed mode)</Option>
+            <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
+            <Option value="wpa3MixedEAP">WPA3 Enterprise (mixed mode)</Option>
+            <Option value="wpa3OnlySAE">WPA3 Personal</Option>
+            <Option value="wpa3MixedSAE">WPA3 Personal (mixed mode)</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpaRadius">WPA Enterprise</Option>
             <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wep">WEP</Option>
             <Option value="open">Open (No Encryption)</Option>
@@ -317,8 +325,8 @@ const SSIDForm = ({
             </span>
           </Item>
         )}
-
-        {(mode === 'wpa2Radius' ||
+        {(mode === 'wpaRadius' ||
+          mode === 'wpa2Radius' ||
           mode === 'wpa2OnlyRadius' ||
           mode === 'wpa3OnlyEAP' ||
           mode === 'wpa3MixedEAP') && (
@@ -335,7 +343,12 @@ const SSIDForm = ({
             <Select
               className={globalStyles.field}
               placeholder="Select RADIUS Service"
-              onPopupScroll={onFetchMoreRadiusProfiles}
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+              showSearch={onSearchProfile}
+              filterOption={false}
+              onSearch={name => onSearchProfile(name, PROFILES.radius)}
+              loading={loadingRadiusProfiles}
+              notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue
             >
               {radiusProfiles.map(profile => (
@@ -561,8 +574,10 @@ SSIDForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
-  onFetchMoreCaptiveProfiles: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
+  loadingCaptiveProfiles: PropTypes.bool,
+  loadingRadiusProfiles: PropTypes.bool,
 };
 
 SSIDForm.defaultProps = {
@@ -571,8 +586,10 @@ SSIDForm.defaultProps = {
   childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
-  onFetchMoreCaptiveProfiles: () => {},
-  onFetchMoreRadiusProfiles: () => {},
+  onSearchProfile: null,
+  onFetchMoreProfiles: () => {},
+  loadingCaptiveProfiles: false,
+  loadingRadiusProfiles: false,
 };
 
 export default SSIDForm;
