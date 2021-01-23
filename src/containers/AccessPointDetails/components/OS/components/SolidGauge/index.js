@@ -57,11 +57,20 @@ const SolidGauge = ({ data, title, label }) => {
         />
         <XAxis type="datetime" />
         <YAxis
-          stops={[
-            [0.1, '#55BF3B'],
-            [0.5, '#DDDF0D'],
-            [0.9, '#DF5353'],
-          ]}
+          stops={
+            title === 'Current Free Memory'
+              ? [
+                  [0.1, '#DF5353'],
+                  [0.1, '#FFFF00'],
+                  [0.25, '#FFFF00'],
+                  [0.25, '#55BF3B'],
+                ]
+              : [
+                  [0.1, '#55BF3B'],
+                  [0.5, '#FFFF00'],
+                  [0.9, '#DF5353'],
+                ]
+          }
           lineWidth={0}
           minorTickInterval={null}
           tickPixelInterval={400}
