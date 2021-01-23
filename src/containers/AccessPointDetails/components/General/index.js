@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, notification, Alert } from 'antd';
+import { Card, Form, Input, Table, Collapse, Select, notification, Alert, Empty } from 'antd';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
 
-import Loading from 'components/Loading';
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 
@@ -22,6 +21,7 @@ const General = ({
   loadingProfiles,
   errorProfiles,
   onFetchMoreProfiles,
+  onSearchProfile,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -270,10 +270,6 @@ const General = ({
     );
   };
 
-  if (loadingProfiles) {
-    return <Loading data-testid="loadingProfiles" />;
-  }
-
   if (errorProfiles) {
     return (
       <Alert
@@ -324,15 +320,20 @@ const General = ({
           rules={[
             {
               required: true,
-              message: 'Please select your Access Point Profile city.',
+              message: 'Please select your Access Point Profile.',
             },
           ]}
         >
           <Select
             className={styles.Field}
             onChange={handleProfileChange}
-            placeholder="Select access point profile..."
+            placeholder="Select Access Point profile..."
             onPopupScroll={onFetchMoreProfiles}
+            showSearch
+            filterOption={false}
+            onSearch={onSearchProfile}
+            loading={loadingProfiles}
+            notFoundContent={!loadingProfiles && <Empty />}
           >
             {profiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -513,6 +514,7 @@ General.propTypes = {
   loadingProfiles: PropTypes.bool,
   errorProfiles: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
+  onSearchProfile: PropTypes.func,
 };
 
 General.defaultProps = {
@@ -523,6 +525,7 @@ General.defaultProps = {
   loadingProfiles: true,
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
+  onSearchProfile: () => {},
 };
 
 export default General;
