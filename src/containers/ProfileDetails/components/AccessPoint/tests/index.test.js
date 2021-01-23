@@ -284,6 +284,7 @@ const mockProps = {
       __typename: 'Profile',
     },
   ],
+  onSearchProfile: () => {},
 };
 
 describe('<AccessPoints />', () => {
