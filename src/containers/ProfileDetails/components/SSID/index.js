@@ -302,14 +302,15 @@ const SSIDForm = ({
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
-            <Option value="wpa3OnlySAE">WPA3 Enterprise</Option>
-            <Option value="wpa3MixedSAE">WPA3 Enterprise (mixed mode)</Option>
-            <Option value="wpa3OnlyEAP">WPA3 Personal</Option>
-            <Option value="wpa3MixedEAP">WPA3 Personal (mixed mode)</Option>
+            <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
+            <Option value="wpa3MixedEAP">WPA3 Enterprise (mixed mode)</Option>
+            <Option value="wpa3OnlySAE">WPA3 Personal</Option>
+            <Option value="wpa3MixedSAE">WPA3 Personal (mixed mode)</Option>
             <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
             <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpaRadius">WPA Enterprise</Option>
             <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wep">WEP</Option>
             <Option value="open">Open (No Encryption)</Option>
