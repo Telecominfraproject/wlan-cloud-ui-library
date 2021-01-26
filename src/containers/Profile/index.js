@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Table } from 'antd';
-import { DeleteFilled, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Button from 'components/Button';
+import DeleteButton from 'components/DeleteButton';
 import Container from 'components/Container';
 import Header from 'components/Header';
-import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
 
 import styles from './index.module.scss';
@@ -15,7 +15,6 @@ import styles from './index.module.scss';
 const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
-  const [deleteModal, setDeleteModal] = useState(false);
   const [activeProfile, setActiveProfile] = useState({
     id: 0,
     name: '',
@@ -26,7 +25,6 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
   const deleteProfile = () => {
     const { id } = activeProfile;
     onDeleteProfile(id);
-    setDeleteModal(false);
   };
 
   const columns = [
@@ -47,16 +45,12 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
     },
     {
       title: '',
-      dataIndex: 'delete',
       width: 80,
       render: (_, record) => (
-        <Button
-          title={`delete-${record.name}`}
+        <DeleteButton
           className={styles.InfoButton}
-          icon={<DeleteFilled />}
-          onClick={e => {
-            e.stopPropagation();
-            setDeleteModal(true);
+          title={`delete-${record.name}`}
+          extraOnClick={() => {
             setActiveProfile({
               id: record.id,
               name: record.name,
@@ -64,6 +58,12 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
               __typename: record.__typename,
             });
           }}
+          onSuccess={deleteProfile}
+          content={
+            <p>
+              Are you sure you want to delete the profile: <strong> {activeProfile.name}</strong>?
+            </p>
+          }
         />
       ),
     },
@@ -72,19 +72,6 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
   return (
     <Container>
       <div className={styles.Profile}>
-        <Modal
-          onCancel={() => setDeleteModal(false)}
-          onSuccess={deleteProfile}
-          visible={deleteModal}
-          title="Are you sure?"
-          buttonText="Delete"
-          buttonType="danger"
-          content={
-            <p>
-              Are you sure you want to delete the profile: <strong> {activeProfile.name}</strong>
-            </p>
-          }
-        />
         <Header>
           <h1>Profiles</h1>
           <div className={styles.Buttons}>

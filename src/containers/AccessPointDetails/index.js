@@ -5,6 +5,7 @@ import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import DeleteButton from 'components/DeleteButton';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
@@ -68,7 +69,6 @@ const AccessPointDetails = ({
   const [isFormDirty, setIsFormDirty] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState(false);
-  const [deleteEquipmentModal, setDeleteEquipmentModal] = useState(false);
 
   const [redirectURL, setRedirectURL] = useState();
 
@@ -105,7 +105,6 @@ const AccessPointDetails = ({
 
   const handleDeleteEquipment = () => {
     onDeleteEquipment();
-    setDeleteEquipmentModal(false);
   };
 
   return (
@@ -137,25 +136,13 @@ const AccessPointDetails = ({
         </div>
         <div className={styles.HeaderDiv}>
           <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
-          <Button
-            name="delete"
-            danger
-            type="primary"
-            className={styles.deleteButton}
-            onClick={() => setDeleteEquipmentModal(true)}
-          >
-            Delete
-          </Button>
-          <Modal
-            onCancel={() => setDeleteEquipmentModal(false)}
+          <DeleteButton
+            showText
+            isDanger
             onSuccess={handleDeleteEquipment}
-            visible={deleteEquipmentModal}
-            title="Are you sure?"
-            buttonText="Delete"
-            buttonType="danger"
             content={
               <p>
-                Are you sure you want to delete this access point: <strong>{data.name}</strong>
+                Are you sure you want to delete this access point: <strong>{data.name}</strong>?
               </p>
             }
           />

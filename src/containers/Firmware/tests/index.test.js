@@ -154,7 +154,8 @@ describe('<Firmware />', () => {
     fireEvent.click(
       getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
     );
-    const paragraph = getByText('Are you sure you want to delete the model target version:');
+    const paragraph = getByText(/Are you sure you want to delete the model target version:/i);
+
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.trackAssignmentData[0].modelId)).toBeVisible();
   });
@@ -193,7 +194,7 @@ describe('<Firmware />', () => {
     fireEvent.click(
       getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
     );
-    const paragraph = getByText('Are you sure you want to delete the model target version:');
+    const paragraph = getByText(/Are you sure you want to delete the model target version:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.trackAssignmentData[0].modelId)).toBeVisible();
 
@@ -266,7 +267,7 @@ describe('<Firmware />', () => {
     fireEvent.click(
       getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
     );
-    const paragraph = getByText('Are you sure you want to delete the version:');
+    const paragraph = getByText(/Are you sure you want to delete the version:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.firmwareData[2].versionName)).toBeVisible();
   });
@@ -304,7 +305,7 @@ describe('<Firmware />', () => {
     fireEvent.click(
       getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
     );
-    const paragraph = getByText('Are you sure you want to delete the version:');
+    const paragraph = getByText(/Are you sure you want to delete the version:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.firmwareData[2].versionName)).toBeVisible();
 

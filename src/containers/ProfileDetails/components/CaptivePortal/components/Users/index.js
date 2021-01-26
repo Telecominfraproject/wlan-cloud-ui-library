@@ -2,16 +2,50 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Table } from 'antd';
 import Button from 'components/Button';
-import Modal from 'components/Modal';
-import { FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import DeleteButton from 'components/DeleteButton';
+import { FormOutlined } from '@ant-design/icons';
 import FormModal from '../FormModal';
 import styles from '../../../index.module.scss';
 
 const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) => {
   const [addUserModal, setAddUserModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
-  const [deleteUserModal, setDeleteUserModal] = useState(false);
   const [activeUser, setActiveUser] = useState({});
+
+  const addUser = ({ username, password, firstName, lastName }) => {
+    const newUser = {
+      username,
+      password,
+      userDetails: {
+        firstName,
+        lastName,
+      },
+    };
+    handleAddUser(newUser);
+    setAddUserModal(false);
+  };
+
+  const updateUser = ({ username, password, firstName, lastName }) => {
+    const newUser = {
+      username,
+      password,
+      userDetails: {
+        firstName,
+        lastName,
+      },
+    };
+
+    handleUpdateUser(activeUser.username, newUser);
+    setEditUserModal(false);
+  };
+
+  const deleteUser = () => {
+    handleDeleteUser(activeUser.username);
+  };
+
+  const usedUserNames = useMemo(() => {
+    return userList.map(i => i.username);
+  }, [userList]);
 
   const columns = [
     {
@@ -47,71 +81,25 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
     {
       width: 64,
       render: (_, record) => (
-        <Button
-          className={styles.InfoButton}
+        <DeleteButton
           title={`delete-${record.username}`}
-          type="danger"
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            setDeleteUserModal(true);
+          className={styles.InfoButton}
+          type="primary"
+          extraOnClick={() => {
             setActiveUser({ ...record });
           }}
+          onSuccess={deleteUser}
+          content={
+            <p>
+              Are you sure you want to delete the user: <strong> {activeUser.username}</strong>?
+            </p>
+          }
         />
       ),
     },
   ];
-
-  const addUser = ({ username, password, firstName, lastName }) => {
-    const newUser = {
-      username,
-      password,
-      userDetails: {
-        firstName,
-        lastName,
-      },
-    };
-    handleAddUser(newUser);
-    setAddUserModal(false);
-  };
-
-  const updateUser = ({ username, password, firstName, lastName }) => {
-    const newUser = {
-      username,
-      password,
-      userDetails: {
-        firstName,
-        lastName,
-      },
-    };
-
-    handleUpdateUser(activeUser.username, newUser);
-    setEditUserModal(false);
-  };
-
-  const deleteUser = () => {
-    handleDeleteUser(activeUser.username);
-    setDeleteUserModal(false);
-  };
-
-  const usedUserNames = useMemo(() => {
-    return userList.map(i => i.username);
-  }, [userList]);
-
   return (
     <>
-      <Modal
-        onCancel={() => setDeleteUserModal(false)}
-        onSuccess={deleteUser}
-        visible={deleteUserModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the user: <strong>{activeUser.username}</strong>
-          </p>
-        }
-      />
       <FormModal
         onCancel={() => setEditUserModal(false)}
         visible={editUserModal}

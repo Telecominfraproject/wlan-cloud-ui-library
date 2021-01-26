@@ -300,7 +300,7 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the model:');
+    const paragraph = getByText(/Are you sure you want to delete the model:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(models[1])).toBeVisible();
   });
@@ -346,7 +346,7 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the model:');
+    const paragraph = getByText(/Are you sure you want to delete the model:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(models[1])).toBeVisible();
 
@@ -441,7 +441,7 @@ describe('<AutoProvision />', () => {
       })
     );
 
-    const paragraph = getByText('Are you sure you want to delete the model:');
+    const paragraph = getByText(/Are you sure you want to delete the model:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(models[1])).toBeVisible();
 

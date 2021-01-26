@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import { FormOutlined, DeleteFilled } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import DeleteButton from 'components/DeleteButton';
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
 
@@ -21,7 +21,6 @@ const Accounts = ({
   isLastPage,
   isAuth0Enabled,
 }) => {
-  const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [activeUser, setActiveUser] = useState({
@@ -35,7 +34,6 @@ const Accounts = ({
   const deleteUser = () => {
     const { id } = activeUser;
     onDeleteUser(id);
-    setDeleteModal(false);
   };
 
   const addUser = ({ email, roles, password }) => {
@@ -65,12 +63,11 @@ const Accounts = ({
     },
     {
       title: '',
-      dataIndex: 'edit',
       key: 'edit',
       width: 64,
       render: (_, record) => (
         <Button
-          title="edit"
+          title={`edit-${record.email}`}
           className={styles.InfoButton}
           type="primary"
           icon={<FormOutlined />}
@@ -89,18 +86,14 @@ const Accounts = ({
     },
     {
       title: '',
-      dataIndex: 'delete',
       key: 'delete',
       width: 64,
       render: (_, record) =>
         currentUserId?.toString() !== record.id && (
-          <Button
-            title="delete"
+          <DeleteButton
             className={styles.InfoButton}
-            type="primary"
-            icon={<DeleteFilled />}
-            onClick={() => {
-              setDeleteModal(true);
+            title={`delete-${record.email}`}
+            extraOnClick={() => {
               setActiveUser({
                 id: record.id,
                 email: record.email,
@@ -109,6 +102,12 @@ const Accounts = ({
                 lastModifiedTimestamp: record.lastModifiedTimestamp,
               });
             }}
+            onSuccess={deleteUser}
+            content={
+              <p>
+                Are you sure you want to delete the User: <strong>{activeUser.email}</strong>?
+              </p>
+            }
           />
         ),
     },
@@ -122,19 +121,7 @@ const Accounts = ({
           Add User
         </Button>
       </Header>
-      <Modal
-        onCancel={() => setDeleteModal(false)}
-        onSuccess={deleteUser}
-        visible={deleteModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the User: <i>{activeUser.email}</i>
-          </p>
-        }
-      />
+
       <FormModal
         onCancel={() => setEditModal(false)}
         visible={editModal}

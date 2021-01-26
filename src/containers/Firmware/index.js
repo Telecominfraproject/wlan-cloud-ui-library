@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Table, Alert, Spin } from 'antd';
 import moment from 'moment';
-import { FormOutlined, DeleteFilled } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
-import Modal from 'components/Modal';
+import DeleteButton from 'components/DeleteButton';
 import styles from './index.module.scss';
 import AssignmentModal from './components/AssignmentModal';
 import VersionModal from './components/VersionModal';
@@ -37,8 +37,6 @@ const Firmware = ({
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
   const [addVersionModal, setAddVersionModal] = useState(false);
   const [editVersionModal, setEditVersionModal] = useState(false);
-  const [deleteAssignmentModal, setDeleteAssignmentModal] = useState(false);
-  const [deleteVersionModal, setDeleteVersionModal] = useState(false);
   const [traskAssignmentValues, setTaskAssignmentValues] = useState({});
   const [firmwareValues, setFirmwareValues] = useState({});
 
@@ -72,7 +70,6 @@ const Firmware = ({
   const deleteTrackAssignment = () => {
     const { trackRecordId, firmwareVersionRecordId } = traskAssignmentValues;
     onDeleteTrackAssignment(trackRecordId, firmwareVersionRecordId);
-    setDeleteAssignmentModal(false);
   };
 
   const createFirmware = ({
@@ -124,7 +121,6 @@ const Firmware = ({
   const deleteFirmware = () => {
     const { id } = firmwareValues;
     onDeleteFirmware(id);
-    setDeleteVersionModal(false);
   };
 
   const assignmentColumns = [
@@ -167,15 +163,19 @@ const Firmware = ({
       key: 'deleteAssignment',
       width: 60,
       render: (_, record) => (
-        <Button
+        <DeleteButton
           title={`delete-track-${record.modelId}`}
           className={styles.InfoButton}
-          type="primary"
-          icon={<DeleteFilled />}
-          onClick={() => {
+          extraOnClick={() => {
             setTaskAssignmentValues({ ...record });
-            setDeleteAssignmentModal(true);
           }}
+          onSuccess={deleteTrackAssignment}
+          content={
+            <p>
+              Are you sure you want to delete the model target version:
+              <strong> {traskAssignmentValues.modelId}</strong>?
+            </p>
+          }
         />
       ),
     },
@@ -242,15 +242,19 @@ const Firmware = ({
           i => Object.values(record).indexOf(i.firmwareVersionRecordId) > 0
         );
         return !found ? (
-          <Button
+          <DeleteButton
             title={`delete-firmware-${record.modelId}`}
             className={styles.InfoButton}
-            type="primary"
-            icon={<DeleteFilled />}
-            onClick={() => {
+            extraOnClick={() => {
               setFirmwareValues({ ...record });
-              setDeleteVersionModal(true);
             }}
+            onSuccess={deleteFirmware}
+            content={
+              <p>
+                Are you sure you want to delete the version:
+                <strong> {firmwareValues.versionName}</strong>?
+              </p>
+            }
           />
         ) : null;
       },
@@ -305,34 +309,7 @@ const Firmware = ({
         title="Edit Firmware Version"
         {...firmwareValues}
       />
-      <Modal
-        onCancel={() => setDeleteAssignmentModal(false)}
-        onSuccess={deleteTrackAssignment}
-        visible={deleteAssignmentModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the model target version:{' '}
-            <strong> {traskAssignmentValues.modelId} </strong>
-          </p>
-        }
-      />
-      <Modal
-        onCancel={() => setDeleteVersionModal(false)}
-        onSuccess={deleteFirmware}
-        visible={deleteVersionModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the version:{' '}
-            <strong> {firmwareValues.versionName} </strong>
-          </p>
-        }
-      />
+
       <Header>
         <h1>Model Target Version</h1>
         {trackAssignmentReady && (

@@ -2,12 +2,11 @@ import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import { Table } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
 
 import Button from 'components/Button';
+import DeleteButton from 'components/DeleteButton';
 import Container from 'components/Container';
 import Header from 'components/Header';
-import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
 
 import FormModal from './components/FormModal';
@@ -16,7 +15,6 @@ import styles from './index.module.scss';
 const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
   const { routes } = useContext(ThemeContext);
   const [addModal, setAddModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
 
   const addClient = ({ macAddress }) => {
@@ -32,8 +30,6 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
     }
     formattedDetails.blocklistDetails.enabled = false;
     onUpdateClient(activeMac.macAddress, formattedDetails);
-
-    setDeleteModal(false);
   };
 
   const columns = [
@@ -51,15 +47,20 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
       key: 'deleteMac',
       width: 60,
       render: (_, record) => (
-        <Button
-          title={`delete-mac-${record.macAddress}`}
+        <DeleteButton
           className={styles.InfoButton}
-          type="danger"
-          icon={<DeleteFilled />}
-          onClick={() => {
+          title={`delete-mac-${record.macAddress}`}
+          extraOnClick={() => {
             setActiveMac({ ...record });
-            setDeleteModal(true);
           }}
+          onSuccess={deleteClient}
+          content={
+            <p>
+              Are you sure you want to remove the Client: <strong>{activeMac.macAddress} </strong>
+              from the Blocked List?
+            </p>
+          }
+          modalButtonText="Remove"
         />
       ),
     },
@@ -67,20 +68,6 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
 
   return (
     <Container>
-      <Modal
-        onCancel={() => setDeleteModal(false)}
-        onSuccess={deleteClient}
-        visible={deleteModal}
-        title="Are you sure?"
-        buttonText="Remove"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to remove the Client: <strong> {activeMac.macAddress} </strong>
-            from the Blocked List?
-          </p>
-        }
-      />
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
