@@ -66,8 +66,8 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa3OnlyEAP' ||
     values.secureMode === 'wpa3MixedEAP'
   ) {
-    formattedData.childProfileIds.push(values.radiusServiceName.value);
-    formattedData.radiusServiceName = values.radiusServiceName.label;
+    formattedData.childProfileIds.push(values.radiusServiceId.value);
+    formattedData.radiusServiceId = values.radiusServiceId.value;
   }
 
   return formattedData;

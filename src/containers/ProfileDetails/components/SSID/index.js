@@ -66,7 +66,7 @@ const SSIDForm = ({
       wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details.vlanId || defaultSsidProfile.vlanId,
-      radiusServiceName:
+      radiusServiceId:
         {
           value: childProfiles?.[0]?.id || null,
           label: childProfiles?.[0]?.name || null,
@@ -331,7 +331,7 @@ const SSIDForm = ({
           mode === 'wpa3OnlyEAP' ||
           mode === 'wpa3MixedEAP') && (
           <Item
-            name="radiusServiceName"
+            name="radiusServiceId"
             label="RADIUS Profile"
             rules={[
               {

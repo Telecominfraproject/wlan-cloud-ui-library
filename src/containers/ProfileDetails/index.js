@@ -108,7 +108,7 @@ const ProfileDetails = ({
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
               values.secureMode === 'wpa3MixedEAP') &&
-            (!values?.radiusServiceName?.value || !values?.radiusServiceName?.label)
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
           ) {
             notification.error({
               message: 'Error',
