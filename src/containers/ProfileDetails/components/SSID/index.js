@@ -24,7 +24,7 @@ const SSIDForm = ({
   loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
-  const [mode, setMode] = useState(details.secureMode || 'open');
+  const [mode, setMode] = useState(details.secureMode || defaultSsidProfile.secureMode);
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
