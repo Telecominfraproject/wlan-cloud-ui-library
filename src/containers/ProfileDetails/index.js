@@ -112,7 +112,7 @@ const ProfileDetails = ({
           ) {
             notification.error({
               message: 'Error',
-              description: 'At least 1 RADIUS Service is required.',
+              description: 'At least 1 RADIUS Profile is required.',
             });
             return;
           }
@@ -130,20 +130,6 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === PROFILES.radius) {
-          if (values.services.length === 0) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 RADIUS Service is required.',
-            });
-            return;
-          }
-          if (values.zones.length === 0) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 RADIUS Service Zone is required.',
-            });
-            return;
-          }
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === PROFILES.captivePortal) {

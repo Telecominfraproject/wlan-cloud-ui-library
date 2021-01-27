@@ -332,17 +332,17 @@ const SSIDForm = ({
           mode === 'wpa3MixedEAP') && (
           <Item
             name="radiusServiceName"
-            label="RADIUS Service"
+            label="RADIUS Profile"
             rules={[
               {
                 required: true,
-                message: 'Please select a RADIUS service',
+                message: 'Please select a RADIUS profile',
               },
             ]}
           >
             <Select
               className={globalStyles.field}
-              placeholder="Select RADIUS Service"
+              placeholder="Select RADIUS Profile"
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch={onSearchProfile}
               filterOption={false}
