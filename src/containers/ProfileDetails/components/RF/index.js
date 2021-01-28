@@ -210,7 +210,7 @@ const RFForm = ({ form, details }) => {
                     <Option value="modeAB">AB</Option>
                   </>
                 )}
-                <Option value="modeX">X</Option>
+                <Option value="modeX">AX</Option>
               </Select>
             );
           },
