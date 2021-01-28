@@ -205,10 +205,12 @@ const RFForm = ({ form, details }) => {
                 {key !== 'is2dot4GHz' && (
                   <>
                     <Option value="modeAC">AC</Option>
+                    <Option value="modeGN">GN</Option>
                     <Option value="modeA">A</Option>
+                    <Option value="modeAB">AB</Option>
                   </>
                 )}
-                <Option value="modeAX">AX</Option>
+                <Option value="modeX">X</Option>
               </Select>
             );
           },
