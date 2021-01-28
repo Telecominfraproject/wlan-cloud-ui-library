@@ -108,11 +108,11 @@ const ProfileDetails = ({
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
               values.secureMode === 'wpa3MixedEAP') &&
-            (!values?.radiusServiceName?.value || !values?.radiusServiceName?.label)
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
           ) {
             notification.error({
               message: 'Error',
-              description: 'At least 1 RADIUS Service is required.',
+              description: 'At least 1 RADIUS Profile is required.',
             });
             return;
           }
@@ -130,20 +130,6 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === PROFILES.radius) {
-          if (values.services.length === 0) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 RADIUS Service is required.',
-            });
-            return;
-          }
-          if (values.zones.length === 0) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 RADIUS Service Zone is required.',
-            });
-            return;
-          }
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === PROFILES.captivePortal) {
