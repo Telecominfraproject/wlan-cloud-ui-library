@@ -7,7 +7,7 @@
   position: fixed;
   display: flex;
   right: 0;
-  z-index: 1;
+  z-index: 3;
 
   :global(.ant-row) {
     margin-bottom: 10px;
@@ -15,6 +15,11 @@
     &:last-child {
       margin-bottom: 0px;
     }
+  }
+
+  :global(ul > li.ant-menu-item.ant-menu-item-only-child:nth-child(2)) {
+    padding: 0;
+    margin: 0 20px;
   }
 
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item),
