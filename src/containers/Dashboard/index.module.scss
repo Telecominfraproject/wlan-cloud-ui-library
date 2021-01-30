@@ -1,18 +1,9 @@
 .mainInfoWrap {
-  padding: 60px;
-
-  .rightInfoWrap {
-    flex: 1;
-    margin: 0 auto;
-  }
-
-  .infoWrapper {
-    display: flex;
-    justify-content: space-between;
-  }
+  flex: 1;
+  margin: 20px;
 }
 
-.chartWrap {
+.cardWrapper {
   display: flex;
   justify-content: space-between;
 }
@@ -23,12 +14,7 @@
 }
 
 @media screen and (max-width: 1200px) {
-  .infoWrapper {
-    flex-direction: column;
-  }
-
-  .chartWrap {
-    flex-wrap: wrap;
+  .cardWrapper {
     flex-direction: column;
   }
 }
