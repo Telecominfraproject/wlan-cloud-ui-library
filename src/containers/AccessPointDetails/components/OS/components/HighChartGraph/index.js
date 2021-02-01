@@ -87,6 +87,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
           style: { color: '#7cb5ec' },
         }}
         visible={visible}
+        showEmpty={false}
       >
         <YAxis.Title
           style={{
@@ -99,7 +100,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
           <SplineSeries
             key={`cpuCore${i}`}
             id={`cpuCore${i}`}
-            name={`CPU Core ${i}`}
+            name={`CPU ${i} Utilization`}
             data={cpuUsage[i]}
             color="#7cb5ec"
           />
@@ -114,6 +115,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         }}
         opposite
         visible={visible}
+        showEmpty={false}
       >
         <YAxis.Title
           style={{
@@ -131,6 +133,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
           style: { color: '#f7a35c' },
         }}
         visible={visible}
+        showEmpty={false}
       >
         <YAxis.Title
           style={{
