@@ -100,7 +100,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
           <SplineSeries
             key={`cpuCore${i}`}
             id={`cpuCore${i}`}
-            name={`CPU ${i} Utilization`}
+            name="CPU Utilization"
             data={cpuUsage[i]}
             color="#7cb5ec"
           />
