@@ -1,20 +1,23 @@
-.Profile {
-  .Buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-  }
+.Buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
 
-  .Buttons > * {
-    margin-left: 10px;
-  }
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
 
-  .LoadMore {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  .Row {
-    cursor: pointer;
-  }
+.Buttons > * {
+  margin-left: 10px;
+}
+
+.LoadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.Row {
+  cursor: pointer;
 }

@@ -45,9 +45,9 @@ describe('<Accounts />', () => {
 
   it('delete user button click should show modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
-    fireEvent.click(getByRole('button', { name: /delete/i }));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].email}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the User:');
+    const paragraph = getByText(/Are you sure you want to delete the User:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.data[0].email)).toBeVisible();
   });
@@ -55,7 +55,7 @@ describe('<Accounts />', () => {
   it('edit account button click should show FormModal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /edit/i }));
+    fireEvent.click(getByRole('button', { name: `edit-${mockProps.data[0].email}` }));
 
     expect(getByText('Edit User')).toBeVisible();
   });
@@ -71,7 +71,7 @@ describe('<Accounts />', () => {
   it('onDeleteUser should be called when modal is submitted', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<Accounts {...mockProps} onDeleteUser={submitSpy} />);
-    fireEvent.click(getByRole('button', { name: /delete/i }));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].email}` }));
     expect(getByRole('button', { name: 'Delete' }));
     fireEvent.click(getByRole('button', { name: 'Delete' }));
 
@@ -83,7 +83,7 @@ describe('<Accounts />', () => {
   it('onEditUser should not be called when form is invalid', async () => {
     const submitSpy = jest.fn();
     const { getByText, getByRole } = render(<Accounts {...mockProps} onEditUser={submitSpy} />);
-    fireEvent.click(getByRole('button', { name: /edit/i }));
+    fireEvent.click(getByRole('button', { name: `edit-${mockProps.data[0].email}` }));
 
     expect(getByText('Edit User')).toBeVisible();
 
@@ -101,7 +101,7 @@ describe('<Accounts />', () => {
     const { getByLabelText, getByRole, getByText } = render(
       <Accounts {...mockProps} onEditUser={submitSpy} />
     );
-    fireEvent.click(getByRole('button', { name: /edit/i }));
+    fireEvent.click(getByRole('button', { name: `edit-${mockProps.data[0].email}` }));
     expect(getByText('Edit User')).toBeVisible();
 
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
@@ -141,7 +141,7 @@ describe('<Accounts />', () => {
   it('cancel button click should hide Delete User Modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: /delete/i }));
+    fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].email}` }));
     expect(getByText('Are you sure?')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 

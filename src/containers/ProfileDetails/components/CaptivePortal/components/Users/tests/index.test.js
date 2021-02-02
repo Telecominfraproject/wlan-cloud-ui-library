@@ -77,7 +77,7 @@ describe('<Users />', () => {
     const { getByRole, getByText } = render(<Users {...mockProps} deleteUserModal />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the user:');
+    const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.userList[0].username)).toBeVisible();
   });
@@ -111,7 +111,7 @@ describe('<Users />', () => {
     const { getByRole, getByText } = render(<Users {...mockProps} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the user:');
+    const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.userList[0].username)).toBeVisible();
 
@@ -167,7 +167,7 @@ describe('<Users />', () => {
     const { getByRole, getByText } = render(<Users {...mockProps} handleDeleteUser={submitSpy} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the user:');
+    const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.userList[0].username)).toBeVisible();
 
@@ -207,7 +207,7 @@ describe('<Users />', () => {
     const { getByRole, getByText } = render(<Users {...mockProps} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the user:');
+    const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.userList[0].username)).toBeVisible();
 

@@ -87,7 +87,8 @@ describe('<Profile />', () => {
 
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the profile:');
+    const paragraph = getByText(/Are you sure you want to delete the profile:/i);
+
     expect(paragraph).toBeVisible();
   });
 
@@ -100,7 +101,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
 
-    const paragraph = getByText('Are you sure you want to delete the profile:');
+    const paragraph = getByText(/Are you sure you want to delete the profile:/i);
     expect(paragraph).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));

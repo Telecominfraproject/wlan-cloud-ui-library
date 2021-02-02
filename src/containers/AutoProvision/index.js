@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select, Switch, Table, Spin, Alert } from 'antd';
-import { FormOutlined, DeleteFilled } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
-import Modal from 'components/Modal';
+import DeleteButton from 'components/DeleteButton';
 import globalStyles from 'styles/index.scss';
 
 import FormModal from './components/FormModal';
@@ -33,7 +33,6 @@ const AutoProvision = ({
   const [activeModel, setActiveModel] = useState({});
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [deleteModal, setDeleteModal] = useState(false);
 
   const layout = {
     labelCol: { span: 5 },
@@ -90,7 +89,6 @@ const AutoProvision = ({
     delete formattedData[activeModel.model];
 
     setEquipmentProfileIdPerModel(formattedData);
-    setDeleteModal(false);
   };
 
   const onSubmit = () => {
@@ -145,15 +143,18 @@ const AutoProvision = ({
       width: 60,
       render: (_, record) => {
         return record.model !== 'default' ? (
-          <Button
-            title={`delete-model-${record.model}`}
+          <DeleteButton
             className={styles.InfoButton}
-            type="danger"
-            icon={<DeleteFilled />}
-            onClick={() => {
+            title={`delete-model-${record.model}`}
+            extraOnClick={() => {
               setActiveModel({ ...record });
-              setDeleteModal(true);
             }}
+            onSuccess={deleteModel}
+            content={
+              <p>
+                Are you sure you want to delete the model: <strong>{activeModel.model}</strong>?
+              </p>
+            }
           />
         ) : null;
       },
@@ -169,19 +170,6 @@ const AutoProvision = ({
 
   return (
     <Container>
-      <Modal
-        onCancel={() => setDeleteModal(false)}
-        onSuccess={deleteModel}
-        visible={deleteModal}
-        title="Are you sure?"
-        buttonText="Delete"
-        buttonType="danger"
-        content={
-          <p>
-            Are you sure you want to delete the model: <strong> {activeModel.model} </strong>
-          </p>
-        }
-      />
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
