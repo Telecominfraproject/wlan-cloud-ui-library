@@ -51,7 +51,7 @@ const RadiusForm = ({ form, details }) => {
                   {fields.length >= MAX_RADIUS && (
                     <Tooltip
                       className={styles.ToolTip}
-                      title={`Maximum ${MAX_RADIUS} Authentication Servers`}
+                      title={`Maximum ${MAX_RADIUS} Authentication Server`}
                     />
                   )}
                   <Button
@@ -134,38 +134,6 @@ const RadiusForm = ({ form, details }) => {
                     />
                   </Item>
 
-                  <Item
-                    name={[field.name, 'timeout']}
-                    label="Session Timeout "
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Session timeout can be a number between 1 and 1440',
-                      },
-                      () => ({
-                        validator(_rule, value) {
-                          if (!value || (value >= 1 && value <= 1440)) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(
-                            new Error('Session timeout can be a number between 1 and 1440')
-                          );
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input
-                      placeholder="1-1440"
-                      type="number"
-                      min={1}
-                      max={1440}
-                      addonAfter={
-                        <Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />
-                      }
-                      data-testid={`authenticationTimeout${field.name}`}
-                    />
-                  </Item>
-
                   {index !== 0 && (
                     <Button
                       className={styles.RadiusDelete}
@@ -196,7 +164,7 @@ const RadiusForm = ({ form, details }) => {
                   {fields.length >= MAX_RADIUS && (
                     <Tooltip
                       className={styles.ToolTip}
-                      title={`Maximum ${MAX_RADIUS} Accounting Servers`}
+                      title={`Maximum ${MAX_RADIUS} Accounting Server`}
                     />
                   )}
                   <Button
@@ -279,37 +247,6 @@ const RadiusForm = ({ form, details }) => {
                     />
                   </Item>
 
-                  <Item
-                    name={[field.name, 'timeout']}
-                    label="Session Timeout "
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Session timeout can be a number between 1 and 1440',
-                      },
-                      () => ({
-                        validator(_rule, value) {
-                          if (!value || (value >= 1 && value <= 1440)) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(
-                            new Error('Session timeout can be a number between 1 and 1440')
-                          );
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input
-                      placeholder="1-1440"
-                      type="number"
-                      min={1}
-                      max={1440}
-                      addonAfter={
-                        <Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />
-                      }
-                      data-testid={`accountingTimeout${field.name}`}
-                    />
-                  </Item>
                   <Button
                     className={styles.RadiusDelete}
                     type="danger"
