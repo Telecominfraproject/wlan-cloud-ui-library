@@ -28,28 +28,24 @@ const mockData = {
       ipAddress: '127.0.0.1',
       secret: 'secret',
       port: 1812,
-      timeout: 5,
     },
     secondaryRadiusAuthServer: {
       model_type: 'RadiusServer',
       ipAddress: '127.0.0.1',
       secret: 'secret',
       port: 1812,
-      timeout: 5,
     },
     primaryRadiusAccountingServer: {
       model_type: 'RadiusServer',
       ipAddress: '127.0.0.1',
       secret: 'secret',
       port: 1812,
-      timeout: 5,
     },
     secondaryRadiusAccountingServer: {
       model_type: 'RadiusServer',
       ipAddress: '127.0.0.1',
       secret: 'secret',
       port: 1812,
-      timeout: 5,
     },
     profileType: 'radius',
   },
@@ -83,7 +79,6 @@ describe('<RadiusForm />', () => {
       expect(getByTestId('authenticationIpAddress0')).toBeVisible();
       expect(getByTestId('authenticationSecret0')).toBeVisible();
       expect(getByTestId('authenticationPort0')).toBeVisible();
-      expect(getByTestId('authenticationTimeout0')).toBeVisible();
     });
   });
 
@@ -138,18 +133,6 @@ describe('<RadiusForm />', () => {
     });
   });
 
-  it('Should show error message if Authentication Server timeout is outside range of 1-1440', async () => {
-    const { getByTestId, getByText } = render(<RadiusForm />);
-
-    fireEvent.change(getByTestId('authenticationTimeout0'), {
-      target: { value: 1441 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('Session timeout can be a number between 1 and 1440')).toBeVisible();
-    });
-  });
-
   it('Should show error message if Accounting Server port is outside range of 1-65535', async () => {
     const { getByTestId, getByText } = render(<RadiusForm />);
 
@@ -175,22 +158,6 @@ describe('<RadiusForm />', () => {
 
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
-    });
-  });
-
-  it('Should show error message if Accounting Server timeout is outside range of 1-1440', async () => {
-    const { getByTestId, getByText } = render(<RadiusForm />);
-
-    fireEvent.change(getByTestId('accountingTimeout0'), {
-      target: { value: 1441 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('Session timeout can be a number between 1 and 1440')).toBeVisible();
-    });
-
-    fireEvent.change(getByTestId('accountingTimeout0'), {
-      target: { value: 5 },
     });
   });
 
