@@ -434,13 +434,13 @@ const CaptivePortalForm = ({
             rules={[
               {
                 required: true,
-                message: 'Please select a RADIUS service',
+                message: 'Please select a RADIUS profile',
               },
             ]}
           >
             <Select
               className={globalStyles.field}
-              placeholder="RADIUS Services"
+              placeholder="RADIUS Profiles"
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch={onSearchProfile}
               filterOption={false}

@@ -196,7 +196,7 @@ const RFForm = ({ form, details }) => {
             return (
               <Select className={styles.Field}>
                 <Option value="modeN">N</Option>
-                {key !== 'is5GHz' && (
+                {key === 'is2dot4GHz' && (
                   <>
                     <Option value="modeB">B</Option>
                     <Option value="modeG">G</Option>
@@ -206,11 +206,11 @@ const RFForm = ({ form, details }) => {
                   <>
                     <Option value="modeAC">AC</Option>
                     <Option value="modeGN">GN</Option>
-                    <Option value="modeX">X</Option>
                     <Option value="modeA">A</Option>
                     <Option value="modeAB">AB</Option>
                   </>
                 )}
+                <Option value="modeX">AX</Option>
               </Select>
             );
           },

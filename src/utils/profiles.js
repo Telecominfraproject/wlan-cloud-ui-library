@@ -1,5 +1,3 @@
-import { notification } from 'antd';
-import _ from 'lodash';
 import { RADIOS, ROAMING } from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
@@ -68,8 +66,8 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa3OnlyEAP' ||
     values.secureMode === 'wpa3MixedEAP'
   ) {
-    formattedData.childProfileIds.push(values.radiusServiceName.value);
-    formattedData.radiusServiceName = values.radiusServiceName.label;
+    formattedData.childProfileIds.push(values.radiusServiceId.value);
+    formattedData.radiusServiceId = values.radiusServiceId.value;
   }
 
   return formattedData;
@@ -97,37 +95,21 @@ export const formatBonjourGatewayForm = values => {
 };
 
 export const formatRadiusForm = values => {
-  const formattedData = _.cloneDeep({ ...values, serviceRegionMap: {} });
-  values.zones.forEach(i => {
-    if (!(i.name in formattedData.serviceRegionMap)) {
-      formattedData.serviceRegionMap[i.name] = {
-        regionName: i.name,
-        serverMap: {},
-      };
-    }
-    values.services.forEach(j => {
-      formattedData.serviceRegionMap[i.name].serverMap[j.name] = j.ips;
-    });
+  const formattedData = { ...values };
 
-    if (!i.subnets || i.subnets.length === 0) {
-      notification.error({
-        message: 'Error',
-        description: 'At least 1 Subnet is required.',
-      });
+  formattedData.primaryRadiusAuthServer = { ...values.authenticationServer[0] };
 
-      throw Error('missing RADIUS subnet');
-    }
+  formattedData.secondaryRadiusAuthServer = values.authenticationServer?.[1]
+    ? { ...values.authenticationServer?.[1] }
+    : null;
 
-    i.subnets.forEach(j => {
-      if (!formattedData.subnetConfiguration) {
-        formattedData.subnetConfiguration = {};
-      }
-      formattedData.subnetConfiguration[j.subnetName] = _.cloneDeep(j);
-      if (values.probeInterval) {
-        formattedData.subnetConfiguration[j.subnetName].probeInterval = values.probeInterval;
-      }
-    });
-  });
+  formattedData.primaryRadiusAccountingServer = values.accountingServer?.[0]
+    ? { ...values.accountingServer?.[0] }
+    : null;
+
+  formattedData.secondaryRadiusAccountingServer = values.accountingServer?.[1]
+    ? { ...values.accountingServer?.[1] }
+    : null;
 
   return formattedData;
 };
