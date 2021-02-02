@@ -105,7 +105,7 @@ describe('<Profile />', () => {
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(paragraph).toBeVisible();
+      expect(paragraph).not.toBeVisible();
     });
   });
 

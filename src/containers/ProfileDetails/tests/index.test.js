@@ -601,97 +601,20 @@ describe('<ProfileDetails />', () => {
     });
   });
 
-  it('error notification should be visible when save button is clicked with no Radius services and profileType is radius', async () => {
+  it('onUpdateProfile should not be called on Radius page when any one of the fields is not submitted correctly', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText } = render(
+    const { getByLabelText, getByRole } = render(
       <Router>
         <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="radius" />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('At least 1 RADIUS Service is required.')).toBeVisible();
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: '' },
     });
-  });
-
-  it('error notification should be visible when save button is clicked with zero subnet and profileType is radius', async () => {
-    const submitSpy = jest.fn();
-    const mockDetails = {
-      ...mockProps,
-      profileType: 'radius',
-      details: {
-        ...mockProps.details,
-        serviceRegionMap: {
-          Ottawa: {
-            model_type: 'RadiusServiceRegion',
-            serverMap: {
-              'Radius-Profile': [
-                {
-                  model_type: 'RadiusServer',
-                  ipAddress: '192.168.0.1',
-                  secret: 'testing123',
-                  authPort: 1812,
-                  timeout: null,
-                },
-              ],
-            },
-            regionName: 'Ottawa',
-          },
-        },
-      },
-    };
-    const { getByRole, getByText } = render(
-      <Router>
-        <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} />
-      </Router>
-    );
-
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('At least 1 Subnet is required.')).toBeVisible();
-    });
-  });
-
-  it('error notification should be visible when save button is clicked with service zones and profileType is radius', async () => {
-    const submitSpy = jest.fn();
-    const mockDetails = {
-      ...mockProps,
-      profileType: 'radius',
-      details: {
-        ...mockProps.details,
-        serviceRegionMap: {
-          Ottawa: {
-            model_type: 'RadiusServiceRegion',
-            serverMap: {
-              'Radius-Profile': [
-                {
-                  model_type: 'RadiusServer',
-                  ipAddress: '192.168.0.1',
-                  secret: 'testing123',
-                  authPort: 1812,
-                  timeout: null,
-                },
-              ],
-            },
-            regionName: 'Ottawa',
-          },
-        },
-      },
-    };
-    const { getByRole, getByText } = render(
-      <Router>
-        <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} />
-      </Router>
-    );
-
-    fireEvent.click(getByRole('button', { name: /deleteRadiusServiceZone/i }));
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('At least 1 RADIUS Service Zone is required.')).toBeVisible();
+      expect(submitSpy).not.toHaveBeenCalled();
     });
   });
 

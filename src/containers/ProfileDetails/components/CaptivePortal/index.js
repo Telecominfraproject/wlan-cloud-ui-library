@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Radio, Select, Upload, Alert, Collapse, message, List } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Radio,
+  Select,
+  Upload,
+  Alert,
+  Collapse,
+  message,
+  List,
+  Empty,
+} from 'antd';
 import { QuestionCircleFilled } from '@ant-design/icons';
+import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import globalStyles from 'styles/index.scss';
@@ -42,7 +55,9 @@ const CaptivePortalForm = ({
   form,
   fileUpload,
   radiusProfiles,
-  onFetchMoreRadiusProfiles,
+  onSearchProfile,
+  onFetchMoreProfiles,
+  loadingRadiusProfiles,
 }) => {
   const [showTips, setShowTips] = useState(false);
 
@@ -419,14 +434,19 @@ const CaptivePortalForm = ({
             rules={[
               {
                 required: true,
-                message: 'Please select a RADIUS service',
+                message: 'Please select a RADIUS profile',
               },
             ]}
           >
             <Select
               className={globalStyles.field}
-              placeholder="RADIUS Services"
-              onPopupScroll={onFetchMoreRadiusProfiles}
+              placeholder="RADIUS Profiles"
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+              showSearch={onSearchProfile}
+              filterOption={false}
+              onSearch={name => onSearchProfile(name, PROFILES.radius)}
+              loading={loadingRadiusProfiles}
+              notFoundContent={!loadingRadiusProfiles && <Empty />}
             >
               {radiusProfiles.map(profile => (
                 <Option key={profile.id} value={profile.name}>
@@ -672,7 +692,9 @@ CaptivePortalForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
+  loadingRadiusProfiles: PropTypes.bool,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -680,7 +702,9 @@ CaptivePortalForm.defaultProps = {
   details: {},
   radiusProfiles: [],
   fileUpload: () => {},
-  onFetchMoreRadiusProfiles: () => {},
+  onSearchProfile: null,
+  onFetchMoreProfiles: () => {},
+  loadingRadiusProfiles: false,
 };
 
 export default CaptivePortalForm;

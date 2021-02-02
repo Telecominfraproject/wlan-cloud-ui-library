@@ -94,4 +94,14 @@
   .UpgradeState {
     margin-left: 20px;
   }
+
+  .HeaderDiv {
+    display: flex;
+  }
+
+  .troubleshootBtnsDiv {
+    & > * {
+      margin-right: 10px;
+    }
+  }
 }

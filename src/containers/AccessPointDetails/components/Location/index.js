@@ -75,6 +75,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
           profileId,
           locationId,
           name,
+          baseMacAddress: data?.baseMacAddress,
           latitude,
           longitude,
           serial,

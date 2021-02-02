@@ -20,3 +20,13 @@
     flex-direction: column;
   }
 }
+
+.HeaderDiv {
+  display: flex;
+}
+
+.troubleshootBtnsDiv {
+  & > * {
+    margin-right: 10px;
+  }
+}

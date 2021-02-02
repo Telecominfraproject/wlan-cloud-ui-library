@@ -196,7 +196,7 @@ const defaultSsidProfile = {
   ssidAdminState: 'enabled',
   secureMode: 'wpa2OnlyPSK',
   vlanId: 1,
-  keyStr: 'w1r3l3ss-fr33d0m',
+  keyStr: '',
   broadcastSsid: 'enabled',
   keyRefresh: 0,
   noLocalSubnets: false,
