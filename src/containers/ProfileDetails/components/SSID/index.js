@@ -73,9 +73,7 @@ const SSIDForm = ({
         } || null,
       ...radioBasedValues,
       childProfileIds: [],
-      radiusAcountingServiceInterval:
-        details?.radiusAcountingServiceInterval ||
-        defaultSsidProfile.radiusAcountingServiceInterval,
+      radiusAcountingServiceInterval: details?.radiusAcountingServiceInterval || '',
     });
   }, [form, details]);
 
@@ -366,10 +364,6 @@ const SSIDForm = ({
               name="radiusAcountingServiceInterval"
               label="RADIUS Accounting Interval"
               rules={[
-                {
-                  required: true,
-                  message: 'RADIUS accounting interval can be a number between 60 and 600',
-                },
                 () => ({
                   validator(_rule, value) {
                     if (!value || (value >= 60 && value <= 600)) {
@@ -384,7 +378,7 @@ const SSIDForm = ({
             >
               <Input
                 className={globalStyles.field}
-                placeholder="60-600"
+                placeholder="No RADIUS Accounting Interval"
                 type="number"
                 min={60}
                 max={600}
