@@ -21,6 +21,49 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 const mockProps = {
+  radiusProfiles: [
+    {
+      __typename: 'Profile',
+      id: '9',
+      name: 'Radius-Profile',
+      profileType: 'radius',
+      details: {
+        model_type: 'RadiusProfile',
+        primaryRadiusAuthServer: null,
+        secondaryRadiusAuthServer: null,
+        primaryRadiusAccountingServer: null,
+        secondaryRadiusAccountingServer: null,
+        profileType: 'radius',
+      },
+    },
+
+    {
+      __typename: 'Profile',
+      id: '15',
+      name: 'radius-profile-2021-01-26T19:14:49.513Z',
+      profileType: 'radius',
+      details: {
+        model_type: 'RadiusProfile',
+        primaryRadiusAuthServer: {
+          model_type: 'RadiusServer',
+          ipAddress: '127.0.0.1',
+          secret: 'secret',
+          port: 1812,
+          timeout: 5,
+        },
+        secondaryRadiusAuthServer: null,
+        primaryRadiusAccountingServer: {
+          model_type: 'RadiusServer',
+          ipAddress: '127.0.0.1',
+          secret: 'secret',
+          port: 1813,
+          timeout: 5,
+        },
+        secondaryRadiusAccountingServer: null,
+        profileType: 'radius',
+      },
+    },
+  ],
   details: {
     appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
     bandwidthLimitDown: 0,
@@ -394,5 +437,86 @@ describe('<SSIDForm />', () => {
     await waitFor(() => {
       expect(getByText('Security Key')).toBeVisible();
     });
+  });
+
+  it('changing Mode select option to Enterprise mode should show RADIUS profile select and RADIUS Accounting Interval field ', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, container } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    const DOWN_ARROW = { keyCode: 40 };
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
+    fireEvent.click(getByText('WPA3 Enterprise (mixed mode)'));
+    await waitFor(() => {
+      expect(getByText('RADIUS Profile')).toBeVisible();
+      expect(getByText('RADIUS Accounting Interval')).toBeVisible();
+    });
+  });
+
+  it('Radius Profiles should be shown in the Radius profiles select', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, container, getByLabelText } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    const DOWN_ARROW = { keyCode: 40 };
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
+    fireEvent.click(getByText('WPA3 Enterprise (mixed mode)'));
+    await waitFor(() => {
+      expect(getByText('RADIUS Profile')).toBeVisible();
+    });
+    const profile = getByLabelText('RADIUS Profile');
+    fireEvent.keyDown(profile, DOWN_ARROW);
+    await waitForElement(() => getByText(mockProps.radiusProfiles[0].name));
+    fireEvent.click(getByText(mockProps.radiusProfiles[0].name));
+  });
+
+  it('Should show errors if Radius Accounting Interval is outside range of 60-600', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, container, getByLabelText } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    const DOWN_ARROW = { keyCode: 40 };
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
+    fireEvent.click(getByText('WPA3 Enterprise (mixed mode)'));
+    await waitFor(() => {
+      expect(getByText('RADIUS Accounting Interval')).toBeVisible();
+    });
+    fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '59' } });
+    await waitFor(() => {
+      expect(
+        getByText('RADIUS accounting interval can be a number between 60 and 600')
+      ).toBeVisible();
+    });
+    fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '600' } });
   });
 });
