@@ -251,6 +251,7 @@ const mockProps = {
       __typename: 'Profile',
     },
   ],
+  onSearchProfile: () => {},
 };
 
 const DOWN_ARROW = { keyCode: 40 };

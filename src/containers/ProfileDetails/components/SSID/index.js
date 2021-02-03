@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select } from 'antd';
+import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING } from '../../constants/index';
+import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -16,12 +16,15 @@ const SSIDForm = ({
   form,
   details,
   captiveProfiles,
-  onFetchMoreCaptiveProfiles,
+  childProfiles,
   radiusProfiles,
-  onFetchMoreRadiusProfiles,
+  onSearchProfile,
+  onFetchMoreProfiles,
+  loadingCaptiveProfiles,
+  loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
-  const [mode, setMode] = useState(details.secureMode || 'open');
+  const [mode, setMode] = useState(details.secureMode || defaultSsidProfile.secureMode);
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -43,29 +46,33 @@ const SSIDForm = ({
 
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
-        radioBasedValues[`${j}${i}`] =
-          (details.radioBasedConfigs && details.radioBasedConfigs[i][j]) || 'auto';
+        radioBasedValues[`${j}${i}`] = details?.radioBasedConfigs?.[i]?.[j]?.toString() ?? 'auto';
       });
     });
 
     form.setFieldsValue({
-      ssid: details.ssid || '',
-      bandwidthLimitDown: details.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
-      bandwidthLimitUp: details.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
-      broadcastSsid: details.broadcastSsid || defaultSsidProfile.broadcastSsid,
-      appliedRadios: details.appliedRadios || defaultSsidProfile.appliedRadios,
-      forwardMode: details.forwardMode || defaultSsidProfile.forwardMode,
-      noLocalSubnets: details.noLocalSubnets ? 'true' : 'false',
-      captivePortal: details.captivePortalId ? 'usePortal' : 'notPortal',
+      ssid: details?.ssid || '',
+      bandwidthLimitDown: details?.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
+      bandwidthLimitUp: details?.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
+      broadcastSsid: details?.broadcastSsid || defaultSsidProfile.broadcastSsid,
+      appliedRadios: details?.appliedRadios || defaultSsidProfile.appliedRadios,
+      forwardMode: details?.forwardMode || defaultSsidProfile.forwardMode,
+      noLocalSubnets: details?.noLocalSubnets ? 'true' : 'false',
+      captivePortal: details?.captivePortalId ? 'usePortal' : 'notPortal',
       captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
       secureMode: details.secureMode || defaultSsidProfile.secureMode,
-      vlan: details.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
+      vlan: details?.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
       keyStr: details.keyStr || defaultSsidProfile.keyStr,
-      wepKey: (details.wepConfig && details.wepConfig.wepKeys[0].txKeyConverted) || '',
-      wepDefaultKeyId: (details.wepConfig && details.wepConfig.primaryTxKeyId) || 1,
+      wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
+      wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details.vlanId || defaultSsidProfile.vlanId,
-      radiusServiceName: details.radiusServiceName,
+      radiusServiceId:
+        {
+          value: childProfiles?.[0]?.id || null,
+          label: childProfiles?.[0]?.name || null,
+        } || null,
       ...radioBasedValues,
+      childProfileIds: [],
     });
   }, [form, details]);
 
@@ -259,7 +266,12 @@ const SSIDForm = ({
                 <Select
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
-                  onPopupScroll={onFetchMoreCaptiveProfiles}
+                  onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
+                  showSearch={onSearchProfile}
+                  filterOption={false}
+                  onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
+                  loading={loadingCaptiveProfiles}
+                  notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
                   {captiveProfiles.map(profile => (
                     <Option key={profile.id} value={profile.id}>
@@ -290,13 +302,18 @@ const SSIDForm = ({
             onChange={value => setMode(value)}
             placeholder="Select Security and Encryption Mode"
           >
-            <Option value="open">Open (No Encryption)</Option>
-            <Option value="wpaPSK">WPA Personal</Option>
-            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
+            <Option value="wpa3MixedEAP">WPA3 Enterprise (mixed mode)</Option>
+            <Option value="wpa3OnlySAE">WPA3 Personal</Option>
+            <Option value="wpa3MixedSAE">WPA3 Personal (mixed mode)</Option>
+            <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
             <Option value="wpa2Radius">WPA & WPA2 Enterprise (mixed mode)</Option>
             <Option value="wpa2OnlyPSK">WPA2 Personal</Option>
-            <Option value="wpa2OnlyRadius">WPA2 Enterprise</Option>
+            <Option value="wpa2PSK">WPA & WPA2 Personal (mixed mode)</Option>
+            <Option value="wpaRadius">WPA Enterprise</Option>
+            <Option value="wpaPSK">WPA Personal</Option>
             <Option value="wep">WEP</Option>
+            <Option value="open">Open (No Encryption)</Option>
           </Select>
         </Item>
 
@@ -308,25 +325,34 @@ const SSIDForm = ({
             </span>
           </Item>
         )}
-
-        {(mode === 'wpa2Radius' || mode === 'wpa2OnlyRadius') && (
+        {(mode === 'wpaRadius' ||
+          mode === 'wpa2Radius' ||
+          mode === 'wpa2OnlyRadius' ||
+          mode === 'wpa3OnlyEAP' ||
+          mode === 'wpa3MixedEAP') && (
           <Item
-            name="radiusServiceName"
-            label="RADIUS Service"
+            name="radiusServiceId"
+            label="RADIUS Profile"
             rules={[
               {
                 required: true,
-                message: 'Please select a RADIUS service',
+                message: 'Please select a RADIUS profile',
               },
             ]}
           >
             <Select
               className={globalStyles.field}
-              placeholder="Select RADIUS Service"
-              onPopupScroll={onFetchMoreRadiusProfiles}
+              placeholder="Select RADIUS Profile"
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+              showSearch={onSearchProfile}
+              filterOption={false}
+              onSearch={name => onSearchProfile(name, PROFILES.radius)}
+              loading={loadingRadiusProfiles}
+              notFoundContent={!loadingRadiusProfiles && <Empty />}
+              labelInValue
             >
               {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.name}>
+                <Option key={profile.id} value={profile.id}>
                   {profile.name}
                 </Option>
               ))}
@@ -334,7 +360,11 @@ const SSIDForm = ({
           </Item>
         )}
 
-        {(mode === 'wpaPSK' || mode === 'wpa2PSK' || mode === 'wpa2OnlyPSK') && (
+        {(mode === 'wpaPSK' ||
+          mode === 'wpa2PSK' ||
+          mode === 'wpa2OnlyPSK' ||
+          mode === 'wpa3OnlySAE' ||
+          mode === 'wpa3MixedSAE') && (
           <Item
             label="Security Key"
             name="keyStr"
@@ -462,9 +492,9 @@ const SSIDForm = ({
                 >
                   <Input
                     className={globalStyles.field}
-                    placeholder="2-4095"
+                    placeholder="1-4095"
                     type="number"
-                    min={2}
+                    min={1}
                     max={4095}
                     maxLength={4}
                   />
@@ -475,56 +505,65 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      {mode !== 'wpaPSK' && mode !== 'wep' && (
-        <Card title="Roaming">
-          <Item label="Advanced Settings" colon={false}>
-            <div className={styles.InlineDiv}>
-              {Object.keys(radioTypes || [])?.map(i => (
-                <span key={i}>{radioTypes?.[i]}</span>
-              ))}
-            </div>
-          </Item>
+      {mode !== 'wpaPSK' &&
+        mode !== 'wep' &&
+        mode !== 'wpa2PSK' &&
+        mode !== 'wpa2OnlyPSK' &&
+        mode !== 'wpa3MixedSAE' &&
+        mode !== 'wpa3OnlySAE' && (
+          <Card title="Roaming">
+            <Item label="Advanced Settings" colon={false}>
+              <div className={styles.InlineDiv}>
+                {Object.keys(radioTypes || [])?.map(i => (
+                  <span key={i}>{radioTypes?.[i]}</span>
+                ))}
+              </div>
+            </Item>
 
-          {mode !== 'open' && (
-            <Item
-              label={
-                <Tooltip
-                  title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
-                  text="Fast BSS Transition (802.11r)"
-                />
-              }
-            >
+            {mode !== 'open' && (
+              <Item
+                label={
+                  <Tooltip
+                    title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
+                    text="Fast BSS Transition (802.11r)"
+                  />
+                }
+              >
+                <div className={styles.InlineDiv}>
+                  {RADIOS.map(i => (
+                    <Item key={i} name={`enable80211r${i}`}>
+                      {dropdownOptions}
+                    </Item>
+                  ))}
+                </div>
+              </Item>
+            )}
+
+            <Item label="802.11k">
               <div className={styles.InlineDiv}>
                 {RADIOS.map(i => (
-                  <Item key={i} name={`enable80211r${i}`}>
+                  <Item key={i} name={`enable80211k${i}`}>
                     {dropdownOptions}
                   </Item>
                 ))}
               </div>
             </Item>
-          )}
 
-          <Item label="802.11k">
-            <div className={styles.InlineDiv}>
-              {RADIOS.map(i => (
-                <Item key={i} name={`enable80211k${i}`}>
-                  {dropdownOptions}
-                </Item>
-              ))}
-            </div>
-          </Item>
+            <Item label="802.11v">
+              <div className={styles.InlineDiv}>
+                {RADIOS.map(i => (
+                  <Item key={i} name={`enable80211v${i}`}>
+                    {dropdownOptions}
+                  </Item>
+                ))}
+              </div>
+            </Item>
+          </Card>
+        )}
 
-          <Item label="802.11v">
-            <div className={styles.InlineDiv}>
-              {RADIOS.map(i => (
-                <Item key={i} name={`enable80211v${i}`}>
-                  {dropdownOptions}
-                </Item>
-              ))}
-            </div>
-          </Item>
-        </Card>
-      )}
+      <Item name="childProfileIds" style={{ display: 'none' }}>
+        <Input />
+      </Item>
     </div>
   );
 };
@@ -532,19 +571,25 @@ const SSIDForm = ({
 SSIDForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  childProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
-  onFetchMoreCaptiveProfiles: PropTypes.func,
-  onFetchMoreRadiusProfiles: PropTypes.func,
+  onSearchProfile: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
+  loadingCaptiveProfiles: PropTypes.bool,
+  loadingRadiusProfiles: PropTypes.bool,
 };
 
 SSIDForm.defaultProps = {
   form: null,
   details: {},
+  childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
-  onFetchMoreCaptiveProfiles: () => {},
-  onFetchMoreRadiusProfiles: () => {},
+  onSearchProfile: null,
+  onFetchMoreProfiles: () => {},
+  loadingCaptiveProfiles: false,
+  loadingRadiusProfiles: false,
 };
 
 export default SSIDForm;

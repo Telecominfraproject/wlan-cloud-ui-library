@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Table } from 'antd';
+import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
+import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
@@ -17,8 +18,10 @@ const AccessPointForm = ({
   childProfiles,
   ssidProfiles,
   rfProfiles,
+  onSearchProfile,
   onFetchMoreProfiles,
-  onFetchMoreRfProfiles,
+  loadingSSIDProfiles,
+  loadingRFProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
@@ -37,7 +40,7 @@ const AccessPointForm = ({
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectdChildProfiles] = useState(
-    childProfiles.filter(i => i.profileType === 'ssid') || []
+    childProfiles.filter(i => i.profileType === PROFILES.ssid) || []
   );
 
   const handleOnChangeSsid = selectedItem => {
@@ -439,9 +442,13 @@ const AccessPointForm = ({
       <Card title="RF Enabled on This Profile">
         <Item name="rfProfileId">
           <Select
-            onPopupScroll={onFetchMoreRfProfiles}
-            showSearch
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
+            showSearch={onSearchProfile}
             placeholder="Select a RF Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.rf)}
+            loading={loadingRFProfiles}
+            notFoundContent={!loadingRFProfiles && <Empty />}
           >
             {rfProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -454,14 +461,14 @@ const AccessPointForm = ({
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
         <Item>
           <Select
-            onPopupScroll={onFetchMoreProfiles}
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
-            showSearch
+            showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}
             value="Select a SSID Profile"
           >
@@ -516,8 +523,10 @@ AccessPointForm.propTypes = {
   ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
+  onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
-  onFetchMoreRfProfiles: PropTypes.func,
+  loadingSSIDProfiles: PropTypes.bool,
+  loadingRFProfiles: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -526,8 +535,10 @@ AccessPointForm.defaultProps = {
   childProfiles: [],
   ssidProfiles: [],
   rfProfiles: [],
+  onSearchProfile: null,
   onFetchMoreProfiles: () => {},
-  onFetchMoreRfProfiles: () => {},
+  loadingSSIDProfiles: false,
+  loadingRFProfiles: false,
 };
 
 export default AccessPointForm;

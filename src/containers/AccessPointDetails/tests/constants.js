@@ -931,4 +931,5 @@ export const defaultProps = {
   onUpdateEquipment: () => {},
   loadingProfiles: false,
   loadingFirmware: false,
+  onDeleteEquipment: () => {},
 };

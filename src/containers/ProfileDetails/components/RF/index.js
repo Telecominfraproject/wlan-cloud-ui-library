@@ -107,7 +107,7 @@ const RFForm = ({ form, details }) => {
   const renderItem = (label, dataIndex, renderInput, options = {}) => (
     <Item label={label} colon={false}>
       <div className={styles.InlineDiv}>
-        {Object.keys(details.rfConfigMap).map(i => renderInput(dataIndex, i, label, options))}
+        {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
       </div>
     </Item>
   );
@@ -180,26 +180,40 @@ const RFForm = ({ form, details }) => {
             return (
               <Select className={styles.Field}>
                 <Option value="is20MHz">20MHz</Option>
-                {key === 'is2dot4GHz' ? null : <Option value="is40MHz">40MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is80MHz">80MHz</Option>}
-                {key === 'is2dot4GHz' ? null : <Option value="is160MHz">160MHz</Option>}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="is40MHz">40MHz</Option>
+                    <Option value="is80MHz">80MHz</Option>
+                    <Option value="is160MHz">160MHz</Option>
+                  </>
+                )}
               </Select>
             );
           },
         })}
         {renderItem('Radio Mode', ['radioMode'], renderOptionItem, {
-          dropdown: (
-            <Select className={styles.Field}>
-              <Option value="modeN">N</Option>
-              <Option value="modeAC">AC</Option>
-              <Option value="modeGN">GN</Option>
-              <Option value="modeX">X</Option>
-              <Option value="modeA">A</Option>
-              <Option value="modeB">B</Option>
-              <Option value="modeG">G</Option>
-              <Option value="modeAB">AB</Option>
-            </Select>
-          ),
+          dropdown: key => {
+            return (
+              <Select className={styles.Field}>
+                <Option value="modeN">N</Option>
+                {key === 'is2dot4GHz' && (
+                  <>
+                    <Option value="modeB">B</Option>
+                    <Option value="modeG">G</Option>
+                  </>
+                )}
+                {key !== 'is2dot4GHz' && (
+                  <>
+                    <Option value="modeAC">AC</Option>
+                    <Option value="modeGN">GN</Option>
+                    <Option value="modeA">A</Option>
+                    <Option value="modeAB">AB</Option>
+                  </>
+                )}
+                <Option value="modeX">AX</Option>
+              </Select>
+            );
+          },
         })}
         {renderItem(
           <span>Beacon Interval (milliseconds)</span>,
@@ -226,7 +240,7 @@ const RFForm = ({ form, details }) => {
         {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="auto">Auto</Option>
+              <Option value="none">Auto</Option>
               <Option value="oneByOne">1x1</Option>
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>

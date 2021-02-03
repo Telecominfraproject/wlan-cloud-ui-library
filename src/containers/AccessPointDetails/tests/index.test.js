@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitForElement } from '@testing-library/react';
+import { cleanup, fireEvent, waitForElement, within } from '@testing-library/react';
 import { BrowserRouter as Router, Route, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -249,7 +249,6 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(defaultProps.locations[0].children[0].name));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    fireEvent.click(getByRole('button', { name: /cancel/i }));
     const paragraph = getByText('Please confirm exiting without saving this Access Point page.');
     expect(paragraph).toBeVisible();
 
@@ -297,5 +296,57 @@ describe('<AccessPointDetails />', () => {
 
     fireEvent.click(getByRole('button', { name: /back/i }));
     expect(window.location.pathname).toEqual('/');
+  });
+
+  it('URL should change when clicking the ok button when Leave Page modal appears', () => {
+    const { getByRole, getByPlaceholderText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'test' },
+    });
+
+    fireEvent.click(getByRole('button', { name: /back/i }));
+    fireEvent.click(getByRole('button', { name: /ok/i }));
+    expect(window.location.pathname).toEqual('/');
+  });
+
+  it('Delete equipment button should show modal', () => {
+    const { getByRole, getByText, getAllByRole } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+    const paragraph = getByText(`Are you sure you want to delete this access point:`);
+    expect(paragraph).toBeVisible();
+    expect(within(paragraph).getByText(defaultProps.data.name)).toBeVisible();
+
+    fireEvent.click(getAllByRole('button', { name: 'Delete' })[1]);
+  });
+
+  it('Cancel button on delete AP modal should hide modal', () => {
+    const { getByRole, getByText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('button', { name: /delete/i }));
+    const paragraph = getByText(`Are you sure you want to delete this access point:`);
+
+    expect(paragraph).toBeVisible();
+    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+    expect(paragraph).not.toBeVisible();
   });
 });

@@ -12,6 +12,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import DeviceDetailCard from './components/DeviceDetailCard';
 import DeviceStatsCard from './components/DeviceStatsCard';
+
 import styles from './index.module.scss';
 
 const ClientDeviceDetails = ({
@@ -21,6 +22,7 @@ const ClientDeviceDetails = ({
   metricsError,
   metricsData,
   historyDate,
+  extraButtons,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const history = useHistory();
@@ -99,10 +101,15 @@ const ClientDeviceDetails = ({
   return (
     <>
       <div className={styles.topBtns}>
-        <Button icon={<LeftOutlined />} onClick={() => history.goBack()}>
-          Back
-        </Button>
-        <Button icon={<ReloadOutlined />} onClick={onRefresh} />
+        <div className={styles.HeaderDiv}>
+          <Button icon={<LeftOutlined />} onClick={() => history.goBack()}>
+            Back
+          </Button>
+        </div>
+        <div className={styles.HeaderDiv}>
+          <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
+          <Button icon={<ReloadOutlined />} onClick={onRefresh} />
+        </div>
       </div>
       <DeviceDetailCard
         name={hostname}
@@ -138,6 +145,7 @@ ClientDeviceDetails.propTypes = {
   metricsData: PropTypes.instanceOf(Array),
   metricsError: PropTypes.instanceOf(Object),
   historyDate: PropTypes.instanceOf(Object),
+  extraButtons: PropTypes.node,
 };
 
 ClientDeviceDetails.defaultProps = {
@@ -150,6 +158,7 @@ ClientDeviceDetails.defaultProps = {
     toTime: moment(),
     fromTime: moment(),
   },
+  extraButtons: null,
 };
 
 export default ClientDeviceDetails;
