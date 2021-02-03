@@ -17,11 +17,6 @@
     }
   }
 
-  :global(ul > li.ant-menu-item.ant-menu-item-only-child:nth-child(2)) {
-    padding: 0;
-    margin: 0 20px;
-  }
-
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item),
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-submenu) {
     height: 100%;
