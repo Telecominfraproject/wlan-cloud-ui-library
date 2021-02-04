@@ -73,6 +73,7 @@ const SSIDForm = ({
         } || null,
       ...radioBasedValues,
       childProfileIds: [],
+      radiusAcountingServiceInterval: details?.radiusAcountingServiceInterval || '',
     });
   }, [form, details]);
 
@@ -330,34 +331,61 @@ const SSIDForm = ({
           mode === 'wpa2OnlyRadius' ||
           mode === 'wpa3OnlyEAP' ||
           mode === 'wpa3MixedEAP') && (
-          <Item
-            name="radiusServiceId"
-            label="RADIUS Profile"
-            rules={[
-              {
-                required: true,
-                message: 'Please select a RADIUS profile',
-              },
-            ]}
-          >
-            <Select
-              className={globalStyles.field}
-              placeholder="Select RADIUS Profile"
-              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-              showSearch={onSearchProfile}
-              filterOption={false}
-              onSearch={name => onSearchProfile(name, PROFILES.radius)}
-              loading={loadingRadiusProfiles}
-              notFoundContent={!loadingRadiusProfiles && <Empty />}
-              labelInValue
+          <>
+            <Item
+              name="radiusServiceId"
+              label="RADIUS Profile"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select a RADIUS profile',
+                },
+              ]}
             >
-              {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.id}>
-                  {profile.name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
+              <Select
+                className={globalStyles.field}
+                placeholder="Select RADIUS Profile"
+                onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+                showSearch={onSearchProfile}
+                filterOption={false}
+                onSearch={name => onSearchProfile(name, PROFILES.radius)}
+                loading={loadingRadiusProfiles}
+                notFoundContent={!loadingRadiusProfiles && <Empty />}
+                labelInValue
+              >
+                {radiusProfiles.map(profile => (
+                  <Option key={profile.id} value={profile.id}>
+                    {profile.name}
+                  </Option>
+                ))}
+              </Select>
+            </Item>
+            <Item
+              name="radiusAcountingServiceInterval"
+              label="RADIUS Accounting Interval"
+              rules={[
+                () => ({
+                  validator(_rule, value) {
+                    if (!value || (value >= 60 && value <= 600)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error('RADIUS accounting interval can be a number between 60 and 600')
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input
+                className={globalStyles.field}
+                placeholder="No RADIUS Accounting Interval"
+                type="number"
+                min={60}
+                max={600}
+                addonAfter={<Tooltip title="Interval range between 60-600" text="Seconds" />}
+              />
+            </Item>
+          </>
         )}
 
         {(mode === 'wpaPSK' ||
