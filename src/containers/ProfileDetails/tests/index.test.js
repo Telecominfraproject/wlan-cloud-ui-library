@@ -455,11 +455,14 @@ describe('<ProfileDetails />', () => {
 
   it('onUpdateProfile should be called when all fields are submitted correctly profileType ssid', async () => {
     const submitSpy = jest.fn();
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="ssid" />
       </Router>
     );
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -507,11 +510,15 @@ describe('<ProfileDetails />', () => {
       },
       __typename: 'Profile',
     };
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockData} onUpdateProfile={submitSpy} />
       </Router>
     );
+
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -532,11 +539,14 @@ describe('<ProfileDetails />', () => {
       },
     };
 
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} profileType="equipment_ap" />
       </Router>
     );
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -589,11 +599,14 @@ describe('<ProfileDetails />', () => {
       },
       __typename: 'Profile',
     };
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails onUpdateProfile={submitSpy} {...mockData} />
       </Router>
     );
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
