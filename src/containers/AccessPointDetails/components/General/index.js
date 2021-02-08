@@ -423,13 +423,7 @@ const General = ({
               ),
             }
           )}
-          {renderItem('Rx Cell Size', radioMap, ['rxCellSizeDb', 'value'], renderInputItem, {
-            min: -100,
-            max: 100,
-            error: '-100 - 100 dBm',
-            addOnText: 'dBm',
-            mapName: 'radioMap',
-          })}
+
           {renderItem(
             'Probe Response Threshold',
             radioMap,

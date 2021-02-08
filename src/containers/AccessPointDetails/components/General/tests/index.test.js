@@ -99,50 +99,6 @@ describe('<General />', () => {
     });
   });
 
-  // Rx Cell Size
-  it('error if the rx cell size exceeds bounds for the is2dot4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is2dot4GHz'), {
-      target: { value: 101 },
-    });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-  it('error if the rx cell size exceeds bounds for the is5GHzU setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzU'), {
-      target: { value: -101 },
-    });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-  it('error if the rx cell size exceeds bounds for the is5GHzL setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzL'), {
-      target: { value: 101 },
-    });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-
   // Probe response threshold
   it('error if the probe response threshold exceeds bounds for the is2dot4GHz setting', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);

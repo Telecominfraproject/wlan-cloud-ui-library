@@ -239,11 +239,6 @@ describe('<RFForm />', () => {
       expect(queryByText('Enter RTS/CTS threshold for is5GHzU')).not.toBeInTheDocument();
       expect(queryByText('Enter RTS/CTS threshold for is5GHzL')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Rx Cell Size for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHzL')).not.toBeInTheDocument();
-
       expect(queryByText('Enter Probe Response Threshold for is2dot4GHz')).not.toBeInTheDocument();
       expect(queryByText('Enter Probe Response Threshold for is5GHz')).not.toBeInTheDocument();
       expect(queryByText('Enter Probe Response Threshold for is5GHzU')).not.toBeInTheDocument();
@@ -494,90 +489,7 @@ describe('<RFForm />', () => {
       expect(getByText('0 - 65535 (Bytes)')).toBeVisible();
     });
   });
-  // test Rx Cell Size invalid inputs
-  it('error if the Rx Cell Size exceeds bounds for the is2dot4GHz setting', async () => {
-    const RFFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RFForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
 
-    const { getByText, getByPlaceholderText } = render(<RFFormComp />);
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is2dot4GHz'), {
-      target: { value: -101 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-
-  it('error if the Rx Cell Size exceeds bounds for the is5GHz setting', async () => {
-    const RFFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RFForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByPlaceholderText } = render(<RFFormComp />);
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHz'), {
-      target: { value: -101 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-
-  it('error if the Rx Cell Size exceeds bounds for the is5GHzU setting', async () => {
-    const RFFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RFForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByPlaceholderText } = render(<RFFormComp />);
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzU'), {
-      target: { value: -101 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
-
-  it('error if the Rx Cell Size exceeds bounds for the is5GHzL setting', async () => {
-    const RFFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RFForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByPlaceholderText } = render(<RFFormComp />);
-
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzL'), {
-      target: { value: -101 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
-    });
-  });
   // test Probe Response Threshold invalid inputs
   it('error if the Probe Response Threshold exceeds bounds for the is2dot4GHz setting', async () => {
     const RFFormComp = () => {
