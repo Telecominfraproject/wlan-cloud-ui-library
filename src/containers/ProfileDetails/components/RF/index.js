@@ -303,9 +303,9 @@ const RFForm = ({ form, details }) => {
           }
         )}
         {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
-          min: 0,
-          max: 100,
-          error: '0 - 100 dBm',
+          min: 1,
+          max: 32,
+          error: '1 - 32 dBm',
           addOnText: 'dBm',
         })}
         <p>Active Scan Setting:</p>

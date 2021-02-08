@@ -764,7 +764,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 dBm')).toBeVisible();
+      expect(getByText('1 - 32 dBm')).toBeVisible();
     });
   });
 
@@ -785,28 +785,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 dBm')).toBeVisible();
-    });
-  });
-
-  it('error if the EIRP Tx Power exceeds bounds for the is5GHz setting', async () => {
-    const RFFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <RFForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByPlaceholderText } = render(<RFFormComp />);
-
-    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHz'), {
-      target: { value: -1 },
-    });
-
-    await waitFor(() => {
-      expect(getByText('0 - 100 dBm')).toBeVisible();
+      expect(getByText('1 - 32 dBm')).toBeVisible();
     });
   });
 
@@ -827,7 +806,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 dBm')).toBeVisible();
+      expect(getByText('1 - 32 dBm')).toBeVisible();
     });
   });
 
@@ -848,7 +827,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 dBm')).toBeVisible();
+      expect(getByText('1 - 32 dBm')).toBeVisible();
     });
   });
   // test Scan Frequency invalid inputs

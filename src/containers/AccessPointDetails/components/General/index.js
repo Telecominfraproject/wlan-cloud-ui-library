@@ -457,9 +457,9 @@ const General = ({
             }
           )}
           {renderItem('EIRP Tx Power', radioMap, ['eirpTxPower', 'value'], renderInputItem, {
-            min: 0,
-            max: 100,
-            error: '0 - 100 dBm',
+            min: 1,
+            max: 32,
+            error: '1 - 32 dBm',
             addOnText: 'dBm',
             mapName: 'radioMap',
           })}
