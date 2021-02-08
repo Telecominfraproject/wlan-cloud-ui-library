@@ -533,61 +533,60 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      {mode !== 'wpaPSK' &&
-        mode !== 'wep' &&
-        mode !== 'wpa2PSK' &&
-        mode !== 'wpa2OnlyPSK' &&
-        mode !== 'wpa3MixedSAE' &&
-        mode !== 'wpa3OnlySAE' && (
-          <Card title="Roaming">
-            <Item label="Advanced Settings" colon={false}>
+      <Card title="Roaming">
+        <Item label="Advanced Settings" colon={false}>
+          <div className={styles.InlineDiv}>
+            {Object.keys(radioTypes || [])?.map(i => (
+              <span key={i}>{radioTypes?.[i]}</span>
+            ))}
+          </div>
+        </Item>
+
+        {mode !== 'wpaPSK' &&
+          mode !== 'wep' &&
+          mode !== 'wpa2PSK' &&
+          mode !== 'wpa2OnlyPSK' &&
+          mode !== 'wpa3MixedSAE' &&
+          mode !== 'wpa3OnlySAE' &&
+          mode !== 'open' && (
+            <Item
+              label={
+                <Tooltip
+                  title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
+                  text="Fast BSS Transition (802.11r)"
+                />
+              }
+            >
               <div className={styles.InlineDiv}>
-                {Object.keys(radioTypes || [])?.map(i => (
-                  <span key={i}>{radioTypes?.[i]}</span>
+                {RADIOS.map(i => (
+                  <Item key={i} name={`enable80211r${i}`}>
+                    {dropdownOptions}
+                  </Item>
                 ))}
               </div>
             </Item>
+          )}
 
-            {mode !== 'open' && (
-              <Item
-                label={
-                  <Tooltip
-                    title="When a wireless network is configured with 'Fast BSS Transitions', hand-offs from one base station to another are managed seamlessly."
-                    text="Fast BSS Transition (802.11r)"
-                  />
-                }
-              >
-                <div className={styles.InlineDiv}>
-                  {RADIOS.map(i => (
-                    <Item key={i} name={`enable80211r${i}`}>
-                      {dropdownOptions}
-                    </Item>
-                  ))}
-                </div>
+        <Item label="802.11k">
+          <div className={styles.InlineDiv}>
+            {RADIOS.map(i => (
+              <Item key={i} name={`enable80211k${i}`}>
+                {dropdownOptions}
               </Item>
-            )}
+            ))}
+          </div>
+        </Item>
 
-            <Item label="802.11k">
-              <div className={styles.InlineDiv}>
-                {RADIOS.map(i => (
-                  <Item key={i} name={`enable80211k${i}`}>
-                    {dropdownOptions}
-                  </Item>
-                ))}
-              </div>
-            </Item>
-
-            <Item label="802.11v">
-              <div className={styles.InlineDiv}>
-                {RADIOS.map(i => (
-                  <Item key={i} name={`enable80211v${i}`}>
-                    {dropdownOptions}
-                  </Item>
-                ))}
-              </div>
-            </Item>
-          </Card>
-        )}
+        <Item label="802.11v">
+          <div className={styles.InlineDiv}>
+            {RADIOS.map(i => (
+              <Item key={i} name={`enable80211v${i}`}>
+                {dropdownOptions}
+              </Item>
+            ))}
+          </div>
+        </Item>
+      </Card>
 
       <Item name="childProfileIds" style={{ display: 'none' }}>
         <Input />
