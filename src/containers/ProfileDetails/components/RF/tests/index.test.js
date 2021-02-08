@@ -680,7 +680,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -701,7 +701,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -722,7 +722,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -743,7 +743,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
   // test EIRP Tx Power invalid inputs
