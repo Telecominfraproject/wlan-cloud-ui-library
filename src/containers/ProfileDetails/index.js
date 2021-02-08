@@ -217,7 +217,7 @@ const ProfileDetails = ({
         </div>
         <div className={styles.HeaderDiv}>
           <div className={styles.HeaderButton}>{extraButtons}</div>
-          <Button type="primary" onClick={handleOnSave}>
+          <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
             Save
           </Button>
         </div>
