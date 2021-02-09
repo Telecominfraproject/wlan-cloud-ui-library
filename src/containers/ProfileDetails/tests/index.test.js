@@ -460,10 +460,15 @@ describe('<ProfileDetails />', () => {
         <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="ssid" />
       </Router>
     );
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
     fireEvent.change(getByLabelText('Profile Name'), {
       target: { value: 'Test' },
     });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -515,11 +520,15 @@ describe('<ProfileDetails />', () => {
         <ProfileDetails {...mockData} onUpdateProfile={submitSpy} />
       </Router>
     );
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
 
     fireEvent.change(getByLabelText('Profile Name'), {
       target: { value: 'Test' },
     });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -544,10 +553,15 @@ describe('<ProfileDetails />', () => {
         <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} profileType="equipment_ap" />
       </Router>
     );
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
     fireEvent.change(getByLabelText('Profile Name'), {
       target: { value: 'Test' },
     });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -604,10 +618,16 @@ describe('<ProfileDetails />', () => {
         <ProfileDetails onUpdateProfile={submitSpy} {...mockData} />
       </Router>
     );
+
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
     fireEvent.change(getByLabelText('Profile Name'), {
       target: { value: 'Test' },
     });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
