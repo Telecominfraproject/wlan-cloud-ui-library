@@ -211,6 +211,7 @@ const mockProps = {
       },
     },
   },
+  showFields: true,
 };
 
 describe('<RFForm />', () => {

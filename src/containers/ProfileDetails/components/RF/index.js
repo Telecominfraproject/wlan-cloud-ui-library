@@ -10,7 +10,7 @@ import { RADIOS } from '../../constants';
 const { Item } = Form;
 const { Option } = Select;
 
-const RFForm = ({ form, details }) => {
+const RFForm = ({ form, details, showFields }) => {
   const { radioTypes } = useContext(ThemeContext);
   const currentRadios = Object.keys(details.rfConfigMap).sort();
 
@@ -382,36 +382,39 @@ const RFForm = ({ form, details }) => {
             addOnText: 'sec',
           }
         )}
-        {renderItem(
-          'Non WIFI',
-          ['channelHopSettings', 'nonWifiThresholdInPercentage'],
-          renderInputItem,
-          {
-            min: 0,
-            max: 100,
-            error: '0 - 100%',
-            addOnText: '%',
-          }
-        )}
-        {renderItem(
-          'Non WIFI Time',
-          ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
-          renderInputItem,
-          {
-            min: 0,
-            max: 500,
-            error: '0 - 500 seconds',
-            addOnText: 'sec',
-          }
-        )}
-        {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
-          dropdown: (
-            <Select className={styles.Field}>
-              <Option value="NON_WIFI">Non-Wifi</Option>
-              <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
-            </Select>
-          ),
-        })}
+        {showFields &&
+          renderItem(
+            'Non WIFI',
+            ['channelHopSettings', 'nonWifiThresholdInPercentage'],
+            renderInputItem,
+            {
+              min: 0,
+              max: 100,
+              error: '0 - 100%',
+              addOnText: '%',
+            }
+          )}
+        {showFields &&
+          renderItem(
+            'Non WIFI Time',
+            ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
+            renderInputItem,
+            {
+              min: 0,
+              max: 500,
+              error: '0 - 500 seconds',
+              addOnText: 'sec',
+            }
+          )}
+        {showFields &&
+          renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
+            dropdown: (
+              <Select className={styles.Field}>
+                <Option value="NON_WIFI">Non-Wifi</Option>
+                <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
+              </Select>
+            ),
+          })}
       </Card>
     </div>
   );
@@ -420,6 +423,7 @@ const RFForm = ({ form, details }) => {
 RFForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  showFields: PropTypes.bool,
 };
 
 RFForm.defaultProps = {
@@ -428,6 +432,7 @@ RFForm.defaultProps = {
     // eslint-disable-next-line no-return-assign, no-sequences
     rfConfigMap: RADIOS.reduce((acc, i) => ((acc[i] = {}), acc), {}),
   },
+  showFields: false,
 };
 
 export default RFForm;
