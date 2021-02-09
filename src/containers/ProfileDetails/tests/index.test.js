@@ -455,12 +455,20 @@ describe('<ProfileDetails />', () => {
 
   it('onUpdateProfile should be called when all fields are submitted correctly profileType ssid', async () => {
     const submitSpy = jest.fn();
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockProps} onUpdateProfile={submitSpy} profileType="ssid" />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -507,12 +515,20 @@ describe('<ProfileDetails />', () => {
       },
       __typename: 'Profile',
     };
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockData} onUpdateProfile={submitSpy} />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -532,12 +548,20 @@ describe('<ProfileDetails />', () => {
       },
     };
 
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockDetails} onUpdateProfile={submitSpy} profileType="equipment_ap" />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
@@ -589,12 +613,21 @@ describe('<ProfileDetails />', () => {
       },
       __typename: 'Profile',
     };
-    const { getByRole } = render(
+    const { getByRole, getByLabelText } = render(
       <Router>
         <ProfileDetails onUpdateProfile={submitSpy} {...mockData} />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+
+    const button = getByRole('button', { name: 'Save' });
+    expect(button).toBeDisabled();
+
+    fireEvent.change(getByLabelText('Profile Name'), {
+      target: { value: 'Test' },
+    });
+    expect(button).not.toBeDisabled();
+
+    fireEvent.click(button);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);
