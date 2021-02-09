@@ -423,7 +423,13 @@ const General = ({
               ),
             }
           )}
-
+          {renderItem('Rx Cell Size', radioMap, ['rxCellSizeDb', 'value'], renderInputItem, {
+            min: -100,
+            max: 100,
+            error: '-100 - 100 dBm',
+            addOnText: 'dBm',
+            mapName: 'radioMap',
+          })}
           {renderItem(
             'Probe Response Threshold',
             radioMap,
@@ -444,16 +450,16 @@ const General = ({
             renderInputItem,
             {
               min: -100,
-              max: 100,
-              error: '-100 - 100 dBm',
+              max: 0,
+              error: '-100 - 0 dBm',
               addOnText: 'dBm',
               mapName: 'radioMap',
             }
           )}
           {renderItem('EIRP Tx Power', radioMap, ['eirpTxPower', 'value'], renderInputItem, {
-            min: 0,
-            max: 100,
-            error: '0 - 100 dBm',
+            min: 1,
+            max: 32,
+            error: '1 - 32 dBm',
             addOnText: 'dBm',
             mapName: 'radioMap',
           })}

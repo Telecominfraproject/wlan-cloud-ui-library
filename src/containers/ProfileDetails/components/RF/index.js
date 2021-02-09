@@ -279,7 +279,12 @@ const RFForm = ({ form, details }) => {
             </Select>
           ),
         })}
-
+        {renderItem('Rx Cell Size', ['rxCellSizeDb'], renderInputItem, {
+          min: -100,
+          max: 100,
+          error: '-100 - 100 dBm',
+          addOnText: 'dBm',
+        })}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
