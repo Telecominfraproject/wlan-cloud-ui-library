@@ -932,4 +932,5 @@ export const defaultProps = {
   loadingProfiles: false,
   loadingFirmware: false,
   onDeleteEquipment: () => {},
+  showFields: true,
 };
