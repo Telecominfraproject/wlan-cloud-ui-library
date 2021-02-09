@@ -199,7 +199,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
   it('error if the client disconnect threshold exceeds bounds for the is5GHzU setting', async () => {
@@ -213,7 +213,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
   it('error if the client disconnect threshold exceeds bounds for the is5GHzL setting', async () => {
@@ -227,7 +227,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
