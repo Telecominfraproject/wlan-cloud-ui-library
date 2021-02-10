@@ -10,7 +10,7 @@ import { RADIOS } from '../../constants';
 const { Item } = Form;
 const { Option } = Select;
 
-const RFForm = ({ form, details, showFields }) => {
+const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);
   const currentRadios = Object.keys(details.rfConfigMap).sort();
 
@@ -158,6 +158,17 @@ const RFForm = ({ form, details, showFields }) => {
     </Item>
   );
 
+  const renderExtraFields = name => {
+    const item = extraFields.find(i => i.label === name);
+    if (item?.renderInput === 'renderInputItem') {
+      return renderItem(item.label, item.dataIndex, renderInputItem, item.options);
+    }
+    if (item?.renderInput === 'renderOptionItem') {
+      return renderItem(item.label, item.dataIndex, renderOptionItem, item.options);
+    }
+    return null;
+  };
+
   return (
     <div className={styles.ProfilePage}>
       <Card>
@@ -279,13 +290,7 @@ const RFForm = ({ form, details, showFields }) => {
             </Select>
           ),
         })}
-        {showFields &&
-          renderItem('Rx Cell Size', ['rxCellSizeDb'], renderInputItem, {
-            min: -100,
-            max: 100,
-            error: '-100 - 100 dBm',
-            addOnText: 'dBm',
-          })}
+        {renderExtraFields('Rx Cell Size')}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
@@ -383,36 +388,9 @@ const RFForm = ({ form, details, showFields }) => {
             addOnText: 'sec',
           }
         )}
-        {renderItem(
-          'Non WIFI',
-          ['channelHopSettings', 'nonWifiThresholdInPercentage'],
-          renderInputItem,
-          {
-            min: 0,
-            max: 100,
-            error: '0 - 100%',
-            addOnText: '%',
-          }
-        )}
-        {renderItem(
-          'Non WIFI Time',
-          ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
-          renderInputItem,
-          {
-            min: 0,
-            max: 500,
-            error: '0 - 500 seconds',
-            addOnText: 'sec',
-          }
-        )}
-        {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
-          dropdown: (
-            <Select className={styles.Field}>
-              <Option value="NON_WIFI">Non-Wifi</Option>
-              <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
-            </Select>
-          ),
-        })}
+        {renderExtraFields('Non WIFI')}
+        {renderExtraFields('Non WIFI Time')}
+        {renderExtraFields('OBSS Hop Mode')}
       </Card>
     </div>
   );
@@ -421,7 +399,7 @@ const RFForm = ({ form, details, showFields }) => {
 RFForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
-  showFields: PropTypes.bool,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 RFForm.defaultProps = {
@@ -430,7 +408,7 @@ RFForm.defaultProps = {
     // eslint-disable-next-line no-return-assign, no-sequences
     rfConfigMap: RADIOS.reduce((acc, i) => ((acc[i] = {}), acc), {}),
   },
-  showFields: false,
+  extraFields: [],
 };
 
 export default RFForm;

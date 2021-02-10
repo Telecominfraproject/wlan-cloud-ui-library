@@ -63,7 +63,7 @@ const ProfileDetails = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
-  showFields,
+  extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -284,7 +284,7 @@ const ProfileDetails = ({
         {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}
         {profileType === PROFILES.bonjour && <BonjourGatewayForm details={details} form={form} />}
         {profileType === PROFILES.rf && (
-          <RFForm details={details} form={form} showFields={showFields} />
+          <RFForm details={details} form={form} extraFields={extraFields} />
         )}
         {profileType === PROFILES.passpoint && (
           <PasspointProfileForm
@@ -337,7 +337,7 @@ ProfileDetails.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
-  showFields: PropTypes.bool,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 ProfileDetails.defaultProps = {
@@ -363,7 +363,7 @@ ProfileDetails.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
-  showFields: false,
+  extraFields: [],
 };
 
 export default ProfileDetails;

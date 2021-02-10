@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor } from '@testing-library/react';
-import { Form } from 'antd';
+import { Form, Select } from 'antd';
 import { render } from 'tests/utils';
 
 import RFForm from '..';
@@ -19,6 +19,8 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+const { Option } = Select;
 
 const mockProps = {
   details: {
@@ -211,7 +213,54 @@ const mockProps = {
       },
     },
   },
-  showFields: true,
+  extraFields: [
+    {
+      label: 'Rx Cell Size',
+      dataIndex: ['rxCellSizeDb'],
+      renderInput: 'renderInputItem',
+      options: {
+        min: -100,
+        max: 100,
+        error: '-100 - 100 dBm',
+        addOnText: 'dBm',
+      },
+    },
+    {
+      label: 'Non WIFI',
+      dataIndex: ['channelHopSettings', 'nonWifiThresholdInPercentage'],
+      renderInput: 'renderInputItem',
+      options: {
+        min: 0,
+        max: 100,
+        error: '0 - 100%',
+        addOnText: '%',
+      },
+    },
+    {
+      label: 'Non WIFI Time',
+      dataIndex: ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
+      renderInput: 'renderInputItem',
+      options: {
+        min: 0,
+        max: 500,
+        error: '0 - 500 seconds',
+        addOnText: 'sec',
+      },
+    },
+    {
+      label: 'OBSS Hop Mode',
+      dataIndex: ['channelHopSettings', 'obssHopMode'],
+      renderInput: 'renderOptionItem',
+      options: {
+        dropdown: (
+          <Select>
+            <Option value="NON_WIFI">Non-Wifi</Option>
+            <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
+          </Select>
+        ),
+      },
+    },
+  ],
 };
 
 describe('<RFForm />', () => {
