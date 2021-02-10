@@ -7,8 +7,8 @@ import styles from './index.module.scss';
 const { Item } = Form;
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 9 },
+  labelCol: { span: 5 },
+  wrapperCol: { span: 15 },
 };
 
 const EditAccount = ({ email, onSubmit }) => {

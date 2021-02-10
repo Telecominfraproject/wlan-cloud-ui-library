@@ -35,7 +35,7 @@ const Firmware = ({
 
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 15 },
   };
 
   const handleOnChangeVersion = value => {

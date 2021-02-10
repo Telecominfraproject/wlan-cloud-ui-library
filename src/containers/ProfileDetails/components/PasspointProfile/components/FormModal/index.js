@@ -11,7 +11,7 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
 
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
+    wrapperCol: { span: 12 },
   };
 
   const addItem = () => {

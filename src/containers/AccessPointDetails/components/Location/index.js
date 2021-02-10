@@ -11,7 +11,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
   const [form] = Form.useForm();
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 15 },
   };
 
   const getLocationPath = () => {

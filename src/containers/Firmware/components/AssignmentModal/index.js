@@ -36,7 +36,7 @@ const AssignmentModal = ({
 
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 14 },
+    wrapperCol: { span: 12 },
   };
 
   const onModelChange = value => {

@@ -29,7 +29,7 @@ const FormModal = ({
 
   const layout = {
     labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
+    wrapperCol: { span: 15 },
   };
 
   useEffect(() => {

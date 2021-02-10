@@ -52,7 +52,7 @@ const General = ({
 
   const layout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 14 },
+    wrapperCol: { span: 15 },
   };
 
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
