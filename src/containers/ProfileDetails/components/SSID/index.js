@@ -562,7 +562,7 @@ const SSIDForm = ({
                     <Option value="enabled">Enabled</Option>
                     <Option value="enabled_reject_if_no_radius_dynamic_vlan">
                       <Tooltip
-                        title="RADIUS Authentication is rejected if Dynamic Vlan is not given by the RADIUS"
+                        title="RADIUS Authentication is rejected if Dynamic VLAN is not given by the RADIUS"
                         text="Qualified Enabled"
                       />
                     </Option>
