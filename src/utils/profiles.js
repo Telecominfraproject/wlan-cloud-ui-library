@@ -70,6 +70,19 @@ export const formatSsidProfileForm = values => {
     formattedData.radiusServiceId = values.radiusServiceId.value;
   }
 
+  if (
+    !(
+      values.secureMode === 'wpaRadius' ||
+      values.secureMode === 'wpa2Radius' ||
+      values.secureMode === 'wpa2OnlyRadius' ||
+      values.secureMode === 'wpa3OnlyEAP' ||
+      values.secureMode === 'wpa3MixedEAP'
+    ) ||
+    values.forwardMode === 'NAT'
+  ) {
+    formattedData.dynamicVlan = 'disabled';
+  }
+
   return formattedData;
 };
 
