@@ -163,6 +163,11 @@ export const formatCaptiveForm = (values, details) => {
     formattedData.externalCaptivePortalURL = null;
   }
 
+  if (values.authenticationType === 'radius') {
+    formattedData.radiusServiceId = parseInt(values.radiusServiceId.value, 10);
+    formattedData.childProfileIds.push(parseInt(values.radiusServiceId.value, 10));
+  }
+
   return formattedData;
 };
 

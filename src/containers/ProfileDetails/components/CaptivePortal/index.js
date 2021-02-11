@@ -52,6 +52,7 @@ const formatFile = file => {
 
 const CaptivePortalForm = ({
   details,
+  childProfiles,
   form,
   fileUpload,
   radiusProfiles,
@@ -303,7 +304,12 @@ const CaptivePortalForm = ({
       backgroundRepeat: details.backgroundRepeat || 'no_repeat',
       backgroundPosition: details.backgroundPosition || 'left_top',
       radiusAuthMethod: details.radiusAuthMethod,
-      radiusServiceName: details.radiusServiceName,
+      radiusServiceId:
+        {
+          value: childProfiles?.[0]?.id || null,
+          label: childProfiles?.[0]?.name || null,
+        } || null,
+      childProfileIds: [],
       userList: details.userList,
     });
   }, [form, details]);
@@ -429,7 +435,7 @@ const CaptivePortalForm = ({
             </Select>
           </Item>
           <Item
-            name="radiusServiceName"
+            name="radiusServiceId"
             label="Service"
             rules={[
               {
@@ -447,9 +453,10 @@ const CaptivePortalForm = ({
               onSearch={name => onSearchProfile(name, PROFILES.radius)}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
+              labelInValue
             >
               {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.name}>
+                <Option key={profile.id} value={profile.id}>
                   {profile.name}
                 </Option>
               ))}
@@ -681,6 +688,10 @@ const CaptivePortalForm = ({
           <Item name="walledGardenAllowlist" hidden>
             <Input />
           </Item>
+
+          <Item name="childProfileIds" style={{ display: 'none' }}>
+            <Input />
+          </Item>
         </Panel>
       </Collapse>
     </div>
@@ -690,6 +701,7 @@ const CaptivePortalForm = ({
 CaptivePortalForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  childProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
   onSearchProfile: PropTypes.func,
@@ -700,6 +712,7 @@ CaptivePortalForm.propTypes = {
 CaptivePortalForm.defaultProps = {
   form: null,
   details: {},
+  childProfiles: [],
   radiusProfiles: [],
   fileUpload: () => {},
   onSearchProfile: null,
