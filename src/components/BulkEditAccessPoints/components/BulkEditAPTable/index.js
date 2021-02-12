@@ -27,43 +27,17 @@ const BulkEditAPTable = ({
     setTableData(tableData);
   }, [tableData]);
 
-  let tempEditedRows = [];
+  const handleSave = (row, values) => {
+    const updatedRow = { ...row };
+    const key = Object.keys(values)[0];
+    updatedRow[key] = JSON.parse(`[${values[key]}]`);
 
-  const handleSave = row => {
-    const newData = [...bulkEditTableData];
-    const channel = JSON.parse(`[${row.channel}]`);
-    const cellSize = JSON.parse(`[${row.cellSize}]`);
-    const probeResponseThreshold = JSON.parse(`[${row.probeResponseThreshold}]`);
-    const clientDisconnectThreshold = JSON.parse(`[${row.clientDisconnectThreshold}]`);
-    const snrDrop = JSON.parse(`[${row.snrDrop}]`);
-    const minLoad = JSON.parse(`[${row.minLoad}]`);
-    const updatedRow = {
-      ...row,
-      channel,
-      cellSize,
-      probeResponseThreshold,
-      clientDisconnectThreshold,
-      snrDrop,
-      minLoad,
-    };
-    const itemIndex = editedRows.findIndex(a => row.key === a.key);
-    const tempRows = [...editedRows];
-
-    if (itemIndex === -1) {
-      tempRows.push(updatedRow);
-      setEditedRows(tempRows);
+    if (!editedRows.some(a => row.key === a.key)) {
+      setEditedRows([...editedRows, updatedRow]);
     } else {
-      const preRow = editedRows[itemIndex];
-      tempEditedRows = [...editedRows];
-      tempEditedRows.splice(itemIndex, 1, { ...preRow, ...updatedRow });
-      setEditedRows(tempEditedRows);
+      setEditedRows(editedRows.map(obj => (obj.id === updatedRow.id ? updatedRow : obj)));
     }
-
-    tempEditedRows.push(updatedRow);
-    const index = newData.findIndex(b => row.key === b.key);
-    const element = newData[index];
-    newData.splice(index, 1, { ...element, ...updatedRow });
-    setTableData(newData);
+    setTableData(bulkEditTableData.map(obj => (obj.id === updatedRow.id ? updatedRow : obj)));
   };
 
   const columns = tableColumns.map(col => {

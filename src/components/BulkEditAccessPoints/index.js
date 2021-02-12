@@ -56,6 +56,7 @@ const BulkEditAccessPoints = ({
             onSaveChanges(editedRows);
             setRestEditedRows(!resetEditedRows);
           }}
+          disabled={editedRows.length <= 0}
           className={styles.saveBtn}
         >
           SAVE CHANGES

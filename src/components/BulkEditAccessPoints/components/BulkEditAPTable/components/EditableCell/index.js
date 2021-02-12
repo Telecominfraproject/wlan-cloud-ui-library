@@ -30,14 +30,14 @@ export const EditableCell = ({
     });
   };
 
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      // console.log('Save failed:', errInfo);
-    }
+  const save = () => {
+    form
+      .validateFields()
+      .then(values => {
+        toggleEdit();
+        handleSave({ ...record }, values);
+      })
+      .catch(() => {});
   };
 
   let childNode = children;
