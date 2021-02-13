@@ -4,6 +4,7 @@ import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
+import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
@@ -27,11 +28,6 @@ const FormModal = ({
     return usedModels.filter(value => value !== model);
   }, [model, usedModels]);
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
-  };
-
   useEffect(() => {
     form.setFieldsValue({
       model,
@@ -40,7 +36,7 @@ const FormModal = ({
   }, [visible]);
 
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       <Item
         label="Model"
         name="model"

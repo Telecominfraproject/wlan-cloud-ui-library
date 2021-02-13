@@ -9,6 +9,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
+import { pageLayout } from 'utils/form';
 
 import {
   formatSsidProfileForm,
@@ -78,11 +79,6 @@ const AddProfile = ({
     setType(initialValues?.profileType);
     setName(initialValues?.name ? initialValues?.name : '');
   }, [initialValues]);
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
 
   const handleOnFormChange = () => {
     if (!isFormDirty) {
@@ -221,7 +217,7 @@ const AddProfile = ({
           </div>
         </Header>
 
-        <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+        <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
           <Card>
             <Item
               label="Type"

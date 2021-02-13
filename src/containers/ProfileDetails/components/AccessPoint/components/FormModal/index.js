@@ -6,18 +6,15 @@ import Modal from 'components/Modal';
 
 import globalStyles from 'styles/index.scss';
 
+import { modalLayout } from 'utils/form';
+
 const { Item } = Form;
 
 const FormModal = ({ onSubmit, onClose, title, visible }) => {
   const [form] = Form.useForm();
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
-  };
-
   const content = (
-    <Form form={form} {...layout}>
+    <Form form={form} {...modalLayout}>
       <Item
         name="greTunnelName"
         label="Name"

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
+import { modalLayout } from 'utils/form';
 import styles from 'styles/index.scss';
 
 const { Item } = Form;
@@ -21,13 +22,8 @@ const AddApModal = ({
 }) => {
   const [form] = Form.useForm();
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
-  };
-
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       <Item
         label="Asset ID"
         name="inventoryId"

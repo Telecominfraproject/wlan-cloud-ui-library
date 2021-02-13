@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import Loading from 'components/Loading';
 import Modal from 'components/Modal';
 
+import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Option } = Select;
@@ -32,11 +33,6 @@ const Firmware = ({
 
   const [version, setVersion] = useState(null);
   const [confirmModal, setConfirmModal] = useState(false);
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
 
   const handleOnChangeVersion = value => {
     setVersion(
@@ -119,7 +115,7 @@ const Firmware = ({
         content={renderModalContent()}
         buttonText="Confirm"
       />
-      <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+      <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
         <div className={styles.InlineEndDiv}>
           <Button className={styles.saveButton} onClick={handleOnReboot} name="reboot">
             Reboot AP

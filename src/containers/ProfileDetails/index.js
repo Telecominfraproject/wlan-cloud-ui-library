@@ -9,6 +9,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
+import { pageLayout } from 'utils/form';
 
 import globalStyles from 'styles/index.scss';
 
@@ -68,11 +69,6 @@ const ProfileDetails = ({
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
 
   const [form] = Form.useForm();
   const { Item } = Form;
@@ -224,7 +220,7 @@ const ProfileDetails = ({
       </Header>
 
       <Form
-        {...layout}
+        {...pageLayout}
         form={form}
         onValuesChange={handleOnFormChange}
         className={styles.ProfileDetails}

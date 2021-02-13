@@ -6,6 +6,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
+import { pageLayout } from 'utils/form';
 
 import styles from '../../index.module.scss';
 
@@ -49,11 +50,6 @@ const General = ({
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
   ];
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 15 },
-  };
 
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
@@ -283,7 +279,7 @@ const General = ({
   }
 
   return (
-    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+    <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
