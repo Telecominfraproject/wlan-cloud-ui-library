@@ -271,17 +271,6 @@ const General = ({
     );
   };
 
-  const renderExtraFields = name => {
-    const item = extraFields.find(i => i.label === name);
-    if (item?.renderInput === 'renderInputItem') {
-      return renderItem(item.label, item.obj, item.dataIndex, renderInputItem, item.options);
-    }
-    if (item?.renderInput === 'renderOptionItem') {
-      return renderItem(item.label, item.obj, item.dataIndex, renderOptionItem, item.options);
-    }
-    return null;
-  };
-
   if (errorProfiles) {
     return (
       <Alert
@@ -435,7 +424,16 @@ const General = ({
               ),
             }
           )}
-          {renderExtraFields('Rx Cell Size')}
+          {extraFields.map(field =>
+            renderItem(
+              field.label,
+              field.obj,
+              field.dataIndex,
+              field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+              field.options
+            )
+          )}
+
           {renderItem(
             'Probe Response Threshold',
             radioMap,

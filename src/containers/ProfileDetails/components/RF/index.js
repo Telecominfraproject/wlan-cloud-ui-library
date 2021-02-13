@@ -158,17 +158,6 @@ const RFForm = ({ form, details, extraFields }) => {
     </Item>
   );
 
-  const renderExtraFields = name => {
-    const item = extraFields.find(i => i.label === name);
-    if (item?.renderInput === 'renderInputItem') {
-      return renderItem(item.label, item.dataIndex, renderInputItem, item.options);
-    }
-    if (item?.renderInput === 'renderOptionItem') {
-      return renderItem(item.label, item.dataIndex, renderOptionItem, item.options);
-    }
-    return null;
-  };
-
   return (
     <div className={styles.ProfilePage}>
       <Card>
@@ -290,7 +279,6 @@ const RFForm = ({ form, details, extraFields }) => {
             </Select>
           ),
         })}
-        {renderExtraFields('Rx Cell Size')}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
@@ -388,9 +376,14 @@ const RFForm = ({ form, details, extraFields }) => {
             addOnText: 'sec',
           }
         )}
-        {renderExtraFields('Non WIFI')}
-        {renderExtraFields('Non WIFI Time')}
-        {renderExtraFields('OBSS Hop Mode')}
+        {extraFields.map(field =>
+          renderItem(
+            field.label,
+            field.dataIndex,
+            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+            field.options
+          )
+        )}
       </Card>
     </div>
   );
