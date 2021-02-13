@@ -21,7 +21,6 @@ const BulkEditAccessPoints = ({
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [editedRows, setEditedRows] = useState([]);
-  const [resetEditedRows, setRestEditedRows] = useState(false);
 
   const handleBackClick = () => {
     history.push(routes.accessPoints);
@@ -54,7 +53,7 @@ const BulkEditAccessPoints = ({
         <Button
           onClick={() => {
             onSaveChanges(editedRows);
-            setRestEditedRows(!resetEditedRows);
+            setEditedRows([]);
           }}
           disabled={editedRows.length <= 0}
           className={styles.saveBtn}
@@ -68,7 +67,6 @@ const BulkEditAccessPoints = ({
         onEditedRows={handleEditedRows}
         onLoadMore={onLoadMore}
         isLastPage={isLastPage}
-        resetEditedRows={resetEditedRows}
       />
     </div>
   );

@@ -91,7 +91,6 @@ const mockProps = {
   onEditedRows: jest.fn(),
   onLoadMore: jest.fn(),
   isLastPage: false,
-  resetEditedRows: false,
 };
 
 describe('<BulkEditAPTableComp />', () => {
@@ -109,13 +108,19 @@ describe('<BulkEditAPTableComp />', () => {
     };
     const { getByTestId } = render(<BulkEditAPTableComp />);
     const ENTER = { keyCode: 13 };
+
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
     fireEvent.click(input);
     fireEvent.change(input, { target: { value: 1 } });
     fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => expect(tableCell).toBeVisible());
+
+    fireEvent.click(tableCell);
     fireEvent.click(input);
-    await waitFor(() => expect(input).toBeInTheDocument());
+    fireEvent.change(input, { target: { value: 1 } });
+    fireEvent.keyDown(input, ENTER);
   });
 });

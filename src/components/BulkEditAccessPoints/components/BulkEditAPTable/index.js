@@ -6,15 +6,8 @@ import { EditableRow } from './components/EditableRow';
 import { EditableCell } from './components/EditableCell';
 import styles from './index.module.scss';
 
-const BulkEditAPTable = ({
-  tableColumns,
-  tableData,
-  onEditedRows,
-  onLoadMore,
-  isLastPage,
-  resetEditedRows,
-}) => {
-  const [bulkEditTableData, setTableData] = useState([]);
+const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, isLastPage }) => {
+  const [bulkEditTableData, setTableData] = useState(tableData);
   const [editedRows, setEditedRows] = useState([]);
   const components = {
     body: {
@@ -22,10 +15,6 @@ const BulkEditAPTable = ({
       cell: EditableCell,
     },
   };
-
-  useEffect(() => {
-    setTableData(tableData);
-  }, [tableData]);
 
   const handleSave = (row, values) => {
     const updatedRow = { ...row };
@@ -61,18 +50,12 @@ const BulkEditAPTable = ({
     onEditedRows(editedRows);
   }, [editedRows]);
 
-  useEffect(() => {
-    setEditedRows([]);
-  }, [resetEditedRows]);
-
   return (
     <>
       <Table
         data-testid="bulkEditTable"
         components={components}
-        rowClassName={() => {
-          return styles.editableRow;
-        }}
+        rowClassName={styles.editableRow}
         columns={columns}
         dataSource={bulkEditTableData}
         scroll={{ x: 1000 }}
@@ -93,7 +76,6 @@ BulkEditAPTable.propTypes = {
   onEditedRows: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool,
-  resetEditedRows: PropTypes.bool.isRequired,
 };
 
 BulkEditAPTable.defaultProps = {

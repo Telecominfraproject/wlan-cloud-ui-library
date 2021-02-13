@@ -105,7 +105,9 @@ describe('<BulkEditAccessPoints />', () => {
         <BulkEditAccessPoints {...mockProps} onSaveChanges={onSaveChangesSpy} />
       </Router>
     );
-    fireEvent.click(getByRole('button', { name: /save changes/i }));
+    const button = getByRole('button', { name: /save changes/i });
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(0);
   });
 
