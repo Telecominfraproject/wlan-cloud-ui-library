@@ -304,11 +304,10 @@ const CaptivePortalForm = ({
       backgroundRepeat: details.backgroundRepeat || 'no_repeat',
       backgroundPosition: details.backgroundPosition || 'left_top',
       radiusAuthMethod: details.radiusAuthMethod,
-      radiusServiceId:
-        {
-          value: childProfiles?.[0]?.id || null,
-          label: childProfiles?.[0]?.name || null,
-        } || null,
+      radiusServiceId: {
+        value: childProfiles?.[0]?.id || null,
+        label: childProfiles?.[0]?.name || null,
+      },
       childProfileIds: [],
       userList: details.userList,
     });
@@ -689,7 +688,7 @@ const CaptivePortalForm = ({
             <Input />
           </Item>
 
-          <Item name="childProfileIds" style={{ display: 'none' }}>
+          <Item name="childProfileIds" hidden>
             <Input />
           </Item>
         </Panel>

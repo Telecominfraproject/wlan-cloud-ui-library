@@ -485,7 +485,7 @@ const AccessPointForm = ({
           pagination={false}
           rowKey="id"
         />
-        <Item name="childProfileIds" style={{ display: 'none' }}>
+        <Item name="childProfileIds" hidden>
           <Input />
         </Item>
       </Card>
