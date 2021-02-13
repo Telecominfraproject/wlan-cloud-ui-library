@@ -279,6 +279,14 @@ const RFForm = ({ form, details, extraFields }) => {
             </Select>
           ),
         })}
+        {extraFields.map(field =>
+          renderItem(
+            field.label,
+            field.dataIndex,
+            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+            field.options
+          )
+        )}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
@@ -376,14 +384,36 @@ const RFForm = ({ form, details, extraFields }) => {
             addOnText: 'sec',
           }
         )}
-        {extraFields.map(field =>
-          renderItem(
-            field.label,
-            field.dataIndex,
-            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
-            field.options
-          )
+        {renderItem(
+          'Non WIFI',
+          ['channelHopSettings', 'nonWifiThresholdInPercentage'],
+          renderInputItem,
+          {
+            min: 0,
+            max: 100,
+            error: '0 - 100%',
+            addOnText: '%',
+          }
         )}
+        {renderItem(
+          'Non WIFI Time',
+          ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
+          renderInputItem,
+          {
+            min: 0,
+            max: 500,
+            error: '0 - 500 seconds',
+            addOnText: 'sec',
+          }
+        )}
+        {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
+          dropdown: (
+            <Select className={styles.Field}>
+              <Option value="NON_WIFI">Non-Wifi</Option>
+              <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
+            </Select>
+          ),
+        })}
       </Card>
     </div>
   );
