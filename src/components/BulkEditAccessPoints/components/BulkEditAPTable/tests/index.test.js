@@ -22,14 +22,64 @@ Object.defineProperty(window, 'matchMedia', {
 
 const mockProps = {
   tableColumns: [
-    { dataIndex: 'name', editable: true, key: 'name', title: 'NAME' },
-    { dataIndex: 'name', editable: false, key: 'name', title: 'NAME-1' },
+    {
+      title: 'NAME',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'CHANNEL',
+      dataIndex: 'channel',
+      key: 'channel',
+      editable: true,
+    },
+    {
+      title: 'CELL SIZE',
+      dataIndex: 'cellSize',
+      key: 'cellSize',
+      editable: true,
+    },
+    {
+      title: 'PROB RESPONSE THRESHOLD',
+      dataIndex: 'probeResponseThreshold',
+      key: 'probeResponseThreshold',
+      editable: true,
+    },
+    {
+      title: 'CLIENT DISCONNECT THRESHOLD',
+      dataIndex: 'clientDisconnectThreshold',
+      key: 'clientDisconnectThreshold',
+      editable: true,
+    },
+    {
+      title: 'SNR (% DROP)',
+      dataIndex: 'snrDrop',
+      key: 'snrDrop',
+      editable: true,
+    },
+    {
+      title: 'MIN LOAD',
+      dataIndex: 'minLoad',
+      key: 'minLoad',
+      editable: true,
+    },
   ],
   tableData: [
     {
       key: '1',
       id: '1',
       name: 'AP 1',
+      channel: [25, 23, 61],
+      cellSize: [-90, -90, -90],
+      clientDisconnectThreshold: [-90, -90, -90],
+      probeResponseThreshold: [-90, -90, -90],
+      minLoad: [50, 40, 40],
+      snrDrop: [20, 30, 30],
+    },
+    {
+      key: '2',
+      id: '2',
+      name: 'AP 2',
       channel: [25, 23, 61],
       cellSize: [-90, -90, -90],
       clientDisconnectThreshold: [-90, -90, -90],
@@ -58,21 +108,14 @@ describe('<BulkEditAPTableComp />', () => {
       return <BulkEditAPTable {...mockProps} />;
     };
     const { getByTestId } = render(<BulkEditAPTableComp />);
-    const tableCell = getByTestId('bulkEditTableCell');
-    fireEvent.click(tableCell);
-    const input = getByTestId('bulkEditFormInput');
-    fireEvent.click(input);
-
     const ENTER = { keyCode: 13 };
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    fireEvent.click(input);
+    fireEvent.change(input, { target: { value: 1 } });
     fireEvent.keyDown(input, ENTER);
-
-    await waitFor(() => expect(getByTestId('bulkEditTableCell')).toBeInTheDocument());
-    const newTableCell = getByTestId('bulkEditTableCell');
-    fireEvent.click(newTableCell);
-    const newInput = getByTestId('bulkEditFormInput');
-    fireEvent.click(newInput);
-
-    fireEvent.keyDown(newInput, ENTER);
-    await waitFor(() => expect(getByTestId('bulkEditTableCell')).toBeInTheDocument());
+    fireEvent.click(input);
+    await waitFor(() => expect(input).toBeInTheDocument());
   });
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render, ROUTES } from 'tests/utils';
 import BulkEditAccessPoints from '..';
@@ -20,8 +20,62 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 const mockProps = {
-  tableColumns: [],
-  tableData: [],
+  tableColumns: [
+    {
+      title: 'NAME',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'CHANNEL',
+      dataIndex: 'channel',
+      key: 'channel',
+      editable: true,
+    },
+    {
+      title: 'CELL SIZE',
+      dataIndex: 'cellSize',
+      key: 'cellSize',
+      editable: true,
+    },
+    {
+      title: 'PROB RESPONSE THRESHOLD',
+      dataIndex: 'probeResponseThreshold',
+      key: 'probeResponseThreshold',
+      editable: true,
+    },
+    {
+      title: 'CLIENT DISCONNECT THRESHOLD',
+      dataIndex: 'clientDisconnectThreshold',
+      key: 'clientDisconnectThreshold',
+      editable: true,
+    },
+    {
+      title: 'SNR (% DROP)',
+      dataIndex: 'snrDrop',
+      key: 'snrDrop',
+      editable: true,
+    },
+    {
+      title: 'MIN LOAD',
+      dataIndex: 'minLoad',
+      key: 'minLoad',
+      editable: true,
+    },
+  ],
+  tableData: [
+    {
+      cellSize: [-90, -90, -90],
+      channel: [36, 6, 149],
+      clientDisconnectThreshold: [-90, -90, -90],
+      id: '1',
+      key: '1',
+      minLoad: [40, 40, 50],
+      name: 'AP 1',
+      probeResponseThreshold: [-90, -90, -90],
+      snrDrop: [30, 30, 20],
+    },
+  ],
   onSaveChanges: () => {},
   onLoadMore: () => {},
   isLastPage: true,
@@ -44,7 +98,7 @@ describe('<BulkEditAccessPoints />', () => {
     expect(window.location.pathname).toEqual(URL);
   });
 
-  it('onSaveChanges should be called when Save Changes button is clicked', () => {
+  it('onSaveChanges should not be called when Save Changes button is clicked on an unedited table', () => {
     const onSaveChangesSpy = jest.fn();
     const { getByRole } = render(
       <Router>
@@ -52,6 +106,27 @@ describe('<BulkEditAccessPoints />', () => {
       </Router>
     );
     fireEvent.click(getByRole('button', { name: /save changes/i }));
+    expect(onSaveChangesSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('onSaveChanges should be called when Save Changes button is clicked on an edited table', async () => {
+    const onSaveChangesSpy = jest.fn();
+    const { getByRole, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} onSaveChanges={onSaveChangesSpy} />
+      </Router>
+    );
+
+    const button = getByRole('button', { name: /save changes/i });
+    expect(button).toBeDisabled();
+    const ENTER = { keyCode: 13 };
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    fireEvent.change(input, { target: { value: 1 } });
+    fireEvent.keyDown(input, ENTER);
+    await waitFor(() => expect(button).not.toBeDisabled());
+    fireEvent.click(button);
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(1);
   });
 
