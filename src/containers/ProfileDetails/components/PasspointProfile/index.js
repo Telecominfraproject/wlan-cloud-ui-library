@@ -496,9 +496,6 @@ const PasspointProfileForm = ({
           pagination={false}
           rowKey="id"
         />
-        <Item name="childProfileIds" hidden>
-          <Input />
-        </Item>
       </Card>
 
       <Card title="Advanced">
