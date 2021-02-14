@@ -7,8 +7,17 @@ import { EditableCell } from './components/EditableCell';
 import styles from './index.module.scss';
 
 const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, isLastPage }) => {
-  const [bulkEditTableData, setTableData] = useState(tableData);
+  const [bulkEditTableData, setTableData] = useState([]);
   const [editedRows, setEditedRows] = useState([]);
+
+  useEffect(() => {
+    onEditedRows(editedRows);
+  }, [editedRows]);
+
+  useEffect(() => {
+    setTableData(tableData);
+  }, [tableData]);
+
   const components = {
     body: {
       row: EditableRow,
@@ -45,10 +54,6 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
       }),
     };
   });
-
-  useEffect(() => {
-    onEditedRows(editedRows);
-  }, [editedRows]);
 
   return (
     <>
