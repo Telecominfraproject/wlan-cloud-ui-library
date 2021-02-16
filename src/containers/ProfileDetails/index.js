@@ -133,6 +133,16 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === PROFILES.captivePortal) {
+          if (
+            values.authenticationType === 'radius' &&
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+          ) {
+            notification.error({
+              message: 'Error',
+              description: 'RADIUS Profile is required for authentication.',
+            });
+            return;
+          }
           formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
 
@@ -273,6 +283,7 @@ const ProfileDetails = ({
           <CaptivePortalForm
             form={form}
             details={details}
+            childProfiles={childProfiles}
             fileUpload={fileUpload}
             radiusProfiles={radiusProfiles}
             onSearchProfile={onSearchProfile}

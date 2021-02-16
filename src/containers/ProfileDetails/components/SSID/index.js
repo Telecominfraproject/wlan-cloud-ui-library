@@ -66,11 +66,10 @@ const SSIDForm = ({
       wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details.vlanId || defaultSsidProfile.vlanId,
-      radiusServiceId:
-        {
-          value: childProfiles?.[0]?.id || null,
-          label: childProfiles?.[0]?.name || null,
-        } || null,
+      radiusServiceId: {
+        value: childProfiles?.[0]?.id || null,
+        label: childProfiles?.[0]?.name || null,
+      },
       ...radioBasedValues,
       childProfileIds: [],
       radiusAcountingServiceInterval: details?.radiusAcountingServiceInterval || '',
@@ -588,7 +587,7 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      <Item name="childProfileIds" style={{ display: 'none' }}>
+      <Item name="childProfileIds" hidden>
         <Input />
       </Item>
     </div>
