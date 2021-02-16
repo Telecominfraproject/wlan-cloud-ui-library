@@ -1229,7 +1229,7 @@ describe('<CaptivePortalForm />', () => {
     );
     const paragraph = getByText('Edit User');
     expect(paragraph).toBeVisible();
-    fireEvent.click(getByRole('button', { name: `Cancel` }));
+    fireEvent.click(getByRole('button', { name: /Cancel/i }));
     await waitFor(() => {
       expect(paragraph).not.toBeVisible();
     });
