@@ -61,10 +61,6 @@ const AccessPointForm = ({
       ...greList,
       {
         ...values,
-        vlanIdsInGreTunnel: values?.vlanIdsInGreTunnel?.replace(/\s/g, '').split(',') || [],
-        greRemoteMacAddr: values?.greRemoteMacAddr?.addressAsString
-          ? values?.greRemoteMacAddr
-          : null,
       },
     ]);
     setGreModalVisible(false);
@@ -97,7 +93,6 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
-      greTunnelConfigurations: greList,
       rfProfileId: currentRfId,
     });
   }, [form, details]);
@@ -105,6 +100,7 @@ const AccessPointForm = ({
   useEffect(() => {
     form.setFieldsValue({
       childProfileIds: selectedChildProfiles.map(i => i.id),
+      greTunnelConfigurations: greList,
     });
   }, [selectedChildProfiles, greList]);
 
@@ -145,24 +141,9 @@ const AccessPointForm = ({
       dataIndex: 'greTunnelName',
     },
     {
-      title: 'Parent Interface Name',
-      dataIndex: 'greParentIfName',
-    },
-    {
       title: 'Remote IP Address',
       dataIndex: 'greRemoteInetAddr',
     },
-    {
-      title: 'Local IP Address',
-      dataIndex: 'greLocalInetAddr',
-      render: item => item ?? 'N/A',
-    },
-    {
-      title: 'Remote MAC Address',
-      dataIndex: ['greRemoteMacAddr', 'addressAsString'],
-      render: item => item ?? 'N/A',
-    },
-
     {
       title: 'VLAN IDs',
       dataIndex: 'vlanIdsInGreTunnel',
