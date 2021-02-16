@@ -23,6 +23,7 @@ const General = ({
   errorProfiles,
   onFetchMoreProfiles,
   onSearchProfile,
+  extraFields,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -419,13 +420,16 @@ const General = ({
               ),
             }
           )}
-          {renderItem('Rx Cell Size', radioMap, ['rxCellSizeDb', 'value'], renderInputItem, {
-            min: -100,
-            max: 100,
-            error: '-100 - 100 dBm',
-            addOnText: 'dBm',
-            mapName: 'radioMap',
-          })}
+          {extraFields.map(field =>
+            renderItem(
+              field.label,
+              field.obj,
+              field.dataIndex,
+              field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+              field.options
+            )
+          )}
+
           {renderItem(
             'Probe Response Threshold',
             radioMap,
@@ -511,6 +515,7 @@ General.propTypes = {
   errorProfiles: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   onSearchProfile: PropTypes.func,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 General.defaultProps = {
@@ -522,6 +527,7 @@ General.defaultProps = {
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
   onSearchProfile: () => {},
+  extraFields: [],
 };
 
 export default General;
