@@ -73,6 +73,7 @@ const SSIDForm = ({
       ...radioBasedValues,
       childProfileIds: [],
       radiusAcountingServiceInterval: details?.radiusAcountingServiceInterval || '',
+      dynamicVlan: details?.dynamicVlan || defaultSsidProfile.dynamicVlan,
     });
   }, [form, details]);
 
@@ -212,7 +213,14 @@ const SSIDForm = ({
             <Radio value="BRIDGE" defaultSelected>
               Bridge
             </Radio>
-            <Radio value="NAT">NAT</Radio>
+            <Radio
+              value="NAT"
+              onChange={() => {
+                form.setFieldsValue({ vlan: 'defaultVLAN' });
+              }}
+            >
+              NAT
+            </Radio>
           </Radio.Group>
         </Item>
 
@@ -492,42 +500,77 @@ const SSIDForm = ({
           shouldUpdate={(prevValues, currentValues) => prevValues.vlan !== currentValues.vlan}
         >
           {({ getFieldValue }) => {
-            return getFieldValue('forwardMode') === 'BRIDGE' &&
-              getFieldValue('vlan') === 'customVLAN' ? (
-              <Item label=" " colon={false}>
-                <Item
-                  name="vlanId"
-                  rules={[
-                    {
-                      required: getFieldValue('vlan'),
-                      message: 'Vlan expected between 1 and 4095',
-                    },
-                    () => ({
-                      validator(_rule, value) {
-                        if (
-                          !value ||
-                          (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
-                        ) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
+            return (
+              getFieldValue('forwardMode') === 'BRIDGE' &&
+              getFieldValue('vlan') === 'customVLAN' && (
+                <Item label=" " colon={false}>
+                  <Item
+                    name="vlanId"
+                    rules={[
+                      {
+                        required: getFieldValue('vlan'),
+                        message: 'Vlan expected between 1 and 4095',
                       },
-                    }),
-                  ]}
-                  style={{ marginTop: '10px' }}
-                  hasFeedback
-                >
-                  <Input
-                    className={globalStyles.field}
-                    placeholder="1-4095"
-                    type="number"
-                    min={1}
-                    max={4095}
-                    maxLength={4}
-                  />
+                      () => ({
+                        validator(_rule, value) {
+                          if (
+                            !value ||
+                            (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
+                          ) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Vlan expected between 1 and 4095'));
+                        },
+                      }),
+                    ]}
+                    style={{ marginTop: '10px' }}
+                    hasFeedback
+                  >
+                    <Input
+                      className={globalStyles.field}
+                      placeholder="1-4095"
+                      type="number"
+                      min={1}
+                      max={4095}
+                      maxLength={4}
+                    />
+                  </Item>
                 </Item>
+              )
+            );
+          }}
+        </Item>
+
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              <Item name="dynamicVlan" label="Dynamic VLAN">
+                {getFieldValue('forwardMode') === 'BRIDGE' &&
+                (mode === 'wpa3OnlyEAP' ||
+                  mode === 'wpa3MixedEAP' ||
+                  mode === 'wpa2OnlyRadius' ||
+                  mode === 'wpa2Radius' ||
+                  mode === 'wpaRadius') ? (
+                  <Select className={globalStyles.field} placeholder="Select Dynamic VLAN">
+                    <Option value="disabled">Disabled</Option>
+                    <Option value="enabled">Enabled</Option>
+                    <Option value="enabled_reject_if_no_radius_dynamic_vlan">
+                      <Tooltip
+                        title="RADIUS Authentication is rejected if Dynamic VLAN is not given by the RADIUS"
+                        text="Qualified Enabled"
+                      />
+                    </Option>
+                  </Select>
+                ) : (
+                  <span className={styles.Disclaimer}>Disabled</span>
+                )}
               </Item>
-            ) : null;
+            );
           }}
         </Item>
       </Card>
