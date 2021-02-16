@@ -38,6 +38,8 @@ const mockProps = {
   handleSave: () => {},
 };
 
+const ENTER = { keyCode: 13 };
+
 describe('<EditableCell />', () => {
   afterEach(cleanup);
 
@@ -74,7 +76,6 @@ describe('<EditableCell />', () => {
     };
     const { getByTestId } = render(<EditableCellComp />);
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
-    const ENTER = { keyCode: 13 };
     fireEvent.keyDown(tableCell, ENTER);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
@@ -111,7 +112,6 @@ describe('<EditableCell />', () => {
     await waitFor(() => {
       expect(input.value).toBe('123');
     });
-    const ENTER = { keyCode: 13 };
     fireEvent.keyDown(input, ENTER);
     await waitFor(() => {
       expect(handleSaveSpy).toHaveBeenCalled();

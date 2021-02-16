@@ -57,8 +57,9 @@ const BulkEditAccessPoints = ({
           }}
           disabled={editedRows.length <= 0}
           className={styles.saveBtn}
+          type="primary"
         >
-          SAVE CHANGES
+          Save
         </Button>
       </div>
       <BulkEditAPTable

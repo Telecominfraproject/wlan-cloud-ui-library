@@ -4,6 +4,7 @@ import { Form, Input } from 'antd';
 import { EditableContext } from '../EditableRow';
 import styles from './index.module.scss';
 
+const { Item } = Form;
 export const EditableCell = ({
   title,
   editable,
@@ -30,6 +31,36 @@ export const EditableCell = ({
     });
   };
 
+  const validateInput = (input, key) => {
+    if (
+      key === 'probeResponseThreshold' ||
+      key === 'clientDisconnectThreshold' ||
+      key === 'cellSize'
+    ) {
+      return input >= -100 && input <= 100;
+    }
+    if (key === 'snrDrop' || key === 'minLoad') {
+      return input >= 0 && input <= 100;
+    }
+    return input >= -1 && input <= 165;
+  };
+
+  const errorText = key => {
+    if (
+      key === 'probeResponseThreshold' ||
+      key === 'clientDisconnectThreshold' ||
+      key === 'cellSize'
+    ) {
+      return `${title} can be a number between -100 and 100`;
+    }
+
+    if (key === 'snrDrop' || key === 'minLoad') {
+      return `${title} can be a number between 1 and 100`;
+    }
+
+    return `${title} can be a number between 1 and 165`;
+  };
+
   const save = () => {
     form
       .validateFields()
@@ -44,17 +75,29 @@ export const EditableCell = ({
 
   if (editable) {
     childNode = editing ? (
-      <Form.Item
+      <Item
         data-testid={`bulkEditFormElement-${record.name}-${dataIndex}`}
-        style={{
-          margin: 0,
-        }}
         name={dataIndex}
         rules={[
           {
             required: true,
-            message: `${title} IS REQUIRED.`,
+            message: `${title} is required.`,
           },
+          () => ({
+            validator(_rule, values) {
+              if (typeof values === 'string') {
+                if (values.split(',').length > 4) {
+                  return Promise.reject(new Error(`Please enter a valid configuration`));
+                }
+
+                if (!values || values.split(',').every(value => validateInput(value, dataIndex))) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error(errorText(dataIndex)));
+              }
+              return Promise.resolve();
+            },
+          }),
         ]}
       >
         <Input
@@ -63,7 +106,7 @@ export const EditableCell = ({
           onPressEnter={save}
           onBlur={save}
         />
-      </Form.Item>
+      </Item>
     ) : (
       <div
         data-testid={`bulkEditTableCell-${record.name}-${dataIndex}`}
@@ -71,9 +114,6 @@ export const EditableCell = ({
         role="button"
         tabIndex={0}
         onKeyDown={() => {}}
-        style={{
-          paddingRight: 24,
-        }}
         onClick={toggleEdit}
       >
         {children}

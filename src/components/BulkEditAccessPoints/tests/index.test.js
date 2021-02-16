@@ -22,42 +22,42 @@ Object.defineProperty(window, 'matchMedia', {
 const mockProps = {
   tableColumns: [
     {
-      title: 'NAME',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'CHANNEL',
+      title: 'Channel',
       dataIndex: 'channel',
       key: 'channel',
       editable: true,
     },
     {
-      title: 'CELL SIZE',
+      title: 'Cell Size',
       dataIndex: 'cellSize',
       key: 'cellSize',
       editable: true,
     },
     {
-      title: 'PROB RESPONSE THRESHOLD',
+      title: 'Probe Response Threshold',
       dataIndex: 'probeResponseThreshold',
       key: 'probeResponseThreshold',
       editable: true,
     },
     {
-      title: 'CLIENT DISCONNECT THRESHOLD',
+      title: 'Client Disconnect Threshold',
       dataIndex: 'clientDisconnectThreshold',
       key: 'clientDisconnectThreshold',
       editable: true,
     },
     {
-      title: 'SNR (% DROP)',
+      title: 'SNR (% Drop)',
       dataIndex: 'snrDrop',
       key: 'snrDrop',
       editable: true,
     },
     {
-      title: 'MIN LOAD',
+      title: 'Min Load',
       dataIndex: 'minLoad',
       key: 'minLoad',
       editable: true,
@@ -84,6 +84,9 @@ const mockProps = {
     { id: 8, name: 'Ottawa' },
   ],
 };
+
+const ENTER = { keyCode: 13 };
+
 describe('<BulkEditAccessPoints />', () => {
   afterEach(cleanup);
   const URL = ROUTES.accessPoints;
@@ -98,20 +101,20 @@ describe('<BulkEditAccessPoints />', () => {
     expect(window.location.pathname).toEqual(URL);
   });
 
-  it('onSaveChanges should not be called when Save Changes button is clicked on an unedited table', () => {
+  it('onSaveChanges should not be called when Save button is clicked on an unedited table', () => {
     const onSaveChangesSpy = jest.fn();
     const { getByRole } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} onSaveChanges={onSaveChangesSpy} />
       </Router>
     );
-    const button = getByRole('button', { name: /save changes/i });
+    const button = getByRole('button', { name: /save/i });
     expect(button).toBeDisabled();
     fireEvent.click(button);
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('onSaveChanges should be called when Save Changes button is clicked on an edited table', async () => {
+  it('onSaveChanges should be called when Save button is clicked on an edited table', async () => {
     const onSaveChangesSpy = jest.fn();
     const { getByRole, getByTestId } = render(
       <Router>
@@ -119,17 +122,136 @@ describe('<BulkEditAccessPoints />', () => {
       </Router>
     );
 
-    const button = getByRole('button', { name: /save changes/i });
+    const button = getByRole('button', { name: /save/i });
     expect(button).toBeDisabled();
-    const ENTER = { keyCode: 13 };
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
-    fireEvent.change(input, { target: { value: 1 } });
+    fireEvent.click(input);
     fireEvent.keyDown(input, ENTER);
     await waitFor(() => expect(button).not.toBeDisabled());
     fireEvent.click(button);
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('error should be shown if Channel input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    fireEvent.change(input, { target: { value: 166 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Channel can be a number between 1 and 165')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if Cell Size input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-cellSize`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-cellSize`);
+    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Cell Size can be a number between -100 and 100')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if Probe Response Threshold  input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-probeResponseThreshold`
+    );
+    fireEvent.click(tableCell);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-probeResponseThreshold`
+    );
+    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(
+        getByText('Probe Response Threshold can be a number between -100 and 100')
+      ).toBeVisible();
+    });
+  });
+
+  it('error should be shown if Client Disconnect Threshold input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-clientDisconnectThreshold`
+    );
+    fireEvent.click(tableCell);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-clientDisconnectThreshold`
+    );
+    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(
+        getByText('Client Disconnect Threshold can be a number between -100 and 100')
+      ).toBeVisible();
+    });
+  });
+
+  it('error should be shown if SNR (% Drop) input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-snrDrop`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-snrDrop`);
+    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('SNR (% Drop) can be a number between 1 and 100')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if Min Load input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-minLoad`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
+    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Min Load can be a number between 1 and 100')).toBeVisible();
+    });
   });
 
   it('if isLastPage is true Load More button should not be visible', async () => {
