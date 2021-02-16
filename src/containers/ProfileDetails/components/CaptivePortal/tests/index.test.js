@@ -1259,7 +1259,7 @@ describe('<CaptivePortalForm />', () => {
     expect(paragraph).toBeVisible();
     expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
 
-    fireEvent.click(getByRole('button', { name: `Cancel` }));
+    fireEvent.click(getByRole('button', { name: /Cancel/i }));
     await waitFor(() => {
       expect(paragraph).not.toBeVisible();
     });

@@ -114,7 +114,7 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(queryByText('Confirm downloading, flashing, rebooting?')).toBeNull();
+      expect(queryByText('Confirm downloading, flashing, rebooting?')).not.toBeVisible();
     });
   });
 
