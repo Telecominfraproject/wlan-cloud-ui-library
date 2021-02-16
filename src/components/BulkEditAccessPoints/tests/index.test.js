@@ -254,6 +254,24 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
+  it('error should be shown if any input has an invalid configuration', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-minLoad`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
+    fireEvent.change(input, { target: { value: '1,1,1,1,1' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Please enter a valid configuration')).toBeVisible();
+    });
+  });
+
   it('if isLastPage is true Load More button should not be visible', async () => {
     const { queryByRole } = render(
       <Router>
