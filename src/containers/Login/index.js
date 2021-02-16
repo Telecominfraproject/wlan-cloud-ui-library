@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import { Card, Form, Input, Button } from 'antd';
 
 import ThemeContext from 'contexts/ThemeContext';
+import { pageLayout } from 'utils/form';
 
 import styles from './index.module.scss';
 
 const { Item } = Form;
-const layout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 15 },
-};
 
 const Login = ({ onLogin }) => {
   const theme = useContext(ThemeContext);
@@ -24,7 +21,7 @@ const Login = ({ onLogin }) => {
       <img className={styles.Logo} alt={theme.company} src={theme.logo} />
       <Card className={styles.Card}>
         <h1>Log In</h1>
-        <Form {...layout} name="login" data-testid="login" onFinish={handleSubmit}>
+        <Form {...pageLayout} name="login" data-testid="login" onFinish={handleSubmit}>
           <Item
             label="E-mail"
             name="email"

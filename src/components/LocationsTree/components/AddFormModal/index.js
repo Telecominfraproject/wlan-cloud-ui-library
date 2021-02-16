@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Breadcrumb } from 'antd';
 
 import Modal from 'components/Modal';
+import { modalLayout } from 'utils/form';
 import styles from './index.module.scss';
 
 const { Item } = Form;
@@ -15,17 +16,12 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
     form.setFieldsValue({ location: '' });
   }, [visible]);
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
-  };
-
   const breadCrumbs = locationPath.map(location => (
     <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
   ));
 
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       <div className={styles.breadCrumbWrap}>
         {locationPath.length > 0 && (
           <Breadcrumb separator=">">

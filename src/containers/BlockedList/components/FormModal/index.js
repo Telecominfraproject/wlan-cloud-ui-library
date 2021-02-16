@@ -4,19 +4,15 @@ import { Form, Input } from 'antd';
 
 import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
+import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
 const FormModal = ({ onCancel, onSubmit, visible, title }) => {
   const [form] = Form.useForm();
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
-  };
-
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       <Item
         label="MAC Address"
         name="macAddress"

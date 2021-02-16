@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Form, Input, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
+import { modalLayout } from 'utils/form';
 import OsuForm from './components/OsuForm';
 import NaiRealm from './components/NaiRealm';
 
@@ -58,11 +59,6 @@ const ProviderIdForm = ({ form, details }) => {
   useEffect(() => {
     setNaiRealm(details?.naiRealmList?.[0]);
   }, [details?.naiRealmList?.[0]]);
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
-  };
 
   const columnsPlmn = [
     {
@@ -192,7 +188,7 @@ const ProviderIdForm = ({ form, details }) => {
             onCancel={handleClosePlmnModal}
             title="Add Public Land Mobile Network (PLMN)"
             content={
-              <Form {...layout} form={plmnForm}>
+              <Form {...modalLayout} form={plmnForm}>
                 <Item
                   name="mcc"
                   label="Mcc:"
@@ -233,7 +229,7 @@ const ProviderIdForm = ({ form, details }) => {
       <OsuForm
         osuDetails={osuDetails}
         osuForm={osuForm}
-        layout={layout}
+        layout={modalLayout}
         onSubmit={handleAddOsuItem}
         removeItem={handleRemoveOsuItem}
       />

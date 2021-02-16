@@ -4,6 +4,7 @@ import { Form, Select, Spin, Alert } from 'antd';
 
 import Modal from 'components/Modal';
 import globalStyles from 'styles/index.scss';
+import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
@@ -34,11 +35,6 @@ const AssignmentModal = ({
     setModel(modelId);
   }, [visible]);
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 14 },
-  };
-
   const onModelChange = value => {
     handleSearchFirmware(value);
     setModel(value);
@@ -46,7 +42,7 @@ const AssignmentModal = ({
   };
 
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       {filteredModels.length === 0 && !model && (
         <Alert
           className={styles.alertMessage}

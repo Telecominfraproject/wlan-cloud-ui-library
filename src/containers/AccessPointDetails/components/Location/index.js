@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select } from 'antd';
 import Button from 'components/Button';
+import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Option } = Select;
@@ -9,10 +10,6 @@ const { Item } = Form;
 
 const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
   const [form] = Form.useForm();
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
-  };
 
   const getLocationPath = () => {
     const locationsPath = [];
@@ -111,7 +108,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
   }, []);
 
   return (
-    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+    <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
           Save
