@@ -9,6 +9,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
+import { pageLayout } from 'utils/form';
 
 import globalStyles from 'styles/index.scss';
 
@@ -63,16 +64,12 @@ const ProfileDetails = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
+  extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
-  };
 
   const [form] = Form.useForm();
   const { Item } = Form;
@@ -133,6 +130,16 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatRadiusForm(values));
         }
         if (profileType === PROFILES.captivePortal) {
+          if (
+            values.authenticationType === 'radius' &&
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+          ) {
+            notification.error({
+              message: 'Error',
+              description: 'RADIUS Profile is required for authentication.',
+            });
+            return;
+          }
           formattedData = Object.assign(formattedData, formatCaptiveForm(values, details));
         }
 
@@ -224,7 +231,7 @@ const ProfileDetails = ({
       </Header>
 
       <Form
-        {...layout}
+        {...pageLayout}
         form={form}
         onValuesChange={handleOnFormChange}
         className={styles.ProfileDetails}
@@ -273,6 +280,7 @@ const ProfileDetails = ({
           <CaptivePortalForm
             form={form}
             details={details}
+            childProfiles={childProfiles}
             fileUpload={fileUpload}
             radiusProfiles={radiusProfiles}
             onSearchProfile={onSearchProfile}
@@ -282,7 +290,9 @@ const ProfileDetails = ({
         )}
         {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}
         {profileType === PROFILES.bonjour && <BonjourGatewayForm details={details} form={form} />}
-        {profileType === PROFILES.rf && <RFForm details={details} form={form} />}
+        {profileType === PROFILES.rf && (
+          <RFForm details={details} form={form} extraFields={extraFields} />
+        )}
         {profileType === PROFILES.passpoint && (
           <PasspointProfileForm
             form={form}
@@ -334,6 +344,7 @@ ProfileDetails.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 ProfileDetails.defaultProps = {
@@ -359,6 +370,7 @@ ProfileDetails.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
+  extraFields: [],
 };
 
 export default ProfileDetails;

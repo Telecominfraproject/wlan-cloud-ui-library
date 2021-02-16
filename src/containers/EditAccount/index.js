@@ -2,14 +2,10 @@ import React from 'react';
 import { Card, Form, Input, Button } from 'antd';
 import PropTypes from 'prop-types';
 
+import { pageLayout } from 'utils/form';
 import styles from './index.module.scss';
 
 const { Item } = Form;
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 9 },
-};
 
 const EditAccount = ({ email, onSubmit }) => {
   const handleSubmit = ({ newPassword }) => {
@@ -21,7 +17,7 @@ const EditAccount = ({ email, onSubmit }) => {
       <Card className={styles.Card}>
         <h1>Edit User</h1>
 
-        <Form {...layout} name="editAccount" data-testid="editAccount" onFinish={handleSubmit}>
+        <Form {...pageLayout} name="editAccount" data-testid="editAccount" onFinish={handleSubmit}>
           <Item className={styles.Email} label="E-mail">
             {email}
           </Item>

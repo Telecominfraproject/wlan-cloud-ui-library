@@ -496,9 +496,6 @@ const PasspointProfileForm = ({
           pagination={false}
           rowKey="id"
         />
-        <Item name="childProfileIds" style={{ display: 'none' }}>
-          <Input />
-        </Item>
       </Card>
 
       <Card title="Advanced">
@@ -540,10 +537,10 @@ const PasspointProfileForm = ({
           </Select>
         </Item>
 
-        <Item name="childProfileIds" style={{ display: 'none' }}>
+        <Item name="childProfileIds" hidden>
           <Input />
         </Item>
-        <Item name="associatedAccessSsidProfileIds" style={{ display: 'none' }}>
+        <Item name="associatedAccessSsidProfileIds" hidden>
           <Input />
         </Item>
       </Card>

@@ -196,6 +196,7 @@ const defaultSsidProfile = {
   ssidAdminState: 'enabled',
   secureMode: 'wpa2OnlyPSK',
   vlanId: 1,
+  dynamicVlan: 'disabled',
   keyStr: '',
   broadcastSsid: 'enabled',
   keyRefresh: 0,
@@ -258,7 +259,7 @@ const defaultApProfile = {
   ntpServer: {
     model_type: 'AutoOrManualString',
     auto: true,
-    value: null,
+    value: 'pool.ntp.org',
   },
   syslogRelay: {
     model_type: 'SyslogRelay',

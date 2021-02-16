@@ -211,6 +211,19 @@ const mockProps = {
       },
     },
   },
+  extraFields: [
+    {
+      label: 'Rx Cell Size',
+      dataIndex: ['rxCellSizeDb'],
+      renderInput: 'renderInputItem',
+      options: {
+        min: -100,
+        max: 100,
+        error: '-100 - 100 dBm',
+        addOnText: 'dBm',
+      },
+    },
+  ],
 };
 
 describe('<RFForm />', () => {
@@ -578,6 +591,7 @@ describe('<RFForm />', () => {
       expect(getByText('-100 - 100 dBm')).toBeVisible();
     });
   });
+
   // test Probe Response Threshold invalid inputs
   it('error if the Probe Response Threshold exceeds bounds for the is2dot4GHz setting', async () => {
     const RFFormComp = () => {

@@ -6,6 +6,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
+import { pageLayout } from 'utils/form';
 
 import styles from '../../index.module.scss';
 
@@ -22,6 +23,7 @@ const General = ({
   errorProfiles,
   onFetchMoreProfiles,
   onSearchProfile,
+  extraFields,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -49,11 +51,6 @@ const General = ({
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
   ];
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 14 },
-  };
 
   const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
@@ -283,7 +280,7 @@ const General = ({
   }
 
   return (
-    <Form {...layout} form={form} onValuesChange={handleOnFormChange}>
+    <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
         <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
           Save
@@ -423,13 +420,16 @@ const General = ({
               ),
             }
           )}
-          {renderItem('Rx Cell Size', radioMap, ['rxCellSizeDb', 'value'], renderInputItem, {
-            min: -100,
-            max: 100,
-            error: '-100 - 100 dBm',
-            addOnText: 'dBm',
-            mapName: 'radioMap',
-          })}
+          {extraFields.map(field =>
+            renderItem(
+              field.label,
+              field.obj,
+              field.dataIndex,
+              field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+              field.options
+            )
+          )}
+
           {renderItem(
             'Probe Response Threshold',
             radioMap,
@@ -515,6 +515,7 @@ General.propTypes = {
   errorProfiles: PropTypes.instanceOf(Object),
   onFetchMoreProfiles: PropTypes.func,
   onSearchProfile: PropTypes.func,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 General.defaultProps = {
@@ -526,6 +527,7 @@ General.defaultProps = {
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
   onSearchProfile: () => {},
+  extraFields: [],
 };
 
 export default General;

@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 import { Input, Form } from 'antd';
 import Modal from 'components/Modal';
 import LocaleItem from 'components/LocaleItem';
+import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
 const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
   const [form] = Form.useForm();
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 15 },
-  };
 
   const addItem = () => {
     form
@@ -73,7 +69,7 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
       visible={visible}
       title={title}
       content={
-        <Form {...layout} form={form}>
+        <Form {...modalLayout} form={form}>
           {title === 'Add Icon' ? renderIconForm() : renderNameForm()}
         </Form>
       }

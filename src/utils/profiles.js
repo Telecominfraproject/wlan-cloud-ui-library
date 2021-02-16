@@ -70,6 +70,19 @@ export const formatSsidProfileForm = values => {
     formattedData.radiusServiceId = values.radiusServiceId.value;
   }
 
+  if (
+    !(
+      values.secureMode === 'wpaRadius' ||
+      values.secureMode === 'wpa2Radius' ||
+      values.secureMode === 'wpa2OnlyRadius' ||
+      values.secureMode === 'wpa3OnlyEAP' ||
+      values.secureMode === 'wpa3MixedEAP'
+    ) ||
+    values.forwardMode === 'NAT'
+  ) {
+    formattedData.dynamicVlan = 'disabled';
+  }
+
   return formattedData;
 };
 
@@ -161,6 +174,11 @@ export const formatCaptiveForm = (values, details) => {
 
   if (!values?.externalCaptivePortalURL) {
     formattedData.externalCaptivePortalURL = null;
+  }
+
+  if (values.authenticationType === 'radius') {
+    formattedData.radiusServiceId = parseInt(values.radiusServiceId.value, 10);
+    formattedData.childProfileIds.push(parseInt(values.radiusServiceId.value, 10));
   }
 
   return formattedData;

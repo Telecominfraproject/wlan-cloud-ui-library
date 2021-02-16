@@ -10,7 +10,7 @@ import { RADIOS } from '../../constants';
 const { Item } = Form;
 const { Option } = Select;
 
-const RFForm = ({ form, details }) => {
+const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);
   const currentRadios = Object.keys(details.rfConfigMap).sort();
 
@@ -279,12 +279,14 @@ const RFForm = ({ form, details }) => {
             </Select>
           ),
         })}
-        {renderItem('Rx Cell Size', ['rxCellSizeDb'], renderInputItem, {
-          min: -100,
-          max: 100,
-          error: '-100 - 100 dBm',
-          addOnText: 'dBm',
-        })}
+        {extraFields.map(field =>
+          renderItem(
+            field.label,
+            field.dataIndex,
+            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+            field.options
+          )
+        )}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
@@ -420,6 +422,7 @@ const RFForm = ({ form, details }) => {
 RFForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 RFForm.defaultProps = {
@@ -428,6 +431,7 @@ RFForm.defaultProps = {
     // eslint-disable-next-line no-return-assign, no-sequences
     rfConfigMap: RADIOS.reduce((acc, i) => ((acc[i] = {}), acc), {}),
   },
+  extraFields: [],
 };
 
 export default RFForm;

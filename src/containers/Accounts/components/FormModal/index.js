@@ -4,6 +4,7 @@ import { Button, Form, Input, Select } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
+import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -30,13 +31,8 @@ const FormModal = ({
     form.setFieldsValue({ email: userEmail, roles: userRole });
   }, [visible]);
 
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 12 },
-  };
-
   const content = (
-    <Form {...layout} form={form}>
+    <Form {...modalLayout} form={form}>
       <Item
         label="E-mail"
         name="email"

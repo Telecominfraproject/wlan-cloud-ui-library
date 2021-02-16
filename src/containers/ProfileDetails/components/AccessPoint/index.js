@@ -333,7 +333,7 @@ const AccessPointForm = ({
                   rules={[
                     {
                       required: syslog,
-                      pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                      pattern: /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/,
                       message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
                   ]}
@@ -466,7 +466,7 @@ const AccessPointForm = ({
           pagination={false}
           rowKey="id"
         />
-        <Item name="childProfileIds" style={{ display: 'none' }}>
+        <Item name="childProfileIds" hidden>
           <Input />
         </Item>
       </Card>
