@@ -374,9 +374,9 @@ describe('<AutoProvision />', () => {
     await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
     fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
 
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[1]);
+    fireEvent.click(getAllByRole('button', { name: /Save/i })[1]);
 
-    fireEvent.click(getAllByRole('button', { name: 'Save' })[0]);
+    fireEvent.click(getAllByRole('button', { name: /Save/i })[0]);
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(1);

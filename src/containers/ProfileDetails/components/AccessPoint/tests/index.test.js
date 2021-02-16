@@ -720,7 +720,6 @@ describe('<AccessPoints />', () => {
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
       expect(getByText('Name field cannot be empty')).toBeVisible();
-      expect(getByText('Parent Interface Name field cannot be empty')).toBeVisible();
       expect(getByText('Remote IP Address field cannot be empty')).toBeVisible();
     });
   });
@@ -758,12 +757,13 @@ describe('<AccessPoints />', () => {
     };
 
     const { getByTestId, getByText, getByRole, getByLabelText } = render(<AccessPointComp />);
+    const testIp = '192.168.0.13';
 
     fireEvent.click(getByTestId('addGre'));
     expect(getByText('Add GRE Configuration')).toBeVisible();
-    fireEvent.change(getByLabelText('Name'), { target: { value: 'gre2' } });
-    fireEvent.change(getByLabelText('Parent Interface Name'), { target: { value: 'wan' } });
-    fireEvent.change(getByLabelText('Remote IP Address'), { target: { value: '192.168.0.13' } });
+    fireEvent.change(getByLabelText(/Name/i), { target: { value: 'gre2' } });
+    fireEvent.change(getByLabelText(/Remote IP Address/i), { target: { value: testIp } });
+    fireEvent.change(getByLabelText(/VLAN IDs/i), { target: { value: '1,2,3,4,5' } });
 
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitForElement, within } from '@testing-library/react';
+import { cleanup, fireEvent, waitFor, waitForElement, within } from '@testing-library/react';
 import { BrowserRouter as Router, Route, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -333,7 +333,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getAllByRole('button', { name: 'Delete' })[1]);
   });
 
-  it('Cancel button on delete AP modal should hide modal', () => {
+  it('Cancel button on delete AP modal should hide modal', async () => {
     const { getByRole, getAllByRole, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -346,7 +346,9 @@ describe('<AccessPointDetails />', () => {
     const paragraph = getByText(/Are you sure you want to delete this access point:/i);
 
     expect(paragraph).toBeVisible();
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
-    expect(paragraph).not.toBeVisible();
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
+    await waitFor(() => {
+      expect(paragraph).not.toBeVisible();
+    });
   });
 });

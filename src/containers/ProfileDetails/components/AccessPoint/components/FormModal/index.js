@@ -28,18 +28,6 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
         <Input className={globalStyles.field} placeholder="Enter Name" />
       </Item>
       <Item
-        name="greParentIfName"
-        label="Parent Interface Name"
-        rules={[
-          {
-            required: true,
-            message: 'Parent Interface Name field cannot be empty',
-          },
-        ]}
-      >
-        <Input className={globalStyles.field} placeholder="Enter Parent Interface Name" />
-      </Item>
-      <Item
         name="greRemoteInetAddr"
         label="Remote IP Address"
         rules={[
@@ -56,33 +44,6 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       >
         <Input className={globalStyles.field} placeholder="Enter Remote IP Address" />
       </Item>
-      <Item
-        name="greLocalInetAddr"
-        label="Local IP Address"
-        rules={[
-          {
-            pattern: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm,
-            message: 'Please enter a valid IP Address format.',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input className={globalStyles.field} placeholder="Enter Local IP Address" />
-      </Item>
-      <Item
-        label="Remote MAC Address"
-        name={['greRemoteMacAddr', 'addressAsString']}
-        rules={[
-          {
-            pattern: /^([0-9a-fA-F]{2}[:]){5}[0-9a-fA-F]{2}$/,
-            message: 'Please enter a valid MAC Address.',
-          },
-        ]}
-        hasFeedback
-      >
-        <Input className={globalStyles.field} placeholder="Enter MAC Address" />
-      </Item>
-
       <Item
         label="VLAN IDs"
         name="vlanIdsInGreTunnel"
@@ -103,8 +64,12 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
     form
       .validateFields()
       .then(values => {
+        const formattedValues = {
+          ...values,
+          vlanIdsInGreTunnel: values.vlanIdsInGreTunnel.split(',').map(i => parseInt(i, 10)),
+        };
         form.resetFields();
-        onSubmit(values);
+        onSubmit(formattedValues);
       })
       .catch(() => {});
   };
