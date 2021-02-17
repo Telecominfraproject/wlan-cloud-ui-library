@@ -70,11 +70,7 @@ const AppLayout = ({
   }, [screenSize]);
 
   return (
-    <Layout
-      className={`${styles.MainLayout} ${isCollapsed ? styles.collapsed : ''} ${
-        isMobile ? styles.mobile : ''
-      }`}
-    >
+    <Layout className={`${isCollapsed ? styles.collapsed : ''} ${isMobile ? styles.mobile : ''}`}>
       <Navbar
         menuItems={menuItems}
         mobileMenuItems={mobileMenuItems}
