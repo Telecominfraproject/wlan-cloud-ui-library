@@ -20,7 +20,6 @@ const VersionModal = ({
   commit,
   releaseDate,
   filename,
-  validationCode,
 }) => {
   const [form] = Form.useForm();
 
@@ -32,7 +31,7 @@ const VersionModal = ({
       description,
       commit,
       filename,
-      validationCode,
+
       date: parseInt(releaseDate, 10) ? moment(parseInt(releaseDate, 10)) : null,
     });
   }, [visible]);
@@ -75,18 +74,7 @@ const VersionModal = ({
       >
         <Input className={globalStyles.field} />
       </Item>
-      <Item
-        label="Validation Code (MD5)"
-        name="validationCode"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your Validation Code ',
-          },
-        ]}
-      >
-        <Input className={globalStyles.field} />
-      </Item>
+
       <Item label="Commit" name="commit">
         <Input className={globalStyles.field} />
       </Item>
@@ -132,7 +120,6 @@ VersionModal.propTypes = {
   commit: PropTypes.string,
   releaseDate: PropTypes.string,
   filename: PropTypes.string,
-  validationCode: PropTypes.string,
 };
 
 VersionModal.defaultProps = {
@@ -146,7 +133,6 @@ VersionModal.defaultProps = {
   commit: '',
   releaseDate: null,
   filename: '',
-  validationCode: '',
 };
 
 export default VersionModal;
