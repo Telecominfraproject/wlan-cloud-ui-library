@@ -39,7 +39,7 @@ const AccessPointDetails = ({
   extraButtons,
   onSearchProfile,
   extraFields,
-  clientsTable,
+  extraTabs,
 }) => {
   const TAB_LIST = [
     {
@@ -64,11 +64,12 @@ const AccessPointDetails = ({
     },
   ];
 
-  if (clientsTable)
+  extraTabs.forEach(extraTab => {
     TAB_LIST.push({
-      key: 'clients',
-      tab: 'Connected Clients',
+      key: extraTab.key,
+      tab: extraTab.title,
     });
+  });
 
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -228,7 +229,15 @@ const AccessPointDetails = ({
           errorFirmware={errorFirmware}
         />
       )}
-      {tab === 'clients' && <div className={styles.clientsContainer}>{clientsTable}</div>}
+      {extraTabs.map(extraTab => {
+        return (
+          tab === extraTab.key && (
+            <div className={styles.tabContentContainer} key={extraTab.key}>
+              {extraTab.component}
+            </div>
+          )
+        );
+      })}
     </div>
   );
 };
@@ -253,7 +262,13 @@ AccessPointDetails.propTypes = {
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
-  clientsTable: PropTypes.node,
+  extraTabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      key: PropTypes.string,
+      component: PropTypes.node,
+    })
+  ),
 };
 
 AccessPointDetails.defaultProps = {
@@ -269,7 +284,7 @@ AccessPointDetails.defaultProps = {
   extraButtons: null,
   onSearchProfile: () => {},
   extraFields: [],
-  clientsTable: null,
+  extraTabs: [],
 };
 
 export default AccessPointDetails;
