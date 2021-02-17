@@ -99,7 +99,6 @@ describe('<VersionModal />', () => {
     fireEvent.change(getByLabelText('Model ID'), { target: { value: 'test id' } });
     fireEvent.change(getByLabelText('Version Name'), { target: { value: 'test name' } });
     fireEvent.change(getByLabelText('Firmware URL'), { target: { value: 'www.test.com' } });
-    fireEvent.change(getByLabelText('Validation Code (MD5)'), { target: { value: 'test' } });
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
