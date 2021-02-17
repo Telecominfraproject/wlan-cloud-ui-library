@@ -62,14 +62,13 @@ const AccessPointDetails = ({
       key: 'firmware',
       tab: 'Firmware',
     },
+    ...extraTabs.map(extraTab => {
+      return {
+        key: extraTab.key,
+        tab: extraTab.title,
+      };
+    }),
   ];
-
-  extraTabs.forEach(extraTab => {
-    TAB_LIST.push({
-      key: extraTab.key,
-      tab: extraTab.title,
-    });
-  });
 
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
@@ -229,15 +228,14 @@ const AccessPointDetails = ({
           errorFirmware={errorFirmware}
         />
       )}
-      {extraTabs.map(extraTab => {
-        return (
+      {extraTabs.map(
+        extraTab =>
           tab === extraTab.key && (
             <div className={styles.tabContentContainer} key={extraTab.key}>
               {extraTab.component}
             </div>
           )
-        );
-      })}
+      )}
     </div>
   );
 };
