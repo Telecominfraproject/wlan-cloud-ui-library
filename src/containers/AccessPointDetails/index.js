@@ -19,29 +19,6 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const TAB_LIST = [
-  {
-    key: 'general',
-    tab: 'General',
-  },
-  {
-    key: 'status',
-    tab: 'Status',
-  },
-  {
-    key: 'location',
-    tab: 'Location',
-  },
-  {
-    key: 'os',
-    tab: 'OS Stats',
-  },
-  {
-    key: 'firmware',
-    tab: 'Firmware',
-  },
-];
-
 const AccessPointDetails = ({
   data,
   profiles,
@@ -62,7 +39,37 @@ const AccessPointDetails = ({
   extraButtons,
   onSearchProfile,
   extraFields,
+  clientsTable,
 }) => {
+  const TAB_LIST = [
+    {
+      key: 'general',
+      tab: 'General',
+    },
+    {
+      key: 'status',
+      tab: 'Status',
+    },
+    {
+      key: 'location',
+      tab: 'Location',
+    },
+    {
+      key: 'os',
+      tab: 'OS Stats',
+    },
+    {
+      key: 'firmware',
+      tab: 'Firmware',
+    },
+  ];
+
+  if (clientsTable)
+    TAB_LIST.push({
+      key: 'clients',
+      tab: 'Connected Clients',
+    });
+
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
   const history = useHistory();
@@ -221,6 +228,7 @@ const AccessPointDetails = ({
           errorFirmware={errorFirmware}
         />
       )}
+      {tab === 'clients' && <div className={styles.clientsContainer}>{clientsTable}</div>}
     </div>
   );
 };
@@ -245,6 +253,7 @@ AccessPointDetails.propTypes = {
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
+  clientsTable: PropTypes.node,
 };
 
 AccessPointDetails.defaultProps = {
@@ -260,6 +269,7 @@ AccessPointDetails.defaultProps = {
   extraButtons: null,
   onSearchProfile: () => {},
   extraFields: [],
+  clientsTable: null,
 };
 
 export default AccessPointDetails;
