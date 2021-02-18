@@ -92,7 +92,7 @@ const AutoProvision = ({
   };
 
   const onSubmit = () => {
-    const formattedData = { ...data.details };
+    const formattedData = JSON.parse(JSON.stringify(data.details));
     form
       .validateFields()
       .then(values => {
