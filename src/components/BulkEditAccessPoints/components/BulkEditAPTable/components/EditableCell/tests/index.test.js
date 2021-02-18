@@ -35,8 +35,9 @@ const mockProps = {
     probeResponseThreshold: [-90, -90, -90],
     snrDrop: [30, 30, 20],
   },
-  handleSave: () => {},
 };
+
+const ENTER = { keyCode: 13 };
 
 describe('<EditableCell />', () => {
   afterEach(cleanup);
@@ -53,9 +54,10 @@ describe('<EditableCell />', () => {
       );
     };
     const { getByTestId } = render(<EditableCellComp />);
-    const tableCell = getByTestId('bulkEditTableCell');
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
     fireEvent.click(tableCell);
-    const formElement = getByTestId('bulkEditFormElement');
+    const formElement = getByTestId(`bulkEditFormElement-${mockProps.record.name}-channel`);
+
     expect(formElement).toBeInTheDocument();
   });
 
@@ -72,11 +74,10 @@ describe('<EditableCell />', () => {
       );
     };
     const { getByTestId } = render(<EditableCellComp />);
-    const tableCell = getByTestId('bulkEditTableCell');
-    const ENTER = { keyCode: 13 };
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
     fireEvent.keyDown(tableCell, ENTER);
     fireEvent.click(tableCell);
-    const input = getByTestId('bulkEditFormInput');
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
     fireEvent.change(input, { target: { value: '' } });
     expect(input.value).toBe('');
     fireEvent.keyDown(input, { key: 'Enter', code: 13 });
@@ -99,9 +100,10 @@ describe('<EditableCell />', () => {
     };
     const { getByTestId } = render(<EditableCellComp />);
 
-    const tableCell = getByTestId('bulkEditTableCell');
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
     fireEvent.click(tableCell);
-    const input = getByTestId('bulkEditFormInput');
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
+
     expect(input).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: '123' } });
@@ -109,11 +111,33 @@ describe('<EditableCell />', () => {
     await waitFor(() => {
       expect(input.value).toBe('123');
     });
-    const ENTER = { keyCode: 13 };
     fireEvent.keyDown(input, ENTER);
     await waitFor(() => {
       expect(handleSaveSpy).toHaveBeenCalled();
     });
+  });
+
+  it('handleSave default prop test', async () => {
+    const EditableCellComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <div form={form}>
+          <EditableContext.Provider value={form}>
+            <EditableCell {...mockProps} editable />
+          </EditableContext.Provider>
+        </div>
+      );
+    };
+    const { getByTestId } = render(<EditableCellComp />);
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
+
+    expect(input).toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: '123' } });
+    fireEvent.keyDown(input, ENTER);
   });
 
   it('cell should not be editable when editable flag is false', async () => {
@@ -129,31 +153,5 @@ describe('<EditableCell />', () => {
     };
 
     render(<EditableCellComp />);
-  });
-
-  it('cell should be Render When Props Not Provide', async () => {
-    const EditableCellComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <div form={form}>
-          <EditableContext.Provider value={form}>
-            <EditableCell editable />
-          </EditableContext.Provider>
-        </div>
-      );
-    };
-
-    const { getByTestId } = render(<EditableCellComp />);
-    const tableCell = getByTestId('bulkEditTableCell');
-    fireEvent.click(tableCell);
-    const input = getByTestId('bulkEditFormInput');
-    expect(input).toBeInTheDocument();
-
-    fireEvent.change(input, { target: { value: '123' } });
-    await waitFor(() => {
-      expect(input.value).toBe('123');
-    });
-    const ENTER = { keyCode: 13 };
-    fireEvent.keyDown(input, ENTER);
   });
 });

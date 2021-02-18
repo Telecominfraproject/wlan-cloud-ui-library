@@ -20,15 +20,10 @@ const BulkEditAccessPoints = ({
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
-  const [editedRows, setEditedRows] = useState([]);
-  const [resetEditedRows, setRestEditedRows] = useState(false);
+  const [editedRows, setEditedRows] = useState(null);
 
   const handleBackClick = () => {
     history.push(routes.accessPoints);
-  };
-
-  const handleEditedRows = rows => {
-    setEditedRows(rows);
   };
 
   const breadCrumbs = breadcrumbPath.map(location => (
@@ -54,20 +49,21 @@ const BulkEditAccessPoints = ({
         <Button
           onClick={() => {
             onSaveChanges(editedRows);
-            setRestEditedRows(!resetEditedRows);
+            setEditedRows(null);
           }}
+          disabled={!editedRows}
           className={styles.saveBtn}
+          type="primary"
         >
-          SAVE CHANGES
+          Save
         </Button>
       </div>
       <BulkEditAPTable
         tableColumns={tableColumns}
         tableData={tableData}
-        onEditedRows={handleEditedRows}
+        setEditedRows={setEditedRows}
         onLoadMore={onLoadMore}
         isLastPage={isLastPage}
-        resetEditedRows={resetEditedRows}
       />
     </div>
   );

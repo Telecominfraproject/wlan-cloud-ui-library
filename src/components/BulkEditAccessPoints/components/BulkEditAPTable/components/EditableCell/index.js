@@ -4,6 +4,7 @@ import { Form, Input } from 'antd';
 import { EditableContext } from '../EditableRow';
 import styles from './index.module.scss';
 
+const { Item } = Form;
 export const EditableCell = ({
   title,
   editable,
@@ -30,45 +31,89 @@ export const EditableCell = ({
     });
   };
 
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      // console.log('Save failed:', errInfo);
+  const validateInput = (input, key) => {
+    if (
+      key === 'probeResponseThreshold' ||
+      key === 'clientDisconnectThreshold' ||
+      key === 'cellSize'
+    ) {
+      return input >= -100 && input <= 100;
     }
+    if (key === 'snrDrop' || key === 'minLoad') {
+      return input >= 0 && input <= 100;
+    }
+    return input >= -1 && input <= 165;
+  };
+
+  const errorText = key => {
+    if (
+      key === 'probeResponseThreshold' ||
+      key === 'clientDisconnectThreshold' ||
+      key === 'cellSize'
+    ) {
+      return `${title} can be a number between -100 and 100`;
+    }
+
+    if (key === 'snrDrop' || key === 'minLoad') {
+      return `${title} can be a number between 1 and 100`;
+    }
+
+    return `${title} can be a number between 1 and 165`;
+  };
+
+  const save = () => {
+    form
+      .validateFields()
+      .then(values => {
+        toggleEdit();
+        handleSave({ ...record }, values);
+      })
+      .catch(() => {});
   };
 
   let childNode = children;
 
   if (editable) {
     childNode = editing ? (
-      <Form.Item
-        data-testid="bulkEditFormElement"
-        style={{
-          margin: 0,
-        }}
+      <Item
+        data-testid={`bulkEditFormElement-${record.name}-${dataIndex}`}
         name={dataIndex}
         rules={[
           {
             required: true,
-            message: `${title} IS REQUIRED.`,
+            message: `${title} is required.`,
           },
+          () => ({
+            validator(_rule, values) {
+              if (typeof values === 'string') {
+                if (values.split(',').length > 4) {
+                  return Promise.reject(new Error(`Please enter a valid configuration`));
+                }
+
+                if (!values || values.split(',').every(value => validateInput(value, dataIndex))) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error(errorText(dataIndex)));
+              }
+              return Promise.resolve();
+            },
+          }),
         ]}
       >
-        <Input data-testid="bulkEditFormInput" ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
+        <Input
+          data-testid={`bulkEditFormInput-${record.name}-${dataIndex}`}
+          ref={inputRef}
+          onPressEnter={save}
+          onBlur={save}
+        />
+      </Item>
     ) : (
       <div
-        data-testid="bulkEditTableCell"
+        data-testid={`bulkEditTableCell-${record.name}-${dataIndex}`}
         className={styles.editableCellValueWrap}
         role="button"
         tabIndex={0}
         onKeyDown={() => {}}
-        style={{
-          paddingRight: 24,
-        }}
         onClick={toggleEdit}
       >
         {children}
