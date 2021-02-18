@@ -61,6 +61,7 @@ const AddProfile = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
+  extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -296,7 +297,9 @@ const AddProfile = ({
           {profileType === PROFILES.radius && (
             <RadiusForm form={form} details={initialValues?.details} />
           )}
-          {profileType === PROFILES.rf && <RFForm form={form} details={initialValues?.details} />}
+          {profileType === PROFILES.rf && (
+            <RFForm form={form} details={initialValues?.details} extraFields={extraFields} />
+          )}
           {profileType === PROFILES.passpoint && (
             <PasspointProfileForm
               form={form}
@@ -348,6 +351,7 @@ AddProfile.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 AddProfile.defaultProps = {
@@ -368,6 +372,7 @@ AddProfile.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
+  extraFields: [],
 };
 
 export default AddProfile;
