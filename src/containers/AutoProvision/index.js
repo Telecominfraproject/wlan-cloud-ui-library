@@ -109,13 +109,13 @@ const AutoProvision = ({
       title: 'MODEL',
       dataIndex: 'model',
       key: 'model',
-      width: 100,
+      width: 150,
     },
     {
       title: 'PROFILE',
       dataIndex: 'profileId',
       key: 'profileId',
-      width: 700,
+      width: 800,
       render: i => profilesById[i]?.name || i,
     },
     {

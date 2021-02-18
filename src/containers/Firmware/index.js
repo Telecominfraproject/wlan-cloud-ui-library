@@ -128,7 +128,7 @@ const Firmware = ({
       title: 'MODEL ID',
       dataIndex: 'modelId',
       key: 'modelId',
-      width: 100,
+      width: 150,
     },
     {
       title: 'VERSION',
@@ -186,7 +186,7 @@ const Firmware = ({
       title: 'MODEL ID',
       dataIndex: 'modelId',
       key: 'modelIdFirmware',
-      width: 100,
+      width: 150,
     },
     {
       title: 'VERSION',
