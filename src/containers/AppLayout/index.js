@@ -104,7 +104,7 @@ AppLayout.propTypes = {
 AppLayout.defaultProps = {
   menuItems: [],
   mobileMenuItems: null,
-  totalAlarms: 0,
+  totalAlarms: null,
   rightMenuItem: null,
 };
 
