@@ -30,15 +30,6 @@ const BulkEditAccessPoints = ({
     <Breadcrumb.Item key={location.id}>{location.name}</Breadcrumb.Item>
   ));
 
-  const handleOnSave = () => {
-    const editedRowsArr = [];
-    Object.keys(editedRows).forEach(key => {
-      editedRowsArr.push(editedRows[key]);
-    });
-
-    return editedRowsArr;
-  };
-
   return (
     <div>
       <Button
@@ -57,7 +48,7 @@ const BulkEditAccessPoints = ({
         </div>
         <Button
           onClick={() => {
-            onSaveChanges(handleOnSave());
+            onSaveChanges(editedRows);
             setEditedRows(null);
           }}
           disabled={!editedRows}
