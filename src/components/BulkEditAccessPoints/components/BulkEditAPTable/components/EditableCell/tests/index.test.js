@@ -35,7 +35,6 @@ const mockProps = {
     probeResponseThreshold: [-90, -90, -90],
     snrDrop: [30, 30, 20],
   },
-  handleSave: () => {},
 };
 
 const ENTER = { keyCode: 13 };
@@ -116,6 +115,29 @@ describe('<EditableCell />', () => {
     await waitFor(() => {
       expect(handleSaveSpy).toHaveBeenCalled();
     });
+  });
+
+  it('handleSave default prop test', async () => {
+    const EditableCellComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <div form={form}>
+          <EditableContext.Provider value={form}>
+            <EditableCell {...mockProps} editable />
+          </EditableContext.Provider>
+        </div>
+      );
+    };
+    const { getByTestId } = render(<EditableCellComp />);
+
+    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
+    fireEvent.click(tableCell);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
+
+    expect(input).toBeInTheDocument();
+
+    fireEvent.change(input, { target: { value: '123' } });
+    fireEvent.keyDown(input, ENTER);
   });
 
   it('cell should not be editable when editable flag is false', async () => {

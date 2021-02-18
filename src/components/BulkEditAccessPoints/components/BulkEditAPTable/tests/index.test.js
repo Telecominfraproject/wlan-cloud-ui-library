@@ -88,7 +88,6 @@ const mockProps = {
       snrDrop: [20, 30, 30],
     },
   ],
-  onEditedRows: jest.fn(),
   onLoadMore: jest.fn(),
   isLastPage: false,
 };

@@ -6,13 +6,8 @@ import { EditableRow } from './components/EditableRow';
 import { EditableCell } from './components/EditableCell';
 import styles from './index.module.scss';
 
-const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, isLastPage }) => {
+const BulkEditAPTable = ({ tableColumns, tableData, onLoadMore, isLastPage, setEditedRows }) => {
   const [bulkEditTableData, setTableData] = useState([]);
-  const [editedRows, setEditedRows] = useState([]);
-
-  useEffect(() => {
-    onEditedRows(editedRows);
-  }, [editedRows]);
 
   useEffect(() => {
     setTableData(tableData);
@@ -29,12 +24,8 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
     const updatedRow = { ...row };
     const key = Object.keys(values)[0];
     updatedRow[key] = JSON.parse(`[${values[key]}]`);
+    setEditedRows(editedRows => ({ ...editedRows, [updatedRow.key]: updatedRow }));
 
-    if (!editedRows.some(a => row.key === a.key)) {
-      setEditedRows([...editedRows, updatedRow]);
-    } else {
-      setEditedRows(editedRows.map(obj => (obj.id === updatedRow.id ? updatedRow : obj)));
-    }
     setTableData(bulkEditTableData.map(obj => (obj.id === updatedRow.id ? updatedRow : obj)));
   };
 
@@ -78,14 +69,15 @@ const BulkEditAPTable = ({ tableColumns, tableData, onEditedRows, onLoadMore, is
 BulkEditAPTable.propTypes = {
   tableColumns: PropTypes.instanceOf(Array).isRequired,
   tableData: PropTypes.instanceOf(Array),
-  onEditedRows: PropTypes.func.isRequired,
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool,
+  setEditedRows: PropTypes.func,
 };
 
 BulkEditAPTable.defaultProps = {
   tableData: [],
   isLastPage: true,
+  setEditedRows: () => {},
 };
 
 export default BulkEditAPTable;
