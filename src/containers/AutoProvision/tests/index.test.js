@@ -257,8 +257,6 @@ describe('<AutoProvision />', () => {
       <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
     );
 
-    fireEvent.click(getByRole('switch'));
-
     const location = getByLabelText('Auto-Provisioning Location');
     fireEvent.keyDown(location, DOWN_ARROW);
     await waitForElement(() => getByText(mockProps.dataLocation[1].name));
