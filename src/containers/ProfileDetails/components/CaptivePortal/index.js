@@ -59,6 +59,7 @@ const CaptivePortalForm = ({
   onSearchProfile,
   onFetchMoreProfiles,
   loadingRadiusProfiles,
+  handleOnFormChange,
 }) => {
   const [showTips, setShowTips] = useState(false);
 
@@ -265,6 +266,7 @@ const CaptivePortalForm = ({
           status: null,
           help: null,
         });
+        handleOnFormChange();
       })
       .catch(e => {
         setWhitelistValidation({
@@ -274,17 +276,23 @@ const CaptivePortalForm = ({
       });
   };
 
-  const handleDeleteWhitelist = item => setWhitelist(whitelist.filter(i => i !== item));
+  const handleDeleteWhitelist = item => {
+    setWhitelist(whitelist.filter(i => i !== item));
+    handleOnFormChange();
+  };
 
   const handleAddUser = newUser => {
     setUserList([...userList, newUser]);
+    handleOnFormChange();
   };
   const handleUpdateUser = (activeUser, newUser) => {
     setUserList(userList.map(user => (user.username === activeUser ? newUser : user)));
+    handleOnFormChange();
   };
 
   const handleDeleteUser = activeUser => {
     setUserList(userList.filter(user => user.username !== activeUser));
+    handleOnFormChange();
   };
 
   useEffect(() => {
@@ -706,6 +714,7 @@ CaptivePortalForm.propTypes = {
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
+  handleOnFormChange: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -717,6 +726,7 @@ CaptivePortalForm.defaultProps = {
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: false,
+  handleOnFormChange: () => {},
 };
 
 export default CaptivePortalForm;

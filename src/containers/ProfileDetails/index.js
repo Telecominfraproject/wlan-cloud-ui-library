@@ -274,6 +274,7 @@ const ProfileDetails = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingSSIDProfiles={loadingSSIDProfiles}
             loadingRFProfiles={loadingRFProfiles}
+            handleOnFormChange={handleOnFormChange}
           />
         )}
         {profileType === PROFILES.captivePortal && (
@@ -286,6 +287,7 @@ const ProfileDetails = ({
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
+            handleOnFormChange={handleOnFormChange}
           />
         )}
         {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}

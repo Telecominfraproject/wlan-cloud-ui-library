@@ -66,7 +66,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       .then(values => {
         const formattedValues = {
           ...values,
-          vlanIdsInGreTunnel: values.vlanIdsInGreTunnel.split(',').map(i => parseInt(i, 10)),
+          vlanIdsInGreTunnel: values.vlanIdsInGreTunnel?.split(',').map(i => parseInt(i, 10)),
         };
         form.resetFields();
         onSubmit(formattedValues);
