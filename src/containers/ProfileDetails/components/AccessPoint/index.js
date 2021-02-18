@@ -22,6 +22,7 @@ const AccessPointForm = ({
   onFetchMoreProfiles,
   loadingSSIDProfiles,
   loadingRFProfiles,
+  handleOnFormChange,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const { Item } = Form;
@@ -39,21 +40,23 @@ const AccessPointForm = ({
   const currentRfId = useMemo(() => childProfiles.find(i => i.profileType === 'rf')?.id, [
     childProfiles,
   ]);
-  const [selectedChildProfiles, setSelectdChildProfiles] = useState(
+  const [selectedChildProfiles, setSelectedChildProfiles] = useState(
     childProfiles.filter(i => i.profileType === PROFILES.ssid) || []
   );
 
   const handleOnChangeSsid = selectedItem => {
-    setSelectdChildProfiles([
+    setSelectedChildProfiles([
       ...selectedChildProfiles,
       ssidProfiles.find(i => i.id === selectedItem),
     ]);
+    handleOnFormChange();
   };
 
   const handleRemoveSsid = id => {
-    setSelectdChildProfiles(
+    setSelectedChildProfiles(
       selectedChildProfiles.filter(i => parseInt(i.id, 10) !== parseInt(id, 10))
     );
+    handleOnFormChange();
   };
 
   const handleAddGre = values => {
@@ -64,10 +67,12 @@ const AccessPointForm = ({
       },
     ]);
     setGreModalVisible(false);
+    handleOnFormChange();
   };
 
   const handleRemoveGre = item => {
     setGreList(greList.filter(i => i !== item));
+    handleOnFormChange();
   };
 
   useEffect(() => {
@@ -508,6 +513,7 @@ AccessPointForm.propTypes = {
   onFetchMoreProfiles: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  handleOnFormChange: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -520,6 +526,7 @@ AccessPointForm.defaultProps = {
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingRFProfiles: false,
+  handleOnFormChange: () => {},
 };
 
 export default AccessPointForm;
