@@ -19,29 +19,6 @@ import Status from './components/Status';
 
 import styles from './index.module.scss';
 
-const TAB_LIST = [
-  {
-    key: 'general',
-    tab: 'General',
-  },
-  {
-    key: 'status',
-    tab: 'Status',
-  },
-  {
-    key: 'location',
-    tab: 'Location',
-  },
-  {
-    key: 'os',
-    tab: 'OS Stats',
-  },
-  {
-    key: 'firmware',
-    tab: 'Firmware',
-  },
-];
-
 const AccessPointDetails = ({
   data,
   profiles,
@@ -62,7 +39,37 @@ const AccessPointDetails = ({
   extraButtons,
   onSearchProfile,
   extraFields,
+  extraTabs,
 }) => {
+  const TAB_LIST = [
+    {
+      key: 'general',
+      tab: 'General',
+    },
+    {
+      key: 'status',
+      tab: 'Status',
+    },
+    {
+      key: 'location',
+      tab: 'Location',
+    },
+    {
+      key: 'os',
+      tab: 'OS Stats',
+    },
+    {
+      key: 'firmware',
+      tab: 'Firmware',
+    },
+    ...extraTabs.map(extraTab => {
+      return {
+        key: extraTab.key,
+        tab: extraTab.title,
+      };
+    }),
+  ];
+
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
   const history = useHistory();
@@ -221,6 +228,14 @@ const AccessPointDetails = ({
           errorFirmware={errorFirmware}
         />
       )}
+      {extraTabs.map(
+        extraTab =>
+          tab === extraTab.key && (
+            <div className={styles.tabContentContainer} key={extraTab.key}>
+              {extraTab.component}
+            </div>
+          )
+      )}
     </div>
   );
 };
@@ -245,6 +260,13 @@ AccessPointDetails.propTypes = {
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
+  extraTabs: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      key: PropTypes.string,
+      component: PropTypes.node,
+    })
+  ),
 };
 
 AccessPointDetails.defaultProps = {
@@ -260,6 +282,7 @@ AccessPointDetails.defaultProps = {
   extraButtons: null,
   onSearchProfile: () => {},
   extraFields: [],
+  extraTabs: [],
 };
 
 export default AccessPointDetails;
