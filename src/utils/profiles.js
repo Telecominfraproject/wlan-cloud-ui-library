@@ -197,6 +197,9 @@ export const formatRfProfileForm = values => {
     formattedData.rfConfigMap[radio].bestApSettings.mlComputed = isBool(
       values.rfConfigMap[radio].bestApSettings.mlComputed
     );
+    formattedData.rfConfigMap[radio].autoChannelSelection = isBool(
+      values.rfConfigMap[radio].autoChannelSelection
+    );
   });
 
   return formattedData;
