@@ -1,4 +1,4 @@
-import { RADIOS, ROAMING } from '../containers/ProfileDetails/constants/index';
+import { RADIOS, ROAMING, DEFAULT_NTP_SERVER } from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
 
@@ -94,6 +94,9 @@ export const formatApProfileForm = values => {
   formattedData.syntheticClientEnabled = isBool(values.syntheticClientEnabled);
   formattedData.syslogRelay.enabled = isBool(values.syslogRelay.enabled);
 
+  if (formattedData.ntpServer.auto) {
+    formattedData.ntpServer.value = DEFAULT_NTP_SERVER;
+  }
   return formattedData;
 };
 

@@ -170,7 +170,7 @@ const Firmware = ({
           </Item>
 
           {version && (
-            <Item label=" " colon={false}>
+            <Item wrapperCol={{ offset: 5, span: 15 }}>
               <TextArea
                 readOnly
                 rows={6}

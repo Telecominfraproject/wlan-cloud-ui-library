@@ -31,7 +31,7 @@ const AccessPointForm = ({
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
 
   const [vlan, setVlan] = useState(details?.vlanNative === undefined ? true : details.vlanNative);
-  const [ntp, setNTP] = useState(details?.ntpServer?.auto || defaultApProfile.ntpServer.auto);
+  const [ntp, setNTP] = useState(details?.ntpServer?.auto ?? defaultApProfile.ntpServer.auto);
 
   const [rtls, setRtls] = useState(details?.rtlsSettings?.enabled);
   const [syslog, setSyslog] = useState(details?.syslogRelay?.enabled);
@@ -75,7 +75,7 @@ const AccessPointForm = ({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
       vlan: details?.vlan || defaultApProfile.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto || defaultApProfile.ntpServer.auto,
+        auto: details?.ntpServer?.auto ?? defaultApProfile.ntpServer.auto,
         value: details?.ntpServer?.value || defaultApProfile.ntpServer.value,
       },
       ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
@@ -185,35 +185,34 @@ const AccessPointForm = ({
         </Item>
 
         {!vlan && (
-          <Item label=" " colon={false}>
-            <Item
-              name="vlan"
-              rules={[
-                {
-                  required: !vlan,
-                  message: 'Vlan expected between 2 and 4095',
+          <Item
+            wrapperCol={{ offset: 5, span: 15 }}
+            name="vlan"
+            rules={[
+              {
+                required: !vlan,
+                message: 'Vlan expected between 2 and 4095',
+              },
+              ({ getFieldValue }) => ({
+                validator(_rule, value) {
+                  if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('Vlan expected between 2 and 4095'));
                 },
-                ({ getFieldValue }) => ({
-                  validator(_rule, value) {
-                    if (!value || (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('Vlan expected between 2 and 4095'));
-                  },
-                }),
-              ]}
-              hasFeedback
-            >
-              <Input
-                data-testid="vlanInput"
-                className={globalStyles.field}
-                placeholder="2-4095"
-                type="number"
-                min={2}
-                max={4095}
-                maxLength={4}
-              />
-            </Item>
+              }),
+            ]}
+            hasFeedback
+          >
+            <Input
+              data-testid="vlanInput"
+              className={globalStyles.field}
+              placeholder="2-4095"
+              type="number"
+              min={2}
+              max={4095}
+              maxLength={4}
+            />
           </Item>
         )}
 
@@ -223,7 +222,7 @@ const AccessPointForm = ({
           </Checkbox>
         </Item>
         {!ntp && (
-          <Item label=" " colon={false}>
+          <Item wrapperCol={{ offset: 5, span: 15 }}>
             <Item
               name={['ntpServer', 'value']}
               rules={[{ required: !ntp, message: 'Please enter your NTP server' }]}
@@ -257,51 +256,52 @@ const AccessPointForm = ({
         </Item>
         {rtls && (
           <>
-            <Item data-testid="rtlsInputFields" label=" " colon={false}>
-              <Item
-                name={['rtlsSettings', 'srvHostIp']}
-                rules={[
-                  {
-                    required: rtls,
-                    pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
-                    message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+            <Item
+              data-testid="rtlsInputFields"
+              wrapperCol={{ offset: 5, span: 15 }}
+              name={['rtlsSettings', 'srvHostIp']}
+              rules={[
+                {
+                  required: rtls,
+                  pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                  message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input
+                className={globalStyles.field}
+                placeholder="IP Address"
+                data-testid="svrIpAdress"
+              />
+            </Item>
+            <Item
+              wrapperCol={{ offset: 5, span: 15 }}
+              name={['rtlsSettings', 'srvHostPort']}
+              rules={[
+                {
+                  required: rtls,
+                  message: 'Port expected between 1 - 65535',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_rule, value) {
+                    if (!value || getFieldValue(['rtlsSettings', 'srvHostPort']) < 65535) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Port expected between 1 - 65535'));
                   },
-                ]}
-                hasFeedback
-              >
-                <Input
-                  className={globalStyles.field}
-                  placeholder="IP Address"
-                  data-testid="svrIpAdress"
-                />
-              </Item>
-              <Item
-                name={['rtlsSettings', 'srvHostPort']}
-                rules={[
-                  {
-                    required: rtls,
-                    message: 'Port expected between 1 - 65535',
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_rule, value) {
-                      if (!value || getFieldValue(['rtlsSettings', 'srvHostPort']) < 65535) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(new Error('Port expected between 1 - 65535'));
-                    },
-                  }),
-                ]}
-                hasFeedback
-              >
-                <Input
-                  className={globalStyles.field}
-                  placeholder="Port"
-                  type="number"
-                  min={1}
-                  max={65535}
-                  data-testid="svrPort"
-                />
-              </Item>
+                }),
+              ]}
+              hasFeedback
+            >
+              <Input
+                className={globalStyles.field}
+                placeholder="Port"
+                type="number"
+                min={1}
+                max={65535}
+                data-testid="svrPort"
+              />
             </Item>
           </>
         )}
@@ -326,7 +326,7 @@ const AccessPointForm = ({
         </Item>
         {syslog && (
           <>
-            <Item data-testid="syslogInputFields" label=" " colon={false}>
+            <Item data-testid="syslogInputFields" wrapperCol={{ offset: 5, span: 15 }}>
               <div className={styles.InlineDiv}>
                 <Item
                   name={['syslogRelay', 'srvHostIp']}
@@ -368,30 +368,31 @@ const AccessPointForm = ({
                   />
                 </Item>
               </div>
-              <Item
-                name={['syslogRelay', 'severity']}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select the Syslog mode',
-                  },
-                ]}
+            </Item>
+            <Item
+              wrapperCol={{ offset: 5, span: 15 }}
+              name={['syslogRelay', 'severity']}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select the Syslog mode',
+                },
+              ]}
+            >
+              <Select
+                data-testid="select"
+                className={globalStyles.field}
+                placeholder="Select Syslog Mode"
               >
-                <Select
-                  data-testid="select"
-                  className={globalStyles.field}
-                  placeholder="Select Syslog Mode"
-                >
-                  <Option value="DEBUG">Debug (DEBUG)</Option>
-                  <Option value="INFO">Info. (INFO)</Option>
-                  <Option value="NOTICE">Notice (NOTICE)</Option>
-                  <Option value="WARNING">Warning (WARNING)</Option>
-                  <Option value="ERR">Error (ERR)</Option>
-                  <Option value="CRIT">Critical (CRIT)</Option>
-                  <Option value="ALERT">Alert (ALERT)</Option>
-                  <Option value="EMERG">Emergency (EMERG)</Option>
-                </Select>
-              </Item>
+                <Option value="DEBUG">Debug (DEBUG)</Option>
+                <Option value="INFO">Info. (INFO)</Option>
+                <Option value="NOTICE">Notice (NOTICE)</Option>
+                <Option value="WARNING">Warning (WARNING)</Option>
+                <Option value="ERR">Error (ERR)</Option>
+                <Option value="CRIT">Critical (CRIT)</Option>
+                <Option value="ALERT">Alert (ALERT)</Option>
+                <Option value="EMERG">Emergency (EMERG)</Option>
+              </Select>
             </Item>
           </>
         )}
