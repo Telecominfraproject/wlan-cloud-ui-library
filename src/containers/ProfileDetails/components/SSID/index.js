@@ -544,13 +544,15 @@ const SSIDForm = ({
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            prevValues.forwardMode !== currentValues.forwardMode
+            prevValues.forwardMode !== currentValues.forwardMode ||
+            prevValues.vlan !== currentValues.vlan
           }
         >
           {({ getFieldValue }) => {
             return (
               <Item name="dynamicVlan" label="Dynamic VLAN">
                 {getFieldValue('forwardMode') === 'BRIDGE' &&
+                getFieldValue('vlan') === 'defaultVLAN' &&
                 (mode === 'wpa3OnlyEAP' ||
                   mode === 'wpa3MixedEAP' ||
                   mode === 'wpa2OnlyRadius' ||
