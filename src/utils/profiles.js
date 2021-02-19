@@ -11,6 +11,9 @@ export const formatSsidProfileForm = values => {
   if (values.vlan === 'defaultVLAN') {
     formattedData.vlanId = 0;
   }
+  if (values.vlan === 'customVLAN') {
+    formattedData.dynamicVlan = 'disabled';
+  }
 
   if (values.wepKey) {
     const wepKeyType = values.wepKey.length === 26 ? 'wep128' : 'wep64';
