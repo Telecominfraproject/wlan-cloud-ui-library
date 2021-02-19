@@ -270,7 +270,7 @@ const SSIDForm = ({
         >
           {({ getFieldValue }) => {
             return getFieldValue('captivePortal') === 'usePortal' ? (
-              <Item label=" " colon={false} name="captivePortalId">
+              <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
                   className={globalStyles.field}
                   placeholder="Select Captive Portal"
@@ -326,7 +326,7 @@ const SSIDForm = ({
         </Item>
 
         {mode === 'wep' && (
-          <Item label=" " colon={false}>
+          <Item wrapperCol={{ offset: 5, span: 15 }}>
             <span className={styles.Disclaimer}>
               When using WEP, high performance features like 11n and 11ac will not work with this
               SSID.
@@ -503,38 +503,37 @@ const SSIDForm = ({
             return (
               getFieldValue('forwardMode') === 'BRIDGE' &&
               getFieldValue('vlan') === 'customVLAN' && (
-                <Item label=" " colon={false}>
-                  <Item
-                    name="vlanId"
-                    rules={[
-                      {
-                        required: getFieldValue('vlan'),
-                        message: 'Vlan expected between 1 and 4095',
+                <Item
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name="vlanId"
+                  rules={[
+                    {
+                      required: getFieldValue('vlan'),
+                      message: 'Vlan expected between 1 and 4095',
+                    },
+                    () => ({
+                      validator(_rule, value) {
+                        if (
+                          !value ||
+                          (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
+                        ) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
                       },
-                      () => ({
-                        validator(_rule, value) {
-                          if (
-                            !value ||
-                            (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
-                          ) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(new Error('Vlan expected between 1 and 4095'));
-                        },
-                      }),
-                    ]}
-                    style={{ marginTop: '10px' }}
-                    hasFeedback
-                  >
-                    <Input
-                      className={globalStyles.field}
-                      placeholder="1-4095"
-                      type="number"
-                      min={1}
-                      max={4095}
-                      maxLength={4}
-                    />
-                  </Item>
+                    }),
+                  ]}
+                  style={{ marginTop: '10px' }}
+                  hasFeedback
+                >
+                  <Input
+                    className={globalStyles.field}
+                    placeholder="1-4095"
+                    type="number"
+                    min={1}
+                    max={4095}
+                    maxLength={4}
+                  />
                 </Item>
               )
             );
@@ -544,13 +543,15 @@ const SSIDForm = ({
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            prevValues.forwardMode !== currentValues.forwardMode
+            prevValues.forwardMode !== currentValues.forwardMode ||
+            prevValues.vlan !== currentValues.vlan
           }
         >
           {({ getFieldValue }) => {
             return (
               <Item name="dynamicVlan" label="Dynamic VLAN">
                 {getFieldValue('forwardMode') === 'BRIDGE' &&
+                getFieldValue('vlan') === 'defaultVLAN' &&
                 (mode === 'wpa3OnlyEAP' ||
                   mode === 'wpa3MixedEAP' ||
                   mode === 'wpa2OnlyRadius' ||

@@ -1,4 +1,4 @@
-import { RADIOS, ROAMING } from '../containers/ProfileDetails/constants/index';
+import { RADIOS, ROAMING, DEFAULT_NTP_SERVER } from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
 
@@ -10,6 +10,9 @@ export const formatSsidProfileForm = values => {
 
   if (values.vlan === 'defaultVLAN') {
     formattedData.vlanId = 0;
+  }
+  if (values.vlan === 'customVLAN') {
+    formattedData.dynamicVlan = 'disabled';
   }
 
   if (values.wepKey) {
@@ -94,6 +97,9 @@ export const formatApProfileForm = values => {
   formattedData.syntheticClientEnabled = isBool(values.syntheticClientEnabled);
   formattedData.syslogRelay.enabled = isBool(values.syslogRelay.enabled);
 
+  if (formattedData.ntpServer.auto) {
+    formattedData.ntpServer.value = DEFAULT_NTP_SERVER;
+  }
   return formattedData;
 };
 
