@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Cascader, Button, Table, Select } from 'antd';
+import { Card, Form, Cascader, Button, Table, Select, Input } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import _ from 'lodash';
@@ -90,6 +90,29 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
   return (
     <Card title="Network Access Identifier (NAI) Realm">
       <Item
+        label="Domains:"
+        name="naiRealms"
+        rules={[
+          { required: true, message: 'Domain names cannot be empty' },
+          ({ getFieldValue }) => ({
+            validator(_rule, value) {
+              if (
+                !value ||
+                getFieldValue('naiRealms').match(
+                  /^\s*([\w-]+(\.[\w-]+)+\s*,\s*)*[\w-]+(\.[\w-]+)+\s*$/g
+                )
+              ) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('Please enter a comma separated list of domains'));
+            },
+          }),
+        ]}
+      >
+        <Input placeholder="Enter Domain Names" />
+      </Item>
+
+      <Item
         name="encoding"
         label="Encoding:"
         rules={[
@@ -178,9 +201,6 @@ NaiRealm.propTypes = {
   removeEap: PropTypes.func.isRequired,
 };
 
-NaiRealm.defaultProps = {
-  eapMap: {},
-  form: null,
-};
+NaiRealm.defaultProps = { eapMap: {}, form: null };
 
 export default NaiRealm;

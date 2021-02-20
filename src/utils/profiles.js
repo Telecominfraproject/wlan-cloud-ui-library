@@ -303,6 +303,7 @@ export const formatProviderProfileForm = values => {
     });
     formattedData.naiRealmList = [
       {
+        naiRealms: formattedData.naiRealms.replace(/\s/g, '').split(',') || [],
         eapMap: formattedData.eapMap || {},
         encoding: formattedData.encoding || 0,
       },

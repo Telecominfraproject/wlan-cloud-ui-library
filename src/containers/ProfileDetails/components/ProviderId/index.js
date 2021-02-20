@@ -16,7 +16,7 @@ const ProviderIdForm = ({ form, details }) => {
   const [plmnForm] = Form.useForm();
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
 
-  const [naiRealm, setNaiRealm] = useState(details?.naiRealmList?.[0]);
+  const [naiRealmList, setNaiRealmList] = useState(details?.naiRealmList?.[0]);
   const [naiForm] = Form.useForm();
 
   const [osuDetails, setOsuDetails] = useState({
@@ -29,17 +29,17 @@ const ProviderIdForm = ({ form, details }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      domainName: details?.domainName || '',
       roamingOi: details?.roamingOi?.join(', ') || '',
       mccMncList: mccMncList || [],
-      encoding: naiRealm?.encoding || 0,
-      eapMap: naiRealm?.eapMap || {},
+      encoding: naiRealmList?.encoding || 0,
+      eapMap: naiRealmList?.eapMap || {},
       osuServerUri: osuDetails?.osuServerUri || '',
       osuFriendlyName: osuDetails?.osuFriendlyName || [],
       osuServiceDescription: osuDetails?.osuServiceDescription || [],
       osuIconList: osuDetails?.osuIconList || [],
+      naiRealms: naiRealmList?.naiRealms?.join(', ') || '',
     });
-  }, [form, details, mccMncList, naiRealm, osuDetails]);
+  }, [form, details, mccMncList, naiRealmList, osuDetails]);
 
   useEffect(() => {
     setOsuDetails({
@@ -57,7 +57,7 @@ const ProviderIdForm = ({ form, details }) => {
   ]);
 
   useEffect(() => {
-    setNaiRealm(details?.naiRealmList?.[0]);
+    setNaiRealmList(details?.naiRealmList?.[0]);
   }, [details?.naiRealmList?.[0]]);
 
   const columnsPlmn = [
@@ -131,19 +131,19 @@ const ProviderIdForm = ({ form, details }) => {
   };
 
   const handleAddEapMethod = obj => {
-    setNaiRealm({
-      ...naiRealm,
+    setNaiRealmList({
+      ...naiRealmList,
       eapMap: obj,
     });
   };
 
   const handleRemoveEapMethod = obj => {
     const field = obj.method;
-    const cloneEap = { ...naiRealm?.eapMap };
+    const cloneEap = { ...naiRealmList?.eapMap };
     cloneEap[field] = [];
 
-    setNaiRealm({
-      ...naiRealm,
+    setNaiRealmList({
+      ...naiRealmList,
       eapMap: cloneEap,
     });
   };
@@ -220,7 +220,7 @@ const ProviderIdForm = ({ form, details }) => {
       </Card>
 
       <NaiRealm
-        eapMap={naiRealm?.eapMap}
+        eapMap={naiRealmList?.eapMap}
         form={naiForm}
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}

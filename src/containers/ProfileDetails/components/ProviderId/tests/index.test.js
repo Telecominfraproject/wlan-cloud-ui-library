@@ -61,22 +61,18 @@ const mockProps = {
     osuServerUri: 'https://example.com/oso',
     roamingOi: [1, 2],
     mccMncList: [],
-    doaminName: 'example.com',
   },
 };
 
 describe('<ProviderIdForm />', () => {
   afterEach(cleanup);
 
-  it('should work when domain name and roaming oi is null', async () => {
+  it('should work when roaming oi is null', async () => {
     const ProviderIdFormComp = () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm
-            details={{ ...mockProps, domainName: null, roamingOi: null }}
-            form={form}
-          />
+          <ProviderIdForm details={{ ...mockProps, roamingOi: null }} form={form} />
         </Form>
       );
     };
