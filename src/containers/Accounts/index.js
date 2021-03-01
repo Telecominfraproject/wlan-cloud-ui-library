@@ -23,13 +23,7 @@ const Accounts = ({
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
-  const [activeUser, setActiveUser] = useState({
-    id: 0,
-    email: '',
-    roles: [],
-    customerId: '',
-    lastModifiedTimestamp: 0,
-  });
+  const [activeUser, setActiveUser] = useState({});
 
   const deleteUser = () => {
     const { id } = activeUser;
@@ -74,11 +68,7 @@ const Accounts = ({
           onClick={() => {
             setEditModal(true);
             setActiveUser({
-              id: record.id,
-              email: record.email,
-              roles: record.roles,
-              customerId: record.customerId,
-              lastModifiedTimestamp: record.lastModifiedTimestamp,
+              ...record,
             });
           }}
         />
@@ -95,11 +85,7 @@ const Accounts = ({
             title={`delete-${record.email}`}
             extraOnClick={() => {
               setActiveUser({
-                id: record.id,
-                email: record.email,
-                roles: record.roles,
-                customerId: record.customerId,
-                lastModifiedTimestamp: record.lastModifiedTimestamp,
+                ...record,
               });
             }}
             onSuccess={deleteUser}
@@ -158,7 +144,7 @@ Accounts.propTypes = {
   data: PropTypes.instanceOf(Array),
   onLoadMore: PropTypes.func,
   isLastPage: PropTypes.bool,
-  currentUserId: PropTypes.number,
+  currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
 };
 

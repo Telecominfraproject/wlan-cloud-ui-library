@@ -32,6 +32,7 @@ const Modal = ({
           </div>
         </>
       }
+      destroyOnClose
       {...restProps}
     >
       {content}
