@@ -169,7 +169,7 @@ describe('<OperatorForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByRole } = render(<OperatorFormComp />);
+    const { getByText, getByRole, queryByText } = render(<OperatorFormComp />);
 
     fireEvent.click(getByRole('button', { name: /add Name/i }));
 
@@ -178,7 +178,7 @@ describe('<OperatorForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Operator Name', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Operator Name', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -191,7 +191,9 @@ describe('<OperatorForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByRole, getByLabelText, getAllByText } = render(<OperatorFormComp />);
+    const { getByText, getByRole, getByLabelText, getAllByText, queryByText } = render(
+      <OperatorFormComp />
+    );
 
     fireEvent.click(getByRole('button', { name: /add Name/i }));
 
@@ -206,7 +208,7 @@ describe('<OperatorForm />', () => {
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
     await waitFor(() => {
-      expect(getByText('Add Operator Name', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Operator Name', { selector: 'div' })).not.toBeInTheDocument();
       expect(getByText('TestName')).toBeVisible();
     });
   });

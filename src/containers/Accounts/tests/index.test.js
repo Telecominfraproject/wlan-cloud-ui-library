@@ -115,38 +115,38 @@ describe('<Accounts />', () => {
   });
 
   it('cancel button click should hide Add User modal', async () => {
-    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add User', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add User', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Edit User Modal', async () => {
-    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /edit/i }));
     expect(getByText('Edit User')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Edit User')).not.toBeVisible();
+      expect(queryByText('Edit User')).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Delete User Modal', async () => {
-    const { getByRole, getByText } = render(<Accounts {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Accounts {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].email}` }));
     expect(getByText('Are you sure?')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Are you sure?')).not.toBeVisible();
+      expect(queryByText('Are you sure?')).not.toBeInTheDocument();
     });
   });
 

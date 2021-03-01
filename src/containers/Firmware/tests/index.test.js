@@ -161,7 +161,7 @@ describe('<Firmware />', () => {
   });
 
   it('cancel button click should hide Add Model Target Version modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /add Model Target Version/i }));
 
@@ -170,12 +170,12 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Model Target Version', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Model Target Version', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Edit Model Target Version Modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
 
     fireEvent.click(
       getByRole('button', { name: `edit-track-${mockProps.firmwareData[0].modelId}` })
@@ -185,12 +185,12 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Edit Model Target Version')).not.toBeVisible();
+      expect(queryByText('Edit Model Target Version')).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Delete Model Target Version Modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
     fireEvent.click(
       getByRole('button', { name: `delete-track-${mockProps.firmwareData[0].modelId}` })
     );
@@ -201,7 +201,9 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(
+        queryByText(/Are you sure you want to delete the model target version:/i)
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -273,7 +275,7 @@ describe('<Firmware />', () => {
   });
 
   it('cancel button click should hide Add Firmware Vesion modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /add version/i }));
 
@@ -282,26 +284,27 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Firmware Version')).not.toBeVisible();
+      expect(queryByText('Add Firmware Version')).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Edit Firmware Version Modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
 
     fireEvent.click(
       getByRole('button', { name: `edit-firmware-${mockProps.firmwareData[2].modelId}` })
     );
+
     expect(getByText('Edit Firmware Version')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Edit Firmware Version')).not.toBeVisible();
+      expect(queryByText('Edit Firmware Version')).not.toBeInTheDocument();
     });
   });
 
   it('cancel button click should hide Delete Firmware Version Modal', async () => {
-    const { getByRole, getByText } = render(<Firmware {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Firmware {...mockProps} />);
     fireEvent.click(
       getByRole('button', { name: `delete-firmware-${mockProps.firmwareData[2].modelId}` })
     );
@@ -312,7 +315,7 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to delete the version:/i)).not.toBeInTheDocument();
     });
   });
 

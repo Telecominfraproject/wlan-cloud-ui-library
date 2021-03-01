@@ -682,7 +682,7 @@ describe('<ProfileDetails />', () => {
   });
 
   it('Cancel button click should hide confirmation modal', async () => {
-    const { getByRole, getByText, getByLabelText } = render(
+    const { getByRole, getByText, getByLabelText, queryByText } = render(
       <Router>
         <ProfileDetails {...mockProps} />
       </Router>
@@ -693,7 +693,7 @@ describe('<ProfileDetails />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Leave Form?')).not.toBeVisible();
+      expect(queryByText('Leave Form?')).not.toBeInTheDocument();
     });
   });
 

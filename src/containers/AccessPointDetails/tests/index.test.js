@@ -334,7 +334,7 @@ describe('<AccessPointDetails />', () => {
   });
 
   it('Cancel button on delete AP modal should hide modal', async () => {
-    const { getByRole, getAllByRole, getByText } = render(
+    const { getByRole, getAllByRole, getByText, queryByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
           <AccessPointDetails {...defaultProps} />
@@ -343,12 +343,12 @@ describe('<AccessPointDetails />', () => {
     );
 
     fireEvent.click(getAllByRole('button', { name: 'Delete' })[1]);
-    const paragraph = getByText(/Are you sure you want to delete this access point:/i);
-
-    expect(paragraph).toBeVisible();
+    expect(getByText(/Are you sure you want to delete this access point:/i)).toBeVisible();
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(
+        queryByText(/Are you sure you want to delete this access point:/i)
+      ).not.toBeInTheDocument();
     });
   });
 });

@@ -93,7 +93,7 @@ describe('<Profile />', () => {
   });
 
   it('cancel button should hide delete modal', async () => {
-    const { getByText, getByRole } = render(
+    const { getByText, getByRole, queryByText } = render(
       <Router>
         <Profile {...mockProps} />
       </Router>
@@ -101,12 +101,11 @@ describe('<Profile />', () => {
 
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].name}` }));
 
-    const paragraph = getByText(/Are you sure you want to delete the profile:/i);
-    expect(paragraph).toBeVisible();
+    expect(getByText(/Are you sure you want to delete the profile:/i)).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to delete the profile:/i)).not.toBeInTheDocument();
     });
   });
 

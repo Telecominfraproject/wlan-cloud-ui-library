@@ -92,7 +92,9 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByRole, getByText, getByLabelText, getByTestId } = render(<ProviderIdFormComp />);
+    const { getByRole, getByText, getByLabelText, getByTestId, queryByText } = render(
+      <ProviderIdFormComp />
+    );
 
     fireEvent.click(getByTestId('addPlmn'));
     expect(getByText('Add Public Land Mobile Network (PLMN)')).toBeVisible();
@@ -104,7 +106,7 @@ describe('<ProviderIdForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Add Public Land Mobile Network (PLMN)')).not.toBeVisible();
+      expect(queryByText('Add Public Land Mobile Network (PLMN)')).not.toBeInTheDocument();
       expect(getByText('240')).toBeVisible();
       expect(getByText('680')).toBeVisible();
     });
@@ -145,14 +147,14 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByTestId, getByRole } = render(<ProviderIdFormComp />);
+    const { getByText, getByTestId, getByRole, queryByText } = render(<ProviderIdFormComp />);
 
     fireEvent.click(getByTestId('addEapMethod'));
     expect(getByText('Add EAP Method')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(getByText('Add EAP Method')).not.toBeVisible();
+      expect(queryByText('Add EAP Method')).not.toBeInTheDocument();
     });
   });
 
@@ -165,7 +167,7 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByTestId, getByText, getByRole } = render(<ProviderIdFormComp />);
+    const { getByTestId, getByText, getByRole, queryByText } = render(<ProviderIdFormComp />);
 
     fireEvent.click(getByTestId('addPlmn'));
     expect(getByText('Add Public Land Mobile Network (PLMN)')).toBeVisible();
@@ -175,7 +177,7 @@ describe('<ProviderIdForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Add Public Land Mobile Network (PLMN)')).not.toBeVisible();
+      expect(queryByText('Add Public Land Mobile Network (PLMN)')).not.toBeInTheDocument();
     });
   });
 
@@ -469,7 +471,7 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByTestId, getByRole } = render(<ProviderIdFormComp />);
+    const { getByText, getByTestId, getByRole, queryByText } = render(<ProviderIdFormComp />);
 
     expect(getByText('Enabled')); // The switch is enabled
 
@@ -480,7 +482,7 @@ describe('<ProviderIdForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Name', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Name', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -498,7 +500,7 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByTestId, getByRole } = render(<ProviderIdFormComp />);
+    const { getByText, getByTestId, getByRole, queryByText } = render(<ProviderIdFormComp />);
 
     expect(getByText('Enabled')); // The switch is enabled
 
@@ -509,7 +511,7 @@ describe('<ProviderIdForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Description', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Description', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -527,7 +529,7 @@ describe('<ProviderIdForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByTestId, getByRole } = render(<ProviderIdFormComp />);
+    const { getByText, getByTestId, getByRole, queryByText } = render(<ProviderIdFormComp />);
 
     expect(getByText('Enabled')); // The switch is enabled
 
@@ -538,7 +540,7 @@ describe('<ProviderIdForm />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add Icon', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Icon', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 

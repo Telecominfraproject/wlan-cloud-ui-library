@@ -528,7 +528,7 @@ describe('<PasspointProfileForm />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(queryByText('Add Connection Capability')).not.toBeVisible();
+      expect(queryByText('Add Connection Capability')).not.toBeInTheDocument();
     });
   });
 

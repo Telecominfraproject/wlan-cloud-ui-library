@@ -1191,7 +1191,7 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+    const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
     fireEvent.keyDown(authentication, DOWN_ARROW);
@@ -1204,7 +1204,7 @@ describe('<CaptivePortalForm />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: `Cancel` }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText('Add User', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -1217,7 +1217,7 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+    const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
     fireEvent.keyDown(authentication, DOWN_ARROW);
@@ -1227,11 +1227,10 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(
       getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
     );
-    const paragraph = getByText('Edit User');
-    expect(paragraph).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
     fireEvent.click(getByRole('button', { name: /Cancel/i }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText('Edit User')).not.toBeInTheDocument();
     });
   });
 
@@ -1244,7 +1243,7 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
+    const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
     fireEvent.keyDown(authentication, DOWN_ARROW);
@@ -1261,7 +1260,7 @@ describe('<CaptivePortalForm />', () => {
 
     fireEvent.click(getByRole('button', { name: /Cancel/i }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to delete the user:/i)).not.toBeInTheDocument();
     });
   });
 
