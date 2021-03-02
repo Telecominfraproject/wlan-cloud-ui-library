@@ -15,12 +15,7 @@ import styles from './index.module.scss';
 const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
-  const [activeProfile, setActiveProfile] = useState({
-    id: 0,
-    name: '',
-    profileType: '',
-    __typename: '',
-  });
+  const [activeProfile, setActiveProfile] = useState({});
 
   const deleteProfile = () => {
     const { id } = activeProfile;
@@ -52,10 +47,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           title={`delete-${record.name}`}
           extraOnClick={() => {
             setActiveProfile({
-              id: record.id,
-              name: record.name,
-              profileType: record.profileType,
-              __typename: record.__typename,
+              ...record,
             });
           }}
           onSuccess={deleteProfile}

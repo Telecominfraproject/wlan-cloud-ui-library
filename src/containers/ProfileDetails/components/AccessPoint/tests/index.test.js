@@ -734,7 +734,7 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByText, getByRole, getByTestId } = render(<AccessPointComp />);
+    const { getByText, getByRole, getByTestId, queryByText } = render(<AccessPointComp />);
 
     fireEvent.click(getByTestId('addGre'));
     expect(getByText('Add GRE Configuration')).toBeVisible();
@@ -742,7 +742,7 @@ describe('<AccessPoints />', () => {
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(getByText('Add GRE Configuration', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add GRE Configuration', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -756,7 +756,9 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByTestId, getByText, getByRole, getByLabelText } = render(<AccessPointComp />);
+    const { getByTestId, getByText, getByRole, getByLabelText, queryByText } = render(
+      <AccessPointComp />
+    );
     const testIp = '192.168.0.13';
 
     fireEvent.click(getByTestId('addGre'));
@@ -767,7 +769,7 @@ describe('<AccessPoints />', () => {
 
     fireEvent.click(getByRole('button', { name: /save/i }));
     await waitFor(() => {
-      expect(getByText('Add GRE Configuration')).not.toBeVisible();
+      expect(queryByText('Add GRE Configuration')).not.toBeInTheDocument();
       expect(getByText('gre2')).toBeVisible();
     });
   });

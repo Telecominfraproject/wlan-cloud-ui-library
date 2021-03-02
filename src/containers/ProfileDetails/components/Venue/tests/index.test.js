@@ -145,15 +145,13 @@ describe('<VenueForm />', () => {
         </Form>
       );
     };
-    const { getByText, getByRole, getByLabelText } = render(<VenueFormComp />);
+    const { getByText, getByRole, queryByLabelText } = render(<VenueFormComp />);
     fireEvent.click(getByRole('button', { name: 'Add Name' }));
     expect(getByText('Add Name')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     await waitFor(() => {
-      expect(getByLabelText('Name')).not.toBeVisible();
-      expect(getByLabelText('Locale')).not.toBeVisible();
-      expect(getByLabelText('Url')).not.toBeVisible();
+      expect(queryByLabelText('Add Name')).not.toBeInTheDocument();
     });
   });
 

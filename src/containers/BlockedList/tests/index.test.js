@@ -92,7 +92,7 @@ describe('<BlockedList />', () => {
   });
 
   it('Cancel button press should hide ADD Client modal', async () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText, queryByText } = render(
       <Router>
         <BlockedList {...mockProps} />
       </Router>
@@ -100,13 +100,12 @@ describe('<BlockedList />', () => {
 
     fireEvent.click(getByRole('button', { name: 'Add Client' }));
 
-    const paragraph = getByText('Add Client', { selector: 'div' });
-    expect(paragraph).toBeVisible();
+    expect(getByText('Add Client', { selector: 'div' })).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText('Add Client', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -129,7 +128,7 @@ describe('<BlockedList />', () => {
   });
 
   it('Cancel button press should hide Delete MAC modal', async () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText, queryByText } = render(
       <Router>
         <BlockedList {...mockProps} />
       </Router>
@@ -148,13 +147,13 @@ describe('<BlockedList />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to remove the Client:/i)).not.toBeInTheDocument();
     });
   });
 
   it('Delete button press on Delete MAC Modal should call onUpdateClient', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText } = render(
+    const { getByRole, getByText, queryByText } = render(
       <Router>
         <BlockedList {...mockProps} onUpdateClient={submitSpy} />
       </Router>
@@ -175,7 +174,7 @@ describe('<BlockedList />', () => {
 
     await waitFor(() => {
       expect(submitSpy).toBeCalledTimes(1);
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to remove the Client:/i)).not.toBeInTheDocument();
     });
   });
 

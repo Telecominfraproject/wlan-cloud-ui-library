@@ -304,7 +304,7 @@ describe('<AutoProvision />', () => {
   });
 
   it('Cancel button press should hide Add Model modal', async () => {
-    const { getByRole, getByText } = render(<AutoProvision {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<AutoProvision {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /add model/i }));
 
@@ -313,12 +313,12 @@ describe('<AutoProvision />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(getByText('Add Model', { selector: 'div' })).not.toBeVisible();
+      expect(queryByText('Add Model', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
   it('Cancel button press should hide Edit Model modal', async () => {
-    const { getByRole, getByText } = render(<AutoProvision {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<AutoProvision {...mockProps} />);
 
     fireEvent.click(
       getByRole('button', {
@@ -331,12 +331,12 @@ describe('<AutoProvision />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(getByText('Edit Model')).not.toBeVisible();
+      expect(queryByText('Edit Model')).not.toBeInTheDocument();
     });
   });
 
   it('Cancel button press should hide Delete Model modal', async () => {
-    const { getByRole, getByText } = render(<AutoProvision {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<AutoProvision {...mockProps} />);
 
     fireEvent.click(
       getByRole('button', {
@@ -351,7 +351,7 @@ describe('<AutoProvision />', () => {
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to delete the model:/i)).not.toBeInTheDocument();
     });
   });
 

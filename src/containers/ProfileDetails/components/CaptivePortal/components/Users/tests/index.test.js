@@ -83,7 +83,7 @@ describe('<Users />', () => {
   });
 
   it('Cancel button press should hide Add User modal', async () => {
-    const { getByRole, getByText } = render(<Users {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Users {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: /add user/i }));
 
@@ -91,24 +91,23 @@ describe('<Users />', () => {
     expect(paragraph).toBeVisible();
     fireEvent.click(getByRole('button', { name: `Cancel` }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText('Add User', { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
   it('Cancel button press should hide Edit User modal', async () => {
-    const { getByRole, getByText } = render(<Users {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Users {...mockProps} />);
 
     fireEvent.click(getByRole('button', { name: `edit-${mockProps.userList[0].username}` }));
-    const paragraph = getByText('Edit User');
-    expect(paragraph).toBeVisible();
+    expect(getByText('Edit User')).toBeVisible();
     fireEvent.click(getByRole('button', { name: `Cancel` }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText('Edit User')).not.toBeInTheDocument();
     });
   });
 
   it('Cancel button press should hide Delete User modal', async () => {
-    const { getByRole, getByText } = render(<Users {...mockProps} />);
+    const { getByRole, getByText, queryByText } = render(<Users {...mockProps} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.userList[0].username}` }));
 
     const paragraph = getByText(/Are you sure you want to delete the user:/i);
@@ -117,7 +116,7 @@ describe('<Users />', () => {
 
     fireEvent.click(getByRole('button', { name: `Cancel` }));
     await waitFor(() => {
-      expect(paragraph).not.toBeVisible();
+      expect(queryByText(/Are you sure you want to delete the user:/i)).not.toBeInTheDocument();
     });
   });
 
