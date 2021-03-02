@@ -27,7 +27,18 @@ export const ROUTES = {
 
 const AllTheProviders = ({ children }) => {
   return (
-    <ThemeProvider company="Test" logo="test.png" logoMobile="test.png" routes={ROUTES}>
+    <ThemeProvider
+      company="Test"
+      logo="test.png"
+      logoMobile="test.png"
+      routes={ROUTES}
+      radioTypes={{
+        is2dot4GHz: '2.4GHz',
+        is5GHzL: '5GHz (L)',
+        is5GHzU: '5GHz (U)',
+        is5GHz: '5GHz',
+      }}
+    >
       {children}
     </ThemeProvider>
   );

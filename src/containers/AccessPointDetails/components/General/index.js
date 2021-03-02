@@ -47,7 +47,6 @@ const General = ({
       title: 'Radio(s)',
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
-      width: 100,
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
   ];
@@ -123,6 +122,12 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
+          manualChannelNumber:
+            radioMap[radio]?.manualChannelNumber || radioMap[radio]?.channelNumber,
+
+          manualBackupChannelNumber:
+            radioMap[radio]?.manualBackupChannelNumber || radioMap[radio]?.backupChannelNumber,
+
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
           },
@@ -241,11 +246,12 @@ const General = ({
     >
       <Input
         className={styles.Field}
-        placeholder={`Enter ${label} for ${key}`}
+        placeholder={`Enter ${label} for ${radioTypes[key]}`}
         type="number"
         min={options.min}
         max={options.max}
         addonAfter={options?.addOnText ? options?.addOnText : ''}
+        disabled={options.disabled || false}
       />
     </Item>
   );
@@ -258,7 +264,7 @@ const General = ({
         rules={[
           {
             required: true,
-            message: `Enter ${label} for ${key}`,
+            message: `Enter ${label} for ${radioTypes[key]}`,
           },
         ]}
       >
@@ -278,6 +284,24 @@ const General = ({
       />
     );
   }
+
+  const renderChannelItem = (label, dataIndex) => {
+    return (
+      <Item label={label} colon={false}>
+        <div className={styles.InlineDiv}>
+          {sortRadioTypes(Object.keys(radioMap)).map(i =>
+            renderInputItem(dataIndex, i, label, {
+              min: 1,
+              max: 165,
+              error: '1 - 165',
+              mapName: 'radioMap',
+              disabled: !childProfiles.rf?.[0]?.details?.rfConfigMap[i].autoChannelSelection,
+            })
+          )}
+        </div>
+      </Item>
+    );
+  };
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
@@ -375,8 +399,8 @@ const General = ({
             mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
-          {renderItem('Active Channel', radioMap, 'channelNumber')}
-          {renderItem('Backup Channel', radioMap, 'backupChannelNumber')}
+          {renderChannelItem('Active Channel', ['manualChannelNumber'])}
+          {renderChannelItem('Backup Channel', ['manualBackupChannelNumber'])}
           {renderItem(
             'Management Rate (Mbps)',
             advancedRadioMap,
