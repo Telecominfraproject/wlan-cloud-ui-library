@@ -21,7 +21,6 @@ const RFForm = ({ form, details, extraFields }) => {
 
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
-        autoChannelSelection: details.rfConfigMap[radio]?.autoChannelSelection ? 'true' : 'false',
         radioType: details.rfConfigMap[radio]?.radioType || radio,
         radioMode: details.rfConfigMap[radio]?.radioMode || defaultRfProfile[radio].radioMode,
         beaconInterval:
@@ -171,9 +170,6 @@ const RFForm = ({ form, details, extraFields }) => {
             ))}
           </div>
         </Item>
-        {renderItem('Auto Channel', ['autoChannelSelection'], renderOptionItem, {
-          dropdown: defaultOptions,
-        })}
         {renderItem('Maximum Devices', ['maxNumClients'], renderInputItem, {
           min: 0,
           max: 100,
@@ -214,7 +210,7 @@ const RFForm = ({ form, details, extraFields }) => {
                     <Option value="modeAB">AB</Option>
                   </>
                 )}
-                <Option value="modeX">AX</Option>
+                <Option value="modeAX">AX</Option>
               </Select>
             );
           },

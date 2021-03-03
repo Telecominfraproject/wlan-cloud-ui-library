@@ -122,11 +122,9 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
-          manualChannelNumber:
-            radioMap[radio]?.manualChannelNumber || radioMap[radio]?.channelNumber,
+          manualChannelNumber: radioMap[radio]?.manualChannelNumber,
 
-          manualBackupChannelNumber:
-            radioMap[radio]?.manualBackupChannelNumber || radioMap[radio]?.backupChannelNumber,
+          manualBackupChannelNumber: radioMap[radio]?.manualBackupChannelNumber,
 
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
@@ -251,7 +249,6 @@ const General = ({
         min={options.min}
         max={options.max}
         addonAfter={options?.addOnText ? options?.addOnText : ''}
-        disabled={options.disabled || false}
       />
     </Item>
   );
@@ -284,24 +281,6 @@ const General = ({
       />
     );
   }
-
-  const renderChannelItem = (label, dataIndex) => {
-    return (
-      <Item label={label} colon={false}>
-        <div className={styles.InlineDiv}>
-          {sortRadioTypes(Object.keys(radioMap)).map(i =>
-            renderInputItem(dataIndex, i, label, {
-              min: 1,
-              max: 165,
-              error: '1 - 165',
-              mapName: 'radioMap',
-              disabled: !childProfiles.rf?.[0]?.details?.rfConfigMap[i].autoChannelSelection,
-            })
-          )}
-        </div>
-      </Item>
-    );
-  };
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
@@ -399,8 +378,24 @@ const General = ({
             mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
-          {renderChannelItem('Active Channel', ['manualChannelNumber'])}
-          {renderChannelItem('Backup Channel', ['manualBackupChannelNumber'])}
+          {renderItem('Manual Active Channel', radioMap, ['manualChannelNumber'], renderInputItem, {
+            min: 1,
+            max: 165,
+            error: '1 - 165',
+            mapName: 'radioMap',
+          })}
+          {renderItem(
+            'Manual Backup Channel',
+            radioMap,
+            ['manualBackupChannelNumber'],
+            renderInputItem,
+            {
+              min: 1,
+              max: 165,
+              error: '1 - 165',
+              mapName: 'radioMap',
+            }
+          )}
           {renderItem(
             'Management Rate (Mbps)',
             advancedRadioMap,

@@ -27,9 +27,15 @@ const mockProps = {
       key: 'name',
     },
     {
-      title: 'Channel',
-      dataIndex: 'channel',
-      key: 'channel',
+      title: 'Manual Active Channel',
+      dataIndex: 'manualChannelNumber',
+      key: 'manualChannelNumber',
+      editable: true,
+    },
+    {
+      title: 'Manual Backup Channel',
+      dataIndex: 'manualBackupChannelNumber',
+      key: 'manualBackupChannelNumber',
       editable: true,
     },
     {
@@ -66,7 +72,8 @@ const mockProps = {
   tableData: [
     {
       cellSize: [-90, -90, -90],
-      channel: [36, 6, 149],
+      manualChannelNumber: [36, 6, 149],
+      manualBackupChannelNumber: [45, 11, 154],
       clientDisconnectThreshold: [-90, -90, -90],
       id: '1',
       key: '1',
@@ -124,9 +131,13 @@ describe('<BulkEditAccessPoints />', () => {
 
     const button = getByRole('button', { name: /save/i });
     expect(button).toBeDisabled();
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.click(input);
     fireEvent.keyDown(input, ENTER);
     await waitFor(() => expect(button).not.toBeDisabled());
@@ -134,21 +145,47 @@ describe('<BulkEditAccessPoints />', () => {
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('error should be shown if Channel input is outside range', async () => {
+  it('error should be shown if Manuel Channel input is outside range', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
     );
 
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.change(input, { target: { value: 166 } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Channel can be a number between 1 and 165')).toBeVisible();
+      expect(getByText('1 - 165')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if Manuel BackupChannel input is outside range', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualBackupChannelNumber`
+    );
+    fireEvent.click(tableCell);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`
+    );
+    fireEvent.change(input, { target: { value: 166 } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('1 - 165')).toBeVisible();
     });
   });
 
@@ -166,7 +203,7 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Cell Size can be a number between -100 and 100')).toBeVisible();
+      expect(getByText('-100 - 100')).toBeVisible();
     });
   });
 
@@ -188,9 +225,7 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(
-        getByText('Probe Response Threshold can be a number between -100 and 100')
-      ).toBeVisible();
+      expect(getByText('-100 - 100')).toBeVisible();
     });
   });
 
@@ -212,9 +247,7 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(
-        getByText('Client Disconnect Threshold can be a number between -100 and 100')
-      ).toBeVisible();
+      expect(getByText('-100 - 100')).toBeVisible();
     });
   });
 
@@ -232,7 +265,7 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('SNR (% Drop) can be a number between 1 and 100')).toBeVisible();
+      expect(getByText('1 - 100')).toBeVisible();
     });
   });
 
@@ -250,7 +283,7 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Min Load can be a number between 1 and 100')).toBeVisible();
+      expect(getByText('1 - 100')).toBeVisible();
     });
   });
 

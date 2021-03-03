@@ -51,14 +51,14 @@ export const EditableCell = ({
       key === 'clientDisconnectThreshold' ||
       key === 'cellSize'
     ) {
-      return `${title} can be a number between -100 and 100`;
+      return `-100 - 100`;
     }
 
     if (key === 'snrDrop' || key === 'minLoad') {
-      return `${title} can be a number between 1 and 100`;
+      return `1 - 100`;
     }
 
-    return `${title} can be a number between 1 and 165`;
+    return `1 - 165`;
   };
 
   const save = () => {

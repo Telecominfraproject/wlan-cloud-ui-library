@@ -365,14 +365,19 @@ describe('<General />', () => {
   });
 
   // Active Channel
-  it('active channel input should be disabled if corresponding frequency does not have Auto-Channel enabled on RF-profile', async () => {
-    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+  it('error if active channel input exceends bounds for the 2.4GHz setting', async () => {
+    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    const input = getByPlaceholderText('Enter Active Channel for 2.4GHz');
+    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 2.4GHz'), {
+      target: { value: 166 },
+    });
+    fireEvent.click(getByRole('button', { name: 'Save' }));
 
-    expect(input).toBeDisabled();
+    await waitFor(() => {
+      expect(getByText('1 - 165')).toBeVisible();
+    });
   });
 
   it('error if active channel input exceends bounds for the 5GHz (L) setting', async () => {
@@ -380,9 +385,7 @@ describe('<General />', () => {
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
-    expect(input).not.toBeDisabled();
-    fireEvent.change(input, {
+    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 5GHz (L)'), {
       target: { value: 166 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -397,9 +400,7 @@ describe('<General />', () => {
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    const input = getByPlaceholderText('Enter Active Channel for 5GHz (U)');
-    expect(input).not.toBeDisabled();
-    fireEvent.change(input, {
+    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 5GHz (U)'), {
       target: { value: 0 },
     });
     fireEvent.click(getByRole('button', { name: 'Save' }));
