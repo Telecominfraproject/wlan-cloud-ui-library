@@ -1,6 +1,6 @@
 {
   "name": "@tip-wlan/wlan-cloud-ui-library",
-  "version": "0.13.3",
+  "version": "1.0.0",
   "author": "NetExperience",
   "description": "React UI Library",
   "engines": {
