@@ -47,7 +47,6 @@ const General = ({
       title: 'Radio(s)',
       dataIndex: ['details', 'appliedRadios'],
       key: 'radios',
-      width: 100,
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
   ];
@@ -123,6 +122,10 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
+          manualChannelNumber: radioMap[radio]?.manualChannelNumber,
+
+          manualBackupChannelNumber: radioMap[radio]?.manualBackupChannelNumber,
+
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
           },
@@ -241,7 +244,7 @@ const General = ({
     >
       <Input
         className={styles.Field}
-        placeholder={`Enter ${label} for ${key}`}
+        placeholder={`Enter ${label} for ${radioTypes[key]}`}
         type="number"
         min={options.min}
         max={options.max}
@@ -258,7 +261,7 @@ const General = ({
         rules={[
           {
             required: true,
-            message: `Enter ${label} for ${key}`,
+            message: `Enter ${label} for ${radioTypes[key]}`,
           },
         ]}
       >
@@ -375,8 +378,24 @@ const General = ({
             mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
-          {renderItem('Active Channel', radioMap, 'channelNumber')}
-          {renderItem('Backup Channel', radioMap, 'backupChannelNumber')}
+          {renderItem('Manual Active Channel', radioMap, ['manualChannelNumber'], renderInputItem, {
+            min: 1,
+            max: 165,
+            error: '1 - 165',
+            mapName: 'radioMap',
+          })}
+          {renderItem(
+            'Manual Backup Channel',
+            radioMap,
+            ['manualBackupChannelNumber'],
+            renderInputItem,
+            {
+              min: 1,
+              max: 165,
+              error: '1 - 165',
+              mapName: 'radioMap',
+            }
+          )}
           {renderItem(
             'Management Rate (Mbps)',
             advancedRadioMap,

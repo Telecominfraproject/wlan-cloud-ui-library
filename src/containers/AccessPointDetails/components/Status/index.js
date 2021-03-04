@@ -71,7 +71,7 @@ const Status = ({ data }) => {
       <Form {...layout}>
         <Card title="Status">
           {renderSpanItem(' ', radioMap, 'radioType')}
-          {renderSpanItem('Channel', radioMap, 'channelNumber')}
+          {renderSpanItem('Channel', status?.channel?.detailsJSON?.channelNumberStatusDataMap)}
           {renderSpanItem('Noise Floor', status?.radioUtilization?.detailsJSON?.avgNoiseFloor)}
           {renderSpanItem(
             'Number of Devices',
