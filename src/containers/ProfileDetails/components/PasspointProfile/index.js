@@ -129,14 +129,14 @@ const PasspointProfileForm = ({
     const isJpgOrPng =
       file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      if (showMessages) message.error('You can only upload JPG/PNG file!');
+      if (showMessages) message.error('You can only upload a JPG/PNG file!');
       return false;
     }
 
     const isValidSize = file.size / 1024 < 400;
 
     if (!isValidSize) {
-      if (showMessages) message.error('Image must smaller than 400KB!');
+      if (showMessages) message.error('Image must be smaller than 400KB!');
       return false;
     }
 

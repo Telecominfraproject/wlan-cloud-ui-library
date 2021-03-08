@@ -40,7 +40,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
 
     const validSize = file.size / 1024 / 1024 < 5;
     if (!validSize) {
-      if (showMessages) message.error('File must smaller than 5MB!');
+      if (showMessages) message.error('File must be smaller than 5MB!');
       return false;
     }
 

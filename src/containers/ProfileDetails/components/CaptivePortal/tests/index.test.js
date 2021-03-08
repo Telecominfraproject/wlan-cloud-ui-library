@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, cleanup, waitFor, waitForElement, within } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
+import userEvent from '@testing-library/user-event';
 
 import CaptivePortalForm from '..';
 
@@ -131,6 +132,11 @@ const mockProps = {
 
 const DOWN_ARROW = { keyCode: 40 };
 
+const file = new File([''], 'testImg.png', {
+  size: 440954,
+  type: 'image/png',
+});
+
 describe('<CaptivePortalForm />', () => {
   afterEach(cleanup);
 
@@ -200,67 +206,56 @@ describe('<CaptivePortalForm />', () => {
     render(<CaptivePortalFormComp />);
   });
 
-  // it('changing authentication mode to Captive Portal User List should display Manage Captive Portal Users button', async () => {
-  //   const mockDetails = {
-  //     ...mockProps.details,
-  //     details: {
-  //       externalCaptivePortalURL: true,
-  //     },
-  //   };
-  //   const CaptivePortalFormComp = () => {
-  //     const [form] = Form.useForm();
-  //     return (
-  //       <Form form={form}>
-  //         <CaptivePortalForm {...mockDetails} form={form} />
-  //       </Form>
-  //     );
-  //   };
-  //   const { getByRole, getByText, container } = render(<CaptivePortalFormComp />);
+  it('changing authentication mode to Captive Portal User List should display Manage Captive Portal Users button', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      details: {
+        externalCaptivePortalURL: true,
+      },
+    };
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockDetails} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getByLabelText } = render(<CaptivePortalFormComp />);
 
-  //   const DOWN_ARROW = { keyCode: 43 };
-  //   const authentication = container.querySelector(
-  //     '[data-testid=authenticationMode] > .ant-select-selector'
-  //   );
+    fireEvent.keyDown(getByLabelText('Authentication'), DOWN_ARROW);
+    await waitForElement(() => getByText('Captive Portal User List'));
+    fireEvent.click(getByText('Captive Portal User List'));
 
-  //   fireEvent.mouseDown(authentication);
-  //   fireEvent.keyDown(authentication, DOWN_ARROW);
-  //   await waitForElement(() => getByText('Captive Portal User List'));
-  //   fireEvent.click(getByText('Captive Portal User List'));
+    await waitFor(() => {
+      expect(getByText('User List')).toBeVisible();
+    });
+  });
 
-  //   expect(getByRole('button', { name: 'Manage Captive Portal Users' })).toBeVisible();
-  // });
+  it('changing authentication mode to RADIUS should render RADIUS card', async () => {
+    const mockDetails = {
+      ...mockProps.details,
+      details: {
+        externalCaptivePortalURL: true,
+      },
+    };
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockDetails} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getAllByText, getByLabelText } = render(<CaptivePortalFormComp />);
+    fireEvent.keyDown(getByLabelText('Authentication'), DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
 
-  // it('changing authentication mode to RADIUS should render RADIUS card', async () => {
-  //   const mockDetails = {
-  //     ...mockProps.details,
-  //     details: {
-  //       externalCaptivePortalURL: true,
-  //     },
-  //   };
-  //   const CaptivePortalFormComp = () => {
-  //     const [form] = Form.useForm();
-  //     return (
-  //       <Form form={form}>
-  //         <CaptivePortalForm {...mockDetails} form={form} />
-  //       </Form>
-  //     );
-  //   };
-  //   const { getByText, getAllByText, container } = render(<CaptivePortalFormComp />);
-
-  //   const DOWN_ARROW = { keyCode: 43 };
-  //   const authentication = container.querySelector(
-  //     '[data-testid=authenticationMode] > .ant-select-selector'
-  //   );
-
-  //   fireEvent.mouseDown(authentication);
-  //   fireEvent.keyDown(authentication, DOWN_ARROW);
-  //   await waitForElement(() => getByText('RADIUS'));
-  //   fireEvent.click(getByText('RADIUS'));
-
-  //   await waitFor(() => {
-  //     expect(getAllByText('RADIUS')[1]).toBeVisible();
-  //   });
-  // });
+    await waitFor(() => {
+      expect(getAllByText('RADIUS')[1]).toBeVisible();
+    });
+  });
 
   it('error message should be displayed when input value for Session Timeout is invalid', async () => {
     const CaptivePortalFormComp = () => {
@@ -767,7 +762,7 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  it('uploading a logo image in other then png/jpg should display error message', () => {
+  it('uploading a logo image in other than png/jpg format should display error message', async () => {
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -778,12 +773,16 @@ describe('<CaptivePortalForm />', () => {
     };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    const gifFile = new File(['(⌐□_□)'], 'testImg.gif', {
+    const gifFile = new File([''], 'testImg.gif', {
       type: 'image/gif',
     });
 
-    fireEvent.change(getByTestId('logoFile'), { target: { files: [gifFile] } });
-    expect(getByText('You can only upload JPG/PNG file!')).toBeVisible();
+    const input = getByTestId('logoFile');
+    userEvent.upload(input, gifFile);
+
+    await waitFor(() => {
+      expect(getByText('You can only upload a JPG/PNG file!')).toBeInTheDocument();
+    });
   });
 
   it('uploading a logo image in png format should add image on screen', () => {
@@ -795,16 +794,12 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getByTestId, getByRole, getByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    const pngFile = new File(['(⌐□_□)'], 'testImg.png', {
-      type: 'image/png',
-    });
-
-    fireEvent.change(getByTestId('logoFile'), { target: { files: [pngFile] } });
+    const input = getByTestId('logoFile');
+    userEvent.upload(input, file);
     expect(getByText(/testImg\.png/)).toBeInTheDocument();
-
-    fireEvent.click(getByRole('button', { name: /remove file/i }));
+    expect(input.files).toHaveLength(1);
   });
 
   it('uploading a logo image in jpg format should add image on screen', () => {
@@ -818,15 +813,13 @@ describe('<CaptivePortalForm />', () => {
     };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    const jpgFile = new File(['(⌐□_□)'], 'testImg.jpg', {
-      type: 'image/jpg',
-    });
-
-    fireEvent.change(getByTestId('logoFile'), { target: { files: [jpgFile] } });
-    expect(getByText(/testImg\.jpg/)).toBeInTheDocument();
+    const input = getByTestId('logoFile');
+    userEvent.upload(input, file);
+    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+    expect(input.files).toHaveLength(1);
   });
 
-  it('uploading a logo image size greater then 400KB should display error message', () => {
+  it('uploading a logo image size greater then 400KB should display error message', async () => {
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -837,23 +830,18 @@ describe('<CaptivePortalForm />', () => {
     };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    fireEvent.change(getByTestId('logoFile'), {
-      target: {
-        files: [
-          {
-            uid: 'rc-upload-1595008718690-73',
-            lastModified: 1595008730671,
-            lastModifiedDate: undefined,
-            name: 'testImg.jpg',
-            size: 440954545646,
-            type: 'image/jpg',
-            percent: 0,
-            originFileObj: { uid: 'rc-upload-1595008718690-73' },
-          },
-        ],
-      },
+    const largeFile = new File([''], 'testImg.png', {
+      type: 'image/png',
     });
-    expect(getByText('Image must smaller than 400KB!')).toBeVisible();
+
+    Object.defineProperty(largeFile, 'size', { value: 2236188 });
+
+    const input = getByTestId('logoFile');
+    userEvent.upload(input, largeFile);
+
+    await waitFor(() => {
+      expect(getByText('Image must be smaller than 400KB!')).toBeInTheDocument();
+    });
   });
 
   it('deleting uploaded logo image should remove image from screen', async () => {
@@ -867,11 +855,8 @@ describe('<CaptivePortalForm />', () => {
     };
     const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
 
-    const pngFile = new File(['(⌐□_□)'], 'testImg.png', {
-      type: 'image/png',
-    });
-
-    fireEvent.change(getByTestId('logoFile'), { target: { files: [pngFile] } });
+    const input = getByTestId('logoFile');
+    userEvent.upload(input, file);
     expect(getByText(/testImg\.png/)).toBeInTheDocument();
 
     fireEvent.click(getByRole('button', { name: /remove file/i }));
@@ -881,7 +866,7 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  it('uploading a background image in other then png/jpg should display error message', () => {
+  it('uploading a background image in other than png/jpg format should display error message', async () => {
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -890,14 +875,17 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getAllByText, getAllByTestId } = render(<CaptivePortalFormComp />);
+    const { getByText, getByTestId } = render(<CaptivePortalFormComp />);
 
-    const gifFile = new File(['(⌐□_□)'], 'testImg.gif', {
+    const gifFile = new File([''], 'testImg.gif', {
       type: 'image/gif',
     });
 
-    fireEvent.change(getAllByTestId('backgroundFile')[0], { target: { files: [gifFile] } });
-    expect(getAllByText('You can only upload JPG/PNG file!')[0]).toBeVisible();
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, gifFile);
+    await waitFor(() => {
+      expect(getByText('You can only upload a JPG/PNG file!')).toBeInTheDocument();
+    });
   });
 
   it('uploading a background image in png format should add image on screen', () => {
@@ -909,16 +897,12 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getAllByTestId, getByRole, getByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    const pngFile = new File(['(⌐□_□)'], 'testImg.png', {
-      type: 'image/png',
-    });
-
-    fireEvent.change(getAllByTestId('backgroundFile')[0], { target: { files: [pngFile] } });
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, file);
     expect(getByText(/testImg\.png/)).toBeInTheDocument();
-
-    fireEvent.click(getByRole('button', { name: /remove file/i }));
+    expect(input.files).toHaveLength(1);
   });
 
   it('uploading a background image in jpg format should add image on screen', () => {
@@ -930,35 +914,15 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getAllByTestId, getByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    const jpgFile = new File(['(⌐□_□)'], 'testImg.jpg', {
-      type: 'image/jpg',
-      response: { url: 'example.com' },
-    });
-
-    fireEvent.change(getAllByTestId('backgroundFile')[0], {
-      target: {
-        files: [
-          jpgFile,
-          {
-            uid: 'rc-upload-1595008718690-73',
-            lastModified: 1595008730671,
-            lastModifiedDate: undefined,
-            name: 'testImg.jpg',
-            size: 440954,
-            type: 'image/jpg',
-            response: { url: 'example.com' },
-            percent: 0,
-            originFileObj: { uid: 'rc-upload-1595008718690-73' },
-          },
-        ],
-      },
-    });
-    expect(getByText(/testImg\.jpg/)).toBeInTheDocument();
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, file);
+    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+    expect(input.files).toHaveLength(1);
   });
 
-  it('uploading a background image size greater then 400KB should display error message', () => {
+  it('uploading a background image size greater then 400KB should display error message', async () => {
     const CaptivePortalFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -967,25 +931,19 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getAllByTestId, getAllByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
-    fireEvent.change(getAllByTestId('backgroundFile')[0], {
-      target: {
-        files: [
-          {
-            uid: 'rc-upload-1595008718690-73',
-            lastModified: 1595008730671,
-            lastModifiedDate: undefined,
-            name: 'testImg.jpg',
-            size: 440954545646,
-            type: 'image/jpg',
-            percent: 0,
-            originFileObj: { uid: 'rc-upload-1595008718690-73' },
-          },
-        ],
-      },
+    const largeFile = new File([''], 'testImg.png', {
+      type: 'image/png',
     });
-    expect(getAllByText('Image must smaller than 400KB!')[1]).toBeVisible();
+
+    Object.defineProperty(largeFile, 'size', { value: 2236188 });
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, largeFile);
+
+    await waitFor(() => {
+      expect(getByText('Image must be smaller than 400KB!')).toBeInTheDocument();
+    });
   });
 
   it('deleting uploaded background image should remove image from screen', async () => {
@@ -997,19 +955,45 @@ describe('<CaptivePortalForm />', () => {
         </Form>
       );
     };
-    const { getAllByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
 
-    const pngFile = new File(['(⌐□_□)'], 'testImg.png', {
-      type: 'image/png',
-    });
-
-    fireEvent.change(getAllByTestId('backgroundFile')[0], { target: { files: [pngFile] } });
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, file);
     expect(getByText(/testImg\.png/)).toBeInTheDocument();
 
     fireEvent.click(getByRole('button', { name: /remove file/i }));
 
     await waitFor(() => {
       expect(queryByText(/testImg\.png/)).not.toBeInTheDocument();
+    });
+  });
+
+  it('clicking the preview image button should show the image in a modal with its image title', async () => {
+    const CaptivePortalFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <CaptivePortalForm {...mockProps} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
+
+    const input = getByTestId('backgroundFile');
+    userEvent.upload(input, file);
+    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+
+    fireEvent.click(getByRole('link', { name: /preview file/i }));
+
+    const title = queryByText(file.name, { selector: 'div' });
+    await waitFor(() => {
+      expect(title).toBeVisible();
+    });
+
+    fireEvent.click(getByRole('button', { name: /close/i }));
+
+    await waitFor(() => {
+      expect(title).not.toBeVisible();
     });
   });
 
