@@ -12,6 +12,7 @@ import {
   message,
   List,
   Empty,
+  Modal,
 } from 'antd';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { PROFILES } from 'containers/ProfileDetails/constants';
@@ -42,25 +43,30 @@ const validateIPv4 = inputString => {
   return false;
 };
 
-const formatFile = file => {
-  return {
-    uid: file.apExportUrl,
-    name: file.apExportUrl,
-    type: file.fileType,
-  };
-};
-
 const CaptivePortalForm = ({
   details,
   childProfiles,
   form,
   fileUpload,
+  onDownloadFile,
   radiusProfiles,
   onSearchProfile,
   onFetchMoreProfiles,
   loadingRadiusProfiles,
   handleOnFormChange,
 }) => {
+  const formatFile = async file => {
+    const src = await onDownloadFile(file.apExportUrl);
+    return [
+      {
+        uid: file.apExportUrl,
+        name: file.apExportUrl,
+        type: file.fileType,
+        thumbUrl: src,
+      },
+    ];
+  };
+
   const [showTips, setShowTips] = useState(false);
 
   const [authentication, setAuthentication] = useState(details.authenticationType);
@@ -68,17 +74,17 @@ const CaptivePortalForm = ({
   const [externalSplash, setExternalSplash] = useState(!!details.externalCaptivePortalURL);
   const [isLoginText, setContentText] = useState(false);
 
-  const [logoFileList, setLogoFileList] = useState(
-    (details.logoFile && [formatFile(details.logoFile)]) || []
-  );
-  const [bgFileList, setBgFileList] = useState(
-    (details.backgroundFile && [formatFile(details.backgroundFile)]) || []
-  );
+  const [logoFileList, setLogoFileList] = useState([]);
+  const [bgFileList, setBgFileList] = useState([]);
   const [whitelist, setWhitelist] = useState(details.walledGardenAllowlist || []);
   const [whitelistSearch, setWhitelistSearch] = useState();
   const [whitelistValidation, setWhitelistValidation] = useState({});
 
   const [userList, setUserList] = useState(details.userList || []);
+
+  const [previewModal, setPreviewModal] = useState(false);
+
+  const [previewImage, setPreviewImage] = useState({});
 
   const disableExternalSplashChange = () => {
     form.setFieldsValue({
@@ -87,18 +93,27 @@ const CaptivePortalForm = ({
     setExternalSplash(false);
   };
 
+  useEffect(() => {
+    if (details.backgroundFile) {
+      formatFile(details.backgroundFile).then(obj => setBgFileList(obj));
+    }
+    if (details.logoFile) {
+      formatFile(details.logoFile).then(obj => setLogoFileList(obj));
+    }
+  }, [details]);
+
   const validateFile = (file, showMessages = false) => {
     const isJpgOrPng =
       file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      if (showMessages) message.error('You can only upload JPG/PNG file!');
+      if (showMessages) message.error('You can only upload a JPG/PNG file!');
       return false;
     }
 
     const isValidSize = file.size / 1024 < 400;
 
     if (!isValidSize) {
-      if (showMessages) message.error('Image must smaller than 400KB!');
+      if (showMessages) message.error('Image must be smaller than 400KB!');
       return false;
     }
 
@@ -133,11 +148,27 @@ const CaptivePortalForm = ({
     if (list) setBgFileList(list);
   };
 
+  const toBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
   const handleFileUpload = file => {
-    if (validateFile(file, true)) {
-      fileUpload(file.name, file);
-    }
+    toBase64(file).then(res => {
+      if (validateFile(file, true)) {
+        fileUpload(file.name, res);
+      }
+    });
+
     return false;
+  };
+
+  const onPreview = file => {
+    setPreviewImage({ ...file });
+    setPreviewModal(true);
   };
 
   const validateWhitelist = (_rule, value) => {
@@ -335,6 +366,15 @@ const CaptivePortalForm = ({
 
   return (
     <div className={styles.ProfilePage}>
+      <Modal
+        visible={previewModal}
+        title={previewImage.name}
+        footer={null}
+        onCancel={() => setPreviewModal(false)}
+      >
+        <img alt="Loading..." src={previewImage.thumbUrl} />
+      </Modal>
+
       <Card title="General Settings ">
         <Item
           label="Authentication"
@@ -600,9 +640,11 @@ const CaptivePortalForm = ({
               />
               <Tooltip title="Max file size of 400KB" text="Background" />
             </div>
+          </Item>
 
+          <Item wrapperCol={{ offset: 5, span: 15 }}>
             <div className={styles.InlineDiv}>
-              <Item name="logoFile" className={styles.Image}>
+              <Item name="logoFile" className={styles.Upload}>
                 <Upload
                   data-testid="logoFile"
                   accept="image/*"
@@ -610,11 +652,12 @@ const CaptivePortalForm = ({
                   beforeUpload={handleFileUpload}
                   listType="picture-card"
                   onChange={handleOnChangeLogo}
+                  onPreview={onPreview}
                 >
-                  Drop an image here, or click to upload. (jpg, jpeg or png)
+                  Drop an image here, or click to upload (JPG or PNG)
                 </Upload>
               </Item>
-              <Item name="backgroundFile" className={styles.Image}>
+              <Item name="backgroundFile" className={styles.Upload}>
                 <Upload
                   data-testid="backgroundFile"
                   accept="image/*"
@@ -622,8 +665,10 @@ const CaptivePortalForm = ({
                   beforeUpload={handleFileUpload}
                   listType="picture-card"
                   onChange={handleOnChangeBg}
+                  s
+                  onPreview={onPreview}
                 >
-                  Drop an image here, or click to upload. (jpg, jpeg or png)
+                  Drop an image here, or click to upload (JPG or PNG)
                 </Upload>
               </Item>
             </div>
@@ -711,6 +756,7 @@ CaptivePortalForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   fileUpload: PropTypes.func,
+  onDownloadFile: PropTypes.func,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
@@ -723,6 +769,7 @@ CaptivePortalForm.defaultProps = {
   childProfiles: [],
   radiusProfiles: [],
   fileUpload: () => {},
+  onDownloadFile: () => {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: false,

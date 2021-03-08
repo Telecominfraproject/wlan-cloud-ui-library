@@ -54,6 +54,7 @@ const ProfileDetails = ({
   operatorProfiles,
   idProviderProfiles,
   fileUpload,
+  onDownloadFile,
   extraButtons,
   onSearchProfile,
   onFetchMoreProfiles,
@@ -283,6 +284,7 @@ const ProfileDetails = ({
             details={details}
             childProfiles={childProfiles}
             fileUpload={fileUpload}
+            onDownloadFile={onDownloadFile}
             radiusProfiles={radiusProfiles}
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
@@ -324,6 +326,7 @@ const ProfileDetails = ({
 ProfileDetails.propTypes = {
   onUpdateProfile: PropTypes.func.isRequired,
   fileUpload: PropTypes.func.isRequired,
+  onDownloadFile: PropTypes.func.isRequired,
   name: PropTypes.string,
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
