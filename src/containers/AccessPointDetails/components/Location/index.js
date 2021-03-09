@@ -63,7 +63,6 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
       .validateFields()
       .then(() => {
         locationId = form.getFieldValue('locations').slice(-1)[0].id;
-
         handleOnEquipmentSave({
           id,
           equipmentType,
@@ -77,7 +76,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
           longitude,
           serial,
           lastModifiedTimestamp,
-          details,
+          formattedData: details,
         });
       })
       .catch(() => {});
@@ -98,12 +97,16 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
 
   useEffect(() => {
     form.setFieldsValue({
-      locations: locationPath.map((location, i) => {
-        return {
-          level: locationPath[i + 1]?.name,
-          children: location.children,
-        };
-      }),
+      locations: locationPath.reduce((arr, location, i) => {
+        if (locationPath[i + 1]) {
+          arr.push({
+            level: locationPath[i + 1]?.name,
+            children: location.children,
+            id: locationPath[i + 1]?.id,
+          });
+        }
+        return arr;
+      }, []),
     });
   }, []);
 
