@@ -74,8 +74,11 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         dateTimeLabelFormats={dateTimeLabelFormats}
         offset={20}
         type="datetime"
+        labels={{
+          style: { color: '#fff' },
+        }}
       >
-        <XAxis.Title>Time</XAxis.Title>
+        <XAxis.Title style={{ color: '#fff' }}>Time</XAxis.Title>
       </XAxis>
 
       <Legend itemStyle={{ color: '#fff' }}>

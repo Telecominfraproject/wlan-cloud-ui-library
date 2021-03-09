@@ -77,11 +77,12 @@ const SolidGauge = ({ data, title, label }) => {
           tickWidth={0}
           labels={{
             y: 16,
+            style: { color: '#fff' },
           }}
           min={0}
           max={100}
         >
-          <YAxis.Title y={-110} style={{ fontSize: '18px' }}>
+          <YAxis.Title y={-110} style={{ color: '#fff', fontSize: '18px' }}>
             {title}
           </YAxis.Title>
           <SolidGaugeSeries name={title} data={[data]} dataLabels={dataLabels} tooltip={tooltip} />

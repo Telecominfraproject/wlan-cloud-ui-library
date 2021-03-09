@@ -26,7 +26,7 @@ const PieChart = ({ chartData, title }) => {
             dataLabels={{ color: '#fff' }}
           />
 
-          <Tooltip borderWidth={0} shadow style={{ color: '#fff', fontSize: '12px' }} />
+          <Tooltip borderWidth={0} shadow style={{ fontSize: '12px' }} />
         </HighchartsChart>
       ) : (
         <h4>No Data</h4>
