@@ -62,7 +62,10 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
     form
       .validateFields()
       .then(() => {
-        locationId = form.getFieldValue('locations').slice(-1)[0].id;
+        const locationsData = form.getFieldValue('locations');
+        locationId =
+          locationsData[locationsData.length - 1]?.id ??
+          locationsData[locationsData.length - 2]?.id;
 
         handleOnEquipmentSave({
           id,
@@ -77,7 +80,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
           longitude,
           serial,
           lastModifiedTimestamp,
-          details,
+          formattedData: details,
         });
       })
       .catch(() => {});
@@ -102,6 +105,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
         return {
           level: locationPath[i + 1]?.name,
           children: location.children,
+          id: locationPath[i + 1]?.id,
         };
       }),
     });
