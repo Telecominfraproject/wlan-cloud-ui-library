@@ -62,9 +62,10 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
     form
       .validateFields()
       .then(() => {
+        const locationsData = form.getFieldValue('locations');
         locationId =
-          form.getFieldValue('locations').slice(-1)[0].id ??
-          form.getFieldValue('locations').slice(-2, -1)[0].id;
+          locationsData[locationsData.length - 1]?.id ??
+          locationsData[locationsData.length - 2]?.id;
 
         handleOnEquipmentSave({
           id,
