@@ -37,7 +37,14 @@ const LineChart = ({ title, data, options }) => {
         colors={COLORS}
       >
         <Chart type="spline" zoomType="x" backgroundColor="none" className={styles.noSelect} />
-        <XAxis tickPixelInterval={90} dateTimeLabelFormats={dateTimeLabelFormats} type="datetime" />
+        <XAxis
+          tickPixelInterval={90}
+          dateTimeLabelFormats={dateTimeLabelFormats}
+          type="datetime"
+          labels={{
+            style: { color: '#fff' },
+          }}
+        />
 
         <Tooltip
           split={false}
@@ -58,6 +65,7 @@ const LineChart = ({ title, data, options }) => {
           alternateGridColor={null}
           labels={{
             formatter: options.formatter ? options.formatter : null,
+            style: { color: '#fff' },
           }}
           min={0}
           minTickInterval={1}
