@@ -7,7 +7,7 @@ import { SettingOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 import styles from './index.module.scss';
 
-const SettingsDropdown = ({ onLogout }) => {
+const SettingsDropdown = ({ onLogout, currentUserId }) => {
   const { routes } = useContext(ThemeContext);
   const [popoverVisible, setPopoverVisible] = useState(false);
 
@@ -21,11 +21,13 @@ const SettingsDropdown = ({ onLogout }) => {
 
   const userOptions = (
     <>
-      <Row>
-        <Link onClick={hidePopover} to={routes.account}>
-          Edit User
-        </Link>
-      </Row>
+      {currentUserId !== 0 && (
+        <Row>
+          <Link onClick={hidePopover} to={routes.account}>
+            Edit User
+          </Link>
+        </Row>
+      )}
       <Row>
         <Link onClick={onLogout} to={routes.root}>
           Log Out
@@ -51,10 +53,12 @@ const SettingsDropdown = ({ onLogout }) => {
 
 SettingsDropdown.propTypes = {
   onLogout: PropTypes.func,
+  currentUserId: PropTypes.number,
 };
 
 SettingsDropdown.defaultProps = {
   onLogout: () => {},
+  currentUserId: 0,
 };
 
 export default SettingsDropdown;
