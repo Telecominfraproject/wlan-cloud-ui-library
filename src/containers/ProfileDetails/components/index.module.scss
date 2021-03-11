@@ -21,26 +21,9 @@
     padding: 20px;
   }
 
-  .Disclaimer {
-    margin-left: 10px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    font-style: italic;
-    font-size: 10px;
-  }
-
-  .Image {
-    padding: 20px;
-    cursor: pointer;
-  }
-
   code {
     background-color: #35a649;
     color: black;
-  }
-
-  .infoCard {
-    margin-right: 10px;
   }
 
   :global(.ant-upload.ant-upload-select-picture-card) {
@@ -76,106 +59,103 @@
     font-weight: bold;
     font-size: 16px;
   }
+}
 
-  .FlexDiv {
-    display: flex;
-    flex-wrap: wrap;
-    & > * {
-      margin: 0;
-      margin-right: 40px;
-    }
-    & > :last-child {
-      margin-right: 0;
-    }
+.Disclaimer {
+  margin-left: 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-style: italic;
+  font-size: 10px;
+}
+
+.infoCard {
+  margin-right: 10px;
+}
+
+.FlexDiv {
+  display: flex;
+  flex-wrap: wrap;
+  & > * {
+    margin: 0;
+    margin-right: 40px;
   }
-
-  .InlineDiv {
-    display: flex;
-    justify-content: space-around;
-
-    & > * {
-      margin: 0;
-      margin-right: 10px;
-      width: 100%;
-      overflow: hidden;
-    }
-    & > :last-child {
-      margin-right: 0;
-    }
+  & > :last-child {
+    margin-right: 0;
   }
+}
 
-  .InlineCenterDiv {
-    display: flex;
-    justify-content: center;
-  }
+.InlineDiv {
+  display: flex;
+  justify-content: space-around;
 
-  .InlineCenterDiv > * {
-    margin: -15px 10px 20px 0;
-  }
-
-  .InlineEndDiv {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .ServiceZones {
-    .RadiusInline {
-      display: flex;
-      justify-content: space-around;
-      flex: 1;
-      & > * {
-        margin: 0 5px;
-      }
-    }
-    .iconButton {
-      margin: 0;
-      margin-right: 10px;
-    }
-    :global(.ant-list-item-meta) {
-      flex: none;
-    }
-    :global(.ant-card) {
-      flex: 1;
-    }
-  }
-
-  .Whitelist {
-    margin-left: 16.66666667%;
-    max-width: 50%;
-
-    &:global(.ant-list) {
-      padding: 0;
-    }
-  }
-
-  .InfoButton {
-    background-color: transparent;
-    border: none;
-  }
-
-  .DeleteButton {
-    margin: 20px 10px 0 0;
-  }
-
-  .ToolTip {
-    margin: 10px 20px 0 0;
-  }
-
-  .BonjourServices {
-    margin-bottom: 10px;
-  }
-
-  .spanStyle {
-    flex: 1;
-    margin-left: 10px;
-  }
-
-  .MultipleSelection {
-    height: 120px;
-  }
-  .RadiusDelete {
-    display: flex;
-    margin-left: auto;
+  & > * {
+    margin: 0;
     margin-right: 10px;
+    width: 100%;
+    overflow: hidden;
   }
+  & > :last-child {
+    margin-right: 0;
+  }
+}
+
+.InlineCenterDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.InlineCenterDiv > * {
+  margin: -15px 10px 20px 0;
+}
+
+.InlineEndDiv {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.Whitelist {
+  margin-left: 16.66666667%;
+  max-width: 50%;
+
+  &:global(.ant-list) {
+    padding: 0;
+  }
+}
+
+.InfoButton {
+  background-color: transparent;
+  border: none;
+}
+
+.DeleteButton {
+  margin: 20px 10px 0 0;
+}
+
+.ToolTip {
+  margin: 10px 20px 0 0;
+}
+
+.BonjourServices {
+  margin-bottom: 10px;
+}
+
+.spanStyle {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.MultipleSelection {
+  height: 120px;
+}
+
+.RadiusDelete {
+  display: flex;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.Image {
+  max-height: 100%;
+  max-width: 100%;
 }
