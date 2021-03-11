@@ -8,7 +8,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
-const Status = ({ data }) => {
+const Status = ({ data, showAlarms }) => {
   const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
@@ -83,15 +83,18 @@ const Status = ({ data }) => {
             'availableCapacity'
           )}
         </Card>
-        <Card title="Alarms">
-          <Table
-            rowKey="id"
-            scroll={{ x: true }}
-            columns={columns}
-            dataSource={data.alarms}
-            pagination={false}
-          />
-        </Card>
+
+        {showAlarms && (
+          <Card title="Alarms">
+            <Table
+              rowKey="id"
+              scroll={{ x: true }}
+              columns={columns}
+              dataSource={data.alarms}
+              pagination={false}
+            />
+          </Card>
+        )}
       </Form>
     </>
   );
@@ -99,10 +102,12 @@ const Status = ({ data }) => {
 
 Status.propTypes = {
   data: PropTypes.instanceOf(Object),
+  showAlarms: PropTypes.bool,
 };
 
 Status.defaultProps = {
   data: {},
+  showAlarms: true,
 };
 
 export default Status;

@@ -40,6 +40,8 @@ const AccessPointDetails = ({
   onSearchProfile,
   extraFields,
   extraTabs,
+  extraGeneralCards,
+  showStatusAlarms,
 }) => {
   const TAB_LIST = [
     {
@@ -204,9 +206,10 @@ const AccessPointDetails = ({
           onFetchMoreProfiles={onFetchMoreProfiles}
           onSearchProfile={onSearchProfile}
           extraFields={extraFields}
+          extraGeneralCards={extraGeneralCards}
         />
       )}
-      {tab === 'status' && <Status data={data} />}
+      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} />}
       {tab === 'location' && (
         <Location
           data={data}
@@ -267,6 +270,8 @@ AccessPointDetails.propTypes = {
       component: PropTypes.node,
     })
   ),
+  extraGeneralCards: PropTypes.node,
+  showStatusAlarms: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -283,6 +288,8 @@ AccessPointDetails.defaultProps = {
   onSearchProfile: () => {},
   extraFields: [],
   extraTabs: [],
+  extraGeneralCards: null,
+  showStatusAlarms: true,
 };
 
 export default AccessPointDetails;

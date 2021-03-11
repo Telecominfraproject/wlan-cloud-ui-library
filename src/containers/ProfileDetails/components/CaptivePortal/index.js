@@ -361,7 +361,7 @@ const CaptivePortalForm = ({
         footer={null}
         onCancel={() => setPreviewModal(false)}
       >
-        <img alt="Loading..." src={previewImage.thumbUrl} />
+        <img className={styles.Image} alt="Loading..." src={previewImage.thumbUrl} />
       </Modal>
 
       <Card title="General Settings ">
