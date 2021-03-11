@@ -48,6 +48,7 @@ const RFForm = ({ form, details, extraFields }) => {
           details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
           defaultRfProfile[radio].clientDisconnectThresholdDb,
         eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
+        autoChannelSelection: details.rfConfigMap[radio]?.autoChannelSelection ? 'true' : 'false',
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
