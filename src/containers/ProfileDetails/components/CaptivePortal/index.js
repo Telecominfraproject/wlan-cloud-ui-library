@@ -56,15 +56,14 @@ const CaptivePortalForm = ({
   handleOnFormChange,
 }) => {
   const formatFile = async file => {
-    const src = await onDownloadFile(file.apExportUrl);
-    return [
+    return onDownloadFile(file.apExportUrl).then(src => [
       {
         uid: file.apExportUrl,
         name: file.apExportUrl,
         type: file.fileType,
         thumbUrl: src,
       },
-    ];
+    ]);
   };
 
   const [showTips, setShowTips] = useState(false);
@@ -148,20 +147,10 @@ const CaptivePortalForm = ({
     if (list) setBgFileList(list);
   };
 
-  const toBase64 = file =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-
   const handleFileUpload = file => {
-    toBase64(file).then(res => {
-      if (validateFile(file, true)) {
-        fileUpload(file.name, res);
-      }
-    });
+    if (validateFile(file, true)) {
+      fileUpload(file.name, file);
+    }
 
     return false;
   };
