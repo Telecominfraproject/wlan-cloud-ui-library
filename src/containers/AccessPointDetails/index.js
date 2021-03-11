@@ -41,7 +41,7 @@ const AccessPointDetails = ({
   extraFields,
   extraTabs,
   extraGeneralCards,
-  isAlarmsEnabled,
+  showStatusAlarms,
 }) => {
   const TAB_LIST = [
     {
@@ -209,7 +209,7 @@ const AccessPointDetails = ({
           extraGeneralCards={extraGeneralCards}
         />
       )}
-      {tab === 'status' && <Status data={data} isAlarmsEnabled={isAlarmsEnabled} />}
+      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} />}
       {tab === 'location' && (
         <Location
           data={data}
@@ -271,7 +271,7 @@ AccessPointDetails.propTypes = {
     })
   ),
   extraGeneralCards: PropTypes.node,
-  isAlarmsEnabled: PropTypes.bool,
+  showStatusAlarms: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -289,7 +289,7 @@ AccessPointDetails.defaultProps = {
   extraFields: [],
   extraTabs: [],
   extraGeneralCards: null,
-  isAlarmsEnabled: false,
+  showStatusAlarms: true,
 };
 
 export default AccessPointDetails;

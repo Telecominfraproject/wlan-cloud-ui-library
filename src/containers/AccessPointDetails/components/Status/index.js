@@ -8,7 +8,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
-const Status = ({ data, isAlarmsEnabled }) => {
+const Status = ({ data, showAlarms }) => {
   const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
@@ -84,7 +84,7 @@ const Status = ({ data, isAlarmsEnabled }) => {
           )}
         </Card>
 
-        {!isAlarmsEnabled && (
+        {showAlarms && (
           <Card title="Alarms">
             <Table
               rowKey="id"
@@ -102,12 +102,12 @@ const Status = ({ data, isAlarmsEnabled }) => {
 
 Status.propTypes = {
   data: PropTypes.instanceOf(Object),
-  isAlarmsEnabled: PropTypes.bool,
+  showAlarms: PropTypes.bool,
 };
 
 Status.defaultProps = {
   data: {},
-  isAlarmsEnabled: false,
+  showAlarms: true,
 };
 
 export default Status;
