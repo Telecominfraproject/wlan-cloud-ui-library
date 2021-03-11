@@ -24,6 +24,7 @@ const General = ({
   onFetchMoreProfiles,
   onSearchProfile,
   extraFields,
+  extraGeneralCards,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -356,6 +357,8 @@ const General = ({
           </Item>
         </Item>
       </Card>
+
+      {extraGeneralCards}
       <Collapse expandIconPosition="right">
         <Panel header="Advanced Settings" name="settings">
           {renderItem(' ', data.details.radioMap, 'radioType')}
@@ -535,6 +538,7 @@ General.propTypes = {
   onFetchMoreProfiles: PropTypes.func,
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
+  extraGeneralCards: PropTypes.node,
 };
 
 General.defaultProps = {
@@ -547,6 +551,7 @@ General.defaultProps = {
   onFetchMoreProfiles: () => {},
   onSearchProfile: () => {},
   extraFields: [],
+  extraGeneralCards: null,
 };
 
 export default General;
