@@ -56,14 +56,15 @@ const CaptivePortalForm = ({
   handleOnFormChange,
 }) => {
   const formatFile = async file => {
-    return onDownloadFile(file.apExportUrl).then(src => [
+    const src = await onDownloadFile(file?.apExportUrl);
+    return [
       {
         uid: file.apExportUrl,
         name: file.apExportUrl,
         type: file.fileType,
         thumbUrl: src,
       },
-    ]);
+    ];
   };
 
   const [showTips, setShowTips] = useState(false);
