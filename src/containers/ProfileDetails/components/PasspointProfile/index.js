@@ -329,7 +329,7 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Item label="SSID" name="osuSsidProfileId">
+        <Item label="ID Provider SSID" name="osuSsidProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
@@ -379,6 +379,36 @@ const PasspointProfileForm = ({
           <Input placeholder="Enter MAC Address" className={globalStyles.field} />
         </Item>
       </Card>
+
+      <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
+        <Item>
+          <Select
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
+            data-testid="ssidProfile"
+            showSearch={onSearchProfile}
+            placeholder="Select a SSID Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
+            onChange={handleOnChangeSsid}
+            value="Select a SSID Profile"
+          >
+            {filteredOptions.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Table
+          dataSource={selectedChildSsids}
+          columns={columnsSsid}
+          pagination={false}
+          rowKey="id"
+        />
+      </Card>
+
       <Card title="Access Network">
         <Item label="Access Network Type" name="accessNetworkType">
           <Select>
@@ -468,36 +498,6 @@ const PasspointProfileForm = ({
           rowKey="connectionCapabilitiesPortNumber"
         />
       </Card>
-
-      <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
-        <Item>
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-            data-testid="ssidProfile"
-            showSearch={onSearchProfile}
-            placeholder="Select a SSID Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
-            loading={loadingSSIDProfiles}
-            notFoundContent={!loadingSSIDProfiles && <Empty />}
-            onChange={handleOnChangeSsid}
-            value="Select a SSID Profile"
-          >
-            {filteredOptions.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
-          </Select>
-        </Item>
-        <Table
-          dataSource={selectedChildSsids}
-          columns={columnsSsid}
-          pagination={false}
-          rowKey="id"
-        />
-      </Card>
-
       <Card title="Advanced">
         <Item
           label="ANQP Domain ID"
