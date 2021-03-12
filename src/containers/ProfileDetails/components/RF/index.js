@@ -162,7 +162,7 @@ const RFForm = ({ form, details, extraFields }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card>
-        <Item label={' '} colon={false}>
+        <Item wrapperCol={{ offset: 5, span: 15 }}>
           <div className={styles.InlineDiv}>
             {currentRadios.map(radio => (
               <span key={radio} className={styles.spanStyle}>

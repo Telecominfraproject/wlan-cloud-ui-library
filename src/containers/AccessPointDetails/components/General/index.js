@@ -99,6 +99,7 @@ const General = ({
       };
 
       currentRadios.forEach(radio => {
+        const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[radio].autoChannelSelection;
         formData.advancedRadioMap[radio] = {
           radioAdminState: advancedRadioMap[radio]?.radioAdminState || 'disabled',
           deauthAttackDetection: advancedRadioMap[radio]?.deauthAttackDetection ? 'true' : 'false',
@@ -122,9 +123,13 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
-          manualChannelNumber: radioMap[radio]?.manualChannelNumber,
+          [isEnabled ? 'channelNumber' : 'manualChannelNumber']: isEnabled
+            ? radioMap[radio]?.channelNumber
+            : radioMap[radio]?.manualChannelNumber,
 
-          manualBackupChannelNumber: radioMap[radio]?.manualBackupChannelNumber,
+          [isEnabled ? 'backupChannelNumber' : 'manualBackupChannelNumber']: isEnabled
+            ? radioMap[radio]?.backupChannelNumber
+            : radioMap[radio]?.manualBackupChannelNumber,
 
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
@@ -249,6 +254,7 @@ const General = ({
         min={options.min}
         max={options.max}
         addonAfter={options?.addOnText ? options?.addOnText : ''}
+        disabled={options.disabled || false}
       />
     </Item>
   );
@@ -266,6 +272,37 @@ const General = ({
         ]}
       >
         {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
+      </Item>
+    );
+  };
+
+  const renderChannelItem = label => {
+    return (
+      <Item label={label} colon={false}>
+        <div className={styles.InlineDiv}>
+          {sortRadioTypes(Object.keys(radioMap)).map(i => {
+            const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[i].autoChannelSelection;
+            let channel = {};
+            if (label === 'Active Channel') {
+              channel = isEnabled
+                ? { dataIndex: ['channelNumber'], addOnText: 'Auto' }
+                : { dataIndex: ['manualChannelNumber'], addOnText: 'Manual' };
+            }
+            if (label === 'Backup Channel') {
+              channel = isEnabled
+                ? { dataIndex: ['backupChannelNumber'], addOnText: 'Auto' }
+                : { dataIndex: ['manualBackupChannelNumber'], addOnText: 'Manual' };
+            }
+            return renderInputItem(channel.dataIndex, i, label, {
+              min: 1,
+              max: 165,
+              error: '1 - 165',
+              mapName: 'radioMap',
+              disabled: isEnabled,
+              addOnText: channel.addOnText,
+            });
+          })}
+        </div>
       </Item>
     );
   };
@@ -378,24 +415,8 @@ const General = ({
             mapName: 'advancedRadioMap',
             dropdown: defaultOptions,
           })}
-          {renderItem('Manual Active Channel', radioMap, ['manualChannelNumber'], renderInputItem, {
-            min: 1,
-            max: 165,
-            error: '1 - 165',
-            mapName: 'radioMap',
-          })}
-          {renderItem(
-            'Manual Backup Channel',
-            radioMap,
-            ['manualBackupChannelNumber'],
-            renderInputItem,
-            {
-              min: 1,
-              max: 165,
-              error: '1 - 165',
-              mapName: 'radioMap',
-            }
-          )}
+          {renderChannelItem('Active Channel')}
+          {renderChannelItem('Backup Channel')}
           {renderItem(
             'Management Rate (Mbps)',
             advancedRadioMap,
