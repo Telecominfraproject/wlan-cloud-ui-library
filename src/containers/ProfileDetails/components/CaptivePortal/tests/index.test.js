@@ -132,13 +132,23 @@ const mockProps = {
 
 const DOWN_ARROW = { keyCode: 40 };
 
-const file = new File([''], 'testImg.png', {
-  size: 440954,
-  type: 'image/png',
-});
+// eslint-disable-next-line react/prop-types
+const CaptivePortalFormComp = ({ mockDetails = mockProps }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form}>
+      <CaptivePortalForm {...mockDetails} form={form} />
+    </Form>
+  );
+};
 
 describe('<CaptivePortalForm />', () => {
-  afterEach(cleanup);
+  let file;
+
+  beforeEach(() => {
+    file = new File([''], 'testImg.png', { type: 'image/png', size: 4000 });
+    cleanup();
+  });
 
   beforeAll(done => {
     done();
@@ -152,15 +162,7 @@ describe('<CaptivePortalForm />', () => {
         authenticationType: null,
       },
     };
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    render(<CaptivePortalFormComp />);
+    render(<CaptivePortalFormComp mockDetails={mockDetails} />);
   });
 
   it('should work when logoFile and backGroundFile is not null ', async () => {
@@ -177,15 +179,8 @@ describe('<CaptivePortalForm />', () => {
         },
       },
     };
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    render(<CaptivePortalFormComp />);
+
+    render(<CaptivePortalFormComp mockDetails={mockDetails} />);
   });
 
   it('should work when externalCaptivePortalURL is true ', async () => {
@@ -195,15 +190,8 @@ describe('<CaptivePortalForm />', () => {
         externalCaptivePortalURL: true,
       },
     };
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    render(<CaptivePortalFormComp />);
+
+    render(<CaptivePortalFormComp mockDetails={mockDetails} />);
   });
 
   it('changing authentication mode to Captive Portal User List should display Manage Captive Portal Users button', async () => {
@@ -213,15 +201,10 @@ describe('<CaptivePortalForm />', () => {
         externalCaptivePortalURL: true,
       },
     };
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    const { getByText, getByLabelText } = render(<CaptivePortalFormComp />);
+
+    const { getByText, getByLabelText } = render(
+      <CaptivePortalFormComp mockDetails={mockDetails} />
+    );
 
     fireEvent.keyDown(getByLabelText('Authentication'), DOWN_ARROW);
     await waitForElement(() => getByText('Captive Portal User List'));
@@ -239,15 +222,10 @@ describe('<CaptivePortalForm />', () => {
         externalCaptivePortalURL: true,
       },
     };
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    const { getByText, getAllByText, getByLabelText } = render(<CaptivePortalFormComp />);
+
+    const { getByText, getAllByText, getByLabelText } = render(
+      <CaptivePortalFormComp mockDetails={mockDetails} />
+    );
     fireEvent.keyDown(getByLabelText('Authentication'), DOWN_ARROW);
     await waitForElement(() => getByText('RADIUS'));
     fireEvent.click(getByText('RADIUS'));
@@ -258,14 +236,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error message should be displayed when input value for Session Timeout is invalid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
     fireEvent.change(getByLabelText('Session Timeout'), {
       target: { value: 15000 },
@@ -277,14 +247,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error message should not be displayed when input value for Session Timeout is valid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, queryByText } = render(<CaptivePortalFormComp />);
     fireEvent.change(getByLabelText('Session Timeout'), {
       target: { value: 5 },
@@ -298,14 +260,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('click on remove button should delete item from whitelist', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { queryByText, getByRole } = render(<CaptivePortalFormComp />);
     await waitFor(() => {
       expect(queryByText('1.1.1.1')).toBeInTheDocument();
@@ -319,14 +273,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('hover on Session Timeout should display tooltip msg', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { container } = render(<CaptivePortalFormComp />);
     fireEvent.mouseOver(container.querySelector('.ant-input-wrapper.ant-input-group > span span'));
 
@@ -338,14 +284,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error message should be displayed when input value for Redirect URL is invalid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
     fireEvent.change(getByLabelText('Redirect URL'), {
       target: { value: '1' },
@@ -357,15 +295,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('changing radio button of Splash Page to Externally should render External Splash Page Card', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
     const { getByText } = render(<CaptivePortalFormComp />);
     fireEvent.click(getByText('Externally Hosted'));
 
@@ -377,14 +306,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error message should be displayed when input value for URL for External Splash Page is invalid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getAllByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     fireEvent.click(getByText('Externally Hosted'));
     fireEvent.change(getAllByPlaceholderText('http://... or https://...')[1], {
@@ -397,14 +318,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('tips should be displayed when Show Splash Page Tips button is clicked', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByRole, getByText } = render(<CaptivePortalFormComp />);
     fireEvent.click(getByText('Externally Hosted'));
     fireEvent.click(
@@ -423,14 +336,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('body content of Splash Page Content should change when User Acceptance Policy Text and Login Success Text button are cicked', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByRole, getByText, getByTestId } = render(<CaptivePortalFormComp />);
 
     fireEvent.click(getByText('Splash Page Content'));
@@ -453,14 +358,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if input value exceeds length of 253 characters ', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
     fireEvent.change(whileListInput, {
@@ -476,14 +373,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if input value is unrecognized and invalid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -524,14 +413,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('should work when input value for Configure is valid', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -559,14 +440,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if Hostname label cotain * wildcard', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -584,14 +457,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if Second-level domain labels contain * wildcard', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -608,14 +473,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if Hostname Label greater than 63 ', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -632,14 +489,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if input value does`t have subdomain ', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -655,14 +504,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if input value in whitelist is already exists', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -681,14 +522,7 @@ describe('<CaptivePortalForm />', () => {
     for (let i = 0; i < 40; i += 1) {
       mockProps.details.walledGardenAllowlist.push(`${i}.${i}.${i}.${i}`);
     }
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
+
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -713,14 +547,7 @@ describe('<CaptivePortalForm />', () => {
       }
       mockProps.details.walledGardenAllowlist.push(value);
     }
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
+
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -740,14 +567,6 @@ describe('<CaptivePortalForm />', () => {
   it('click on add button should add item to the whitelist', async () => {
     mockProps.details.walledGardenAllowlist = [];
 
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByPlaceholderText, getByText, getAllByRole } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
 
@@ -763,37 +582,19 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('uploading a logo image in other than png/jpg format should display error message', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getAllByText } = render(<CaptivePortalFormComp />);
 
-    const gifFile = new File([''], 'testImg.gif', {
-      type: 'image/gif',
-    });
+    Object.defineProperty(file, 'type', { value: 'image/gif' });
 
     const input = getByTestId('logoFile');
-    userEvent.upload(input, gifFile);
+    userEvent.upload(input, file);
 
     await waitFor(() => {
-      expect(getByText('You can only upload a JPG/PNG file!')).toBeInTheDocument();
+      expect(getAllByText('You can only upload a JPG/PNG file!')[0]).toBeVisible();
     });
   });
 
   it('uploading a logo image in png format should add image on screen', () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('logoFile');
@@ -803,14 +604,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('uploading a logo image in jpg format should add image on screen', () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('logoFile');
@@ -819,40 +612,20 @@ describe('<CaptivePortalForm />', () => {
     expect(input.files).toHaveLength(1);
   });
 
-  it('uploading a logo image size greater then 400KB should display error message', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
+  it('uploading a logo image with file size greater then 400KB should display error message', async () => {
+    const { getByTestId, getAllByText } = render(<CaptivePortalFormComp />);
 
-    const largeFile = new File([''], 'testImg.png', {
-      type: 'image/png',
-    });
-
-    Object.defineProperty(largeFile, 'size', { value: 2236188 });
+    Object.defineProperty(file, 'size', { value: 2236188 });
 
     const input = getByTestId('logoFile');
-    userEvent.upload(input, largeFile);
+    userEvent.upload(input, file);
 
     await waitFor(() => {
-      expect(getByText('Image must be smaller than 400KB!')).toBeInTheDocument();
+      expect(getAllByText('Image must be smaller than 400KB!')[0]).toBeVisible();
     });
   });
 
   it('deleting uploaded logo image should remove image from screen', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('logoFile');
@@ -867,36 +640,19 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('uploading a background image in other than png/jpg format should display error message', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByText, getByTestId } = render(<CaptivePortalFormComp />);
+    const { getByTestId, getAllByText } = render(<CaptivePortalFormComp />);
 
-    const gifFile = new File([''], 'testImg.gif', {
-      type: 'image/gif',
-    });
+    Object.defineProperty(file, 'type', { value: 'image/gif' });
 
     const input = getByTestId('backgroundFile');
-    userEvent.upload(input, gifFile);
+    userEvent.upload(input, file);
+
     await waitFor(() => {
-      expect(getByText('You can only upload a JPG/PNG file!')).toBeInTheDocument();
+      expect(getAllByText('You can only upload a JPG/PNG file!')[0]).toBeVisible();
     });
   });
 
   it('uploading a background image in png format should add image on screen', () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
@@ -906,14 +662,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('uploading a background image in jpg format should add image on screen', () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
@@ -922,39 +670,20 @@ describe('<CaptivePortalForm />', () => {
     expect(input.files).toHaveLength(1);
   });
 
-  it('uploading a background image size greater then 400KB should display error message', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
+  it('uploading a backgroundFile image with file size greater then 400KB should display error message', async () => {
+    const { getByTestId, getAllByText } = render(<CaptivePortalFormComp />);
 
-    const largeFile = new File([''], 'testImg.png', {
-      type: 'image/png',
-    });
+    Object.defineProperty(file, 'size', { value: 2236188 });
 
-    Object.defineProperty(largeFile, 'size', { value: 2236188 });
     const input = getByTestId('backgroundFile');
-    userEvent.upload(input, largeFile);
+    userEvent.upload(input, file);
 
     await waitFor(() => {
-      expect(getByText('Image must be smaller than 400KB!')).toBeInTheDocument();
+      expect(getAllByText('Image must be smaller than 400KB!')[0]).toBeVisible();
     });
   });
 
   it('deleting uploaded background image should remove image from screen', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
@@ -969,14 +698,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('clicking the preview image button should show the image in a modal with its image title', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByTestId, getByRole, getByText, queryByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
@@ -998,14 +719,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Changing the authentication setting to Captive Portal User List should show the user list card', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1019,14 +732,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Deleted user should not be shown in user list table after being deleted', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1048,14 +753,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Changing the authentication setting to Radius should show the Radius card', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1069,14 +766,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Radius card should show radius profiles and authentication modes', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getAllByLabelText, getByText, getAllByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getAllByLabelText('Authentication')[0];
@@ -1099,14 +788,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Add User button press should show Add User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1120,14 +801,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Edit User button press should show Edit User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1142,14 +815,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Delete User button press should show Delete User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1167,14 +832,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Cancel button press should hide Add User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1193,14 +850,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Cancel button press should hide Edit User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1219,14 +868,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Cancel button press should hide Delete User modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole, queryByText } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1249,14 +890,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Correct form submission on Add User Modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1283,14 +916,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Correct form submission on Edit User Modal', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');
@@ -1318,15 +943,6 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('Delete button on Delete Modal should delete user', async () => {
-    const CaptivePortalFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <CaptivePortalForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
     const authentication = getByLabelText('Authentication');

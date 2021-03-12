@@ -44,7 +44,7 @@ describe('<FormModal />', () => {
     });
   });
 
-  it('Missing model error should show if model form has missing model', async () => {
+  it('Invalid username error should show if user enters a username that is already a part of the user list', async () => {
     const submitSpy = jest.fn();
 
     const { getByText, getByRole, getByLabelText } = render(

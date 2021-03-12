@@ -655,7 +655,6 @@ const CaptivePortalForm = ({
                   beforeUpload={handleFileUpload}
                   listType="picture-card"
                   onChange={handleOnChangeBg}
-                  s
                   onPreview={onPreview}
                 >
                   Drop an image here, or click to upload (JPG or PNG)
