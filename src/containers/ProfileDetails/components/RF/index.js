@@ -215,22 +215,12 @@ const RFForm = ({ form, details, extraFields }) => {
             );
           },
         })}
-        {renderItem(
-          <span>Beacon Interval (milliseconds)</span>,
-          ['beaconInterval'],
-          renderOptionItem,
-          {
-            dropdown: (
-              <Select className={styles.Field}>
-                <Option value={100}>100</Option>
-                <Option value={200}>200</Option>
-                <Option value={300}>300</Option>
-                <Option value={400}>400</Option>
-                <Option value={500}>500</Option>
-              </Select>
-            ),
-          }
-        )}
+        {renderItem('Beacon Interval (milliseconds)', ['beaconInterval'], renderInputItem, {
+          min: 15,
+          max: 65535,
+          error: '15 - 65535 (1.024 ms)',
+          addOnText: '1.024 ms',
+        })}
         {renderItem('RTS/CTS threshold', ['rtsCtsThreshold'], renderInputItem, {
           min: 0,
           max: 65535,
