@@ -254,7 +254,6 @@ const General = ({
         min={options.min}
         max={options.max}
         addonAfter={options?.addOnText ? options?.addOnText : ''}
-        disabled={options.disabled || false}
       />
     </Item>
   );
@@ -280,27 +279,58 @@ const General = ({
     return (
       <Item label={label} colon={false}>
         <div className={styles.InlineDiv}>
-          {sortRadioTypes(Object.keys(radioMap)).map(i => {
-            const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[i].autoChannelSelection;
-            let channel = {};
+          {sortRadioTypes(Object.keys(radioMap)).map(key => {
+            const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key].autoChannelSelection;
+            let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
-                ? { dataIndex: ['channelNumber'], addOnText: 'Auto' }
-                : { dataIndex: ['manualChannelNumber'], addOnText: 'Manual' };
+                ? { dataIndex: 'channelNumber', addOnText: 'Auto' }
+                : { dataIndex: 'manualChannelNumber', addOnText: 'Manual' };
             }
             if (label === 'Backup Channel') {
               channel = isEnabled
-                ? { dataIndex: ['backupChannelNumber'], addOnText: 'Auto' }
-                : { dataIndex: ['manualBackupChannelNumber'], addOnText: 'Manual' };
+                ? { dataIndex: 'backupChannelNumber', addOnText: 'Auto' }
+                : { dataIndex: 'manualBackupChannelNumber', addOnText: 'Manual' };
             }
-            return renderInputItem(channel.dataIndex, i, label, {
-              min: 1,
-              max: 165,
-              error: '1 - 165',
-              mapName: 'radioMap',
-              disabled: isEnabled,
-              addOnText: channel.addOnText,
-            });
+            return (
+              <Item
+                key={`radioMap${key}${channel.dataIndex}`}
+                name={['radioMap', key, channel.dataIndex]}
+                rules={[
+                  { required: true, message: '1 - 165' },
+                  ({ getFieldValue }) => ({
+                    validator(_rule, value) {
+                      if (
+                        parseInt(getFieldValue(['radioMap', key, 'manualChannelNumber']), 10) ===
+                        parseInt(getFieldValue(['radioMap', key, 'manualBackupChannelNumber']), 10)
+                      ) {
+                        return Promise.reject(
+                          new Error('Active and backup channels must be different')
+                        );
+                      }
+                      if (
+                        !value ||
+                        (getFieldValue(['radioMap', key, channel.dataIndex]) <= 165 &&
+                          getFieldValue(['radioMap', key, channel.dataIndex]) >= 1)
+                      ) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('1 - 165'));
+                    },
+                  }),
+                ]}
+              >
+                <Input
+                  className={styles.Field}
+                  placeholder={`Enter ${label} for ${radioTypes[key]}`}
+                  type="number"
+                  min={1}
+                  max={165}
+                  addonAfter={channel.addOnText}
+                  disabled={isEnabled}
+                />
+              </Item>
+            );
           })}
         </div>
       </Item>

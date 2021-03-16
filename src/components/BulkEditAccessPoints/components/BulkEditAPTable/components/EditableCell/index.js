@@ -45,6 +45,25 @@ export const EditableCell = ({
     return input >= -1 && input <= 165;
   };
 
+  const validateChannelInput = key => {
+    if (key === 'manualChannelNumber') {
+      return (
+        form
+          .getFieldValue('manualChannelNumber')
+          .split(',')
+          .filter(channel => record.manualBackupChannelNumber.includes(parseInt(channel, 10)))
+          .length === 0
+      );
+    }
+
+    return (
+      form
+        .getFieldValue('manualBackupChannelNumber')
+        .split(',')
+        .filter(channel => record.manualChannelNumber.includes(parseInt(channel, 10))).length === 0
+    );
+  };
+
   const errorText = key => {
     if (
       key === 'probeResponseThreshold' ||
@@ -81,13 +100,24 @@ export const EditableCell = ({
         rules={[
           {
             required: true,
-            message: `${title} is required.`,
+            message: errorText(dataIndex),
           },
           () => ({
             validator(_rule, values) {
               if (typeof values === 'string') {
-                if (values.split(',').length > 4) {
-                  return Promise.reject(new Error(`Please enter a valid configuration`));
+                if (values.split(',').length !== record.radioMap.length) {
+                  return Promise.reject(new Error(`Enter a valid configuration`));
+                }
+
+                if (
+                  dataIndex === 'manualChannelNumber' ||
+                  dataIndex === 'manualBackupChannelNumber'
+                ) {
+                  if (!validateChannelInput(dataIndex)) {
+                    return Promise.reject(
+                      new Error(`Active and backup channels must be different`)
+                    );
+                  }
                 }
 
                 if (!values || values.split(',').every(value => validateInput(value, dataIndex))) {
@@ -132,11 +162,14 @@ EditableCell.propTypes = {
     key: PropTypes.string,
     name: PropTypes.string,
     cellSize: PropTypes.instanceOf(Array),
-    channel: PropTypes.instanceOf(Array),
+    manualChannelNumber: PropTypes.instanceOf(Array),
+    manualBackupChannelNumber: PropTypes.instanceOf(Array),
     clientDisconnectThreshold: PropTypes.instanceOf(Array),
     probeResponseThreshold: PropTypes.instanceOf(Array),
     snrDrop: PropTypes.instanceOf(Array),
     minLoad: PropTypes.instanceOf(Array),
+    radioMap: PropTypes.instanceOf(Array),
+    id: PropTypes.string,
   }),
   handleSave: PropTypes.func,
 };

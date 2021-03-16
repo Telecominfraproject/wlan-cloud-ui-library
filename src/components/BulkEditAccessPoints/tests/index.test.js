@@ -81,6 +81,7 @@ const mockProps = {
       name: 'AP 1',
       probeResponseThreshold: [-90, -90, -90],
       snrDrop: [30, 30, 20],
+      radioMap: ['is5GHz', 'is2dot4GHz', 'is5GHzL'],
     },
   ],
   onSaveChanges: () => {},
@@ -145,7 +146,7 @@ describe('<BulkEditAccessPoints />', () => {
     expect(onSaveChangesSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('error should be shown if Manuel Channel input is outside range', async () => {
+  it('error should be shown if Manuel Channel input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -159,7 +160,14 @@ describe('<BulkEditAccessPoints />', () => {
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
     );
-    fireEvent.change(input, { target: { value: 166 } });
+    fireEvent.change(input, { target: { value: '166, 0, -1' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('1 - 165')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -167,7 +175,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if Manuel BackupChannel input is outside range', async () => {
+  it('error should be shown if Manuel BackupChannel input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -181,7 +189,14 @@ describe('<BulkEditAccessPoints />', () => {
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`
     );
-    fireEvent.change(input, { target: { value: 166 } });
+    fireEvent.change(input, { target: { value: '166, 0, -1' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('1 - 165')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -189,7 +204,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if Cell Size input is outside range', async () => {
+  it('error should be shown if Cell Size input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -199,7 +214,14 @@ describe('<BulkEditAccessPoints />', () => {
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-cellSize`);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-cellSize`);
-    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.change(input, { target: { value: '-101, 101, 0' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -207,7 +229,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if Probe Response Threshold  input is outside range', async () => {
+  it('error should be shown if Probe Response Threshold input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -221,7 +243,14 @@ describe('<BulkEditAccessPoints />', () => {
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-probeResponseThreshold`
     );
-    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.change(input, { target: { value: '-101, 101, 0' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -229,7 +258,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if Client Disconnect Threshold input is outside range', async () => {
+  it('error should be shown if Client Disconnect Threshold input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -243,7 +272,14 @@ describe('<BulkEditAccessPoints />', () => {
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-clientDisconnectThreshold`
     );
-    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.change(input, { target: { value: '-101, 101, 0' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('-100 - 100')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -251,7 +287,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if SNR (% Drop) input is outside range', async () => {
+  it('error should be shown if SNR (% Drop) input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -261,7 +297,14 @@ describe('<BulkEditAccessPoints />', () => {
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-snrDrop`);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-snrDrop`);
-    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.change(input, { target: { value: '-101, 101, 0' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('1 - 100')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -269,7 +312,7 @@ describe('<BulkEditAccessPoints />', () => {
     });
   });
 
-  it('error should be shown if Min Load input is outside range', async () => {
+  it('error should be shown if Min Load input is outside range or empty', async () => {
     const { getByText, getByTestId } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
@@ -279,7 +322,13 @@ describe('<BulkEditAccessPoints />', () => {
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-minLoad`);
     fireEvent.click(tableCell);
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
-    fireEvent.change(input, { target: { value: 101 } });
+    fireEvent.change(input, { target: { value: '-101, 101, 0' } });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('1 - 100')).toBeVisible();
+    });
+    fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
@@ -301,7 +350,55 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Please enter a valid configuration')).toBeVisible();
+      expect(getByText('Enter a valid configuration')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if active manual channels have same channels as backup manual channels', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
+    fireEvent.click(tableCell);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
+    fireEvent.change(input, {
+      target: { value: [...mockProps.tableData[0].manualBackupChannelNumber] },
+    });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Active and backup channels must be different')).toBeVisible();
+    });
+  });
+
+  it('error should be shown if backup manual channels have same channels as active manual channels', async () => {
+    const { getByText, getByTestId } = render(
+      <Router>
+        <BulkEditAccessPoints {...mockProps} />
+      </Router>
+    );
+
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualBackupChannelNumber`
+    );
+    fireEvent.click(tableCell);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`
+    );
+    fireEvent.change(input, {
+      target: { value: [...mockProps.tableData[0].manualChannelNumber] },
+    });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(getByText('Active and backup channels must be different')).toBeVisible();
     });
   });
 
