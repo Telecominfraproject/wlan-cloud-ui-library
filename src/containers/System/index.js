@@ -8,7 +8,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 const { TabPane } = Tabs;
 
-const System = ({ children }) => {
+const System = ({ hasCustomer, children }) => {
   const { routes } = useContext(ThemeContext);
   const location = useLocation();
   const history = useHistory();
@@ -29,9 +29,13 @@ const System = ({ children }) => {
       <Container>
         <Tabs defaultActiveKey={getActiveKey()} onChange={onTabChange}>
           <TabPane tab="Device Manufacturer" key="manufacturer" />
-          <TabPane tab="Firmware" key="firmware" />
-          <TabPane tab="Auto-Provisioning" key="autoprovision" />
-          <TabPane tab="Client Blocked List" key="blockedlist" />
+          {hasCustomer && (
+            <>
+              <TabPane tab="Firmware" key="firmware" />
+              <TabPane tab="Auto-Provisioning" key="autoprovision" />
+              <TabPane tab="Client Blocked List" key="blockedlist" />
+            </>
+          )}
         </Tabs>
       </Container>
       {children}
@@ -40,7 +44,12 @@ const System = ({ children }) => {
 };
 
 System.propTypes = {
+  hasCustomer: PropTypes.bool,
   children: PropTypes.node.isRequired,
+};
+
+System.defaultProps = {
+  hasCustomer: true,
 };
 
 export default System;
