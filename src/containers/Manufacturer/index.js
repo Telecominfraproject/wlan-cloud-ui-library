@@ -102,8 +102,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
               }
               type="info"
             />
-
-            <Item name="backgroundFile" className={styles.FileButton}>
+            <Item className={styles.FileButton}>
               <Upload
                 accept="application/x-gzip"
                 fileList={ouiFileList}

@@ -318,7 +318,7 @@ const Firmware = ({
       </Header>
       {trackAssignmentReady && (
         <Table
-          rowKey="modelId"
+          rowKey={i => i.modelId + i.firmwareVersionRecordId}
           columns={assignmentColumns}
           dataSource={trackAssignmentData}
           pagination={false}

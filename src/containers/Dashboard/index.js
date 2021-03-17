@@ -46,7 +46,7 @@ Dashboard.propTypes = {
   statsCardDetails: PropTypes.instanceOf(Object),
   pieChartDetails: PropTypes.instanceOf(Object),
   lineChartConfig: PropTypes.instanceOf(Object),
-  lineChartData: PropTypes.instanceOf(Array),
+  lineChartData: PropTypes.instanceOf(Object),
   lineChartLoading: PropTypes.bool,
 };
 
@@ -54,7 +54,7 @@ Dashboard.defaultProps = {
   statsCardDetails: null,
   pieChartDetails: null,
   lineChartConfig: null,
-  lineChartData: [],
+  lineChartData: null,
   lineChartLoading: true,
 };
 export default Dashboard;

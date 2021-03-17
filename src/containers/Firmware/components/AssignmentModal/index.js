@@ -29,8 +29,10 @@ const AssignmentModal = ({
   const [form] = Form.useForm();
   const [model, setModel] = useState();
   useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue({ modelId, firmwareVersionRecordId });
+    if (visible) {
+      form.resetFields();
+      form.setFieldsValue({ modelId, firmwareVersionRecordId });
+    }
     handleSearchFirmware(modelId);
     setModel(modelId);
   }, [visible]);

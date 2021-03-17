@@ -208,7 +208,7 @@ const General = ({
   );
 
   const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
-    <Item label={label} colon={false}>
+    <Item label={label} colon={false} key={label}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(obj)).map(i =>
           renderInput ? (
