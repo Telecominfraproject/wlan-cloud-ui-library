@@ -4,7 +4,7 @@ import { Card, Form, Cascader, Button, Table, Select, Input } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import _ from 'lodash';
-import { authOptions } from './constants';
+import { authOptions, akaMethodLabels } from './constants';
 
 import styles from '../../../index.module.scss';
 
@@ -56,7 +56,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
     Object.keys(eapMap).forEach(i => {
       if (eapMap[i].length !== 0) {
         formattedData.push({
-          method: i,
+          method: i.includes('aka') ? akaMethodLabels[i] : i,
           authentication: eapMap[i],
         });
       }
@@ -172,6 +172,8 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   <Option value="EAP-MSCHAP-V2 with username/password">
                     EAP-MSCHAP-V2 with username/password
                   </Option>
+                  <Option value="eap_aka_authentication">EAP-AKA Prime Authentication</Option>
+                  <Option value="eap_aka">EAP-AKA</Option>
                 </Select>
               </Item>
               <Item

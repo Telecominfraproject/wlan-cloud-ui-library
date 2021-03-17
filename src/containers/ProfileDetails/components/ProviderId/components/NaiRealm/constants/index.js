@@ -97,3 +97,8 @@ export const authOptions = [
     children: credType,
   },
 ];
+
+export const akaMethodLabels = {
+  eap_aka_authentication: 'EAP-AKA Prime Authentication',
+  eap_aka: 'EAP-AKA',
+};
