@@ -353,24 +353,6 @@ describe('<PasspointProfileForm />', () => {
     });
   });
 
-  it('HESSID empty error message should appear when field is empty', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
-        </Form>
-      );
-    };
-    const { getByLabelText, getByText } = render(<PasspointProfileFormComp />);
-
-    fireEvent.change(getByLabelText('HESSID'), { target: { value: '' } });
-
-    await waitFor(() => {
-      expect(getByText('Mac Address cannot be empty'));
-    });
-  });
-
   it('HESSID Mac Address Pattern error message should appear when field input is incorret', async () => {
     const PasspointProfileFormComp = () => {
       const [form] = Form.useForm();

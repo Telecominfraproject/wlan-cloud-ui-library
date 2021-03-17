@@ -355,10 +355,6 @@ const PasspointProfileForm = ({
           label="HESSID"
           name={['hessid', 'addressAsString']}
           rules={[
-            {
-              required: true,
-              message: 'Mac Address cannot be empty',
-            },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
@@ -376,7 +372,7 @@ const PasspointProfileForm = ({
             }),
           ]}
         >
-          <Input placeholder="Enter MAC Address" className={globalStyles.field} />
+          <Input placeholder="00:00:00:00:00:00" className={globalStyles.field} />
         </Item>
       </Card>
 
