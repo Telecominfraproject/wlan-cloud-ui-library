@@ -36,6 +36,7 @@ const PasspointProfileForm = ({
   loadingVenueProfiles,
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
+  handleOnFormChange,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
@@ -176,6 +177,7 @@ const PasspointProfileForm = ({
 
   const handleSaveConnection = newConnection => {
     setConnectionCapabilitySetList([...connectionCapabilitySetList, newConnection]);
+    handleOnFormChange();
   };
 
   const handleConnectionRemove = item => {
@@ -184,6 +186,7 @@ const PasspointProfileForm = ({
         i => i.connectionCapabilitiesPortNumber !== item.connectionCapabilitiesPortNumber
       )
     );
+    handleOnFormChange();
   };
 
   const columns = [
@@ -225,10 +228,12 @@ const PasspointProfileForm = ({
 
   const handleOnChangeSsid = selectedItem => {
     setSelectedChildSsids([...selectedChildSsids, ssidProfiles.find(i => i.id === selectedItem)]);
+    handleOnFormChange();
   };
 
   const handleRemoveSsid = id => {
     setSelectedChildSsids(selectedChildSsids.filter(i => parseInt(i.id, 10) !== parseInt(id, 10)));
+    handleOnFormChange();
   };
 
   const columnsSsid = [
@@ -573,6 +578,7 @@ PasspointProfileForm.propTypes = {
   loadingVenueProfiles: PropTypes.bool,
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
+  handleOnFormChange: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -590,6 +596,7 @@ PasspointProfileForm.defaultProps = {
   loadingVenueProfiles: false,
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
+  handleOnFormChange: () => {},
 };
 
 export default PasspointProfileForm;

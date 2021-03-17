@@ -9,7 +9,7 @@ import styles from '../index.module.scss';
 const { Item } = Form;
 const { Option } = Select;
 
-const OperatorForm = ({ details, form }) => {
+const OperatorForm = ({ details, form, handleOnFormChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [operatorFriendlyName, setOperatorFriendlyName] = useState(
@@ -28,10 +28,12 @@ const OperatorForm = ({ details, form }) => {
 
   const addName = values => {
     setOperatorFriendlyName([...operatorFriendlyName, values]);
+    handleOnFormChange();
   };
 
   const removeName = obj => {
     setOperatorFriendlyName([...operatorFriendlyName.filter(i => i !== obj)]);
+    handleOnFormChange();
   };
 
   const cancelModal = () => {
@@ -111,11 +113,13 @@ const OperatorForm = ({ details, form }) => {
 OperatorForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
+  handleOnFormChange: PropTypes.func,
 };
 
 OperatorForm.defaultProps = {
   form: null,
   details: {},
+  handleOnFormChange: () => {},
 };
 
 export default OperatorForm;

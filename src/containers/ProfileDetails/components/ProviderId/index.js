@@ -11,7 +11,7 @@ import styles from '../index.module.scss';
 
 const { Item } = Form;
 
-const ProviderIdForm = ({ form, details }) => {
+const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   const [plmnModal, setPlmnModal] = useState(false);
   const [plmnForm] = Form.useForm();
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
@@ -87,6 +87,7 @@ const ProviderIdForm = ({ form, details }) => {
           className={styles.iconButton}
           onClick={() => {
             setMccMncList([...mccMncList.filter(i => i !== item)]);
+            handleOnFormChange();
           }}
         />
       ),
@@ -102,6 +103,7 @@ const ProviderIdForm = ({ form, details }) => {
         plmnForm.resetFields();
       })
       .catch(() => {});
+    handleOnFormChange();
   };
 
   const handleClosePlmnModal = () => {
@@ -121,6 +123,7 @@ const ProviderIdForm = ({ form, details }) => {
         [dataIndex]: [obj],
       });
     }
+    handleOnFormChange();
   };
 
   const handleRemoveOsuItem = (obj, dataIndex) => {
@@ -128,6 +131,7 @@ const ProviderIdForm = ({ form, details }) => {
       ...osuDetails,
       [dataIndex]: osuDetails[dataIndex].filter(i => i !== obj),
     });
+    handleOnFormChange();
   };
 
   const handleAddEapMethod = obj => {
@@ -135,6 +139,7 @@ const ProviderIdForm = ({ form, details }) => {
       ...naiRealmList,
       eapMap: obj,
     });
+    handleOnFormChange();
   };
 
   const handleRemoveEapMethod = obj => {
@@ -146,6 +151,7 @@ const ProviderIdForm = ({ form, details }) => {
       ...naiRealmList,
       eapMap: cloneEap,
     });
+    handleOnFormChange();
   };
 
   return (
@@ -232,6 +238,7 @@ const ProviderIdForm = ({ form, details }) => {
         layout={modalLayout}
         onSubmit={handleAddOsuItem}
         removeItem={handleRemoveOsuItem}
+        handleOnFormChange={handleOnFormChange}
       />
     </div>
   );
@@ -240,11 +247,13 @@ const ProviderIdForm = ({ form, details }) => {
 ProviderIdForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
+  handleOnFormChange: PropTypes.func,
 };
 
 ProviderIdForm.defaultProps = {
   form: null,
   details: {},
+  handleOnFormChange: () => {},
 };
 
 export default ProviderIdForm;
