@@ -48,6 +48,7 @@ const RFForm = ({ form, details, extraFields }) => {
           details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
           defaultRfProfile[radio].clientDisconnectThresholdDb,
         eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
+        autoChannelSelection: details.rfConfigMap[radio]?.autoChannelSelection ? 'true' : 'false',
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
@@ -161,7 +162,7 @@ const RFForm = ({ form, details, extraFields }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card>
-        <Item label={' '} colon={false}>
+        <Item wrapperCol={{ offset: 5, span: 15 }}>
           <div className={styles.InlineDiv}>
             {currentRadios.map(radio => (
               <span key={radio} className={styles.spanStyle}>

@@ -23,42 +23,48 @@ Object.defineProperty(window, 'matchMedia', {
 const mockProps = {
   tableColumns: [
     {
-      title: 'NAME',
+      title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'CHANNEL',
-      dataIndex: 'channel',
-      key: 'channel',
+      title: 'Manual Active Channel',
+      dataIndex: 'manualChannelNumber',
+      key: 'manualChannelNumber',
       editable: true,
     },
     {
-      title: 'CELL SIZE',
+      title: 'Manual Backup Channel',
+      dataIndex: 'manualBackupChannelNumber',
+      key: 'manualBackupChannelNumber',
+      editable: true,
+    },
+    {
+      title: 'Cell Size',
       dataIndex: 'cellSize',
       key: 'cellSize',
       editable: true,
     },
     {
-      title: 'PROB RESPONSE THRESHOLD',
+      title: 'Probe Response Threshold',
       dataIndex: 'probeResponseThreshold',
       key: 'probeResponseThreshold',
       editable: true,
     },
     {
-      title: 'CLIENT DISCONNECT THRESHOLD',
+      title: 'Client Disconnect Threshold',
       dataIndex: 'clientDisconnectThreshold',
       key: 'clientDisconnectThreshold',
       editable: true,
     },
     {
-      title: 'SNR (% DROP)',
+      title: 'SNR (% Drop)',
       dataIndex: 'snrDrop',
       key: 'snrDrop',
       editable: true,
     },
     {
-      title: 'MIN LOAD',
+      title: 'Min Load',
       dataIndex: 'minLoad',
       key: 'minLoad',
       editable: true,
@@ -66,26 +72,17 @@ const mockProps = {
   ],
   tableData: [
     {
-      key: '1',
+      cellSize: [-90, -90, -90],
+      manualChannelNumber: [36, 6, 149],
+      manualBackupChannelNumber: [45, 11, 154],
+      clientDisconnectThreshold: [-90, -90, -90],
       id: '1',
+      key: '1',
+      minLoad: [40, 40, 50],
       name: 'AP 1',
-      channel: [25, 23, 61],
-      cellSize: [-90, -90, -90],
-      clientDisconnectThreshold: [-90, -90, -90],
       probeResponseThreshold: [-90, -90, -90],
-      minLoad: [50, 40, 40],
-      snrDrop: [20, 30, 30],
-    },
-    {
-      key: '2',
-      id: '2',
-      name: 'AP 2',
-      channel: [25, 23, 61],
-      cellSize: [-90, -90, -90],
-      clientDisconnectThreshold: [-90, -90, -90],
-      probeResponseThreshold: [-90, -90, -90],
-      minLoad: [50, 40, 40],
-      snrDrop: [20, 30, 30],
+      snrDrop: [30, 30, 20],
+      radioMap: ['is5GHz', 'is2dot4GHz', 'is5GHzL'],
     },
   ],
   onLoadMore: jest.fn(),
@@ -108,18 +105,24 @@ describe('<BulkEditAPTableComp />', () => {
     const { getByTestId } = render(<BulkEditAPTableComp />);
     const ENTER = { keyCode: 13 };
 
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-channel`);
+    const input = getByTestId(
+      `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
+    );
     fireEvent.click(input);
-    fireEvent.change(input, { target: { value: 1 } });
+    fireEvent.change(input, { target: { value: '37, 8, 157' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => expect(tableCell).toBeVisible());
 
     fireEvent.click(tableCell);
     fireEvent.click(input);
-    fireEvent.change(input, { target: { value: 1 } });
+    fireEvent.change(input, { target: { value: '36, 6, 149' } });
     fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => expect(tableCell).toBeVisible());
   });
 });

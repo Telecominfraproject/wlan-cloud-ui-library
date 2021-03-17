@@ -34,5 +34,6 @@ export { default as Modal } from 'components/Modal';
 export { default as Header } from 'components/Header';
 export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
+export { default as Tooltip } from 'components/Tooltip';
 
 export { default as GenericNotFound } from 'components/GenericNotFound';

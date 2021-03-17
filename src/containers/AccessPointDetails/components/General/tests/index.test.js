@@ -364,15 +364,54 @@ describe('<General />', () => {
     });
   });
 
-  // Active Channel
-  it('error if active channel input exceends bounds for the 2.4GHz setting', async () => {
+  it('Active channel field should be disabled if autoChannelSelection setting is enabled', async () => {
+    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    const input = getByPlaceholderText('Enter Active Channel for 2.4GHz');
+    expect(input).toBeDisabled();
+  });
+
+  it('Backup channel field should be disabled if autoChannelSelection setting is enabled', async () => {
+    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    const input = getByPlaceholderText('Enter Backup Channel for 2.4GHz');
+    expect(input).toBeDisabled();
+  });
+
+  it('Active channel field should not be disabled if autoChannelSelection setting is disabled', async () => {
+    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
+    expect(input).not.toBeDisabled();
+  });
+
+  it('Backup channel field should not be disabled if autoChannelSelection setting is disabled', async () => {
+    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
+    expect(input).not.toBeDisabled();
+  });
+
+  it('error if active channel input exceends bounds', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 2.4GHz'), {
+    const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
+    expect(input).not.toBeDisabled();
+
+    fireEvent.change(input, {
       target: { value: 166 },
     });
+
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -380,29 +419,18 @@ describe('<General />', () => {
     });
   });
 
-  it('error if active channel input exceends bounds for the 5GHz (L) setting', async () => {
+  it('error if backup channel input exceends bounds', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 5GHz (L)'), {
+    const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
+    expect(input).not.toBeDisabled();
+
+    fireEvent.change(input, {
       target: { value: 166 },
     });
-    fireEvent.click(getByRole('button', { name: 'Save' }));
 
-    await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
-    });
-  });
-
-  it('error if active channel input exceends bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    fireEvent.change(getByPlaceholderText('Enter Manual Active Channel for 5GHz (U)'), {
-      target: { value: 0 },
-    });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {

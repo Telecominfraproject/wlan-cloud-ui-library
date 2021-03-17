@@ -21,12 +21,13 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 const mockProps = {
-  title: 'CHANNEL',
+  title: 'Manual Active',
   editable: true,
-  dataIndex: 'channel',
+  dataIndex: 'manualActiveChannel',
   record: {
     cellSize: [-90, -90, -90],
-    channel: [36, 6, 149],
+    manualChannelNumber: [36, 6, 149],
+    manualBackupChannelNumber: [45, 11, 154],
     clientDisconnectThreshold: [-90, -90, -90],
     id: '1',
     key: '1',
@@ -34,6 +35,7 @@ const mockProps = {
     name: 'AP 1',
     probeResponseThreshold: [-90, -90, -90],
     snrDrop: [30, 30, 20],
+    radioMap: ['is5GHz', 'is2dot4GHz', 'is5GHzL'],
   },
 };
 
@@ -54,9 +56,13 @@ describe('<EditableCell />', () => {
       );
     };
     const { getByTestId } = render(<EditableCellComp />);
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
+    );
     fireEvent.click(tableCell);
-    const formElement = getByTestId(`bulkEditFormElement-${mockProps.record.name}-channel`);
+    const formElement = getByTestId(
+      `bulkEditFormElement-${mockProps.record.name}-${mockProps.dataIndex}`
+    );
 
     expect(formElement).toBeInTheDocument();
   });
@@ -74,10 +80,11 @@ describe('<EditableCell />', () => {
       );
     };
     const { getByTestId } = render(<EditableCellComp />);
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
-    fireEvent.keyDown(tableCell, ENTER);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     fireEvent.change(input, { target: { value: '' } });
     expect(input.value).toBe('');
     fireEvent.keyDown(input, { key: 'Enter', code: 13 });
@@ -100,16 +107,17 @@ describe('<EditableCell />', () => {
     };
     const { getByTestId } = render(<EditableCellComp />);
 
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
-
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     expect(input).toBeInTheDocument();
 
-    fireEvent.change(input, { target: { value: '123' } });
+    fireEvent.change(input, { target: { value: '1,2,3' } });
 
     await waitFor(() => {
-      expect(input.value).toBe('123');
+      expect(input.value).toBe('1,2,3');
     });
     fireEvent.keyDown(input, ENTER);
     await waitFor(() => {
@@ -130,13 +138,14 @@ describe('<EditableCell />', () => {
     };
     const { getByTestId } = render(<EditableCellComp />);
 
-    const tableCell = getByTestId(`bulkEditTableCell-${mockProps.record.name}-channel`);
+    const tableCell = getByTestId(
+      `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
+    );
     fireEvent.click(tableCell);
-    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-channel`);
-
+    const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     expect(input).toBeInTheDocument();
 
-    fireEvent.change(input, { target: { value: '123' } });
+    fireEvent.change(input, { target: { value: '1,2,3' } });
     fireEvent.keyDown(input, ENTER);
   });
 
