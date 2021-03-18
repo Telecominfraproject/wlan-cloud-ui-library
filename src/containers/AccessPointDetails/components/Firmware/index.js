@@ -117,7 +117,12 @@ const Firmware = ({
       />
       <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
         <div className={styles.InlineEndDiv}>
-          <Button className={styles.saveButton} onClick={handleOnReboot} name="reboot">
+          <Button
+            className={styles.saveButton}
+            onClick={handleOnReboot}
+            name="reboot"
+            disabled={status.upgradeState !== 'undefined'}
+          >
             Reboot AP
           </Button>
         </div>
