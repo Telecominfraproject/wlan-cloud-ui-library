@@ -9,7 +9,7 @@ import FormModal from './components/FormModal';
 const { Item } = Form;
 const { Option } = Select;
 
-const VenueForm = ({ form, details }) => {
+const VenueForm = ({ form, details, handleOnFormChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
     details?.venueTypeAssignment?.venueGroupId || 0
@@ -34,6 +34,7 @@ const VenueForm = ({ form, details }) => {
   const handleNameSave = values => {
     const newVenue = { ...values, venueUrl: values.venueUrl.toLowerCase() };
     setVenueNameList([...venueNameList, newVenue]);
+    handleOnFormChange();
   };
 
   const handleCloseModal = () => {
@@ -42,6 +43,7 @@ const VenueForm = ({ form, details }) => {
 
   const handleRemove = item => {
     setVenueNameList(venueNameList.filter(i => i.dupleName !== item.dupleName));
+    handleOnFormChange();
   };
 
   const columns = [
@@ -248,11 +250,13 @@ const VenueForm = ({ form, details }) => {
 VenueForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
+  handleOnFormChange: PropTypes.func,
 };
 
 VenueForm.defaultProps = {
   form: null,
   details: {},
+  handleOnFormChange: () => {},
 };
 
 export default VenueForm;

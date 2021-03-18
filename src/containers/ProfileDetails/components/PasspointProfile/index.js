@@ -36,6 +36,7 @@ const PasspointProfileForm = ({
   loadingVenueProfiles,
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
+  handleOnFormChange,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
@@ -176,6 +177,7 @@ const PasspointProfileForm = ({
 
   const handleSaveConnection = newConnection => {
     setConnectionCapabilitySetList([...connectionCapabilitySetList, newConnection]);
+    handleOnFormChange();
   };
 
   const handleConnectionRemove = item => {
@@ -184,6 +186,7 @@ const PasspointProfileForm = ({
         i => i.connectionCapabilitiesPortNumber !== item.connectionCapabilitiesPortNumber
       )
     );
+    handleOnFormChange();
   };
 
   const columns = [
@@ -225,10 +228,12 @@ const PasspointProfileForm = ({
 
   const handleOnChangeSsid = selectedItem => {
     setSelectedChildSsids([...selectedChildSsids, ssidProfiles.find(i => i.id === selectedItem)]);
+    handleOnFormChange();
   };
 
   const handleRemoveSsid = id => {
     setSelectedChildSsids(selectedChildSsids.filter(i => parseInt(i.id, 10) !== parseInt(id, 10)));
+    handleOnFormChange();
   };
 
   const columnsSsid = [
@@ -329,7 +334,7 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Item label="ID Provider SSID" name="osuSsidProfileId">
+        <Item label="OSU SSID" name="osuSsidProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
@@ -355,10 +360,6 @@ const PasspointProfileForm = ({
           label="HESSID"
           name={['hessid', 'addressAsString']}
           rules={[
-            {
-              required: true,
-              message: 'Mac Address cannot be empty',
-            },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
@@ -376,7 +377,7 @@ const PasspointProfileForm = ({
             }),
           ]}
         >
-          <Input placeholder="Enter MAC Address" className={globalStyles.field} />
+          <Input placeholder="00:00:00:00:00:00" className={globalStyles.field} />
         </Item>
       </Card>
 
@@ -573,6 +574,7 @@ PasspointProfileForm.propTypes = {
   loadingVenueProfiles: PropTypes.bool,
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
+  handleOnFormChange: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -590,6 +592,7 @@ PasspointProfileForm.defaultProps = {
   loadingVenueProfiles: false,
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
+  handleOnFormChange: () => {},
 };
 
 export default PasspointProfileForm;

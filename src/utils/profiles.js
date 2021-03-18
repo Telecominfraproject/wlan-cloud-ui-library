@@ -1,4 +1,9 @@
-import { RADIOS, ROAMING, DEFAULT_NTP_SERVER } from '../containers/ProfileDetails/constants/index';
+import {
+  RADIOS,
+  ROAMING,
+  DEFAULT_NTP_SERVER,
+  DEFAULT_HESS_ID,
+} from '../containers/ProfileDetails/constants/index';
 
 const isBool = value => value === 'true';
 
@@ -280,6 +285,10 @@ export const formatPasspointForm = (values, details) => {
   formattedData.disableDownstreamGroupAddressedForwarding = isBool(
     values.disableDownstreamGroupAddressedForwarding
   );
+
+  if (!values.hessid.addressAsString) {
+    formattedData.hessid.addressAsString = DEFAULT_HESS_ID;
+  }
   return formattedData;
 };
 

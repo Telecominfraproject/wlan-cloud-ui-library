@@ -313,11 +313,18 @@ const ProfileDetails = ({
             loadingVenueProfiles={loadingVenueProfiles}
             loadingOperatorProfiles={loadingOperatorProfiles}
             loadingIdProviderProfiles={loadingIdProviderProfiles}
+            handleOnFormChange={handleOnFormChange}
           />
         )}
-        {profileType === PROFILES.providerID && <ProviderIdForm form={form} details={details} />}
-        {profileType === PROFILES.operator && <OperatorForm form={form} details={details} />}
-        {profileType === PROFILES.venue && <VenueForm form={form} details={details} />}
+        {profileType === PROFILES.providerID && (
+          <ProviderIdForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+        )}
+        {profileType === PROFILES.operator && (
+          <OperatorForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+        )}
+        {profileType === PROFILES.venue && (
+          <VenueForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+        )}
       </Form>
     </Container>
   );

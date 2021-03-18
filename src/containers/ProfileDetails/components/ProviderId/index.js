@@ -11,8 +11,8 @@ import styles from '../index.module.scss';
 
 const { Item } = Form;
 
-const ProviderIdForm = ({ form, details }) => {
-  const [modaForm] = Form.useForm();
+const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
+  const [modalForm] = Form.useForm();
   const [plmnModal, setPlmnModal] = useState(false);
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
 
@@ -85,6 +85,7 @@ const ProviderIdForm = ({ form, details }) => {
           className={styles.iconButton}
           onClick={() => {
             setMccMncList([...mccMncList.filter(i => i !== item)]);
+            handleOnFormChange();
           }}
         />
       ),
@@ -92,19 +93,20 @@ const ProviderIdForm = ({ form, details }) => {
   ];
 
   const handleAddPlmnItem = () => {
-    modaForm
+    modalForm
       .validateFields()
       .then(values => {
         setMccMncList([...mccMncList, values]);
         setPlmnModal(false);
-        modaForm.resetFields();
+        modalForm.resetFields();
       })
       .catch(() => {});
+    handleOnFormChange();
   };
 
   const handleClosePlmnModal = () => {
     setPlmnModal(false);
-    modaForm.resetFields();
+    modalForm.resetFields();
   };
 
   const handleAddOsuItem = (obj, dataIndex) => {
@@ -119,6 +121,7 @@ const ProviderIdForm = ({ form, details }) => {
         [dataIndex]: [obj],
       });
     }
+    handleOnFormChange();
   };
 
   const handleRemoveOsuItem = (obj, dataIndex) => {
@@ -133,6 +136,7 @@ const ProviderIdForm = ({ form, details }) => {
       ...naiRealmList,
       eapMap: obj,
     });
+    handleOnFormChange();
   };
 
   const handleRemoveEapMethod = obj => {
@@ -144,6 +148,7 @@ const ProviderIdForm = ({ form, details }) => {
       ...naiRealmList,
       eapMap: cloneEap,
     });
+    handleOnFormChange();
   };
 
   return (
@@ -186,7 +191,7 @@ const ProviderIdForm = ({ form, details }) => {
             onCancel={handleClosePlmnModal}
             title="Add Public Land Mobile Network (PLMN)"
             content={
-              <Form {...modalLayout} form={modaForm}>
+              <Form {...modalLayout} form={modalForm}>
                 <Item
                   name="mcc"
                   label="Mcc:"
@@ -219,17 +224,18 @@ const ProviderIdForm = ({ form, details }) => {
 
       <NaiRealm
         eapMap={naiRealmList?.eapMap}
-        form={modaForm}
+        form={modalForm}
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
       />
 
       <OsuForm
         osuDetails={osuDetails}
-        osuForm={modaForm}
+        osuForm={modalForm}
         layout={modalLayout}
         onSubmit={handleAddOsuItem}
         removeItem={handleRemoveOsuItem}
+        handleOnFormChange={handleOnFormChange}
       />
     </div>
   );
@@ -238,11 +244,13 @@ const ProviderIdForm = ({ form, details }) => {
 ProviderIdForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
+  handleOnFormChange: PropTypes.func,
 };
 
 ProviderIdForm.defaultProps = {
   form: null,
   details: {},
+  handleOnFormChange: () => {},
 };
 
 export default ProviderIdForm;
