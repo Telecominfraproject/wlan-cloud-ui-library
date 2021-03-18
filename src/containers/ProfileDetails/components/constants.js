@@ -8,7 +8,7 @@ const defaultRfProfile = {
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
-    mimoMode: 'twoByTwo',
+    mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: false,
     activeScanSettings: {
@@ -55,7 +55,7 @@ const defaultRfProfile = {
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is20MHz',
-    mimoMode: 'twoByTwo',
+    mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: false,
     activeScanSettings: {
@@ -102,7 +102,7 @@ const defaultRfProfile = {
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
-    mimoMode: 'twoByTwo',
+    mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: false,
     activeScanSettings: {
@@ -149,7 +149,7 @@ const defaultRfProfile = {
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
-    mimoMode: 'twoByTwo',
+    mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: false,
     activeScanSettings: {
