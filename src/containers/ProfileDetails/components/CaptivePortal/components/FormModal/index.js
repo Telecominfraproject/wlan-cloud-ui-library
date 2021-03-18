@@ -22,8 +22,10 @@ const FormModal = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue({ username, password, firstName, lastName });
+    if (visible) {
+      form.resetFields();
+      form.setFieldsValue({ username, password, firstName, lastName });
+    }
   }, [visible]);
 
   const filteredUserNames = useMemo(() => {
