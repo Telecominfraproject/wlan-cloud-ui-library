@@ -3,7 +3,7 @@ import { WifiOutlined, SwapOutlined, SignalFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 
-import { formatBytes } from 'utils/bytes';
+import { formatBytes } from 'utils/formatFunctions';
 import styles from './index.module.scss';
 
 const DeviceDetailCard = ({

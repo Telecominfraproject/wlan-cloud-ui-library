@@ -11,7 +11,12 @@ import {
   SplineSeries,
   Tooltip,
 } from 'react-jsx-highstock';
-import { formatBytes, labelFormatter } from 'utils/bytes';
+import {
+  formatBytes,
+  bytesLabelFormatter,
+  percentageLabelFormatter,
+  celsiusLabelFormatter,
+} from 'utils/formatFunctions';
 
 import Loading from 'components/Loading';
 
@@ -88,6 +93,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         id="usage"
         labels={{
           style: { color: '#7cb5ec' },
+          formatter: percentageLabelFormatter,
         }}
         visible={visible}
         showEmpty={false}
@@ -97,7 +103,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
             color: '#7cb5ec',
           }}
         >
-          CPU Utilization (%)
+          CPU Utilization
         </YAxis.Title>
         {Object.keys(cpuUsage).map(i => (
           <SplineSeries
@@ -114,7 +120,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         id="free"
         labels={{
           style: { color: '#34AE29' },
-          formatter: labelFormatter,
+          formatter: bytesLabelFormatter,
         }}
         opposite
         visible={visible}
@@ -134,6 +140,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         id="temp"
         labels={{
           style: { color: '#f7a35c' },
+          formatter: celsiusLabelFormatter,
         }}
         visible={visible}
         showEmpty={false}
@@ -143,7 +150,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
             color: '#f7a35c',
           }}
         >
-          CPU Temperature (°C)
+          CPU Temperature
         </YAxis.Title>
         <SplineSeries id="cpuTemp" name="CPU Temperature" data={cpuTemp} color="#f7a35c" />
       </YAxis>

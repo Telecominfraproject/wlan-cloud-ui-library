@@ -13,7 +13,7 @@ export function formatBytes(bytes, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-export function labelFormatter() {
+export function bytesLabelFormatter() {
   return formatBytes(this.value);
 }
 
@@ -29,4 +29,20 @@ export function formatBitsPerSecond(bps) {
   }
 
   return `${Math.floor(bps)} bps`;
+}
+
+function formatCelcius(celsius) {
+  return `${Math.round(celsius * 100) / 100} °C`;
+}
+
+export function celsiusLabelFormatter() {
+  return formatCelcius(this.value);
+}
+
+function formatPercentage(percentage) {
+  return `${Math.round(percentage * 100) / 100} %`;
+}
+
+export function percentageLabelFormatter() {
+  return formatPercentage(this.value);
 }
