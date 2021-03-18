@@ -125,7 +125,7 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
             color: '#34AE29',
           }}
         >
-          Free Memory (MB)
+          Free Memory
         </YAxis.Title>
         <SplineSeries id="freeMemory" name="Free Memory" data={freeMemory} color="#34AE29" />
       </YAxis>

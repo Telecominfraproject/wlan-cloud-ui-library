@@ -14,7 +14,7 @@ export function formatBytes(bytes, decimals = 2) {
 }
 
 export function labelFormatter() {
-  return formatBytes(this.value).replace(/[^\d.-]/g, '');
+  return formatBytes(this.value);
 }
 
 export function formatBitsPerSecond(bps) {
