@@ -329,7 +329,7 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Item label="ID Provider SSID" name="osuSsidProfileId">
+        <Item label="OSU SSID" name="osuSsidProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfileSelect"
