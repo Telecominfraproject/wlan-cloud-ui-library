@@ -6,7 +6,7 @@ import FormModal from '../FormModal';
 
 const { Item } = Form;
 
-const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
+const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
   const [osuEnabled, setOsuEnabled] = useState(
     osuDetails?.osuServerUri !== null && osuDetails?.osuServerUri !== ''
   );
@@ -39,7 +39,10 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem }) => {
             checkedChildren="Enabled"
             unCheckedChildren="Disabled"
             style={{ marginLeft: '1rem' }}
-            onChange={() => setOsuEnabled(!osuEnabled)}
+            onChange={() => {
+              setOsuEnabled(!osuEnabled);
+              handleOnFormChange();
+            }}
             defaultChecked={osuEnabled}
             data-testid="switchToggle"
           />
@@ -147,10 +150,12 @@ OsuForm.propTypes = {
   osuDetails: PropTypes.instanceOf(Object),
   onSubmit: PropTypes.func.isRequired,
   removeItem: PropTypes.func.isRequired,
+  handleOnFormChange: PropTypes.func,
 };
 
 OsuForm.defaultProps = {
   osuDetails: {},
+  handleOnFormChange: () => {},
 };
 
 export default OsuForm;
