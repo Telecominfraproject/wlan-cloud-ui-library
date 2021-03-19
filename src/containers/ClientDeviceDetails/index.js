@@ -5,7 +5,7 @@ import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { formatBytes, formatBitsPerSecond } from 'utils/bytes';
+import { formatBytes, formatBitsPerSecond } from 'utils/formatFunctions';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
 import ThemeContext from 'contexts/ThemeContext';
