@@ -110,7 +110,7 @@ const Firmware = ({
       <Modal
         onCancel={() => setConfirmModal(false)}
         onSuccess={handleOnSuccessModal}
-        visible={confirmModal}
+        visible={Boolean(confirmModal)}
         title="Confirm"
         content={renderModalContent()}
         buttonText="Confirm"

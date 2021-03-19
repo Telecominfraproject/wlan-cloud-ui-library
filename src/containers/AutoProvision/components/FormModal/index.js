@@ -29,10 +29,12 @@ const FormModal = ({
   }, [model, usedModels]);
 
   useEffect(() => {
-    form.setFieldsValue({
-      model,
-      profileId: profileId ? profileId.toString() : null,
-    });
+    if (visible) {
+      form.setFieldsValue({
+        model,
+        profileId: profileId ? profileId.toString() : null,
+      });
+    }
   }, [visible]);
 
   const content = (

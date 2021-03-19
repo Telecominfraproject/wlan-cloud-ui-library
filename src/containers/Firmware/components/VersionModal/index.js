@@ -24,16 +24,18 @@ const VersionModal = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue({
-      modelId,
-      versionName,
-      description,
-      commit,
-      filename,
+    if (visible) {
+      form.resetFields();
+      form.setFieldsValue({
+        modelId,
+        versionName,
+        description,
+        commit,
+        filename,
 
-      date: parseInt(releaseDate, 10) ? moment(parseInt(releaseDate, 10)) : null,
-    });
+        date: parseInt(releaseDate, 10) ? moment(parseInt(releaseDate, 10)) : null,
+      });
+    }
   }, [visible]);
 
   const content = (

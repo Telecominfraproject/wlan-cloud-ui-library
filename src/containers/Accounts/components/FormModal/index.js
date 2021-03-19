@@ -27,8 +27,10 @@ const FormModal = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.resetFields();
-    form.setFieldsValue({ email: userEmail, roles: userRole });
+    if (visible) {
+      form.resetFields();
+      form.setFieldsValue({ email: userEmail, roles: userRole });
+    }
   }, [visible]);
 
   const content = (

@@ -106,7 +106,7 @@ const RFForm = ({ form, details, extraFields }) => {
   );
 
   const renderItem = (label, dataIndex, renderInput, options = {}) => (
-    <Item label={label} colon={false}>
+    <Item label={label} colon={false} key={label}>
       <div className={styles.InlineDiv}>
         {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
       </div>
