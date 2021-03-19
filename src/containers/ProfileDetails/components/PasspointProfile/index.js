@@ -59,9 +59,6 @@ const PasspointProfileForm = ({
   );
 
   useEffect(() => {
-    const selectedSsid = associatedSsidProfiles?.find(
-      o => o.id === details?.osuSsidProfileId?.toString()
-    );
     const selectedVenue = childProfiles?.find(
       o => o.id === details?.passpointVenueProfileId?.toString()
     );
@@ -92,7 +89,7 @@ const PasspointProfileForm = ({
           key: i?.id || [],
           label: i?.name || [],
         })) || [],
-      osuSsidProfileId: selectedSsid?.id,
+      osuSsidProfileId: details?.osuSsidProfileId?.toString(),
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || null,
