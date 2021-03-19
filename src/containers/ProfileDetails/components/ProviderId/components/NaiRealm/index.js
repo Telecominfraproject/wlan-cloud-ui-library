@@ -172,6 +172,8 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   <Option value="EAP-MSCHAP-V2 with username/password">
                     EAP-MSCHAP-V2 with username/password
                   </Option>
+                  <Option value="EAP-AKA Authentication">EAP-AKA Authentication</Option>
+                  <Option value="EAP-AKA'">EAP-AKA Prime</Option>
                 </Select>
               </Item>
               <Item
