@@ -90,6 +90,21 @@ const Firmware = ({
 
   const status = data?.status?.firmware?.detailsJSON || {};
 
+  const getRebootStatus = () => {
+    switch (status?.upgradeState) {
+      case 'download_initiated':
+      case 'downloading':
+      case 'apply_initiated':
+      case 'applying':
+      case 'reboot_initiated':
+      case 'rebooting':
+        return true;
+
+      default:
+        return false;
+    }
+  };
+
   if (loadingFirmware) {
     return <Loading data-testid="loadingFirmware" />;
   }
@@ -121,7 +136,7 @@ const Firmware = ({
             className={styles.saveButton}
             onClick={handleOnReboot}
             name="reboot"
-            disabled={status.upgradeState !== 'undefined'}
+            disabled={getRebootStatus()}
           >
             Reboot AP
           </Button>
