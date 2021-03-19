@@ -90,6 +90,21 @@ const Firmware = ({
 
   const status = data?.status?.firmware?.detailsJSON || {};
 
+  const getRebootStatus = () => {
+    switch (status?.upgradeState) {
+      case 'download_initiated':
+      case 'downloading':
+      case 'apply_initiated':
+      case 'applying':
+      case 'reboot_initiated':
+      case 'rebooting':
+        return true;
+
+      default:
+        return false;
+    }
+  };
+
   if (loadingFirmware) {
     return <Loading data-testid="loadingFirmware" />;
   }
@@ -117,7 +132,12 @@ const Firmware = ({
       />
       <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
         <div className={styles.InlineEndDiv}>
-          <Button className={styles.saveButton} onClick={handleOnReboot} name="reboot">
+          <Button
+            className={styles.saveButton}
+            onClick={handleOnReboot}
+            name="reboot"
+            disabled={getRebootStatus()}
+          >
             Reboot AP
           </Button>
         </div>
