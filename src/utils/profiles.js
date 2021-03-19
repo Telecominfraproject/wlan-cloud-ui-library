@@ -7,6 +7,13 @@ import {
 
 const isBool = value => value === 'true';
 
+const getFileType = type => {
+  if (type.startsWith('image/')) {
+    return type === 'image/png' ? 'PNG' : 'JPG';
+  }
+  return type;
+};
+
 export const formatSsidProfileForm = values => {
   const formattedData = {
     radioBasedConfigs: {},
@@ -141,13 +148,6 @@ export const formatRadiusForm = values => {
 export const formatCaptiveForm = (values, details) => {
   const formattedData = { ...values };
 
-  const getFileType = type => {
-    if (type.startsWith('image/')) {
-      return type === 'image/png' ? 'PNG' : 'JPG';
-    }
-    return type;
-  };
-
   if (
     !values.logoFile ||
     (values.logoFile && values.logoFile.fileList && values.logoFile.fileList.length === 0)
@@ -216,19 +216,7 @@ export const formatRfProfileForm = values => {
 export const formatPasspointForm = (values, details) => {
   const formattedData = { ...values };
 
-  const getFileType = type => {
-    if (type.startsWith('image/')) {
-      return type === 'image/png' ? 'PNG' : 'JPG';
-    }
-    return type;
-  };
-
-  if (typeof values?.osuSsidProfileId === 'object') {
-    formattedData.osuSsidProfileId = values?.osuSsidProfileId?.value;
-    formattedData.childProfileIds.push(formattedData.osuSsidProfileId);
-  } else {
-    formattedData.childProfileIds.push(values?.osuSsidProfileId);
-  }
+  formattedData.osuSsidProfileId = values?.osuSsidProfileId;
 
   if (typeof values?.passpointVenueProfileId === 'object') {
     formattedData.passpointVenueProfileId = values?.passpointVenueProfileId?.value;
