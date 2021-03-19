@@ -12,12 +12,11 @@ import styles from '../index.module.scss';
 const { Item } = Form;
 
 const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
+  const [modalForm] = Form.useForm();
   const [plmnModal, setPlmnModal] = useState(false);
-  const [plmnForm] = Form.useForm();
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
 
   const [naiRealmList, setNaiRealmList] = useState(details?.naiRealmList?.[0]);
-  const [naiForm] = Form.useForm();
 
   const [osuDetails, setOsuDetails] = useState({
     osuServerUri: details?.osuServerUri || '',
@@ -25,36 +24,35 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
     osuServiceDescription: details?.osuServiceDescription || [],
     osuIconList: details?.osuIconList || [],
   });
-  const [osuForm] = Form.useForm();
 
   useEffect(() => {
     form.setFieldsValue({
       roamingOi: details?.roamingOi?.join(', ') || '',
+      osuServerUri: details?.osuServerUri || '',
+      naiRealms: details?.naiRealmList?.[0].naiRealms?.join(', ') || '',
+    });
+  }, [details]);
+
+  useEffect(() => {
+    form.setFieldsValue({
       mccMncList: mccMncList || [],
+    });
+  }, [mccMncList]);
+
+  useEffect(() => {
+    form.setFieldsValue({
       encoding: naiRealmList?.encoding || 0,
       eapMap: naiRealmList?.eapMap || {},
-      osuServerUri: osuDetails?.osuServerUri || '',
+    });
+  }, [naiRealmList]);
+
+  useEffect(() => {
+    form.setFieldsValue({
       osuFriendlyName: osuDetails?.osuFriendlyName || [],
       osuServiceDescription: osuDetails?.osuServiceDescription || [],
       osuIconList: osuDetails?.osuIconList || [],
-      naiRealms: naiRealmList?.naiRealms?.join(', ') || '',
     });
-  }, [form, details, mccMncList, naiRealmList, osuDetails]);
-
-  useEffect(() => {
-    setOsuDetails({
-      ...osuDetails,
-      osuServerUri: details?.osuServerUri || '',
-      osuFriendlyName: details?.osuFriendlyName || [],
-      osuServiceDescription: details?.osuServiceDescription || [],
-      osuIconList: details?.osuIconList || [],
-    });
-  }, [
-    details?.osuServerUri,
-    details?.osuFriendlyName,
-    details?.osuServiceDescription,
-    details?.osuIconList,
-  ]);
+  }, [osuDetails]);
 
   useEffect(() => {
     setNaiRealmList(details?.naiRealmList?.[0]);
@@ -95,12 +93,12 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   ];
 
   const handleAddPlmnItem = () => {
-    plmnForm
+    modalForm
       .validateFields()
       .then(values => {
         setMccMncList([...mccMncList, values]);
         setPlmnModal(false);
-        plmnForm.resetFields();
+        modalForm.resetFields();
       })
       .catch(() => {});
     handleOnFormChange();
@@ -108,7 +106,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
 
   const handleClosePlmnModal = () => {
     setPlmnModal(false);
-    plmnForm.resetFields();
+    modalForm.resetFields();
   };
 
   const handleAddOsuItem = (obj, dataIndex) => {
@@ -127,11 +125,10 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   };
 
   const handleRemoveOsuItem = (obj, dataIndex) => {
-    setOsuDetails({
-      ...osuDetails,
-      [dataIndex]: osuDetails[dataIndex].filter(i => i !== obj),
-    });
-    handleOnFormChange();
+    setOsuDetails(prevValues => ({
+      ...prevValues,
+      [dataIndex]: prevValues[dataIndex].filter(i => i !== obj),
+    }));
   };
 
   const handleAddEapMethod = obj => {
@@ -194,7 +191,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
             onCancel={handleClosePlmnModal}
             title="Add Public Land Mobile Network (PLMN)"
             content={
-              <Form {...modalLayout} form={plmnForm}>
+              <Form {...modalLayout} form={modalForm}>
                 <Item
                   name="mcc"
                   label="Mcc:"
@@ -227,14 +224,14 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
 
       <NaiRealm
         eapMap={naiRealmList?.eapMap}
-        form={naiForm}
+        form={modalForm}
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
       />
 
       <OsuForm
         osuDetails={osuDetails}
-        osuForm={osuForm}
+        osuForm={modalForm}
         layout={modalLayout}
         onSubmit={handleAddOsuItem}
         removeItem={handleRemoveOsuItem}

@@ -15,8 +15,6 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
   const [descModal, setDescModal] = useState(false);
   const [iconModal, setIconModal] = useState(false);
 
-  const [iconForm] = Form.useForm();
-
   const handleCloseModal = index => {
     if (index === 'osuFriendlyName') {
       setNameModal(false);
@@ -25,7 +23,6 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
       setDescModal(false);
     }
     if (index === 'osuIconList') {
-      iconForm.resetFields();
       setIconModal(false);
     }
   };
@@ -128,6 +125,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
               tableData={osuDetails?.osuIconList}
               dataIndex="osuIconList"
               removeRow={removeItem}
+              rowKey="imageUrl"
             />
           </Card>
 
