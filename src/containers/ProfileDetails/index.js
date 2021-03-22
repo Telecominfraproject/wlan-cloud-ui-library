@@ -54,6 +54,7 @@ const ProfileDetails = ({
   operatorProfiles,
   idProviderProfiles,
   associatedSsidProfiles,
+  osuSsidProfile,
   fileUpload,
   onDownloadFile,
   extraButtons,
@@ -307,6 +308,7 @@ const ProfileDetails = ({
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}
             associatedSsidProfiles={associatedSsidProfiles}
+            osuSsidProfile={osuSsidProfile}
             fileUpload={fileUpload}
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
@@ -348,6 +350,7 @@ ProfileDetails.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   associatedSsidProfiles: PropTypes.instanceOf(Array),
+  osuSsidProfile: PropTypes.instanceOf(Object),
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -375,6 +378,7 @@ ProfileDetails.defaultProps = {
   childProfileIds: [],
   childProfiles: [],
   associatedSsidProfiles: [],
+  osuSsidProfile: {},
   extraButtons: null,
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},

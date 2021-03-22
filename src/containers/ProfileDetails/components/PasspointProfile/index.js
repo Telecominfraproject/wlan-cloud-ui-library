@@ -30,6 +30,7 @@ const PasspointProfileForm = ({
   childProfiles,
   idProviderProfiles,
   associatedSsidProfiles,
+  osuSsidProfile,
   fileUpload,
   onSearchProfile,
   onFetchMoreProfiles,
@@ -89,7 +90,12 @@ const PasspointProfileForm = ({
           key: i?.id || [],
           label: i?.name || [],
         })) || [],
-      osuSsidProfileId: details?.osuSsidProfileId?.toString(),
+      osuSsidProfileId:
+        {
+          value: osuSsidProfile?.id || null,
+          key: osuSsidProfile?.id || null,
+          label: osuSsidProfile?.name || null,
+        } || null,
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || null,
@@ -339,6 +345,7 @@ const PasspointProfileForm = ({
             onSearch={name => onSearchProfile(name, PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
+            labelInValue
           >
             {ssidProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -562,6 +569,7 @@ PasspointProfileForm.propTypes = {
   childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   associatedSsidProfiles: PropTypes.instanceOf(Array),
+  osuSsidProfile: PropTypes.instanceOf(Object),
   fileUpload: PropTypes.func,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -581,6 +589,7 @@ PasspointProfileForm.defaultProps = {
   childProfiles: [],
   idProviderProfiles: [],
   associatedSsidProfiles: [],
+  osuSsidProfile: {},
   fileUpload: () => {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},

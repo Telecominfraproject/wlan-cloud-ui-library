@@ -216,7 +216,7 @@ export const formatRfProfileForm = values => {
 export const formatPasspointForm = (values, details) => {
   const formattedData = { ...values };
 
-  formattedData.osuSsidProfileId = values?.osuSsidProfileId;
+  formattedData.osuSsidProfileId = values?.osuSsidProfileId?.value;
 
   if (typeof values?.passpointVenueProfileId === 'object') {
     formattedData.passpointVenueProfileId = values?.passpointVenueProfileId?.value;
