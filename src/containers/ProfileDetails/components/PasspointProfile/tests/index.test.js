@@ -52,14 +52,8 @@ const mockProps = {
     termsAndConditionsFile: null,
     unauthenticatedEmergencyServiceAccessible: false,
   },
-  childProfileIds: ['40', '30', '20', '10'],
+  childProfileIds: ['30', '20', '10'],
   childProfiles: [
-    {
-      id: '40',
-      name: 'ssid-profile-1',
-      profileType: 'ssid',
-      details: {},
-    },
     {
       id: '30',
       name: 'Venue-Profile',
@@ -76,6 +70,14 @@ const mockProps = {
       id: '10',
       name: 'Operator-Profile',
       profileType: 'passpoint_operator',
+      details: {},
+    },
+  ],
+  associatedSsidProfiles: [
+    {
+      id: '40',
+      name: 'ssid-profile-1',
+      profileType: 'ssid',
       details: {},
     },
   ],

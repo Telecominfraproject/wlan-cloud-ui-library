@@ -29,6 +29,8 @@ const PasspointProfileForm = ({
   ssidProfiles,
   childProfiles,
   idProviderProfiles,
+  associatedSsidProfiles,
+  osuSsidProfile,
   fileUpload,
   onSearchProfile,
   onFetchMoreProfiles,
@@ -48,7 +50,7 @@ const PasspointProfileForm = ({
   );
 
   const [selectedChildSsids, setSelectedChildSsids] = useState(
-    childProfiles.filter(
+    associatedSsidProfiles.filter(
       i => i.profileType === 'ssid' && i.id !== details?.osuSsidProfileId?.toString()
     ) || []
   );
@@ -58,7 +60,6 @@ const PasspointProfileForm = ({
   );
 
   useEffect(() => {
-    const selectedSsid = childProfiles?.find(o => o.id === details?.osuSsidProfileId?.toString());
     const selectedVenue = childProfiles?.find(
       o => o.id === details?.passpointVenueProfileId?.toString()
     );
@@ -91,9 +92,9 @@ const PasspointProfileForm = ({
         })) || [],
       osuSsidProfileId:
         {
-          value: selectedSsid?.id || null,
-          key: selectedSsid?.id || null,
-          label: selectedSsid?.name || null,
+          value: osuSsidProfile?.id || null,
+          key: osuSsidProfile?.id || null,
+          label: osuSsidProfile?.name || null,
         } || null,
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
@@ -567,6 +568,8 @@ PasspointProfileForm.propTypes = {
   ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
+  associatedSsidProfiles: PropTypes.instanceOf(Array),
+  osuSsidProfile: PropTypes.instanceOf(Object),
   fileUpload: PropTypes.func,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -585,6 +588,8 @@ PasspointProfileForm.defaultProps = {
   ssidProfiles: [],
   childProfiles: [],
   idProviderProfiles: [],
+  associatedSsidProfiles: [],
+  osuSsidProfile: {},
   fileUpload: () => {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
