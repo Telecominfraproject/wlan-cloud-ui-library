@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu as AntdMenu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const { Item, SubMenu } = AntdMenu;
 
 const Menu = ({ mode, menuItems, onMenuItemClick, ...restProps }) => {
+  const location = useLocation();
+
+  const selectedKeys = location.pathname.split('/');
+
   const getMenuItem = item => (
     <Item key={item.key}>
       <Link onClick={onMenuItemClick} to={item.path}>
@@ -27,7 +31,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, ...restProps }) => {
   });
 
   return (
-    <AntdMenu mode={mode} theme="dark" {...restProps}>
+    <AntdMenu mode={mode} theme="dark" selectedKeys={selectedKeys} {...restProps}>
       {items}
     </AntdMenu>
   );

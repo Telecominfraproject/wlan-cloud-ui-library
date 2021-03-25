@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useLocation } from 'react-router-dom';
-import { Layout, Drawer, Badge } from 'antd';
-import { MenuOutlined, BellFilled, BellOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { Layout, Drawer } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 
 import SettingsDropdown from 'components/SettingsDropdown';
 import ThemeContext from 'contexts/ThemeContext';
+
 import Menu from './components/Menu';
+import Alarm from './components/Alarm';
+
 import styles from './index.module.scss';
 
 const { Header } = Layout;
@@ -14,7 +17,6 @@ const { Header } = Layout;
 const Navbar = ({
   menuItems,
   mobileMenuItems,
-  locationState,
   collapsed,
   isMobile,
   onMenuToggle,
@@ -25,9 +27,6 @@ const Navbar = ({
   currentUserId,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
-  const location = useLocation();
-
-  const selectedKeys = locationState.pathname.split('/');
 
   const renderRightMenuIcon = () => {
     if (isMobile) {
@@ -61,25 +60,14 @@ const Navbar = ({
           <Menu
             mode="inline"
             menuItems={mobileMenuItems || menuItems}
-            selectedKeys={selectedKeys}
             onMenuItemClick={onMenuItemClick}
           />
         </Drawer>
       ) : (
-        <Menu menuItems={menuItems} selectedKeys={selectedKeys} onMenuItemClick={onMenuItemClick} />
+        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} />
       )}
       <div className={styles.RightMenu}>
-        {totalAlarms !== null && (
-          <Link to={routes.alarms}>
-            <Badge count={totalAlarms} showZero>
-              {location.pathname === routes.alarms ? (
-                <BellFilled className={styles.BellIconActive} />
-              ) : (
-                <BellOutlined className={styles.BellIcon} />
-              )}
-            </Badge>
-          </Link>
-        )}
+        {totalAlarms !== null && <Alarm routes={routes} totalAlarms={totalAlarms} />}
         {renderRightMenuIcon()}
       </div>
     </Header>
@@ -87,7 +75,6 @@ const Navbar = ({
 };
 
 Navbar.propTypes = {
-  locationState: PropTypes.instanceOf(Object).isRequired,
   collapsed: PropTypes.bool.isRequired,
   isMobile: PropTypes.bool.isRequired,
   onMenuToggle: PropTypes.func.isRequired,
