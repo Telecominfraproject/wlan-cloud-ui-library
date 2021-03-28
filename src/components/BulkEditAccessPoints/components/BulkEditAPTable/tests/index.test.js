@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent } from '@testing-library/react';
 
 import React from 'react';
 import { render } from 'tests/utils';
@@ -116,13 +116,13 @@ describe('<BulkEditAPTableComp />', () => {
     fireEvent.change(input, { target: { value: '37, 8, 157' } });
     fireEvent.keyDown(input, ENTER);
 
-    await waitFor(() => expect(tableCell).toBeVisible());
+    expect(input.value).toBe('37, 8, 157');
 
     fireEvent.click(tableCell);
     fireEvent.click(input);
     fireEvent.change(input, { target: { value: '36, 6, 149' } });
     fireEvent.keyDown(input, ENTER);
 
-    await waitFor(() => expect(tableCell).toBeVisible());
+    expect(input.value).toBe('36, 6, 149');
   });
 });

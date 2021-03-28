@@ -413,7 +413,7 @@ describe('<PasspointProfileForm />', () => {
     expect(getByText('You can only upload a JPG/PNG file!')).toBeVisible();
   });
 
-  it('uploading a termsAndConditionsFile in png format should add image on screen', () => {
+  it('uploading a termsAndConditionsFile in png format should add image on screen', async () => {
     const PasspointProfileFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -422,19 +422,19 @@ describe('<PasspointProfileForm />', () => {
         </Form>
       );
     };
-    const { getByTestId, getByRole, getByText } = render(<PasspointProfileFormComp />);
+    const { getByTestId, getByText } = render(<PasspointProfileFormComp />);
 
     const pngFile = new File(['(⌐□_□)'], 'testImg.png', {
       type: 'image/png',
     });
 
     fireEvent.change(getByTestId('termsAndConditionsUpload'), { target: { files: [pngFile] } });
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
-
-    fireEvent.click(getByRole('button', { name: /remove file/i }));
+    await waitFor(() => {
+      expect(getByText(pngFile.name)).toBeInTheDocument();
+    });
   });
 
-  it('uploading a termsAndConditionsFile in jpg format should add image on screen', () => {
+  it('uploading a termsAndConditionsFile in jpg format should add image on screen', async () => {
     const PasspointProfileFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -450,7 +450,10 @@ describe('<PasspointProfileForm />', () => {
     });
 
     fireEvent.change(getByTestId('termsAndConditionsUpload'), { target: { files: [jpgFile] } });
-    expect(getByText(/testImg\.jpg/)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(jpgFile.name)).toBeInTheDocument();
+    });
   });
 
   it('deleting uploaded termsAndConditionsFile should remove image from screen', async () => {
@@ -469,7 +472,10 @@ describe('<PasspointProfileForm />', () => {
     });
 
     fireEvent.change(getByTestId('termsAndConditionsUpload'), { target: { files: [pngFile] } });
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(pngFile.name)).toBeInTheDocument();
+    });
 
     fireEvent.click(getByRole('button', { name: /remove file/i }));
 
