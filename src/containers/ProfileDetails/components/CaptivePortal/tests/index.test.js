@@ -345,14 +345,14 @@ describe('<CaptivePortalForm />', () => {
         name: /login success text/i,
       })
     );
-    expect(getByTestId('bodyContent')).toHaveDisplayValue('Welcome to the network');
+    expect(getByTestId('successPageMarkdownText')).toHaveDisplayValue('Welcome to the network');
 
     fireEvent.click(
       getByRole('button', {
         name: /user acceptance policy text/i,
       })
     );
-    expect(getByTestId('bodyContent')).toHaveDisplayValue(
+    expect(getByTestId('userAcceptancePolicy')).toHaveDisplayValue(
       'Use this network at your own risk. No warranty of any kind.'
     );
   });
