@@ -50,8 +50,7 @@ const SSIDForm = ({
       });
     });
 
-    const radiusProfile =
-      childProfiles.find(profile => profile?.profileType === PROFILES.radius) ?? {};
+    const radiusProfile = childProfiles.find(profile => profile?.profileType === PROFILES.radius);
 
     form.setFieldsValue({
       ssid: details?.ssid || '',
@@ -70,8 +69,8 @@ const SSIDForm = ({
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
       vlanId: details.vlanId || defaultSsidProfile.vlanId,
       radiusServiceId: {
-        value: radiusProfile.id ?? null,
-        label: radiusProfile.name ?? null,
+        value: radiusProfile?.id || null,
+        label: radiusProfile?.name || null,
       },
       ...radioBasedValues,
       childProfileIds: [],
