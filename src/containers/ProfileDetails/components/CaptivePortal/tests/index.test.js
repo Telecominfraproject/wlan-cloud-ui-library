@@ -494,22 +494,26 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  it('uploading a logo image in png format should add image on screen', () => {
+  it('uploading a logo image in png format should add image on screen', async () => {
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('logoFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
-    expect(input.files).toHaveLength(1);
+    await (() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
   });
 
-  it('uploading a logo image in jpg format should add image on screen', () => {
+  it('uploading a logo image in jpg format should add image on screen', async () => {
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('logoFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
-    expect(input.files).toHaveLength(1);
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
   });
 
   it('uploading a logo image with file size greater then 400KB should display error message', async () => {
@@ -530,12 +534,16 @@ describe('<CaptivePortalForm />', () => {
 
     const input = getByTestId('logoFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
 
     fireEvent.click(getByRole('button', { name: /remove file/i }));
 
     await waitFor(() => {
-      expect(queryByText(/testImg\.png/)).not.toBeInTheDocument();
+      expect(queryByText(file.name)).not.toBeInTheDocument();
     });
   });
 
@@ -552,22 +560,26 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  it('uploading a background image in png format should add image on screen', () => {
+  it('uploading a background image in png format should add image on screen', async () => {
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
-    expect(input.files).toHaveLength(1);
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
   });
 
-  it('uploading a background image in jpg format should add image on screen', () => {
+  it('uploading a background image in jpg format should add image on screen', async () => {
     const { getByTestId, getByText } = render(<CaptivePortalFormComp />);
 
     const input = getByTestId('backgroundFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
-    expect(input.files).toHaveLength(1);
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
   });
 
   it('uploading a backgroundFile image with file size greater then 400KB should display error message', async () => {
@@ -588,12 +600,16 @@ describe('<CaptivePortalForm />', () => {
 
     const input = getByTestId('backgroundFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
 
     fireEvent.click(getByRole('button', { name: /remove file/i }));
 
     await waitFor(() => {
-      expect(queryByText(/testImg\.png/)).not.toBeInTheDocument();
+      expect(queryByText(file.name)).not.toBeInTheDocument();
     });
   });
 
@@ -602,7 +618,11 @@ describe('<CaptivePortalForm />', () => {
 
     const input = getByTestId('backgroundFile');
     userEvent.upload(input, file);
-    expect(getByText(/testImg\.png/)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(getByText(file.name)).toBeInTheDocument();
+      expect(input.files).toHaveLength(1);
+    });
 
     fireEvent.click(getByRole('link', { name: /preview file/i }));
 

@@ -8,7 +8,6 @@ import {
 } from './utils';
 
 const fakeSsid = generateSsidProfile();
-const fakeSsid2 = generateSsidProfile();
 
 export const mockAccessPoint = {
   details: {
@@ -191,7 +190,6 @@ export const mockVenue = {
     },
   },
 };
-
 export const mockPasspoint = {
   details: {
     accessNetworkType: 'private_network',
@@ -223,9 +221,8 @@ export const mockPasspoint = {
     termsAndConditionsFile: null,
     unauthenticatedEmergencyServiceAccessible: false,
   },
-  childProfileIds: [fakeSsid.id, '30', '20', '10'],
+  childProfileIds: ['30', '20', '10'],
   childProfiles: [
-    fakeSsid,
     {
       id: '30',
       name: 'Venue-Profile',
@@ -245,12 +242,39 @@ export const mockPasspoint = {
       details: {},
     },
   ],
+  associatedSsidProfiles: [
+    {
+      id: '40',
+      name: 'ssid-profile-1',
+      profileType: 'ssid',
+      details: {},
+    },
+  ],
   venueProfiles: [
     {
       id: '30',
       name: 'Venue-Profile',
       profileType: 'passpoint_venue',
-      details: mockVenue,
+      details: {
+        model_type: 'PasspointVenueProfile',
+        profileType: 'passpoint_venue',
+        venueNameSet: [
+          {
+            asDuple: 'fra:Exemple de lieu',
+            defaultDupleSeparator: ':',
+            dupleName: 'Exemple de lieu',
+            locale: 'fra_CA',
+            model_type: 'PasspointVenueName',
+            venueUrl: 'http://www.example.com/info-fra',
+          },
+        ],
+        venueTypeAssignment: {
+          model_type: 'ProfileVenueTypeAssignment',
+          venueDescription: null,
+          venueGroupId: 2,
+          venueTypeId: 8,
+        },
+      },
     },
   ],
   operatorProfiles: [
@@ -258,7 +282,20 @@ export const mockPasspoint = {
       id: '10',
       name: 'Operator-Profile',
       profileType: 'passpoint_operator',
-      details: mockOperator,
+      details: {
+        operatorFriendlyName: [
+          {
+            asDuple: 'eng:test',
+            defaultDupleSeparator: ':',
+            dupleIso3Language: 'eng',
+            dupleName: 'test',
+            locale: 'eng',
+            model_type: 'PasspointDuple',
+          },
+        ],
+        serverOnlyAuthenticatedL2EncriptionNetwork: true,
+        x509CertificateLocation: '/etc/ca.pem',
+      },
     },
   ],
   idProviderProfiles: [
@@ -275,7 +312,116 @@ export const mockPasspoint = {
       details: {},
     },
   ],
-  ssidProfiles: [fakeSsid, fakeSsid2],
+  ssidProfiles: [
+    {
+      id: '40',
+      name: 'ssid-profile-1',
+      profileType: 'ssid',
+      details: {
+        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
+        bandwidthLimitDown: 0,
+        bandwidthLimitUp: 0,
+        bonjourGatewayProfileId: null,
+        broadcastSsid: 'enabled',
+        captivePortalId: null,
+        enable80211w: null,
+        forwardMode: null,
+        keyRefresh: 0,
+        keyStr: 'testing123',
+        model_type: 'SsidConfiguration',
+        noLocalSubnets: false,
+        profileType: 'ssid',
+        radioBasedConfigs: {
+          is2dot4GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzL: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzU: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+        },
+        radiusServiceName: 'Radius-Profile',
+        secureMode: 'wpaEAP',
+        ssid: 'Default-SSID-1594386919128',
+        ssidAdminState: 'enabled',
+        videoTrafficOnly: false,
+        vlanId: 1,
+        wepConfig: null,
+      },
+      __typename: 'Profile',
+    },
+    {
+      id: '41',
+      name: 'ssid-profile-2',
+      profileType: 'ssid',
+      details: {
+        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
+        bandwidthLimitDown: 0,
+        bandwidthLimitUp: 0,
+        bonjourGatewayProfileId: null,
+        broadcastSsid: 'enabled',
+        captivePortalId: null,
+        enable80211w: null,
+        forwardMode: null,
+        keyRefresh: 0,
+        keyStr: null,
+        model_type: 'SsidConfiguration',
+        noLocalSubnets: false,
+        profileType: 'ssid',
+        radioBasedConfigs: {
+          is2dot4GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHz: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzL: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+          is5GHzU: {
+            model_type: 'RadioBasedSsidConfiguration',
+            enable80211r: null,
+            enable80211k: null,
+            enable80211v: null,
+          },
+        },
+        radiusServiceName: null,
+        secureMode: 'open',
+        ssid: 'TipWlan-cloud-3-radios',
+        ssidAdminState: 'enabled',
+        videoTrafficOnly: false,
+        vlanId: 1,
+        wepConfig: null,
+      },
+      __typename: 'Profile',
+    },
+  ],
   onSearchProfile: () => {},
 };
 

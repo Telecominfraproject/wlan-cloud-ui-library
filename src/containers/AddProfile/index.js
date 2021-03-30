@@ -143,14 +143,14 @@ const AddProfile = ({
         }
 
         if (profileType === PROFILES.passpoint) {
-          if (!values.passpointVenueProfileId) {
+          if (!values.passpointVenueProfileId?.value) {
             notification.error({
               message: 'Error',
               description: 'A Venue Profile is required.',
             });
             return;
           }
-          if (!values.passpointOperatorProfileId) {
+          if (!values.passpointOperatorProfileId?.value) {
             notification.error({
               message: 'Error',
               description: 'A Operator Profile is required.',
@@ -164,8 +164,14 @@ const AddProfile = ({
             });
             return;
           }
+          if (!values.osuSsidProfileId) {
+            notification.error({
+              message: 'Error',
+              description: 'An SSID Profile is required.',
+            });
+            return;
+          }
 
-          values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(
             formattedData,

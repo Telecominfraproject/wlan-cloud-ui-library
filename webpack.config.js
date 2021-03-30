@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -7,10 +9,11 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
     filename: 'index.js',
-    library: 'wlan-cloud-ui-library',
+    library: '@tip-wlan/wlan-cloud-ui-library',
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },
+
   externals: [
     {
       react: {
@@ -19,17 +22,40 @@ module.exports = {
         commonjs2: 'react',
         root: 'React',
       },
+      lodash: {
+        commonjs: 'lodash',
+        commonjs2: 'lodash',
+        amd: 'lodash',
+        root: '_', // indicates global variable
+      },
+      'babel-runtime': {
+        commonjs: 'babel-runtime',
+        commonjs2: 'babel-runtime',
+      },
+      'babel-polyfill': {
+        commonjs: 'babel-polyfill',
+        commonjs2: 'babel-polyfill',
+      },
+      moment: {
+        root: 'moment',
+        commonjs2: 'moment',
+        commonjs: 'moment',
+        amd: 'moment',
+      },
     },
+    /^highcharts\/.+$/,
     'react-dom',
     'antd',
     '@ant-design/icons',
+    '@babel/core',
+    'highcharts-react-official',
     'prop-types',
     'react-router-dom',
+    'react-jsx-highcharts',
+    'react-jsx-highstock',
+    'uuid',
   ],
-  devtool: 'inline-source-map',
-  devServer: {
-    port: 3000,
-  },
+
   module: {
     rules: [
       {
@@ -55,7 +81,9 @@ module.exports = {
           {
             loader: 'less-loader',
             options: {
-              javascriptEnabled: true,
+              lessOptions: {
+                javascriptEnabled: true,
+              },
             },
           },
         ],
@@ -83,6 +111,7 @@ module.exports = {
       },
     ],
   },
+
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
     alias: {
@@ -95,4 +124,10 @@ module.exports = {
       'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom'),
     },
   },
+
+  plugins: [
+    new CleanWebpackPlugin(),
+
+    // new BundleAnalyzerPlugin(),
+  ],
 };

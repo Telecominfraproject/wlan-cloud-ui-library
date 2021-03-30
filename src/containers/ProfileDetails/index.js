@@ -53,6 +53,8 @@ const ProfileDetails = ({
   venueProfiles,
   operatorProfiles,
   idProviderProfiles,
+  associatedSsidProfiles,
+  osuSsidProfile,
   fileUpload,
   onDownloadFile,
   extraButtons,
@@ -154,14 +156,14 @@ const ProfileDetails = ({
         }
 
         if (profileType === PROFILES.passpoint) {
-          if (!values.passpointVenueProfileId) {
+          if (!values.passpointVenueProfileId?.value) {
             notification.error({
               message: 'Error',
               description: 'A Venue Profile is required.',
             });
             return;
           }
-          if (!values.passpointOperatorProfileId) {
+          if (!values.passpointOperatorProfileId?.value) {
             notification.error({
               message: 'Error',
               description: 'A Operator Profile is required.',
@@ -182,7 +184,6 @@ const ProfileDetails = ({
             });
             return;
           }
-          values.associatedAccessSsidProfileIds.forEach(i => formattedData.childProfileIds.push(i));
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
         }
@@ -306,6 +307,8 @@ const ProfileDetails = ({
             venueProfiles={venueProfiles}
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}
+            associatedSsidProfiles={associatedSsidProfiles}
+            osuSsidProfile={osuSsidProfile}
             fileUpload={fileUpload}
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
@@ -346,6 +349,8 @@ ProfileDetails.propTypes = {
   idProviderProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
+  associatedSsidProfiles: PropTypes.instanceOf(Array),
+  osuSsidProfile: PropTypes.instanceOf(Object),
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -372,6 +377,8 @@ ProfileDetails.defaultProps = {
   idProviderProfiles: [],
   childProfileIds: [],
   childProfiles: [],
+  associatedSsidProfiles: [],
+  osuSsidProfile: {},
   extraButtons: null,
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
