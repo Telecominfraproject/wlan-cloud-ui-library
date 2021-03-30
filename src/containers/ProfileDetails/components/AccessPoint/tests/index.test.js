@@ -51,17 +51,7 @@ const mockProps = {
     syslogRelay: null,
     vlan: 0,
     vlanNative: true,
-    greTunnelConfigurations: [
-      {
-        model_type: 'GreTunnelConfiguration',
-        greTunnelName: 'gre5',
-        greRemoteInetAddr: '192.168.0.12',
-        greParentIfName: 'wan',
-        greRemoteMacAddr: {
-          addressAsString: '00:0a:95:9d:68:16',
-        },
-      },
-    ],
+    greTunnelConfigurations: [],
   },
   childProfileIds: [3],
   childProfiles: [
