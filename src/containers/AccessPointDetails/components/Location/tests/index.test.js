@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitForElement, waitFor } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitForElement, waitFor } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import { defaultProps } from '../../../tests/constants';
 import Location from '..';
 
@@ -19,13 +19,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<Location />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('handleSubmit should  be called on location tab with Level 2 as new locationID', async () => {
     const submitSpy = jest.fn();
     const { getByRole, getByLabelText, getByText } = render(

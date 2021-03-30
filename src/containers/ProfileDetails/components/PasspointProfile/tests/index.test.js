@@ -1,9 +1,11 @@
 // test file for passpoint Fom
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
 import { Form } from 'antd';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
+
+import { mockPasspoint } from '../../../tests/constants';
 
 import PasspointProfileForm from '..';
 
@@ -21,249 +23,10 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    accessNetworkType: 'private_network',
-    anqpDomainId: 0,
-    associatedAccessSsidProfileIds: [],
-    connectionCapabilitySet: [
-      {
-        connectionCapabilitiesIpProtocol: 'TCP',
-        connectionCapabilitiesPortNumber: 9000,
-        connectionCapabilitiesStatus: 'open',
-      },
-    ],
-    disableDownstreamGroupAddressedForwarding: true,
-    emergencyServicesReachable: true,
-    enableInterworkingAndHs20: true,
-    gasAddr3Behaviour: 'p2pSpecWorkaroundFromRequest',
-    hessid: {
-      addressAsString: '0a:0b:0c:0d:0e:0f',
-    },
-    internetConnectivity: true,
-    ipAddressTypeAvailability: 'address_type_not_available',
-    networkAuthenticationType: 'acceptance_of_terms_and_conditions',
-    operatingClass: 0,
-    passpointAccessNetworkType: 'private_network',
-    passpointOperatorProfileId: 10,
-    passpointOsuProviderProfileIds: [20, 21],
-    passpointVenueProfileId: 30,
-    osuSsidProfileId: 2,
-    termsAndConditionsFile: null,
-    unauthenticatedEmergencyServiceAccessible: false,
-  },
-  childProfileIds: ['40', '30', '20', '10'],
-  childProfiles: [
-    {
-      id: '40',
-      name: 'ssid-profile-1',
-      profileType: 'ssid',
-      details: {},
-    },
-    {
-      id: '30',
-      name: 'Venue-Profile',
-      profileType: 'passpoint_venue',
-      details: {},
-    },
-    {
-      id: '20',
-      name: 'Id-Provider-Profile-1',
-      profileType: 'passpoint_osu_id_provider',
-      details: {},
-    },
-    {
-      id: '10',
-      name: 'Operator-Profile',
-      profileType: 'passpoint_operator',
-      details: {},
-    },
-  ],
-  venueProfiles: [
-    {
-      id: '30',
-      name: 'Venue-Profile',
-      profileType: 'passpoint_venue',
-      details: {
-        model_type: 'PasspointVenueProfile',
-        profileType: 'passpoint_venue',
-        venueNameSet: [
-          {
-            asDuple: 'fra:Exemple de lieu',
-            defaultDupleSeparator: ':',
-            dupleName: 'Exemple de lieu',
-            locale: 'fra_CA',
-            model_type: 'PasspointVenueName',
-            venueUrl: 'http://www.example.com/info-fra',
-          },
-        ],
-        venueTypeAssignment: {
-          model_type: 'ProfileVenueTypeAssignment',
-          venueDescription: null,
-          venueGroupId: 2,
-          venueTypeId: 8,
-        },
-      },
-    },
-  ],
-  operatorProfiles: [
-    {
-      id: '10',
-      name: 'Operator-Profile',
-      profileType: 'passpoint_operator',
-      details: {
-        operatorFriendlyName: [
-          {
-            asDuple: 'eng:test',
-            defaultDupleSeparator: ':',
-            dupleIso3Language: 'eng',
-            dupleName: 'test',
-            locale: 'eng',
-            model_type: 'PasspointDuple',
-          },
-        ],
-        serverOnlyAuthenticatedL2EncriptionNetwork: true,
-        x509CertificateLocation: '/etc/ca.pem',
-      },
-    },
-  ],
-  idProviderProfiles: [
-    {
-      id: '20',
-      name: 'Id-Provider-Profile-1',
-      profileType: 'passpoint_osu_id_provider',
-      details: {},
-    },
-    {
-      id: '21',
-      name: 'Id-Provider-Profile-2',
-      profileType: 'passpoint_osu_id_provider',
-      details: {},
-    },
-  ],
-  ssidProfiles: [
-    {
-      id: '40',
-      name: 'ssid-profile-1',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: 'testing123',
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: 'Radius-Profile',
-        secureMode: 'wpaEAP',
-        ssid: 'Default-SSID-1594386919128',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: '41',
-      name: 'ssid-profile-2',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: null,
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: null,
-        secureMode: 'open',
-        ssid: 'TipWlan-cloud-3-radios',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-  ],
-  onSearchProfile: () => {},
-};
-
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<PasspointProfileForm />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('Should still work when passpointVenueProfileId is null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockPasspoint.details,
       details: {
         passpointVenueProfileId: null,
       },
@@ -286,7 +49,7 @@ describe('<PasspointProfileForm />', () => {
 
   it('Should still work when passpointOperatorProfileId is null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockPasspoint.details,
       details: {
         passpointOperatorProfileId: null,
       },
@@ -309,7 +72,7 @@ describe('<PasspointProfileForm />', () => {
 
   it('Should still work when passpointOsuProviderProfileIds is null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockPasspoint.details,
       details: {
         passpointOsuProviderProfileIds: null,
       },
@@ -332,7 +95,7 @@ describe('<PasspointProfileForm />', () => {
 
   it('Should still work when osuSsidProfileId is null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockPasspoint.details,
       details: {
         osuSsidProfileId: null,
       },
@@ -358,7 +121,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -373,7 +136,7 @@ describe('<PasspointProfileForm />', () => {
 
   it('should work when termsAndConditionsFile is not null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockPasspoint.details,
       details: {
         termsAndConditionsFile: {
           apExportUrl: 'example.com',
@@ -397,7 +160,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -416,7 +179,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -437,7 +200,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -456,7 +219,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -481,7 +244,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -499,7 +262,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -519,7 +282,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -538,7 +301,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -573,7 +336,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -591,7 +354,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -609,7 +372,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -627,7 +390,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
@@ -645,12 +408,12 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };
 
-    const { queryAllByText, getByText, container } = render(<PasspointProfileFormComp />);
+    const { getByRole, getByText, container } = render(<PasspointProfileFormComp />);
     const selectInputFiled = container.querySelector(
       '[data-testid=ssidProfile] > .ant-select-selector span input'
     );
@@ -661,11 +424,13 @@ describe('<PasspointProfileForm />', () => {
     fireEvent.mouseDown(selectInput);
     fireEvent.keyDown(selectInput, DOWN_ARROW);
 
-    await waitForElement(() => getByText('ssid-profile-2'));
-    fireEvent.click(getByText('ssid-profile-2'));
+    const profileName = mockPasspoint.ssidProfiles[1].name;
+
+    await waitForElement(() => getByText(profileName));
+    fireEvent.click(getByText(profileName));
+
     await waitFor(() => {
-      expect(queryAllByText('ssid-profile-1')[0]).toBeVisible();
-      expect(queryAllByText('ssid-profile-2')[0]).toBeVisible();
+      expect(getByRole('cell', { name: profileName })).toBeVisible();
     });
   });
 
@@ -674,7 +439,7 @@ describe('<PasspointProfileForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <PasspointProfileForm {...mockProps} form={form} />
+          <PasspointProfileForm {...mockPasspoint} form={form} />
         </Form>
       );
     };

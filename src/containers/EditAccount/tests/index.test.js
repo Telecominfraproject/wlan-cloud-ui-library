@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 import { render } from 'tests/utils';
 import EditAccount from '..';
@@ -20,8 +20,6 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 describe('<EditAccount />', () => {
-  afterEach(cleanup);
-
   it('should not call onSubmit if both password fields are empty', async () => {
     const submitSpy = jest.fn();
     const { getByTestId, getByText } = render(<EditAccount email="" onSubmit={submitSpy} />);

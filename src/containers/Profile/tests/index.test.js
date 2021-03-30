@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render, ROUTES } from 'tests/utils';
 import { screen } from '@testing-library/dom';
@@ -33,8 +33,6 @@ const mockProps = {
 };
 
 describe('<Profile />', () => {
-  afterEach(cleanup);
-
   it('should call default onReload if reload button is clicked and no onReload function is', async () => {
     const { getByRole } = render(
       <Router>

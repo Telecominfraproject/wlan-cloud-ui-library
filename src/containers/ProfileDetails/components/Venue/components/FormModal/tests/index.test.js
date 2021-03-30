@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import FormModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -26,11 +26,7 @@ const MISSING_NAME = 'Name field cannot be empty';
 const MISSING_LOCALE = 'Locale field cannot be empty';
 const INVALID_URL = 'Please enter URL in the format http://... or https://...';
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<FormModal />', () => {
-  afterEach(cleanup);
-
   it('Invalid model error should show if model form contains invalid model id', async () => {
     const submitSpy = jest.fn();
 

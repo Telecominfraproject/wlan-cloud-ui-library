@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { screen } from '@testing-library/dom';
 import { render } from 'tests/utils';
 import userEvent from '@testing-library/user-event';
@@ -32,10 +32,6 @@ const mockProps = {
 };
 
 describe('<Manufacturer />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('onSearchOUI should be called when correct OUI string is submitted', async () => {
     const searchSpy = jest.fn();
 

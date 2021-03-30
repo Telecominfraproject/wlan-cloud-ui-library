@@ -1,8 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
+import { mockBonjourGateway } from '../../../tests/constants';
 
 import BonjourGateway from '..';
 
@@ -20,46 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockData = {
-  profileType: 'bonjour',
-  name: 'bonjour-profile',
-  details: {
-    model_type: 'BonjourGatewayProfile',
-    profileDescription: 'test-description',
-    profileType: 'bonjour',
-    bonjourServices: [
-      {
-        model_type: 'BonjourServiceSet',
-        vlanId: null,
-        supportAllServices: false,
-        serviceNames: ['AirPlay', 'GoogleCast', 'SFTP', 'SAMBA'],
-      },
-      {
-        model_type: 'BonjourServiceSet',
-        vlanId: 17,
-        supportAllServices: false,
-        serviceNames: ['AirPort', 'SFTP'],
-      },
-      {
-        model_type: 'BonjourServiceSet',
-        vlanId: 33,
-        supportAllServices: false,
-        serviceNames: ['AirTunes', 'SFTP', 'AFP'],
-      },
-      {
-        model_type: 'BonjourServiceSet',
-        vlanId: 35,
-        supportAllServices: false,
-        serviceNames: ['AirTunes', 'SFTP'],
-      },
-    ],
-  },
-  __typename: 'Profile',
-};
-
 describe('<BonjourGateway />', () => {
-  afterEach(cleanup);
-
   it('Form should load with the initial inputs for VLAN and Services if details object is empty', async () => {
     const BonjourGatewayForm = () => {
       const [form] = Form.useForm();
@@ -118,7 +80,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -136,7 +98,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -157,7 +119,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -176,7 +138,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -198,7 +160,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -218,7 +180,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -239,7 +201,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -264,7 +226,7 @@ describe('<BonjourGateway />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <BonjourGateway form={form} {...mockData} />
+          <BonjourGateway form={form} {...mockBonjourGateway} />
         </Form>
       );
     };
@@ -278,7 +240,7 @@ describe('<BonjourGateway />', () => {
     });
 
     fireEvent.change(getByTestId('vlanInput4'), {
-      target: { value: mockData.details.bonjourServices[1].vlanId },
+      target: { value: mockBonjourGateway.details.bonjourServices[1].vlanId },
     });
 
     await waitFor(() => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import { render } from 'tests/utils';
 import Users from '..';
 
@@ -56,8 +56,6 @@ const mockProps = {
 };
 
 describe('<Users />', () => {
-  beforeEach(cleanup);
-
   it('Add User button press should show Add User modal', async () => {
     const { getByRole, getByText } = render(<Users {...mockProps} />);
 

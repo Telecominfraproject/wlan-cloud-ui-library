@@ -1,7 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, within, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, within, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
+import { mockProps } from './constants';
 import AutoProvision from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -18,192 +19,9 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  data: {
-    id: '2',
-    name: 'Test Customer',
-    email: 'test@example.com',
-    createdTimestamp: '1595550085649',
-    lastModifiedTimestamp: '1595599101464',
-    details: {
-      model_type: 'CustomerDetails',
-      autoProvisioning: {
-        model_type: 'EquipmentAutoProvisioningSettings',
-        enabled: true,
-        locationId: 8,
-        equipmentProfileIdPerModel: {
-          default: 6,
-          ECW5410: 7,
-          TIP_AP: 7,
-          ECW5211: 7,
-          AP2220: 7,
-          EA8300: 6,
-        },
-      },
-    },
-    __typename: 'Customer',
-  },
-  dataLocation: [
-    {
-      id: '2',
-      name: 'Menlo Park',
-      parentId: '0',
-      locationType: 'SITE',
-      __typename: 'Location',
-    },
-    {
-      id: '3',
-      name: 'Building 1',
-      parentId: '2',
-      locationType: 'BUILDING',
-      __typename: 'Location',
-    },
-    {
-      id: '8',
-      name: 'Ottawa',
-      parentId: '0',
-      locationType: 'SITE',
-      __typename: 'Location',
-    },
-  ],
-  dataProfile: [
-    {
-      id: '6',
-      name: 'ApProfile-3-radios',
-      profileType: 'equipment_ap',
-      details: {
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        equipmentType: 'AP',
-        vlanNative: true,
-        vlan: 0,
-        ntpServer: {
-          model_type: 'AutoOrManualString',
-          auto: true,
-          value: 'pool.ntp.org',
-        },
-        syslogRelay: null,
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        ledControlEnabled: true,
-        equipmentDiscovery: false,
-        radioMap: {
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzU: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzL: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        profileType: 'equipment_ap',
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: '7',
-      name: 'ApProfile-2-radios',
-      profileType: 'equipment_ap',
-      details: {
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        equipmentType: 'AP',
-        vlanNative: true,
-        vlan: 0,
-        ntpServer: {
-          model_type: 'AutoOrManualString',
-          auto: true,
-          value: 'pool.ntp.org',
-        },
-        syslogRelay: null,
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        ledControlEnabled: true,
-        equipmentDiscovery: false,
-        radioMap: {
-          is5GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        profileType: 'equipment_ap',
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: '8',
-      name: 'EnterpriseApProfile',
-      profileType: 'equipment_ap',
-      details: {
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        equipmentType: 'AP',
-        vlanNative: true,
-        vlan: 0,
-        ntpServer: {
-          model_type: 'AutoOrManualString',
-          auto: true,
-          value: 'pool.ntp.org',
-        },
-        syslogRelay: null,
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        ledControlEnabled: true,
-        equipmentDiscovery: false,
-        radioMap: {
-          is5GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzU: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzL: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        profileType: 'equipment_ap',
-      },
-      __typename: 'Profile',
-    },
-  ],
-  loadingLoaction: false,
-  loadingProfile: false,
-  errorLocation: null,
-  errorProfile: null,
-};
-
-const DOWN_ARROW = { keyCode: 40 };
-
 const models = ['default', 'ECW5410', 'TIP_AP', 'ECW5211', 'AP2220', 'EA8300'];
 
 describe('<AutoProvision />', () => {
-  afterEach(cleanup);
-
   it('onUpdateCustomer should be called if auto provision toggle is set to enabled  and user saves', async () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />);
@@ -357,7 +175,7 @@ describe('<AutoProvision />', () => {
 
   it('onUpdateCustomer should be called if add model form is valid', async () => {
     const submitSpy = jest.fn();
-    const { getByRole, getByText, getByLabelText, getAllByRole, getAllByText } = render(
+    const { getByRole, getByText, getByLabelText, getAllByRole } = render(
       <AutoProvision {...mockProps} onUpdateCustomer={submitSpy} />
     );
 
@@ -369,8 +187,8 @@ describe('<AutoProvision />', () => {
 
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.dataProfile[0].name)[2]);
-    fireEvent.click(getAllByText(mockProps.dataProfile[0].name)[2]);
+    await waitForElement(() => getByText(mockProps.dataProfile[0].name), { timeout: 10000 });
+    fireEvent.click(getByText(mockProps.dataProfile[0].name));
 
     fireEvent.click(getAllByRole('button', { name: /Save/i })[1]);
 

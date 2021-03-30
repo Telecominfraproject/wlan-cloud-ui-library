@@ -1,6 +1,5 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup } from '@testing-library/react';
 import { render } from 'tests/utils';
 import HighChartGraph from '..';
 
@@ -34,8 +33,6 @@ const osData = {
 };
 
 describe('<HighChartGraph />', () => {
-  afterEach(cleanup);
-
   it('Render HighChartGraph', async () => {
     render(<HighChartGraph osData={osData} />);
   });

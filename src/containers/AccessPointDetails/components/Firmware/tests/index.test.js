@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitFor, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import { firmware } from '../../../tests/constants';
 import Firmware from '..';
 
@@ -23,12 +23,7 @@ const defaultProps = {
   loadingFirmware: false,
 };
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<Firmware />', () => {
-  afterEach(() => {
-    cleanup();
-  });
   it('firmware should Render Without Data', async () => {
     const { getByText } = render(<Firmware firmware={firmware} {...defaultProps} />);
 
@@ -85,8 +80,9 @@ describe('<Firmware />', () => {
     const targetVersion = getByRole('combobox');
 
     fireEvent.keyDown(targetVersion, DOWN_ARROW);
-    await waitForElement(() => getByText('ap2220-2020-06-25-ce03472'));
-    fireEvent.click(getByText('ap2220-2020-06-25-ce03472'));
+
+    await waitForElement(() => getByText(firmware[0].versionName));
+    fireEvent.click(getByText(firmware[0].versionName));
   });
 
   it('cancel button should hide the reboot model', async () => {
