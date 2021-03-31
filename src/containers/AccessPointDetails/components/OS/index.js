@@ -5,7 +5,7 @@ import { LineChartOutlined } from '@ant-design/icons';
 
 import Timer from 'components/Timer';
 import SolidGauge from './components/SolidGauge';
-import HighChartGraph from './components/HighChartGraph';
+import CombinedGraph from './components/CombinedGraph';
 
 import styles from '../../index.module.scss';
 
@@ -90,7 +90,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         <SolidGauge data={memory} title="Current Free Memory" />
         <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>
-      <HighChartGraph
+      <CombinedGraph
         loading={osData?.loading}
         cpuUsage={metrics.cpuUtilCores}
         freeMemory={metrics.freeMemory}

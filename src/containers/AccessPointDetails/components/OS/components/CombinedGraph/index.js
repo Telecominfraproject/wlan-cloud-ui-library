@@ -8,7 +8,7 @@ import Loading from 'components/Loading';
 import LineGraphTooltip from 'components/LineGraphTooltip';
 import { COLORS } from 'utils/charts';
 
-const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
+const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
   const lineData = useMemo(() => {
     let result = [];
 
@@ -77,18 +77,18 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
   );
 };
 
-HighChartGraph.propTypes = {
+CombinedGraph.propTypes = {
   loading: PropTypes.bool,
   cpuUsage: PropTypes.instanceOf(Object),
   freeMemory: PropTypes.instanceOf(Object),
   cpuTemp: PropTypes.instanceOf(Object),
 };
 
-HighChartGraph.defaultProps = {
+CombinedGraph.defaultProps = {
   loading: false,
   cpuUsage: {},
   freeMemory: {},
   cpuTemp: {},
 };
 
-export default HighChartGraph;
+export default CombinedGraph;
