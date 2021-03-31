@@ -31,14 +31,14 @@ const OS = ({ data, osData, handleRefresh }) => {
 
     metrics.forEach(i => {
       if (i?.detailsJSON?.apPerformance) {
-        const time = parseInt(i.createdTimestamp, 10);
-        freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
-        cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
+        const timestamp = parseInt(i.createdTimestamp, 10);
+        freeMemory.push({ timestamp, value: i.detailsJSON.apPerformance.freeMemory });
+        cpuTemperature.push({ timestamp, value: i.detailsJSON.apPerformance.cpuTemperature });
         i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
           if (!(index in cpuUtilCores)) {
             cpuUtilCores[index] = [];
           }
-          cpuUtilCores[index].push([time, j]);
+          cpuUtilCores[index].push({ timestamp, value: j });
         });
       }
     });
