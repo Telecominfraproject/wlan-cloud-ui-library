@@ -1,93 +1,62 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import Highcharts from 'highcharts';
-import highchartsMore from 'highcharts/highcharts-more';
-import solidGauge from 'highcharts/modules/solid-gauge';
-import {
-  HighchartsChart,
-  withHighcharts,
-  XAxis,
-  YAxis,
-  Pane,
-  SolidGaugeSeries,
-  Chart,
-} from 'react-jsx-highcharts';
-
+import { PieChart, Pie, Cell, ResponsiveContainer, Label } from 'recharts';
 import styles from './index.module.scss';
 
-highchartsMore(Highcharts);
-solidGauge(Highcharts);
-
-const plotOptions = {
-  solidgauge: {
-    dataLabels: {
-      y: 5,
-      borderWidth: 0,
-      useHTML: true,
-    },
-  },
-};
-
-const tooltip = {
-  valueSuffix: ' %',
+const colors = {
+  green: '#55BF3B',
+  yellow: '#FFFF00',
+  red: '#DF5353',
+  empty: '#434343',
 };
 
 const SolidGauge = ({ data, title, label }) => {
-  const dataLabels = {
-    format: `<div><span>{y} ${label}</span><br/></div>`,
-    y: -50,
-  };
+  const pieData = useMemo(() => {
+    return [
+      { name: title, value: data },
+      { name: 'rest', value: 100 - data },
+    ];
+  }, [data, title]);
+
+  const fillColor = useMemo(() => {
+    if (title === 'Current Free Memory') {
+      if (data < 10) return colors.red;
+      if (data < 25) return colors.yellow;
+      return colors.green;
+    }
+
+    if (data < 10) return colors.green;
+    if (data < 90) return colors.yellow;
+    return colors.red;
+  }, [data, title]);
 
   return (
     <div className={styles.container}>
-      <HighchartsChart gauge plotOptions={plotOptions}>
-        <Chart type="solidgauge" zoomType="x" backgroundColor="none" />
+      <span className={styles.title}>{title}</span>
 
-        <Pane
-          center={['50%', '55%']}
-          size="80%"
-          startAngle={-90}
-          endAngle={90}
-          background={{
-            innerRadius: '60%',
-            outerRadius: '100%',
-            shape: 'arc',
-            backgroundColor: '#434343',
-          }}
-        />
-        <XAxis type="datetime" />
-        <YAxis
-          stops={
-            title === 'Current Free Memory'
-              ? [
-                  [0.1, '#DF5353'],
-                  [0.1, '#FFFF00'],
-                  [0.25, '#FFFF00'],
-                  [0.25, '#55BF3B'],
-                ]
-              : [
-                  [0.1, '#55BF3B'],
-                  [0.5, '#FFFF00'],
-                  [0.9, '#DF5353'],
-                ]
-          }
-          lineWidth={0}
-          minorTickInterval={null}
-          tickPixelInterval={400}
-          tickWidth={0}
-          labels={{
-            y: 16,
-            style: { color: '#fff' },
-          }}
-          min={0}
-          max={100}
-        >
-          <YAxis.Title y={-110} style={{ color: '#fff', fontSize: '18px' }}>
-            {title}
-          </YAxis.Title>
-          <SolidGaugeSeries name={title} data={[data]} dataLabels={dataLabels} tooltip={tooltip} />
-        </YAxis>
-      </HighchartsChart>
+      <ResponsiveContainer height={400}>
+        <PieChart>
+          <Pie
+            dataKey="value"
+            data={pieData}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={80}
+            fill="#8884d8"
+            cy="50%"
+          >
+            <Label
+              value={`${data} ${label}`}
+              position="center"
+              fill="white"
+              style={{ fontSize: 32 }}
+            />
+            {pieData.map((entry, i) => (
+              <Cell key={`cell-${entry.name}`} fill={i === 0 ? fillColor : colors.empty} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
     </div>
   );
 };
@@ -104,4 +73,4 @@ SolidGauge.defaultProps = {
   label: '%',
 };
 
-export default withHighcharts(SolidGauge, Highcharts);
+export default SolidGauge;

@@ -1,8 +1,15 @@
-.noSelect {
-  -webkit-touch-callout: none; // iOS Safari
-  -webkit-user-select: none; // Safari
-  -khtml-user-select: none; // Konqueror HTML
-  -moz-user-select: none; // Old versions of Firefox
-  -ms-user-select: none; // Internet Explorer & Edge
-  user-select: none; // Chrome, Edge, Opera and Firefox
+.customTooltip {
+  background-color: lightgrey;
+  border: 1px solid blue;
+  color: black;
+  padding: 16px;
+
+  .label {
+    margin:  0px;
+    font-style: italic;
+  }
+
+  .point {
+    margin:  0px;
+  }
 }

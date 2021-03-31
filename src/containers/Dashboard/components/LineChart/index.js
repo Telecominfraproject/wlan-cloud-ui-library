@@ -1,98 +1,102 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Chart,
-  HighchartsChart,
-  Legend,
-  SplineSeries,
-  Tooltip,
-  XAxis,
-  YAxis,
-  withHighcharts,
-} from 'react-jsx-highcharts';
-import Highcharts from 'highcharts/highstock';
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import moment from 'moment';
 
 import Timer from 'components/Timer';
 import { COLORS } from 'utils/charts';
-
-import Card from '../Card';
 import styles from './index.module.scss';
 
-const dateTimeLabelFormats = {
-  minute: '%l:%M%P',
-  hour: '%l:%M%P',
-  day: '%a. %l:%M%P',
-  week: '',
-  month: '',
-  year: '',
+import Card from '../Card';
+
+const CustomTooltip = ({ active, payload, label, formatter }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className={styles.customTooltip}>
+        <p className={styles.label}>{moment(label).format('MMM D, YYYY h:mm a')}</p>
+        {payload.map(series => {
+          return (
+            <p key={series.name} className={styles.point}>
+              <span style={{ color: series.color, marginRight: 8 }}>●</span>
+              {`${series.name}:  ${formatter ? formatter(series.value) : series.value}`}
+            </p>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return null;
 };
 
-const LineChart = ({ title, data, options }) => {
+CustomTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.instanceOf(Object),
+  label: PropTypes.number,
+  formatter: PropTypes.func,
+};
+
+CustomTooltip.defaultProps = {
+  active: false,
+  payload: [],
+  label: 0,
+  formatter: null,
+};
+
+const MyLineChart = ({ title, data, options }) => {
+  const lineData = useMemo(() => {
+    let result = [];
+    Object.keys(data).forEach(key => {
+      result = [...result, data[key]];
+    });
+
+    return result;
+  }, [data]);
+
   return (
     <Card title={title} extra={<Timer refreshAfter={300} />}>
-      <HighchartsChart
-        time={{
-          useUTC: false,
-        }}
-        colors={COLORS}
-      >
-        <Chart type="spline" zoomType="x" backgroundColor="none" className={styles.noSelect} />
-        <XAxis
-          tickPixelInterval={90}
-          dateTimeLabelFormats={dateTimeLabelFormats}
-          type="datetime"
-          labels={{
-            style: { color: '#fff' },
-          }}
-        />
-
-        <Tooltip
-          split={false}
-          shared
-          useHTML
-          xDateFormat="%b %e %Y %l:%M%P"
-          pointFormatter={options.tooltipFormatter ? options.tooltipFormatter : null}
-        />
-        <Legend
-          itemStyle={{ color: 'rgba(255, 255, 255, 0.85)' }}
-          itemHoverStyle={{ color: 'rgba(255, 255, 255)' }}
-        >
-          <Legend.Title />
-        </Legend>
-        <YAxis
-          minorGridLineWidth={0}
-          gridLineWidth={0}
-          alternateGridColor={null}
-          labels={{
-            formatter: options.formatter ? options.formatter : null,
-            style: { color: '#fff' },
-          }}
-          min={0}
-          minTickInterval={1}
-        >
-          {Array.isArray(data?.value) ? (
-            <SplineSeries key={data.key} name={data.key} data={data.value} />
-          ) : (
-            data &&
-            Object.keys(data).map(key => (
-              <SplineSeries key={key} name={data[key].key} data={data[key].value} />
-            ))
-          )}
-        </YAxis>
-      </HighchartsChart>
+      <div style={{ width: '100%', height: 400 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart>
+            <XAxis
+              dataKey="timestamp"
+              type="number"
+              allowDuplicatedCategory={false}
+              domain={['dataMin', 'dataMax']}
+              tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+            />
+            <YAxis
+              dataKey="value"
+              tickFormatter={tick => (options.formatter ? options.formatter(tick) : tick)}
+            />
+            <Tooltip content={<CustomTooltip formatter={options.formatter} />} />
+            <Legend />
+            {lineData.map((s, i) => (
+              <Line
+                dataKey="value"
+                data={s.value}
+                name={s.key}
+                key={s.key}
+                dot={false}
+                stroke={COLORS[i]}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </Card>
   );
 };
 
-LineChart.propTypes = {
+MyLineChart.propTypes = {
   title: PropTypes.string,
   data: PropTypes.instanceOf(Object),
   options: PropTypes.instanceOf(Object),
 };
 
-LineChart.defaultProps = {
+MyLineChart.defaultProps = {
   title: '',
   data: {},
   options: {},
 };
-export default withHighcharts(LineChart, Highcharts);
+export default MyLineChart;

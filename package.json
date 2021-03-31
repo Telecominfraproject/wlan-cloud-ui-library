@@ -104,5 +104,8 @@
       "eslint --fix 'src/**/*.js' --max-warnings=0",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "recharts": "^2.0.9"
   }
 }
