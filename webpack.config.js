@@ -50,6 +50,7 @@ module.exports = {
     'prop-types',
     'react-router-dom',
     'uuid',
+    'recharts',
   ],
 
   module: {
