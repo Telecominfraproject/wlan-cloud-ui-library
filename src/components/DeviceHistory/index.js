@@ -5,6 +5,7 @@ import LineGraphTooltip from 'components/LineGraphTooltip';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Brush } from 'recharts';
 
 const colors = ['#265EAC', '#00A3CC'];
+const chartHeight = 150;
 
 // this is here for the test
 const DeviceHistoryChart = ({ data, width }) => {
@@ -24,7 +25,7 @@ const DeviceHistoryChart = ({ data, width }) => {
 
   return (
     <>
-      <ResponsiveContainer width={width || '100%'} height={200}>
+      <ResponsiveContainer width={width || '100%'} height={chartHeight}>
         <AreaChart
           data={lineData}
           syncId="synced"
@@ -54,7 +55,7 @@ const DeviceHistoryChart = ({ data, width }) => {
         </AreaChart>
       </ResponsiveContainer>
 
-      <ResponsiveContainer width={width || '100%'} height={200}>
+      <ResponsiveContainer width={width || '100%'} height={chartHeight}>
         <AreaChart
           data={lineData}
           syncId="synced"
@@ -83,7 +84,7 @@ const DeviceHistoryChart = ({ data, width }) => {
         </AreaChart>
       </ResponsiveContainer>
 
-      <ResponsiveContainer width={width || '100%'} height={200}>
+      <ResponsiveContainer width={width || '100%'} height={chartHeight + 70}>
         <AreaChart
           data={lineData}
           syncId="synced"
