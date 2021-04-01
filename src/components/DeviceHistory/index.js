@@ -6,7 +6,8 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Brush } fr
 
 const colors = ['#265EAC', '#00A3CC'];
 
-const DeviceHistoryChart = ({ data }) => {
+// this is here for the test
+const DeviceHistoryChart = ({ data, width }) => {
   const lineData = useMemo(() => {
     const result = [];
     data.forEach(datum => {
@@ -23,7 +24,7 @@ const DeviceHistoryChart = ({ data }) => {
 
   return (
     <>
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width={width || '100%'} height={200}>
         <AreaChart
           data={lineData}
           syncId="synced"
@@ -53,7 +54,7 @@ const DeviceHistoryChart = ({ data }) => {
         </AreaChart>
       </ResponsiveContainer>
 
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width={width || '100%'} height={200}>
         <AreaChart
           data={lineData}
           syncId="synced"
@@ -82,7 +83,7 @@ const DeviceHistoryChart = ({ data }) => {
         </AreaChart>
       </ResponsiveContainer>
 
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width={width || '100%'} height={200}>
         <AreaChart
           data={lineData}
           syncId="synced"
@@ -127,10 +128,12 @@ const DeviceHistoryChart = ({ data }) => {
 
 DeviceHistoryChart.propTypes = {
   data: T.instanceOf(Object),
+  width: T.number,
 };
 
 DeviceHistoryChart.defaultProps = {
   data: {},
+  width: null,
 };
 
 export default DeviceHistoryChart;
