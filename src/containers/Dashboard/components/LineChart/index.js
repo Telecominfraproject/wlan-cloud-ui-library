@@ -26,7 +26,6 @@ const MyLineChart = ({ title, data, options }) => {
             <XAxis
               dataKey="timestamp"
               type="number"
-              allowDuplicatedCategory={false}
               domain={['dataMin', 'dataMax']}
               tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
               stroke="white"
@@ -35,6 +34,9 @@ const MyLineChart = ({ title, data, options }) => {
               dataKey="value"
               tickFormatter={tick => (options.formatter ? options.formatter(tick) : tick)}
               stroke="white"
+              allowDecimals={false}
+              domain={['dataMin', 'dataMax']}
+              tick={{ style: { fontSize: 12 } }}
             />
             <Tooltip content={<LineGraphTooltip formatter={options.formatter} />} />
             <Legend />
