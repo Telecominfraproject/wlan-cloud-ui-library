@@ -1,10 +1,6 @@
 .Card {
   flex: 1;
   margin: 10px;
-
-  :global(.highcharts-background) {
-    fill: none;
-  }
 }
 
 @media screen and (max-width: 1440px) {

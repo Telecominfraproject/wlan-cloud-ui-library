@@ -15,7 +15,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
     Object.keys(cpuUsage).forEach(core => {
       result = [
         ...result,
-        { name: `CPU Core ${core}`, data: cpuUsage[core], yAxisFormatter: tick => `${tick}%` },
+        { name: `CPU Core ${core + 1}`, data: cpuUsage[core], yAxisFormatter: tick => `${tick}%` },
       ];
     });
 
@@ -50,7 +50,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
               dataKey="value"
               yAxisId={s.name}
               orientation={i % 2 === 0 ? 'left' : 'right'}
-              domain={['dataMin', 'dataMax']}
+              domain={['dataMin-2', 'dataMax+2']}
               stroke={COLORS[i]}
               strokeWidth={2}
               tickFormatter={s.yAxisFormatter}
@@ -59,6 +59,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
 
           <Tooltip content={<LineGraphTooltip />} />
           <Legend />
+
           {lineData.map((s, i) => (
             <Line
               dataKey="value"
@@ -67,8 +68,10 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
               key={s.name}
               dot={false}
               stroke={COLORS[i]}
+              strokeWidth={2}
               yAxisId={s.name}
               formatter={s.yAxisFormatter}
+              type="monotone"
             />
           ))}
         </LineChart>

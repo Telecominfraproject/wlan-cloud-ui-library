@@ -15,7 +15,6 @@ const MyLineChart = ({ title, data, options }) => {
     Object.keys(data).forEach(key => {
       result = [...result, data[key]];
     });
-
     return result;
   }, [data]);
 
@@ -30,10 +29,12 @@ const MyLineChart = ({ title, data, options }) => {
               allowDuplicatedCategory={false}
               domain={['dataMin', 'dataMax']}
               tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+              stroke="white"
             />
             <YAxis
               dataKey="value"
               tickFormatter={tick => (options.formatter ? options.formatter(tick) : tick)}
+              stroke="white"
             />
             <Tooltip content={<LineGraphTooltip formatter={options.formatter} />} />
             <Legend />
@@ -45,6 +46,7 @@ const MyLineChart = ({ title, data, options }) => {
                 key={s.key}
                 dot={false}
                 stroke={COLORS[i]}
+                strokeWidth={2}
                 formatter={options.formatter}
               />
             ))}

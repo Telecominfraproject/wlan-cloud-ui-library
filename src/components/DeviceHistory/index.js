@@ -1,202 +1,136 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import moment from 'moment';
-import Highcharts from 'highcharts/highstock';
-import {
-  HighchartsStockChart,
-  Chart,
-  withHighcharts,
-  XAxis,
-  YAxis,
-  AreaSplineSeries,
-  Tooltip,
-  Loading,
-} from 'react-jsx-highstock';
-import addHighchartsMore from 'highcharts/highcharts-more';
+import LineGraphTooltip from 'components/LineGraphTooltip';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Brush } from 'recharts';
 
-addHighchartsMore(Highcharts);
+const colors = ['#265EAC', '#00A3CC'];
 
-const dateTimeLabelFormats = {
-  millisecond: '%l:%M%P',
-  second: '%l:%M%P',
-  minute: '%l:%M%P',
-  hour: '%l:%M%P',
-  day: '%a. %l:%M%P',
-  week: '',
-  month: '',
-  year: '',
-};
-
-const metricsHeight = 25;
-const metricsPadding = 8;
-
-const METRICS = {
-  rssi: 'RSSI',
-  rxBytes: 'RX Mbps',
-  txBytes: 'TX Mbps',
-};
-
-const toDecimalPlaces = (theNumber, decimalPlaces) => {
-  const decimalPlacesMultiplier = 10 ** decimalPlaces;
-
-  return Math.round(theNumber * decimalPlacesMultiplier) / decimalPlacesMultiplier;
-};
-
-function tooltipFormatter() {
-  const html = [];
-
-  if (this.points && this.points.length) {
-    html.push(moment(this.points[0].x).format('MMM D, YYYY h:mm A'));
-    html.push('<br /><span style="color: transparent">.</span><br />');
-
-    for (let i = 0; i < this.points.length; i += 1) {
-      html.push(`<strong>${this.points[i].series.name}</strong>`);
-      let unit = '';
-      if (
-        this.points[i].series.name === METRICS.rxBytes ||
-        this.points[i].series.name === METRICS.txBytes
-      ) {
-        unit = ' Mbps';
-      }
-
-      html.push(toDecimalPlaces(this.points[i].point.y, 2) + unit);
-
-      if (i < this.points.length - 1) {
-        html.push('<br />');
-      }
-    }
-  }
-  return html.join('<br />');
-}
-
-const DeviceHistoryChart = ({ loading, data }) => {
-  const config = useMemo(() => {
-    const rssi = { id: 'rssi', data: [] };
-    const rx = { id: 'rx', data: [] };
-    const tx = { id: 'tx', data: [] };
-
-    data.forEach(i => {
-      const timestamp = parseInt(i.createdTimestamp, 10);
-      rssi.data.push([timestamp, i.rssi]);
-      rx.data.push([timestamp, i.detailsJSON.averageRxRate]);
-      tx.data.push([timestamp, i.detailsJSON.averageTxRate]);
+const DeviceHistoryChart = ({ data }) => {
+  const lineData = useMemo(() => {
+    const result = [];
+    data.forEach(datum => {
+      const timestamp = parseInt(datum.createdTimestamp, 10);
+      result.push({
+        timestamp,
+        rssi: datum.rssi,
+        rx: datum.detailsJSON.averageRxRate,
+        tx: datum.detailsJSON.averageTxRate,
+      });
     });
-
-    return { rssi, rx, tx };
+    return result;
   }, [data]);
 
-  const renderMetrics = (i, id, label, series, min, max) => {
-    const top = i * metricsHeight + i * metricsPadding + 5; // the 5 is the top margin
-    const color = i % 2 ? '#00A3CC' : '#265EAC';
-    const fillColor =
-      i % 2
-        ? {
-            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-            stops: [
-              [0, 'rgba(0,163,204,1)'],
-              [1, 'rgba(0,163,204,0.1)'],
-            ],
-          }
-        : {
-            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-            stops: [
-              [0, 'rgba(38,94,172,1)'],
-              [1, 'rgba(38,94,172,0.1)'],
-            ],
-          };
-    return (
-      <YAxis
-        key={id}
-        opposite
-        id={id}
-        gridLineWidth={0}
-        offset={25}
-        startOnTick={false}
-        tickPixelInterval={10}
-        height={`${metricsHeight}%`}
-        top={`${top}%`}
-        min={min}
-        max={max}
-      >
-        <YAxis.Title>{label}</YAxis.Title>
-        <AreaSplineSeries
-          id={label}
-          name={label}
-          data={series}
-          color={color}
-          lineColor={color}
-          showInLegend={false}
-          threshold={null}
-          fillColor={fillColor}
-          lineWidth={1}
-          gapSize={120000}
-          gapUnit="value"
-          states={{
-            hover: {
-              lineWidthPlus: 0,
-              marker: {
-                enabled: true,
-                radius: 2,
-              },
-            },
-          }}
-        />
-      </YAxis>
-    );
-  };
-
   return (
-    <HighchartsStockChart
-      time={{
-        useUTC: false,
-      }}
-    >
-      <Chart
-        backgroundColor="transparent"
-        plotBackgroundColor={null}
-        plotBorderWidth={0}
-        plotShadow={false}
-        height={350}
-        spacingTop={0}
-        spacingBottom={0}
-      />
-      <Loading
-        isLoading={loading}
-        style={{
-          opacity: 1,
-          backgroundColor: 'transparent',
-        }}
-      >
-        Loading...
-      </Loading>
+    <>
+      <ResponsiveContainer width="100%" height={200}>
+        <AreaChart
+          data={lineData}
+          syncId="synced"
+          margin={{
+            top: 10,
+            right: 0,
+            left: 0,
+            bottom: 0,
+          }}
+          baseValue={-100}
+        >
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={colors[0]} stopOpacity={1} />
+              <stop offset="100%" stopColor={colors[0]} stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="timestamp" hide />
+          <YAxis
+            orientation="right"
+            label={{ value: 'RSSI', angle: 90, position: 'insideRight', stroke: 'white' }}
+            domain={[-100, 0]}
+            stroke="white"
+          />
+          <Tooltip content={<LineGraphTooltip />} />
+          <Area type="monotone" dataKey="rssi" stroke={colors[0]} fill="url(#colorUv)" />
+        </AreaChart>
+      </ResponsiveContainer>
 
-      <Tooltip shared formatter={tooltipFormatter} />
+      <ResponsiveContainer width="100%" height={200}>
+        <AreaChart
+          data={lineData}
+          syncId="synced"
+          margin={{
+            top: 10,
+            right: 0,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <defs>
+            <linearGradient id="colorUv2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={colors[1]} stopOpacity={1} />
+              <stop offset="100%" stopColor={colors[1]} stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="timestamp" hide />
+          <YAxis
+            orientation="right"
+            label={{ value: 'Rx Bytes', angle: 90, position: 'insideRight', stroke: 'white' }}
+            domain={[0, 1000]}
+            stroke="white"
+          />
+          <Tooltip content={<LineGraphTooltip />} />
+          <Area type="monotone" dataKey="rx" stroke={colors[1]} fill="url(#colorUv2)" />
+        </AreaChart>
+      </ResponsiveContainer>
 
-      <XAxis
-        time={{
-          useUTC: false,
-        }}
-        tickPixelInterval={90}
-        dateTimeLabelFormats={dateTimeLabelFormats}
-        type="datetime"
-        showEmpty
-      />
-
-      {renderMetrics(0, 'rssi', METRICS.rssi, config.rssi.data, -100, -40)}
-      {renderMetrics(1, 'rxBytes', METRICS.rxBytes, config.rx.data, 0, 1000)}
-      {renderMetrics(2, 'txBytes', METRICS.txBytes, config.tx.data, 0, 1000)}
-    </HighchartsStockChart>
+      <ResponsiveContainer width="100%" height={200}>
+        <AreaChart
+          data={lineData}
+          syncId="synced"
+          margin={{
+            top: 10,
+            right: 0,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <defs>
+            <linearGradient id="colorUv3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={colors[0]} stopOpacity={1} />
+              <stop offset="100%" stopColor={colors[0]} stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+          <XAxis
+            dataKey="timestamp"
+            tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+            stroke="white"
+          />
+          <YAxis
+            orientation="right"
+            label={{ value: 'Tx Bytes', angle: 90, position: 'insideRight', stroke: 'white' }}
+            domain={[0, 1000]}
+            stroke="white"
+          />
+          <Tooltip content={<LineGraphTooltip />} />
+          <Brush
+            dataKey="timestamp"
+            tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+            travellerWidth={10}
+            fill="#434343"
+            stroke="grey"
+          />
+          <Area type="monotone" dataKey="tx" stroke={colors[0]} fill="url(#colorUv3)" />
+        </AreaChart>
+      </ResponsiveContainer>
+    </>
   );
 };
 
 DeviceHistoryChart.propTypes = {
   data: T.instanceOf(Object),
-  loading: T.bool,
 };
 
 DeviceHistoryChart.defaultProps = {
   data: {},
-  loading: false,
 };
 
-export default withHighcharts(DeviceHistoryChart, Highcharts);
+export default DeviceHistoryChart;
