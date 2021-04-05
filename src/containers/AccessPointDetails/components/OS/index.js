@@ -32,7 +32,8 @@ const OS = ({ data, osData, handleRefresh }) => {
     metrics.forEach(i => {
       if (i?.detailsJSON?.apPerformance) {
         const time = parseInt(i.createdTimestamp, 10);
-        freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory]);
+        // Convert freeMemory (Kb) to (Bytes) for byte formatters
+        freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory * 1000]);
         cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
         i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
           if (!(index in cpuUtilCores)) {
@@ -94,6 +95,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         loading={osData?.loading}
         cpuUsage={metrics.cpuUtilCores}
         freeMemory={metrics.freeMemory}
+        maxFreeMemory={Math.round(osPerformance?.totalAvailableMemoryKb * 1000)}
         cpuTemp={metrics.cpuTemperature}
       />
     </Card>
