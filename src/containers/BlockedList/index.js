@@ -9,10 +9,13 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import ThemeContext from 'contexts/ThemeContext';
 
+import { useWritableInput } from 'contexts/InputDisabledContext';
+
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
+  const { roleIsWritable } = useWritableInput();
   const { routes } = useContext(ThemeContext);
   const [addModal, setAddModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
@@ -43,27 +46,32 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
         </Link>
       ),
     },
-    {
-      key: 'deleteMac',
-      width: 60,
-      render: (_, record) => (
-        <DeleteButton
-          className={styles.InfoButton}
-          title={`delete-mac-${record.macAddress}`}
-          extraOnClick={() => {
-            setActiveMac({ ...record });
-          }}
-          onSuccess={deleteClient}
-          content={
-            <p>
-              Are you sure you want to remove the Client: <strong>{activeMac.macAddress} </strong>
-              from the Blocked List?
-            </p>
-          }
-          modalButtonText="Remove"
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            key: 'deleteMac',
+            width: 60,
+            render: (_, record) => (
+              <DeleteButton
+                className={styles.InfoButton}
+                title={`delete-mac-${record.macAddress}`}
+                extraOnClick={() => {
+                  setActiveMac({ ...record });
+                }}
+                onSuccess={deleteClient}
+                content={
+                  <p>
+                    Are you sure you want to remove the Client:{' '}
+                    <strong>{activeMac.macAddress} </strong>
+                    from the Blocked List?
+                  </p>
+                }
+                modalButtonText="Remove"
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -77,9 +85,11 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
       <div className={styles.BlockedList}>
         <Header>
           <h1>Client Blocked List</h1>
-          <Button type="primary" onClick={() => setAddModal(true)}>
-            Add Client
-          </Button>
+          {roleIsWritable && (
+            <Button type="primary" onClick={() => setAddModal(true)}>
+              Add Client
+            </Button>
+          )}
         </Header>
 
         <Table rowKey="macAddress" dataSource={data} columns={columns} pagination={false} />

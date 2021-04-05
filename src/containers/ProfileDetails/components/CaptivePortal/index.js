@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
   Card,
   Form,
-  Input,
+  Input as AntdInput,
   Radio,
-  Select,
+  Select as AntdSelect,
   Upload,
   Alert,
   Collapse,
@@ -18,14 +18,25 @@ import { QuestionCircleFilled } from '@ant-design/icons';
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+
 import globalStyles from 'styles/index.scss';
 import Users from './components/Users';
 import styles from '../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+const Select = withWritableInput(AntdSelect);
+
 const { Panel } = Collapse;
-const { TextArea } = Input;
+const { TextArea: AntdTextArea, Search: AntdSearch } = AntdInput;
+const Input = withWritableInput(AntdInput);
+const TextArea = withWritableInput(AntdTextArea);
+const Search = withWritableInput(AntdSearch);
+
+const { Group: RadioGroup } = Radio;
+const Group = withWritableInput(RadioGroup);
 
 const validateIPv4 = inputString => {
   // allow spaces in place of dots
@@ -55,6 +66,7 @@ const CaptivePortalForm = ({
   loadingRadiusProfiles,
   handleOnFormChange,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const formatFile = async file => {
     const src = await onDownloadFile(file?.apExportUrl);
     return [
@@ -429,14 +441,14 @@ const CaptivePortalForm = ({
           <Input className={globalStyles.field} placeholder="http://... or https://..." />
         </Item>
         <Item label="Splash Page" name="externalSplashPage">
-          <Radio.Group>
+          <Group>
             <Radio value="false" onChange={disableExternalSplashChange}>
               Access Point Hosted
             </Radio>
             <Radio value="true" onChange={() => setExternalSplash(true)}>
               Externally Hosted
             </Radio>
-          </Radio.Group>
+          </Group>
         </Item>
       </Card>
 
@@ -698,7 +710,7 @@ const CaptivePortalForm = ({
             validateStatus={whitelistValidation.status}
             help={whitelistValidation.help}
           >
-            <Input.Search
+            <Search
               placeholder="Hostname, IP, or IP range..."
               enterButton="Add"
               value={whitelistSearch}
@@ -715,9 +727,11 @@ const CaptivePortalForm = ({
               renderItem={item => (
                 <List.Item
                   extra={
-                    <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
-                      Remove
-                    </Button>
+                    roleIsWritable && (
+                      <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
+                        Remove
+                      </Button>
+                    )
                   }
                 >
                   <List.Item.Meta title={item} />

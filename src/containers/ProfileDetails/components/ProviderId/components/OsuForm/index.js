@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch, Form, Input, Button } from 'antd';
+import { Card, Switch as AntdSwitch, Form, Input as AntdInput, Button } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
 
+const Input = withWritableInput(AntdInput);
+const Switch = withWritableInput(AntdSwitch);
+
 const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
+  const { roleIsWritable } = useWritableInput();
   const [osuEnabled, setOsuEnabled] = useState(
     osuDetails?.osuServerUri !== null && osuDetails?.osuServerUri !== ''
   );
@@ -31,7 +36,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
     <Card
       title={
         <>
-          Online Sign Up (OSU){' '}
+          Online Sign Up (OSU)
           <Switch
             checkedChildren="Enabled"
             unCheckedChildren="Disabled"
@@ -66,9 +71,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Name:"
             bordered={false}
             extra={
-              <Button onClick={() => setNameModal(true)} data-testid="osuName">
-                Add
-              </Button>
+              roleIsWritable && (
+                <Button onClick={() => setNameModal(true)} data-testid="osuName">
+                  Add
+                </Button>
+              )
             }
           >
             <PasspointLocaleTable
@@ -91,9 +98,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Description:"
             bordered={false}
             extra={
-              <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
-                Add
-              </Button>
+              roleIsWritable && (
+                <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
+                  Add
+                </Button>
+              )
             }
           >
             <PasspointLocaleTable
@@ -116,9 +125,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Icons:"
             bordered={false}
             extra={
-              <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
-                Add
-              </Button>
+              roleIsWritable && (
+                <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
+                  Add
+                </Button>
+              )
             }
           >
             <PasspointLocaleTable

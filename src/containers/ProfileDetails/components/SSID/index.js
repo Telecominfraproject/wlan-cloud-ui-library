@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
+import { Card, Form, Input as AntdInput, Checkbox, Radio, Select as AntdSelect, Empty } from 'antd';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
+import { withWritableInput } from 'contexts/InputDisabledContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
@@ -10,7 +11,21 @@ import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
 
 const { Item } = Form;
-const { Option } = Select;
+
+// Input HOCs
+const Input = withWritableInput(AntdInput);
+const { Password: Pass } = AntdInput;
+const Password = withWritableInput(Pass);
+
+// Select HOCs
+const Select = withWritableInput(AntdSelect);
+const { Option } = AntdSelect;
+
+const { Group: RadioGroup } = Radio;
+const Group = withWritableInput(RadioGroup);
+
+const { Group: CheckGroup } = Checkbox;
+const CheckBoxGroup = withWritableInput(CheckGroup);
 
 const SSIDForm = ({
   form,
@@ -98,10 +113,10 @@ const SSIDForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <Group>
             <Radio value="enabled">Show SSID</Radio>
             <Radio value="disabled">Hide SSID</Radio>
-          </Radio.Group>
+          </Group>
         </Item>
 
         <Item label="Bandwidth">
@@ -174,13 +189,13 @@ const SSIDForm = ({
         </Item>
 
         <Item name="appliedRadios" label="Use On">
-          <Checkbox.Group>
+          <CheckBoxGroup>
             {Object.keys(radioTypes || [])?.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
             ))}
-          </Checkbox.Group>
+          </CheckBoxGroup>
         </Item>
       </Card>
       <Card title="Network Connectivity">
@@ -209,7 +224,7 @@ const SSIDForm = ({
             </span>
           }
         >
-          <Radio.Group>
+          <Group>
             <Radio value="BRIDGE" defaultSelected>
               Bridge
             </Radio>
@@ -221,7 +236,7 @@ const SSIDForm = ({
             >
               NAT
             </Radio>
-          </Radio.Group>
+          </Group>
         </Item>
 
         <Item
@@ -244,10 +259,10 @@ const SSIDForm = ({
                 }
               >
                 {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Radio.Group>
+                  <Group>
                     <Radio value="false">Allow Local Access</Radio>
                     <Radio value="true">No Local Access</Radio>
-                  </Radio.Group>
+                  </Group>
                 ) : (
                   <span className={styles.Disclaimer}>Not Applicable</span>
                 )}
@@ -257,10 +272,10 @@ const SSIDForm = ({
         </Item>
 
         <Item label="Captive Portal" name="captivePortal">
-          <Radio.Group>
+          <Group>
             <Radio value="notPortal">Do Not Use</Radio>
             <Radio value="usePortal">Use</Radio>
-          </Radio.Group>
+          </Group>
         </Item>
         <Item
           noStyle
@@ -413,7 +428,7 @@ const SSIDForm = ({
             ]}
             hasFeedback
           >
-            <Input.Password
+            <Password
               visibilityToggle
               className={globalStyles.field}
               placeholder="8-63 characters"
@@ -484,10 +499,10 @@ const SSIDForm = ({
             return (
               <Item label="VLAN" name="vlan">
                 {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Radio.Group>
+                  <Group>
                     <Radio value="customVLAN">Use Custom VLAN</Radio>
                     <Radio value="defaultVLAN">Use Default VLAN</Radio>
-                  </Radio.Group>
+                  </Group>
                 ) : (
                   <span className={styles.Disclaimer}>Not Applicable</span>
                 )}

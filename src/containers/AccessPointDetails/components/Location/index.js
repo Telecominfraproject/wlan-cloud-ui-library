@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select } from 'antd';
+import { Card, Form, Select as AntdSelect } from 'antd';
 import Button from 'components/Button';
 import { pageLayout } from 'utils/form';
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
 import styles from '../../index.module.scss';
 
-const { Option } = Select;
+const { Option } = AntdSelect;
 const { Item } = Form;
 
+const Select = withWritableInput(AntdSelect);
+
 const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
+  const { roleIsWritable } = useWritableInput();
   const [form] = Form.useForm();
 
   const getLocationPath = () => {
@@ -113,11 +117,13 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-      <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
-          Save
-        </Button>
-      </div>
+      {roleIsWritable && (
+        <div className={styles.InlineEndDiv}>
+          <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
+            Save
+          </Button>
+        </div>
+      )}
 
       <Card title="Location">
         <Form.List name="locations">

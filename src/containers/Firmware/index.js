@@ -7,6 +7,9 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
+
+import { useWritableInput } from 'contexts/InputDisabledContext';
+
 import styles from './index.module.scss';
 import AssignmentModal from './components/AssignmentModal';
 import VersionModal from './components/VersionModal';
@@ -33,6 +36,7 @@ const Firmware = ({
   firmwareModelError,
   firmwareModelLoading,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
   const [addVersionModal, setAddVersionModal] = useState(false);
@@ -139,46 +143,54 @@ const Firmware = ({
         return (firmware && firmware.versionName) || firmwareRecordId;
       },
     },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'editAssignment',
-      width: 60,
-      render: (_, record) => (
-        <Button
-          title={`edit-track-${record.modelId}`}
-          className={styles.InfoButton}
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setTaskAssignmentValues({ ...record });
-            setEditAssignmentModal(true);
-          }}
-        />
-      ),
-    },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'deleteAssignment',
-      width: 60,
-      render: (_, record) => (
-        <DeleteButton
-          title={`delete-track-${record.modelId}`}
-          className={styles.InfoButton}
-          extraOnClick={() => {
-            setTaskAssignmentValues({ ...record });
-          }}
-          onSuccess={deleteTrackAssignment}
-          content={
-            <p>
-              Are you sure you want to delete the model target version:
-              <strong> {traskAssignmentValues.modelId}</strong>?
-            </p>
-          }
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'editAssignment',
+            width: 60,
+            render: (_, record) => (
+              <Button
+                title={`edit-track-${record.modelId}`}
+                className={styles.InfoButton}
+                type="primary"
+                icon={<FormOutlined />}
+                onClick={() => {
+                  setTaskAssignmentValues({ ...record });
+                  setEditAssignmentModal(true);
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'deleteAssignment',
+            width: 60,
+            render: (_, record) => (
+              <DeleteButton
+                title={`delete-track-${record.modelId}`}
+                className={styles.InfoButton}
+                extraOnClick={() => {
+                  setTaskAssignmentValues({ ...record });
+                }}
+                onSuccess={deleteTrackAssignment}
+                content={
+                  <p>
+                    Are you sure you want to delete the model target version:
+                    <strong> {traskAssignmentValues.modelId}</strong>?
+                  </p>
+                }
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const versionColumn = [
@@ -214,51 +226,59 @@ const Firmware = ({
       render: time =>
         parseInt(time, 10) ? moment(time, 'x').format('DD MMM YYYY, hh:mm a') : null,
     },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'editFirmware',
-      width: 60,
-      render: (_, record) => (
-        <Button
-          title={`edit-firmware-${record.modelId}`}
-          className={styles.InfoButton}
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setFirmwareValues({ ...record });
-            setEditVersionModal(true);
-          }}
-        />
-      ),
-    },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'deleteFirmware',
-      width: 60,
-      render: (_, record) => {
-        const found = Object.values(trackAssignmentData).some(
-          i => Object.values(record).indexOf(i.firmwareVersionRecordId) > 0
-        );
-        return !found ? (
-          <DeleteButton
-            title={`delete-firmware-${record.modelId}`}
-            className={styles.InfoButton}
-            extraOnClick={() => {
-              setFirmwareValues({ ...record });
-            }}
-            onSuccess={deleteFirmware}
-            content={
-              <p>
-                Are you sure you want to delete the version:
-                <strong> {firmwareValues.versionName}</strong>?
-              </p>
-            }
-          />
-        ) : null;
-      },
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'editFirmware',
+            width: 60,
+            render: (_, record) => (
+              <Button
+                title={`edit-firmware-${record.modelId}`}
+                className={styles.InfoButton}
+                type="primary"
+                icon={<FormOutlined />}
+                onClick={() => {
+                  setFirmwareValues({ ...record });
+                  setEditVersionModal(true);
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'deleteFirmware',
+            width: 60,
+            render: (_, record) => {
+              const found = Object.values(trackAssignmentData).some(
+                i => Object.values(record).indexOf(i.firmwareVersionRecordId) > 0
+              );
+              return !found ? (
+                <DeleteButton
+                  title={`delete-firmware-${record.modelId}`}
+                  className={styles.InfoButton}
+                  extraOnClick={() => {
+                    setFirmwareValues({ ...record });
+                  }}
+                  onSuccess={deleteFirmware}
+                  content={
+                    <p>
+                      Are you sure you want to delete the version:
+                      <strong> {firmwareValues.versionName}</strong>?
+                    </p>
+                  }
+                />
+              ) : null;
+            },
+          },
+        ]
+      : []),
   ];
 
   const trackAssignmentReady = !trackAssignmentLoading && !trackAssignmentError;
@@ -312,7 +332,7 @@ const Firmware = ({
 
       <Header>
         <h1>Model Target Version</h1>
-        {trackAssignmentReady && (
+        {roleIsWritable && trackAssignmentReady && (
           <Button onClick={() => setAddAssignmentModal(true)}> Add Model Target Version</Button>
         )}
       </Header>
@@ -338,7 +358,9 @@ const Firmware = ({
       )}
       <Header>
         <h1>All Versions</h1>
-        {firmwareReady && <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>}
+        {roleIsWritable && firmwareReady && (
+          <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
+        )}
       </Header>
       {firmwareReady && (
         <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />

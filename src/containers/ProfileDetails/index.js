@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Card, notification, Select } from 'antd';
+import { Form, Input as AntdInput, Card, notification, Select } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -26,6 +26,8 @@ import {
   profileTypes,
 } from 'utils/profiles';
 
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+
 import { PROFILES } from './constants';
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
@@ -39,6 +41,8 @@ import OperatorForm from './components/Operator';
 import VenueForm from './components/Venue';
 
 import styles from './index.module.scss';
+
+const Input = withWritableInput(AntdInput);
 
 const ProfileDetails = ({
   profileType,
@@ -70,6 +74,7 @@ const ProfileDetails = ({
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
+  const { roleIsWritable } = useWritableInput();
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -224,12 +229,14 @@ const ProfileDetails = ({
           </Button>
           <h1>{`Edit ${name}`}</h1>
         </div>
-        <div className={styles.HeaderDiv}>
-          <div className={styles.HeaderButton}>{extraButtons}</div>
-          <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
-            Save
-          </Button>
-        </div>
+        {roleIsWritable && (
+          <div className={styles.HeaderDiv}>
+            <div className={styles.HeaderButton}>{extraButtons}</div>
+            <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
+              Save
+            </Button>
+          </div>
+        )}
       </Header>
 
       <Form

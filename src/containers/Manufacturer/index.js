@@ -8,9 +8,13 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
 
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+
 import styles from './index.module.scss';
 
 const { Item } = Form;
+const { Search: AntdSearch } = Input;
+const Search = withWritableInput(AntdSearch);
 
 const layout = {
   labelCol: { span: 2 },
@@ -18,6 +22,7 @@ const layout = {
 };
 
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadingFileUpload }) => {
+  const { roleIsWritable } = useWritableInput();
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);
@@ -112,7 +117,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
                 data-testid="ouiUpload"
                 disabled={loadingFileUpload}
               >
-                <Button disabled={loadingFileUpload} icon={<UploadOutlined />}>
+                <Button disabled={loadingFileUpload || !roleIsWritable} icon={<UploadOutlined />}>
                   Select File to Import...
                 </Button>
               </Upload>
@@ -121,7 +126,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
           </Card>
           <Card title="Set a Manufacturer Alias">
             <Item name="oui" label="OUI">
-              <Input.Search
+              <Search
                 placeholder="OUI String"
                 enterButton="Find"
                 maxLength={8}

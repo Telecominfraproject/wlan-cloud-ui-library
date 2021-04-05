@@ -96,7 +96,7 @@ const AppLayout = ({
 AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
   onLogout: PropTypes.func.isRequired,
-  locationState: PropTypes.instanceOf(Object).isRequired,
+  locationState: PropTypes.instanceOf(Object),
   menuItems: PropTypes.instanceOf(Array),
   mobileMenuItems: PropTypes.instanceOf(Array),
   totalAlarms: PropTypes.number,
@@ -107,6 +107,7 @@ AppLayout.propTypes = {
 AppLayout.defaultProps = {
   menuItems: [],
   mobileMenuItems: null,
+  locationState: null,
   totalAlarms: null,
   rightMenuItem: null,
   currentUserId: 0,

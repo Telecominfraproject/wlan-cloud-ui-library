@@ -1,17 +1,22 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Input } from 'antd';
+import { Form, Card, Input as AntdInput } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
 
 import styles from '../index.module.scss';
 
 const MAX_RADIUS = 1;
 
 const { Item, List } = Form;
+const { Password: AntdPassword } = AntdInput;
+const Input = withWritableInput(AntdInput);
+const Password = withWritableInput(AntdPassword);
 
 const RadiusForm = ({ form, details }) => {
+  const { roleIsWritable } = useWritableInput();
   const formatInitialAuthenticationValues = () => {
     const values = [details?.primaryRadiusAuthServer];
     if (details?.secondaryRadiusAuthServer) {
@@ -98,7 +103,7 @@ const RadiusForm = ({ form, details }) => {
                       },
                     ]}
                   >
-                    <Input.Password
+                    <Password
                       className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`authenticationSecret${field.name}`}
@@ -211,7 +216,7 @@ const RadiusForm = ({ form, details }) => {
                       },
                     ]}
                   >
-                    <Input.Password
+                    <Password
                       className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`accountingSecret${field.name}`}
@@ -246,17 +251,18 @@ const RadiusForm = ({ form, details }) => {
                       data-testid={`accountingPort${field.name}`}
                     />
                   </Item>
-
-                  <Button
-                    className={styles.RadiusDelete}
-                    type="danger"
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                    data-testid={`accountingDelete${field.name}`}
-                  >
-                    Remove
-                  </Button>
+                  {roleIsWritable && (
+                    <Button
+                      className={styles.RadiusDelete}
+                      type="danger"
+                      onClick={() => {
+                        remove(field.name);
+                      }}
+                      data-testid={`accountingDelete${field.name}`}
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </div>
               ))}
             </Card>

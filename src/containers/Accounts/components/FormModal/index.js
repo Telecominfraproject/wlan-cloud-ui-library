@@ -23,6 +23,7 @@ const FormModal = ({
   userId,
   isAuth0Enabled,
   onResetUserPassword,
+  allUserRoles,
 }) => {
   const [form] = Form.useForm();
 
@@ -54,8 +55,9 @@ const FormModal = ({
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
         <Select placeholder="Select role">
-          <Option value="SuperUser">SuperUser</Option>
-          <Option value="CustomerIT">CustomerIT</Option>
+          {allUserRoles.map(i => (
+            <Option value={i}>{i}</Option>
+          ))}
         </Select>
       </Item>
       {!isAuth0Enabled && (
@@ -148,6 +150,7 @@ FormModal.propTypes = {
   userId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
+  allUserRoles: PropTypes.instanceOf(Array),
 };
 
 FormModal.defaultProps = {
@@ -157,6 +160,7 @@ FormModal.defaultProps = {
   userId: '',
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
+  allUserRoles: ['SuperUser', 'CustomerIT'],
 };
 
 export default FormModal;

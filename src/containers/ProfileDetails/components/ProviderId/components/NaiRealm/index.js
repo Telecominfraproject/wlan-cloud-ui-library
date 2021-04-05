@@ -1,17 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Cascader, Button, Table, Select, Input } from 'antd';
+import {
+  Card,
+  Form,
+  Cascader,
+  Button,
+  Table,
+  Select as AntdSelect,
+  Input as AntdInput,
+} from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import _ from 'lodash';
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
 import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+
+const Input = withWritableInput(AntdInput);
+const Select = withWritableInput(AntdSelect);
 
 const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
+  const { roleIsWritable } = useWritableInput();
   const [eapModal, setEapModal] = useState(false);
 
   const columnsNai = [
@@ -27,20 +40,24 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         return obj.map(i => <div key={i}>{i}</div>);
       },
     },
-    {
-      title: '',
-      width: 80,
-      render: item => (
-        <Button
-          title="removeEapMethod"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          onClick={() => {
-            removeEap(item);
-          }}
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            width: 80,
+            render: item => (
+              <Button
+                title="removeEapMethod"
+                icon={<DeleteOutlined />}
+                className={styles.iconButton}
+                onClick={() => {
+                  removeEap(item);
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const naiLayout = {
@@ -132,9 +149,11 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         title="Extensible Authentication (EAP) Methods:"
         bordered={false}
         extra={
-          <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
-            Add
-          </Button>
+          roleIsWritable && (
+            <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
+              Add
+            </Button>
+          )
         }
       >
         <Table

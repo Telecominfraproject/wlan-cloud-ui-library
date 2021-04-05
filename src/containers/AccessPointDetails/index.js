@@ -9,6 +9,7 @@ import DeleteButton from 'components/DeleteButton';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import { getLocationPath } from 'utils/locations';
 
 import General from './components/General';
@@ -43,6 +44,7 @@ const AccessPointDetails = ({
   extraGeneralCards,
   showStatusAlarms,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const TAB_LIST = [
     {
       key: 'general',
@@ -146,16 +148,18 @@ const AccessPointDetails = ({
         </div>
         <div className={styles.HeaderDiv}>
           <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
-          <DeleteButton
-            showText
-            isDanger
-            onSuccess={handleDeleteEquipment}
-            content={
-              <p>
-                Are you sure you want to delete this access point: <strong>{data.name}</strong>?
-              </p>
-            }
-          />
+          {roleIsWritable && (
+            <DeleteButton
+              showText
+              isDanger
+              onSuccess={handleDeleteEquipment}
+              content={
+                <p>
+                  Are you sure you want to delete this access point: <strong>{data.name}</strong>?
+                </p>
+              }
+            />
+          )}
         </div>
       </Header>
       <Card

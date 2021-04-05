@@ -1,8 +1,18 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
+import {
+  Card,
+  Form,
+  Input,
+  Checkbox as AntdCheckbox,
+  Radio,
+  Select as AntdSelect,
+  Table,
+  Empty,
+} from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
 
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
@@ -11,6 +21,16 @@ import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
 
 import FormModal from './components/FormModal';
+
+const { Item } = Form;
+const { Option } = AntdSelect;
+
+const Select = withWritableInput(AntdSelect);
+
+const { Group: RadioGroup } = Radio;
+const Group = withWritableInput(RadioGroup);
+
+const Checkbox = withWritableInput(AntdCheckbox);
 
 const AccessPointForm = ({
   form,
@@ -24,9 +44,8 @@ const AccessPointForm = ({
   loadingRFProfiles,
   handleOnFormChange,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const { radioTypes } = useContext(ThemeContext);
-  const { Item } = Form;
-  const { Option } = Select;
 
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
@@ -127,17 +146,21 @@ const AccessPointForm = ({
       dataIndex: ['details', 'appliedRadios'],
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
-    {
-      title: '',
-      width: 80,
-      render: (_, record) => (
-        <Button
-          title="removeSsid"
-          icon={<DeleteFilled />}
-          onClick={() => handleRemoveSsid(record?.id)}
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            width: 80,
+            render: (_, record) => (
+              <Button
+                title="removeSsid"
+                icon={<DeleteFilled />}
+                onClick={() => handleRemoveSsid(record?.id)}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const columnsGre = [
@@ -170,10 +193,10 @@ const AccessPointForm = ({
   ];
 
   const enabledRadioOptions = () => (
-    <Radio.Group>
+    <Group>
       <Radio value="false">Disabled</Radio>
       <Radio value="true">Enabled</Radio>
-    </Radio.Group>
+    </Group>
   );
 
   const filteredOptions = ssidProfiles.filter(
@@ -250,14 +273,14 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group disabled>
+          <Group disabled>
             <Radio value="false" onChange={() => setRtls(false)}>
               Disabled
             </Radio>
             <Radio value="true" onChange={() => setRtls(true)}>
               Enabled
             </Radio>
-          </Radio.Group>
+          </Group>
         </Item>
         {rtls && (
           <>
@@ -320,14 +343,14 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <Group>
             <Radio value="false" onChange={() => setSyslog(false)}>
               Disabled
             </Radio>
             <Radio value="true" onChange={() => setSyslog(true)}>
               Enabled
             </Radio>
-          </Radio.Group>
+          </Group>
         </Item>
         {syslog && (
           <>
@@ -480,9 +503,11 @@ const AccessPointForm = ({
       <Card
         title="GRE Tunnel Configuration"
         extra={
-          <Button type="solid" onClick={() => setGreModalVisible(true)} data-testid="addGre">
-            Add
-          </Button>
+          roleIsWritable && (
+            <Button type="solid" onClick={() => setGreModalVisible(true)} data-testid="addGre">
+              Add
+            </Button>
+          )
         }
       >
         <Table

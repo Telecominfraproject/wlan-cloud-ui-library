@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Table } from 'antd';
+import { Card, Select as AntdSelect, Form, Button, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import globalStyles from 'styles/index.scss';
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+
+const Select = withWritableInput(AntdSelect);
 
 const VenueForm = ({ form, details, handleOnFormChange }) => {
+  const { roleIsWritable } = useWritableInput();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
     details?.venueTypeAssignment?.venueGroupId || 0
@@ -59,18 +63,22 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       title: 'URL',
       dataIndex: 'venueUrl',
     },
-    {
-      title: '',
-      width: 80,
-      render: (_, record) => (
-        <Button
-          title="remove"
-          icon={<DeleteOutlined />}
-          className={styles.iconButton}
-          onClick={() => handleRemove(record)}
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            width: 80,
+            render: (_, record) => (
+              <Button
+                title="remove"
+                icon={<DeleteOutlined />}
+                className={styles.iconButton}
+                onClick={() => handleRemove(record)}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -222,9 +230,11 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Venue Name"
         extra={
-          <Button type="solid" onClick={() => setModalVisible(true)}>
-            Add Name
-          </Button>
+          roleIsWritable && (
+            <Button type="solid" onClick={() => setModalVisible(true)}>
+              Add Name
+            </Button>
+          )
         }
       >
         <Item noStyle name="venueNameSet">

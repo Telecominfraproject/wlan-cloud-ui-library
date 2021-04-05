@@ -1,18 +1,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select, Switch, Table, Spin, Alert } from 'antd';
+import { Card, Form, Select as AntdSelect, Switch as AntdSwitch, Table, Spin, Alert } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
 import DeleteButton from 'components/DeleteButton';
 import globalStyles from 'styles/index.scss';
+import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
 
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+
+const Select = withWritableInput(AntdSelect);
+const Switch = withWritableInput(AntdSwitch);
 
 const AutoProvision = ({
   data,
@@ -24,6 +28,7 @@ const AutoProvision = ({
   errorProfile,
   onUpdateCustomer,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const status = data?.details?.autoProvisioning || {};
   const [form] = Form.useForm();
   const [enabled, setEnabled] = useState(status.enabled || false);
@@ -122,47 +127,57 @@ const AutoProvision = ({
       width: 800,
       render: i => profilesById[i]?.name || i,
     },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'editModel',
-      width: 60,
-      render: (_, record) => (
-        <Button
-          title={`edit-model-${record.model}`}
-          className={styles.InfoButton}
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setActiveModel({ ...record });
-            setEditModal(true);
-          }}
-        />
-      ),
-    },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'deleteModel',
-      width: 60,
-      render: (_, record) => {
-        return record.model !== 'default' ? (
-          <DeleteButton
-            className={styles.InfoButton}
-            title={`delete-model-${record.model}`}
-            extraOnClick={() => {
-              setActiveModel({ ...record });
-            }}
-            onSuccess={deleteModel}
-            content={
-              <p>
-                Are you sure you want to delete the model: <strong>{activeModel.model}</strong>?
-              </p>
-            }
-          />
-        ) : null;
-      },
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'editModel',
+            width: 60,
+            render: (_, record) => (
+              <Button
+                title={`edit-model-${record.model}`}
+                className={styles.InfoButton}
+                type="primary"
+                icon={<FormOutlined />}
+                onClick={() => {
+                  setActiveModel({ ...record });
+                  setEditModal(true);
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
+
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            dataIndex: '',
+            key: 'deleteModel',
+            width: 60,
+            render: (_, record) => {
+              return record.model !== 'default' ? (
+                <DeleteButton
+                  className={styles.InfoButton}
+                  title={`delete-model-${record.model}`}
+                  extraOnClick={() => {
+                    setActiveModel({ ...record });
+                  }}
+                  onSuccess={deleteModel}
+                  content={
+                    <p>
+                      Are you sure you want to delete the model:{' '}
+                      <strong>{activeModel.model}</strong>?
+                    </p>
+                  }
+                />
+              ) : null;
+            },
+          },
+        ]
+      : []),
   ];
 
   useEffect(() => {
@@ -208,11 +223,13 @@ const AutoProvision = ({
               unCheckedChildren="Disabled"
             />
           </Item>
-          <div>
-            <Button type="primary" onClick={onSubmit}>
-              Save
-            </Button>
-          </div>
+          {roleIsWritable && (
+            <div>
+              <Button type="primary" onClick={onSubmit}>
+                Save
+              </Button>
+            </div>
+          )}
         </div>
 
         {enabled && (
@@ -254,7 +271,7 @@ const AutoProvision = ({
 
             <Card
               title="Target Equipment Profiles"
-              extra={<Button onClick={() => setAddModal(true)}>Add Model</Button>}
+              extra={roleIsWritable && <Button onClick={() => setAddModal(true)}>Add Model</Button>}
             >
               <div className={styles.Content}>
                 <Table rowKey="model" columns={columns} dataSource={tableData} pagination={false} />

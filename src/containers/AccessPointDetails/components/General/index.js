@@ -1,8 +1,19 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, notification, Alert, Empty } from 'antd';
+import {
+  Card,
+  Form,
+  Input as AntdInput,
+  Table,
+  Collapse,
+  Select as AntdSelect,
+  notification,
+  Alert,
+  Empty,
+} from 'antd';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
 
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
@@ -11,8 +22,12 @@ import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
 const { Panel } = Collapse;
+
+const { Option } = AntdSelect;
+const Select = withWritableInput(AntdSelect);
+
+const Input = withWritableInput(AntdInput);
 
 const General = ({
   data,
@@ -26,6 +41,7 @@ const General = ({
   extraFields,
   extraGeneralCards,
 }) => {
+  const { roleIsWritable } = useWritableInput();
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const columns = [
@@ -328,7 +344,7 @@ const General = ({
                   min={1}
                   max={165}
                   addonAfter={channel.addOnText}
-                  disabled={isEnabled}
+                  disabled={isEnabled || !roleIsWritable}
                 />
               </Item>
             );
@@ -352,11 +368,14 @@ const General = ({
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-      <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
-          Save
-        </Button>
-      </div>
+      {roleIsWritable && (
+        <div className={styles.InlineEndDiv}>
+          <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
+            Save
+          </Button>
+        </div>
+      )}
+
       <Card title="Identity">
         <Item
           label="Access Point Name"

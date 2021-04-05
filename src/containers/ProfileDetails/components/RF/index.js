@@ -1,14 +1,18 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select } from 'antd';
+import { Card, Form, Input as AntdInput, Select as AntdSelect } from 'antd';
 import ThemeContext from 'contexts/ThemeContext';
+import { withWritableInput } from 'contexts/InputDisabledContext';
 
 import { defaultRfProfile } from '../constants';
 import styles from '../index.module.scss';
 import { RADIOS } from '../../constants';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+
+const Select = withWritableInput(AntdSelect);
+const Input = withWritableInput(AntdInput);
 
 const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);

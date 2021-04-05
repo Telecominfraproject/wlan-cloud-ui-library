@@ -2,8 +2,10 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
+  const { roleIsWritable } = useWritableInput();
   const formatCols = useMemo(() => {
     return [
       {
@@ -27,17 +29,21 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
           }
         },
       },
-      {
-        title: '',
-        width: 80,
-        render: item => (
-          <Button
-            title="removeItem"
-            icon={<DeleteOutlined />}
-            onClick={() => removeRow(item, dataIndex)}
-          />
-        ),
-      },
+      ...(roleIsWritable
+        ? [
+            {
+              title: '',
+              width: 80,
+              render: item => (
+                <Button
+                  title="removeItem"
+                  icon={<DeleteOutlined />}
+                  onClick={() => removeRow(item, dataIndex)}
+                />
+              ),
+            },
+          ]
+        : []),
     ];
   }, [dataIndex, tableData]);
 

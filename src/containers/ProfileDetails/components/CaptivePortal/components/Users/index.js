@@ -4,10 +4,13 @@ import { Card, Table } from 'antd';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import { FormOutlined } from '@ant-design/icons';
+import { useWritableInput } from 'contexts/InputDisabledContext';
+
 import FormModal from '../FormModal';
 import styles from '../../../index.module.scss';
 
 const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) => {
+  const { roleIsWritable } = useWritableInput();
   const [addUserModal, setAddUserModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
   const [activeUser, setActiveUser] = useState({});
@@ -62,41 +65,49 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
       title: 'Last Name',
       dataIndex: ['userDetails', 'lastName'],
     },
-    {
-      width: 64,
-      render: (_, record) => (
-        <Button
-          className={styles.InfoButton}
-          title={`edit-${record.username}`}
-          type="primary"
-          icon={<FormOutlined />}
-          onClick={() => {
-            setEditUserModal(true);
-            setActiveUser({ ...record });
-          }}
-        />
-      ),
-    },
-
-    {
-      width: 64,
-      render: (_, record) => (
-        <DeleteButton
-          title={`delete-${record.username}`}
-          className={styles.InfoButton}
-          type="primary"
-          extraOnClick={() => {
-            setActiveUser({ ...record });
-          }}
-          onSuccess={deleteUser}
-          content={
-            <p>
-              Are you sure you want to delete the user: <strong> {activeUser.username}</strong>?
-            </p>
-          }
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            width: 64,
+            render: (_, record) => (
+              <Button
+                className={styles.InfoButton}
+                title={`edit-${record.username}`}
+                type="primary"
+                icon={<FormOutlined />}
+                onClick={() => {
+                  setEditUserModal(true);
+                  setActiveUser({ ...record });
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
+    ...(roleIsWritable
+      ? [
+          {
+            width: 64,
+            render: (_, record) => (
+              <DeleteButton
+                title={`delete-${record.username}`}
+                className={styles.InfoButton}
+                type="primary"
+                extraOnClick={() => {
+                  setActiveUser({ ...record });
+                }}
+                onSuccess={deleteUser}
+                content={
+                  <p>
+                    Are you sure you want to delete the user:{' '}
+                    <strong> {activeUser.username}</strong>?
+                  </p>
+                }
+              />
+            ),
+          },
+        ]
+      : []),
   ];
   return (
     <>
@@ -120,7 +131,7 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
       />
       <Card
         title="User List"
-        extra={<Button onClick={() => setAddUserModal(true)}> Add User</Button>}
+        extra={roleIsWritable && <Button onClick={() => setAddUserModal(true)}> Add User</Button>}
       >
         <Table rowKey="username" columns={columns} dataSource={userList} pagination={false} />
       </Card>

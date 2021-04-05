@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Input } from 'antd';
+import { Card, Select as AntdSelect, Form, Button, Input as AntdInput } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
+import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
 import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
+
+const Select = withWritableInput(AntdSelect);
+const Input = withWritableInput(AntdInput);
 
 const OperatorForm = ({ details, form, handleOnFormChange }) => {
+  const { roleIsWritable } = useWritableInput();
   const [modalVisible, setModalVisible] = useState(false);
 
   const [operatorFriendlyName, setOperatorFriendlyName] = useState(
@@ -85,9 +90,11 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
       <Card
         title="Operator Name"
         extra={
-          <Button type="solid" onClick={() => setModalVisible(true)}>
-            Add Name
-          </Button>
+          roleIsWritable && (
+            <Button type="solid" onClick={() => setModalVisible(true)}>
+              Add Name
+            </Button>
+          )
         }
       >
         <PasspointLocaleTable
