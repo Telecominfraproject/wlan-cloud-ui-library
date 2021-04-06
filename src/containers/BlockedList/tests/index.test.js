@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render } from 'tests/utils';
+
+import { mockProps } from './constants';
 import BlockedList from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -19,45 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  data: [
-    {
-      customerId: '2',
-      macAddress: '00:0a:95:9d:68:16',
-      createdTimestamp: '0',
-      lastModifiedTimestamp: '1595891230273',
-      details: {
-        model_type: 'ClientInfoDetails',
-        alias: null,
-        clientType: 0,
-        apFingerprint: null,
-        userName: null,
-        hostName: null,
-        lastUsedCpUsername: null,
-        lastUserAgent: null,
-        doNotSteer: false,
-        blocklistDetails: {
-          model_type: 'BlocklistDetails',
-          enabled: true,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      __typename: 'Client',
-    },
-    {
-      customerId: '2',
-      macAddress: '00:0a:95:9d:68:15',
-      createdTimestamp: '0',
-      lastModifiedTimestamp: '1595891230273',
-      __typename: 'Client',
-    },
-  ],
-};
-
 describe('<BlockedList />', () => {
-  afterEach(cleanup);
-
   it('Add MAC button press should show Add Client modal', async () => {
     const { getByRole, getByText } = render(
       <Router>

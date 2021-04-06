@@ -1,12 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup } from '@testing-library/react';
 import { render } from 'tests/utils';
 import PieChart from '..';
 
 describe('<PieChart />', () => {
-  afterEach(cleanup);
-
   it('Should Render PieChart with valid data', async () => {
     const mockProps = {
       title: 'AP Vendors',

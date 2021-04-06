@@ -1,7 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
+import userEvent from '@testing-library/user-event';
+import faker from 'faker';
+
 import FormModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -18,18 +21,25 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  visible: true,
-  usedUserNames: ['test'],
-};
-
 const MISSING_USERNAME = 'Please input your username.';
 const MISSING_PASSWORD = 'Please input your password.';
 const INVALID_USERNAME = 'Username already used. Please enter a new username.';
 
-describe('<FormModal />', () => {
-  afterEach(cleanup);
+function buildUserForm() {
+  return {
+    username: faker.internet.userName(),
+    password: faker.internet.password(),
+    firstname: faker.name.firstName(),
+    lastname: faker.name.lastName(),
+  };
+}
 
+const mockProps = {
+  visible: true,
+  usedUserNames: [buildUserForm().username],
+};
+
+describe('<FormModal />', () => {
   it('Invalid model error should show if model form contains invalid model id', async () => {
     const submitSpy = jest.fn();
 
@@ -51,12 +61,14 @@ describe('<FormModal />', () => {
       <FormModal {...mockProps} onSubmit={submitSpy} />
     );
 
-    fireEvent.change(getByLabelText('Username'), { target: { value: 'test' } });
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
-    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
-    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
+    const { password, firstname, lastname } = buildUserForm();
 
-    fireEvent.click(getByRole('button', { name: 'Save' }));
+    userEvent.type(getByRole('textbox', { name: /username/i }), mockProps.usedUserNames[0]);
+    userEvent.type(getByLabelText(/password/i), password);
+    userEvent.type(getByRole('textbox', { name: /first name/i }), firstname);
+    userEvent.type(getByRole('textbox', { name: /last name/i }), lastname);
+
+    fireEvent.click(getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
       expect(submitSpy).toHaveBeenCalledTimes(0);
@@ -69,7 +81,7 @@ describe('<FormModal />', () => {
 
     const { getByRole } = render(<FormModal {...mockProps} onCancel={cancelSpy} />);
 
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
       expect(cancelSpy).toHaveBeenCalledTimes(1);
@@ -79,7 +91,7 @@ describe('<FormModal />', () => {
   it('onCancel default props', async () => {
     const { getByRole } = render(<FormModal {...mockProps} />);
 
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
   });
 
   it('onSubmit default props', async () => {
@@ -87,7 +99,9 @@ describe('<FormModal />', () => {
       <FormModal {...mockProps} username="username" firstName="firstname" lastName="lastname" />
     );
 
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
+    const { password } = buildUserForm();
+
+    userEvent.type(getByLabelText(/password/i), password);
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
   });

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { render, ROUTES } from 'tests/utils';
 import BulkEditAccessPoints from '..';
@@ -96,7 +96,6 @@ const mockProps = {
 const ENTER = { keyCode: 13 };
 
 describe('<BulkEditAccessPoints />', () => {
-  afterEach(cleanup);
   const URL = ROUTES.accessPoints;
 
   it('URL should change back to /network/access-points when Back button is clicked', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import FormModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -153,11 +153,8 @@ const mockProps = {
 const MISSING_MODEL = 'Please enter Model.';
 const MISSING_PROFILE = 'Please select Access Point Profile.';
 const INVALID_MODEL = 'Model already used. Please enter a new model.';
-const DOWN_ARROW = { keyCode: 40 };
 
 describe('<FormModal />', () => {
-  afterEach(cleanup);
-
   it('Loading spinner should be visible if loadingProfile is true for Form modal', async () => {
     const { getByTestId } = render(<FormModal {...mockProps} loadingProfile />);
 

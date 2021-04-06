@@ -1,9 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitFor, waitForElement, within } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement, within } from '@testing-library/react';
 import { BrowserRouter as Router, Route, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
 import { defaultProps, firmware } from './constants';
 import AccessPointDetails from '..';
 
@@ -21,13 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<AccessPointDetails />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('general tab should show the general form', async () => {
     const { getByRole, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>

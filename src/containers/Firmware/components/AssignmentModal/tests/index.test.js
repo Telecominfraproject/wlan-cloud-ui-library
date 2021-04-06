@@ -1,8 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { generateFirmware } from 'containers/AccessPointDetails/tests/utils';
 
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
 import AssignmentModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -24,22 +25,7 @@ const mockProps = {
   title: 'Add Model Target Version',
   filteredModels: ['ea8300-ca'],
   handleSearchFirmware: () => {},
-  firmwareVersionData: [
-    {
-      id: '3',
-      modelId: 'ea8300-ca',
-      versionName: 'ea8300-2020-06-25-ce03472',
-      description: '',
-      filename:
-        'https://tip-read:tip-read@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ea8300/ea8300-2020-06-25-ce03472.tar.gz',
-      commit: 'ce03472',
-      releaseDate: '1596045666546',
-      validationCode: 'b209deb9847bdf40a31e45edf2e5a8d7',
-      createdTimestamp: '1596045666546',
-      lastModifiedTimestamp: '1596045666546',
-      __typename: 'Firmware',
-    },
-  ],
+  firmwareVersionData: [generateFirmware()],
   firmwareVersionLoading: false,
   firmwareModelError: null,
   firmwareModelLoading: false,
@@ -48,11 +34,8 @@ const mockProps = {
 };
 const MISSING_MODEL = 'Please input your Model ID';
 const MISSING_FIRMWARE = 'Please select your firmware version';
-const DOWN_ARROW = { keyCode: 40 };
 
 describe('<AssignmentModal />', () => {
-  afterEach(cleanup);
-
   it('Title should be Add Model Target Version', async () => {
     const { getByText } = render(<AssignmentModal {...mockProps} />);
 
