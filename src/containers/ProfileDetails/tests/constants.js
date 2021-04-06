@@ -1,6 +1,5 @@
 import {
   generateCompanyNames,
-  generateGreTunnelConfig,
   generateRadiusProfile,
   generateRfConfig,
   generateRfProfile,
@@ -40,7 +39,7 @@ export const mockAccessPoint = {
     syslogRelay: null,
     vlan: 0,
     vlanNative: true,
-    greTunnelConfigurations: [generateGreTunnelConfig()],
+    greTunnelConfigurations: [],
   },
   childProfileIds: [fakeSsid.id],
   childProfiles: [fakeSsid],
