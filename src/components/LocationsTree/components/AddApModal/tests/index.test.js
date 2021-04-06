@@ -1,7 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
+
+import { mockProps } from './constants';
+
 import AddApModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -18,134 +21,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  onCancel: jest.fn(),
-  onSubmit: jest.fn(),
-  visible: true,
-  buttonText: 'Add',
-  title: 'Add Access Point',
-  profiles: [
-    {
-      id: '6',
-      name: 'ApProfile-3-radios',
-      profileType: 'equipment_ap',
-      details: {
-        equipmentDiscovery: false,
-        equipmentType: 'AP',
-        ledControlEnabled: true,
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        ntpServer: { model_type: 'AutoOrManualString', auto: true, value: 'pool.ntp.org' },
-        profileType: 'equipment_ap',
-        radioMap: {
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzL: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzU: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        syslogRelay: null,
-        vlan: 0,
-        vlanNative: true,
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: '7',
-      name: 'ApProfile-2-radios',
-      profileType: 'equipment_ap',
-      details: {
-        equipmentDiscovery: false,
-        equipmentType: 'AP',
-        ledControlEnabled: true,
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        ntpServer: { model_type: 'AutoOrManualString', auto: true, value: 'pool.ntp.org' },
-        profileType: 'equipment_ap',
-        radioMap: {
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        syslogRelay: null,
-        vlan: 0,
-        vlanNative: true,
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: '8',
-      name: 'EnterpriseApProfile',
-      profileType: 'equipment_ap',
-      details: {
-        equipmentDiscovery: false,
-        equipmentType: 'AP',
-        ledControlEnabled: true,
-        model_type: 'ApNetworkConfiguration',
-        networkConfigVersion: 'AP-1',
-        ntpServer: { model_type: 'AutoOrManualString', auto: true, value: 'pool.ntp.org' },
-        profileType: 'equipment_ap',
-        radioMap: {
-          is2dot4GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHz: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzL: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-          is5GHzU: {
-            model_type: 'RadioProfileConfiguration',
-            bestApEnabled: true,
-            bestAPSteerType: 'both',
-          },
-        },
-        rtlsSettings: null,
-        syntheticClientEnabled: true,
-        syslogRelay: null,
-        vlan: 0,
-        vlanNative: true,
-      },
-      __typename: 'Profile',
-    },
-  ],
-  loadingProfile: false,
-  errorProfile: false,
-};
-
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<AddApModal />', () => {
-  afterEach(cleanup);
-
   it('should show Add Access Point modal when visible is true', () => {
     const onCheckSpy = jest.fn();
     const { getByText } = render(<AddApModal {...mockProps} onCheck={onCheckSpy} />);
@@ -185,8 +61,8 @@ describe('<AddApModal />', () => {
     fireEvent.change(getByLabelText('Name'), { target: { value: 'Test' } });
     const profile = getByLabelText('Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText('ApProfile-3-radios'));
-    fireEvent.click(getByText('ApProfile-3-radios'));
+    await waitForElement(() => getByText(mockProps.profiles[0].name));
+    fireEvent.click(getByText(mockProps.profiles[0].name));
     fireEvent.click(getByRole('button', { name: /add/i }));
     await waitFor(() => {
       expect(onSubmitSpy).toHaveBeenCalledTimes(1);

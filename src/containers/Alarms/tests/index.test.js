@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import Alarms from '..';
 
@@ -82,10 +82,6 @@ const mockProps = {
 };
 
 describe('<Alarms />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('should work with the default props', async () => {
     const { getAllByText } = render(
       <Router>

@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, within } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 
 import { render } from 'tests/utils';
 import Accounts from '..';
@@ -41,8 +41,6 @@ const INVALID_CONFIRMED_PASSWORD = 'Please input your password';
 const INVALID_PASSWORDS = 'The two passwords do not match';
 
 describe('<Accounts />', () => {
-  afterEach(cleanup);
-
   it('delete user button click should show modal', async () => {
     const { getByRole, getByText } = render(<Accounts {...mockProps} />);
     fireEvent.click(getByRole('button', { name: `delete-${mockProps.data[0].email}` }));

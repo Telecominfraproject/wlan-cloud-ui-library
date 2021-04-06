@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 import { render } from 'tests/utils';
 import Login from '..';
@@ -20,8 +20,6 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 describe('<Login />', () => {
-  afterEach(cleanup);
-
   it('should not call onLogin if email and password is empty', async () => {
     const submitSpy = jest.fn();
     const { getByTestId, getByText } = render(<Login onLogin={submitSpy} />);

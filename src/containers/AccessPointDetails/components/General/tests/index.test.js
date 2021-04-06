@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitForElement, waitFor } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitForElement, waitFor } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import { defaultProps } from '../../../tests/constants';
 import General from '..';
 
@@ -19,24 +19,20 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<General />', () => {
-  afterEach(() => {
-    cleanup();
-  });
-
   it('changing the access point profile should update table', async () => {
-    const { getByText, getByLabelText } = render(<General {...defaultProps} />);
+    const { getByText, getByLabelText, getAllByText } = render(<General {...defaultProps} />);
 
     const apProfile = getByLabelText('Access Point Profile');
 
+    const profileName = defaultProps.profiles[0].name;
+
     fireEvent.keyDown(apProfile, DOWN_ARROW);
-    await waitForElement(() => getByText('EnterpriseApProfile'));
-    fireEvent.click(getByText('EnterpriseApProfile'));
+    await waitForElement(() => getByText(profileName));
+    fireEvent.click(getByText(profileName));
 
     await waitFor(() => {
-      expect(getByText('TipWlan-cloud-Enterprise')).toBeVisible();
+      expect(getAllByText(profileName)[0]).toBeVisible();
     });
   });
 
@@ -382,31 +378,12 @@ describe('<General />', () => {
     expect(input).toBeDisabled();
   });
 
-  it('Active channel field should not be disabled if autoChannelSelection setting is disabled', async () => {
-    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
-    expect(input).not.toBeDisabled();
-  });
-
-  it('Backup channel field should not be disabled if autoChannelSelection setting is disabled', async () => {
-    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
-
-    fireEvent.click(getByRole('button', { name: /settings/i }));
-
-    const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
-    expect(input).not.toBeDisabled();
-  });
-
   it('error if active channel input exceends bounds', async () => {
     const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
     const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
-    expect(input).not.toBeDisabled();
 
     fireEvent.change(input, {
       target: { value: 166 },
@@ -425,7 +402,6 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
     const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
-    expect(input).not.toBeDisabled();
 
     fireEvent.change(input, {
       target: { value: 166 },

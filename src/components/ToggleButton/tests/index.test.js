@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -8,8 +8,6 @@ import ToggleButton from '..';
 import styles from '../index.module.scss';
 
 describe('<ToggleButton />', () => {
-  afterEach(cleanup);
-
   const clientDevices = '/network/client-devices';
   const accessPoints = '/network/access-points';
 

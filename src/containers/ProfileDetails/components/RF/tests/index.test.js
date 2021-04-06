@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
+
+import { mockRf } from '../../../tests/constants';
 
 import RFForm from '..';
 
@@ -20,214 +22,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    model_type: 'RfConfiguration',
-    profileType: 'rf',
-    rfConfigMap: {
-      is2dot4GHz: {
-        activeScanSettings: {
-          enabled: false,
-          model_type: 'ActiveScanSettings',
-          scanDurationMillis: 0,
-          scanFrequencySeconds: 0,
-        },
-        autoChannelSelection: false, // removed from form in cloudSDK
-        beaconInterval: 0,
-        bestApEnabled: null, // removed from form in cloudSDK
-        bestApSettings: {
-          dropInSnrPercentage: 10,
-          minLoadFactor: 10,
-          mlComputed: false,
-          model_type: 'RadioBestApSettings',
-        },
-        channelBandwidth: 'is20MHz',
-        channelHopSettings: {
-          model_type: 'ChannelHopSettings',
-          noiseFloorThresholdInDB: -75,
-          noiseFloorThresholdTimeInSeconds: 180,
-          nonWifiThresholdInPercentage: 50,
-          nonWifiThresholdTimeInSeconds: 180,
-          obssHopMode: 'NON_WIFI',
-        },
-        clientDisconnectThresholdDb: 0,
-        eirpTxPower: 0,
-        forceScanDuringVoice: 'disabled', // not in form
-        managementRate: 'rate1mbps',
-        maxNumClients: 0,
-        mimoMode: 'none',
-        minAutoCellSize: null, // removed from form in cloudSDK
-        model_type: 'RfElementConfiguration',
-        multicastRate: 'rate6mbps',
-        neighbouringListApConfig: {
-          maxAps: 0,
-          minSignal: 0,
-          model_type: 'NeighbouringAPListConfiguration',
-        },
-        perimeterDetectionEnabled: true, // removed from form in cloudSDK
-        probeResponseThresholdDb: 0,
-        radioMode: 'modeN',
-        rf: null,
-        rtsCtsThreshold: 0,
-        rxCellSizeDb: 0,
-      },
-      is5GHz: {
-        activeScanSettings: {
-          enabled: false,
-          model_type: 'ActiveScanSettings',
-          scanDurationMillis: 0,
-          scanFrequencySeconds: 0,
-        },
-        autoChannelSelection: false, // removed from form in cloudSDK
-        beaconInterval: 0,
-        bestApEnabled: null, // removed from form in cloudSDK
-        bestApSettings: {
-          dropInSnrPercentage: 10,
-          minLoadFactor: 10,
-          mlComputed: false,
-          model_type: 'RadioBestApSettings',
-        },
-        channelBandwidth: 'is20MHz',
-        channelHopSettings: {
-          model_type: 'ChannelHopSettings',
-          noiseFloorThresholdInDB: -75,
-          noiseFloorThresholdTimeInSeconds: 180,
-          nonWifiThresholdInPercentage: 50,
-          nonWifiThresholdTimeInSeconds: 180,
-          obssHopMode: 'NON_WIFI',
-        },
-        clientDisconnectThresholdDb: 0,
-        eirpTxPower: 0,
-        forceScanDuringVoice: 'disabled', // not in form
-        managementRate: 'rate1mbps',
-        maxNumClients: 0,
-        mimoMode: 'none',
-        minAutoCellSize: null, // removed from form in cloudSDK
-        model_type: 'RfElementConfiguration',
-        multicastRate: 'rate6mbps',
-        neighbouringListApConfig: {
-          maxAps: 0,
-          minSignal: 0,
-          model_type: 'NeighbouringAPListConfiguration',
-        },
-        perimeterDetectionEnabled: true, // removed from form in cloudSDK
-        probeResponseThresholdDb: 0,
-        radioMode: 'modeN',
-        rf: null,
-        rtsCtsThreshold: 0,
-        rxCellSizeDb: 0,
-      },
-      is5GHzU: {
-        activeScanSettings: {
-          enabled: false,
-          model_type: 'ActiveScanSettings',
-          scanDurationMillis: 0,
-          scanFrequencySeconds: 0,
-        },
-        autoChannelSelection: false, // removed from form in cloudSDK
-        beaconInterval: 0,
-        bestApEnabled: null, // removed from form in cloudSDK
-        bestApSettings: {
-          dropInSnrPercentage: 10,
-          minLoadFactor: 10,
-          mlComputed: false,
-          model_type: 'RadioBestApSettings',
-        },
-        channelBandwidth: 'is20MHz',
-        channelHopSettings: {
-          model_type: 'ChannelHopSettings',
-          noiseFloorThresholdInDB: -75,
-          noiseFloorThresholdTimeInSeconds: 180,
-          nonWifiThresholdInPercentage: 50,
-          nonWifiThresholdTimeInSeconds: 180,
-          obssHopMode: 'NON_WIFI',
-        },
-        clientDisconnectThresholdDb: 0,
-        eirpTxPower: 0,
-        forceScanDuringVoice: 'disabled', // not in form
-        managementRate: 'rate1mbps',
-        maxNumClients: 0,
-        mimoMode: 'none',
-        minAutoCellSize: null, // removed from form in cloudSDK
-        model_type: 'RfElementConfiguration',
-        multicastRate: 'rate6mbps',
-        neighbouringListApConfig: {
-          maxAps: 0,
-          minSignal: 0,
-          model_type: 'NeighbouringAPListConfiguration',
-        },
-        perimeterDetectionEnabled: true, // removed from form in cloudSDK
-        probeResponseThresholdDb: 0,
-        radioMode: 'modeN',
-        rf: null,
-        rtsCtsThreshold: 0,
-        rxCellSizeDb: 0,
-      },
-      is5GHzL: {
-        activeScanSettings: {
-          enabled: false,
-          model_type: 'ActiveScanSettings',
-          scanDurationMillis: 0,
-          scanFrequencySeconds: 0,
-        },
-        autoChannelSelection: false, // removed from form in cloudSDK
-        beaconInterval: 0,
-        bestApEnabled: null, // removed from form in cloudSDK
-        bestApSettings: {
-          dropInSnrPercentage: 10,
-          minLoadFactor: 10,
-          mlComputed: false,
-          model_type: 'RadioBestApSettings',
-        },
-        channelBandwidth: 'is20MHz',
-        channelHopSettings: {
-          model_type: 'ChannelHopSettings',
-          noiseFloorThresholdInDB: -75,
-          noiseFloorThresholdTimeInSeconds: 180,
-          nonWifiThresholdInPercentage: 50,
-          nonWifiThresholdTimeInSeconds: 180,
-          obssHopMode: 'NON_WIFI',
-        },
-        clientDisconnectThresholdDb: 0,
-        eirpTxPower: 0,
-        forceScanDuringVoice: 'disabled', // not in form
-        managementRate: 'rate1mbps',
-        maxNumClients: 0,
-        mimoMode: 'none',
-        minAutoCellSize: null, // removed from form in cloudSDK
-        model_type: 'RfElementConfiguration',
-        multicastRate: 'rate6mbps',
-        neighbouringListApConfig: {
-          maxAps: 0,
-          minSignal: 0,
-          model_type: 'NeighbouringAPListConfiguration',
-        },
-        perimeterDetectionEnabled: true, // removed from form in cloudSDK
-        probeResponseThresholdDb: 0,
-        radioMode: 'modeN',
-        rf: null,
-        rtsCtsThreshold: 0,
-        rxCellSizeDb: 0,
-      },
-    },
-  },
-  extraFields: [
-    {
-      label: 'Rx Cell Size',
-      dataIndex: ['rxCellSizeDb'],
-      renderInput: 'renderInputItem',
-      options: {
-        min: -100,
-        max: 100,
-        error: '-100 - 100 dBm',
-        addOnText: 'dBm',
-      },
-    },
-  ],
-};
-
 describe('<RFForm />', () => {
-  afterEach(cleanup);
   // test default values of form
   it('Form should load with the initial values if details object is empty', async () => {
     const RFFormComp = () => {
@@ -345,7 +140,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -366,7 +161,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -387,7 +182,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -408,7 +203,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -429,7 +224,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -450,7 +245,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -471,7 +266,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -492,7 +287,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -513,7 +308,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -534,7 +329,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -555,7 +350,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -576,7 +371,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -598,7 +393,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -619,7 +414,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -640,7 +435,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -661,12 +456,12 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
 
-    const { getByText, getByPlaceholderText } = render(<RFFormComp {...mockProps} />);
+    const { getByText, getByPlaceholderText } = render(<RFFormComp {...mockRf} />);
 
     fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHzL'), {
       target: { value: -101 },
@@ -682,7 +477,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -703,7 +498,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -724,7 +519,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -745,7 +540,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -766,7 +561,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -787,7 +582,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -808,7 +603,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -829,7 +624,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -850,7 +645,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -871,7 +666,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -892,7 +687,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -913,7 +708,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -934,7 +729,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -955,7 +750,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -976,7 +771,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -997,7 +792,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1018,7 +813,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1039,7 +834,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1060,7 +855,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1081,7 +876,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1102,7 +897,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1123,7 +918,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1144,7 +939,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1165,7 +960,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1186,7 +981,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1207,7 +1002,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1228,7 +1023,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1249,7 +1044,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1270,7 +1065,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1291,7 +1086,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1312,7 +1107,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1333,7 +1128,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1355,7 +1150,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1376,7 +1171,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1397,7 +1192,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1418,7 +1213,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1439,7 +1234,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1460,7 +1255,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1481,7 +1276,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1502,7 +1297,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1523,7 +1318,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1544,7 +1339,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1565,7 +1360,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1586,7 +1381,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1607,7 +1402,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1628,7 +1423,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1649,7 +1444,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };
@@ -1670,7 +1465,7 @@ describe('<RFForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <RFForm {...mockProps} form={form} />
+          <RFForm {...mockRf} form={form} />
         </Form>
       );
     };

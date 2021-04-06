@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import FormModal from '..';
 
@@ -23,8 +23,6 @@ const mockProps = {
 };
 
 describe('<FormModal />', () => {
-  afterEach(cleanup);
-
   it('Invalid MAC address show show on invalid Client input', async () => {
     const submitSpy = jest.fn();
 

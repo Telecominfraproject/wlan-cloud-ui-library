@@ -1,7 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
+import { generateLocation } from 'components/LocationsTree/tests/utils';
 
 import EditFormModal from '..';
 
@@ -24,19 +25,10 @@ const mockProps = {
   visible: true,
   onSubmit: () => {},
   onCancel: () => {},
-  selectedLocation: {
-    id: '2',
-    lastModifiedTimestamp: '1596059377937',
-    locationType: 'SITE',
-    name: 'Menlo Park',
-    parentId: '0',
-    __typename: 'Location',
-  },
+  selectedLocation: generateLocation(),
 };
 
 describe('<EditFormModal />', () => {
-  afterEach(cleanup);
-
   it('if selectedLocation is defined it should populate form with values', () => {
     const { getByLabelText } = render(
       <EditFormModal {...mockProps} selectedLocation={{ name: 'Test', locationType: 'SITE' }} />

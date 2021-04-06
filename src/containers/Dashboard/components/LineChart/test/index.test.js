@@ -1,12 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup } from '@testing-library/react';
 import { render } from 'tests/utils';
 import LineChart from '..';
 
 describe('<DeviceStatsCard />', () => {
-  afterEach(cleanup);
-
   it('Should Render LineChart with simple data', async () => {
     const mockProps = {
       title: 'Inservice APs (24 hours)',

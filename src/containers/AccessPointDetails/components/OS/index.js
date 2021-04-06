@@ -94,6 +94,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         loading={osData?.loading}
         cpuUsage={metrics.cpuUtilCores}
         freeMemory={metrics.freeMemory}
+        maxFreeMemory={Math.round(osPerformance?.totalAvailableMemoryKb * 1000)}
         cpuTemp={metrics.cpuTemperature}
       />
     </Card>
