@@ -32,7 +32,7 @@ const OS = ({ data, osData, handleRefresh }) => {
     metrics.forEach(i => {
       if (i?.detailsJSON?.apPerformance) {
         const timestamp = parseInt(i.createdTimestamp, 10);
-        freeMemory.push({ timestamp, value: i.detailsJSON.apPerformance.freeMemory });
+        freeMemory.push({ timestamp, value: i.detailsJSON.apPerformance.freeMemory * 1000 });
         cpuTemperature.push({ timestamp, value: i.detailsJSON.apPerformance.cpuTemperature });
         i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
           if (!(index in cpuUtilCores)) {

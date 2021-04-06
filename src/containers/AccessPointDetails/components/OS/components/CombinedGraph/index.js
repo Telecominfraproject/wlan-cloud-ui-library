@@ -8,21 +8,33 @@ import Loading from 'components/Loading';
 import LineGraphTooltip from 'components/LineGraphTooltip';
 import { COLORS } from 'utils/charts';
 
-const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
+const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }) => {
   const lineData = useMemo(() => {
     let result = [];
 
     Object.keys(cpuUsage).forEach(core => {
       result = [
         ...result,
-        { name: `CPU Core ${core + 1}`, data: cpuUsage[core], yAxisFormatter: tick => `${tick}%` },
+        {
+          name: `CPU Core ${core + 1}`,
+          data: cpuUsage[core],
+          yAxisFormatter: tick => `${tick}%`,
+          min: 0,
+          max: 100,
+        },
       ];
     });
 
     result = [
       ...result,
-      { name: 'Free Memory', data: freeMemory, yAxisFormatter: formatBytes },
-      { name: 'CPU Temp', data: cpuTemp, yAxisFormatter: tick => `${tick} °C` },
+      {
+        name: 'Free Memory',
+        data: freeMemory,
+        yAxisFormatter: formatBytes,
+        min: 0,
+        max: maxFreeMemory,
+      },
+      { name: 'CPU Temp', data: cpuTemp, yAxisFormatter: tick => `${tick} °C`, min: 0, max: 100 },
     ];
 
     return result;
@@ -35,7 +47,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
   return (
     <div style={{ width: '100%', height: 400 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart>
+        <LineChart margin={{ top: 15 }}>
           <XAxis
             dataKey="timestamp"
             type="number"
@@ -50,7 +62,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
               dataKey="value"
               yAxisId={s.name}
               orientation={i % 2 === 0 ? 'left' : 'right'}
-              domain={['dataMin-2', 'dataMax+2']}
+              domain={[s.min, s.max]}
               stroke={COLORS[i]}
               strokeWidth={2}
               tickFormatter={s.yAxisFormatter}
@@ -85,6 +97,7 @@ CombinedGraph.propTypes = {
   cpuUsage: PropTypes.instanceOf(Object),
   freeMemory: PropTypes.instanceOf(Object),
   cpuTemp: PropTypes.instanceOf(Object),
+  maxFreeMemory: PropTypes.number,
 };
 
 CombinedGraph.defaultProps = {
@@ -92,6 +105,7 @@ CombinedGraph.defaultProps = {
   cpuUsage: {},
   freeMemory: {},
   cpuTemp: {},
+  maxFreeMemory: 0,
 };
 
 export default CombinedGraph;
