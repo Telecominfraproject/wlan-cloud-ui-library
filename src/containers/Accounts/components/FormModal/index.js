@@ -69,7 +69,7 @@ const FormModal = ({
         </Select>
       </Item>
 
-      {extraFields.map(field => (
+      {extraFields?.map(field => (
         <Item name={field.name} label={field.label} {...field}>
           {React.cloneElement(field.component, {
             checked,
