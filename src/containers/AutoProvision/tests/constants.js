@@ -70,7 +70,7 @@ export const mockProps = {
       },
     }),
   ],
-  loadingLoaction: false,
+  loadingLocation: false,
   loadingProfile: false,
   errorLocation: null,
   errorProfile: null,

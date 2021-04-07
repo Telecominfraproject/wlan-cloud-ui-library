@@ -18,11 +18,12 @@ const AutoProvision = ({
   data,
   dataLocation,
   dataProfile,
-  loadingLoaction,
+  loadingLocation,
   loadingProfile,
   errorLocation,
   errorProfile,
   onUpdateCustomer,
+  onFetchMoreProfiles,
 }) => {
   const status = data?.details?.autoProvisioning || {};
   const [form] = Form.useForm();
@@ -183,6 +184,7 @@ const AutoProvision = ({
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
         usedModels={usedModels}
+        onFetchMoreProfiles={onFetchMoreProfiles}
       />
 
       <FormModal
@@ -195,6 +197,7 @@ const AutoProvision = ({
         loadingProfile={loadingProfile}
         errorProfile={errorProfile}
         usedModels={usedModels}
+        onFetchMoreProfiles={onFetchMoreProfiles}
       />
       <Form {...layout} form={form}>
         <div className={styles.Header}>
@@ -218,8 +221,8 @@ const AutoProvision = ({
         {enabled && (
           <div className={styles.Content}>
             <Card title="Target Location">
-              {loadingLoaction && (
-                <Spin data-testid="loadingLoaction" className={styles.spinner} size="large" />
+              {loadingLocation && (
+                <Spin data-testid="loadingLocation" className={styles.spinner} size="large" />
               )}
               {errorLocation && (
                 <Alert
@@ -230,7 +233,7 @@ const AutoProvision = ({
                   showIcon
                 />
               )}
-              {!loadingLoaction && !errorLocation && (
+              {!loadingLocation && !errorLocation && (
                 <Item
                   label="Auto-Provisioning Location"
                   name="locationId"
@@ -271,22 +274,24 @@ AutoProvision.propTypes = {
   data: PropTypes.instanceOf(Object),
   dataLocation: PropTypes.instanceOf(Array),
   dataProfile: PropTypes.instanceOf(Array),
-  loadingLoaction: PropTypes.bool,
+  loadingLocation: PropTypes.bool,
   loadingProfile: PropTypes.bool,
   errorLocation: PropTypes.instanceOf(Object),
   errorProfile: PropTypes.instanceOf(Object),
   onUpdateCustomer: PropTypes.func,
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 AutoProvision.defaultProps = {
   data: {},
   dataLocation: [],
   dataProfile: [],
-  loadingLoaction: true,
+  loadingLocation: true,
   loadingProfile: true,
   errorLocation: null,
   errorProfile: null,
   onUpdateCustomer: () => {},
+  onFetchMoreProfiles: () => {},
 };
 
 export default AutoProvision;
