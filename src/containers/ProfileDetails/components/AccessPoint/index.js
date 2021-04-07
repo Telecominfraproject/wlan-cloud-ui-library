@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Card,
   Form,
-  Input,
+  Input as AntdInput,
   Checkbox as AntdCheckbox,
   Radio,
   Select as AntdSelect,
@@ -31,6 +31,7 @@ const { Group: RadioGroup } = Radio;
 const Group = withWritableInput(RadioGroup);
 
 const Checkbox = withWritableInput(AntdCheckbox);
+const Input = withWritableInput(AntdInput);
 
 const AccessPointForm = ({
   form,
@@ -177,19 +178,23 @@ const AccessPointForm = ({
       dataIndex: 'vlanIdsInGreTunnel',
       render: items => (!items?.length ? 'N/A' : items?.join(', ')),
     },
-    {
-      title: '',
-      width: 80,
-      render: item => (
-        <Button
-          title="removeGre"
-          icon={<DeleteFilled />}
-          onClick={() => {
-            handleRemoveGre(item);
-          }}
-        />
-      ),
-    },
+    ...(roleIsWritable
+      ? [
+          {
+            title: '',
+            width: 80,
+            render: item => (
+              <Button
+                title="removeGre"
+                icon={<DeleteFilled />}
+                onClick={() => {
+                  handleRemoveGre(item);
+                }}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const enabledRadioOptions = () => (

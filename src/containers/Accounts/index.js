@@ -24,6 +24,7 @@ const Accounts = ({
   isLastPage,
   isAuth0Enabled,
   allUserRoles,
+  extraFields,
 }) => {
   const { roleIsWritable } = useWritableInput();
   const [editModal, setEditModal] = useState(false);
@@ -129,12 +130,13 @@ const Accounts = ({
         visible={editModal}
         onSubmit={editUser}
         title="Edit User"
-        userRole={activeUser?.roles?.[0]}
+        userRole={activeUser?.roles}
         userEmail={activeUser.email}
         userId={activeUser?.id}
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
         allUserRoles={allUserRoles}
+        extraFields={extraFields}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
@@ -143,6 +145,7 @@ const Accounts = ({
         title="Add User"
         isAuth0Enabled={isAuth0Enabled}
         allUserRoles={allUserRoles}
+        extraFields={extraFields}
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
@@ -165,6 +168,7 @@ Accounts.propTypes = {
   currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   allUserRoles: PropTypes.instanceOf(Array),
+  extraFields: PropTypes.instanceOf(Object),
 };
 
 Accounts.defaultProps = {
@@ -175,6 +179,7 @@ Accounts.defaultProps = {
   currentUserId: null,
   isAuth0Enabled: false,
   allUserRoles: ['SuperUser', 'CustomerIT'],
+  extraFields: null,
 };
 
 export default Accounts;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Select } from 'antd';
 
@@ -24,15 +24,23 @@ const FormModal = ({
   isAuth0Enabled,
   onResetUserPassword,
   allUserRoles,
+  extraFields,
 }) => {
   const [form] = Form.useForm();
+  const [checked, setChecked] = useState(userRole.includes('ManagePortalUser'));
 
   useEffect(() => {
     if (visible) {
       form.resetFields();
-      form.setFieldsValue({ email: userEmail, roles: userRole });
+      form.setFieldsValue({ email: userEmail, roles: userRole, checked });
     }
   }, [visible]);
+
+  const handleChange = e => {
+    if (e.target.type === 'checkbox') {
+      setChecked(!checked);
+    }
+  };
 
   const content = (
     <Form {...modalLayout} form={form}>
@@ -60,6 +68,16 @@ const FormModal = ({
           ))}
         </Select>
       </Item>
+
+      {extraFields.map(field => (
+        <Item name={field.name} label={field.label} {...field}>
+          {React.cloneElement(field.component, {
+            checked,
+            onChange: handleChange,
+          })}
+        </Item>
+      ))}
+
       {!isAuth0Enabled && (
         <>
           <Item
@@ -123,8 +141,23 @@ const FormModal = ({
     form
       .validateFields()
       .then(values => {
+        const valuesCopy = JSON.parse(JSON.stringify(values));
+
+        if (!Array.isArray(valuesCopy.roles)) {
+          valuesCopy.roles = [valuesCopy.roles];
+        }
+
+        if (checked) {
+          valuesCopy.roles.push('ManagePortalUser');
+        } else {
+          valuesCopy.roles = valuesCopy.roles.filter(
+            i => i !== 'ManagePortalUser' && i !== 'Unknown'
+          );
+        }
+
+        onSubmit(valuesCopy);
         form.resetFields();
-        onSubmit(values);
+        setChecked(userRole.includes('ManagePortalUser'));
       })
       .catch(() => {});
   };
@@ -151,6 +184,7 @@ FormModal.propTypes = {
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
   allUserRoles: PropTypes.instanceOf(Array),
+  extraFields: PropTypes.instanceOf(Object),
 };
 
 FormModal.defaultProps = {
@@ -161,6 +195,7 @@ FormModal.defaultProps = {
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
   allUserRoles: ['SuperUser', 'CustomerIT'],
+  extraFields: null,
 };
 
 export default FormModal;

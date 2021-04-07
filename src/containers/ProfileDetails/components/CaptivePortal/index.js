@@ -6,7 +6,7 @@ import {
   Input as AntdInput,
   Radio,
   Select as AntdSelect,
-  Upload,
+  Upload as AntdUpload,
   Alert,
   Collapse,
   message,
@@ -37,6 +37,8 @@ const Search = withWritableInput(AntdSearch);
 
 const { Group: RadioGroup } = Radio;
 const Group = withWritableInput(RadioGroup);
+
+const Upload = withWritableInput(AntdUpload);
 
 const validateIPv4 = inputString => {
   // allow spaces in place of dots
