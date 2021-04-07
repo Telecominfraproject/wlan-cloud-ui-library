@@ -46,7 +46,7 @@ const dateTimeLabelFormats = {
   year: '',
 };
 
-const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
+const HighChartGraph = ({ loading, cpuUsage, freeMemory, maxFreeMemory, cpuTemp }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -97,6 +97,8 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         }}
         visible={visible}
         showEmpty={false}
+        min={0}
+        max={100}
       >
         <YAxis.Title
           style={{
@@ -125,6 +127,8 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         opposite
         visible={visible}
         showEmpty={false}
+        min={0}
+        max={maxFreeMemory}
       >
         <YAxis.Title
           style={{
@@ -144,6 +148,8 @@ const HighChartGraph = ({ loading, cpuUsage, freeMemory, cpuTemp }) => {
         }}
         visible={visible}
         showEmpty={false}
+        min={0}
+        max={100}
       >
         <YAxis.Title
           style={{
@@ -162,6 +168,7 @@ HighChartGraph.propTypes = {
   loading: PropTypes.bool,
   cpuUsage: PropTypes.instanceOf(Object),
   freeMemory: PropTypes.instanceOf(Object),
+  maxFreeMemory: PropTypes.number,
   cpuTemp: PropTypes.instanceOf(Object),
 };
 
@@ -169,6 +176,7 @@ HighChartGraph.defaultProps = {
   loading: false,
   cpuUsage: [],
   freeMemory: {},
+  maxFreeMemory: 0,
   cpuTemp: {},
 };
 

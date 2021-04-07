@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
-import { render } from 'tests/utils';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
+import { render, DOWN_ARROW } from 'tests/utils';
 import FormModal from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -35,11 +35,7 @@ const MISSING_PORT = 'Port field cannot be empty';
 const INVALID_PORT = 'Port expected between 1 - 6553';
 const USED_PORT = 'Port is already used';
 
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<FormModal />', () => {
-  afterEach(cleanup);
-
   it('Missing model error should show if model form has missing model', async () => {
     const submitSpy = jest.fn();
 

@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
 import { Form } from 'antd';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
+
+import { mockVenue } from '../../../tests/constants';
 
 import VenueForm from '..';
 
@@ -20,40 +22,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    model_type: 'PasspointVenueProfile',
-    profileType: 'passpoint_venue',
-    venueNameSet: [
-      {
-        asDuple: 'fra:Exemple de lieu',
-        defaultDupleSeparator: ':',
-        dupleName: 'Exemple de lieu',
-        locale: 'fra',
-        model_type: 'PasspointVenueName',
-        venueUrl: 'http://www.example.com/info-fra',
-      },
-    ],
-    venueTypeAssignment: {
-      model_type: 'ProfileVenueTypeAssignment',
-      venueDescription: null,
-      venueGroupId: 2,
-      venueTypeId: 8,
-    },
-  },
-};
-
-const DOWN_ARROW = { keyCode: 40 };
-
 describe('<VenueForm />', () => {
-  afterEach(cleanup);
-
   it('should still work when venueNameSet is null', async () => {
     const VenueFormComp = () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm details={{ ...mockProps.details, venueNameSet: null }} form={form} />
+          <VenueForm details={{ ...mockVenue.details, venueNameSet: null }} form={form} />
         </Form>
       );
     };
@@ -65,7 +40,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm details={{ ...mockProps.details, venueNameSet: [] }} form={form} />
+          <VenueForm details={{ ...mockVenue.details, venueNameSet: [] }} form={form} />
         </Form>
       );
     };
@@ -77,7 +52,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm details={{ ...mockProps.details, venueTypeAssignment: null }} form={form} />
+          <VenueForm details={{ ...mockVenue.details, venueTypeAssignment: null }} form={form} />
         </Form>
       );
     };
@@ -89,7 +64,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm details={{ ...mockProps.details, venueTypeAssignment: {} }} form={form} />
+          <VenueForm details={{ ...mockVenue.details, venueTypeAssignment: {} }} form={form} />
         </Form>
       );
     };
@@ -101,7 +76,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -122,7 +97,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -141,7 +116,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -160,7 +135,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -189,7 +164,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -217,7 +192,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -235,7 +210,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -256,7 +231,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -281,7 +256,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -302,7 +277,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -323,7 +298,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -344,7 +319,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -365,7 +340,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -386,7 +361,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -407,7 +382,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -428,7 +403,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };
@@ -449,7 +424,7 @@ describe('<VenueForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <VenueForm {...mockProps} form={form} />
+          <VenueForm {...mockVenue} form={form} />
         </Form>
       );
     };

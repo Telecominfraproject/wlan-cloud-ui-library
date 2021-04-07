@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import VersionModal from '..';
 
@@ -28,8 +28,6 @@ const MISSING_VERSION = 'Please input your Version Name';
 const MISSING_URL = 'Please input your Firmware URL';
 
 describe('<VersionModal />', () => {
-  afterEach(cleanup);
-
   it('Title should be Add Firmware Version', async () => {
     const { getByText } = render(<VersionModal {...mockProps} />);
 

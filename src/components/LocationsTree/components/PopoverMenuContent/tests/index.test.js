@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render } from 'tests/utils';
@@ -14,8 +14,6 @@ const mockProps = {
 };
 
 describe('<PopoverMenuContent />', () => {
-  afterEach(cleanup);
-
   it('should open Add Location Form Modal when Add Location is clicked', () => {
     const submitSpy = jest.fn();
     const { getByRole } = render(<PopoverMenuContent {...mockProps} setAddModal={submitSpy} />);

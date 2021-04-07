@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { render } from 'tests/utils';
 import { Form } from 'antd';
 import { EditableCell } from '..';
@@ -42,8 +42,6 @@ const mockProps = {
 const ENTER = { keyCode: 13 };
 
 describe('<EditableCell />', () => {
-  afterEach(cleanup);
-
   it('Ap data should be displayed in editable form in ant form element, when table cell is clicked.', () => {
     const EditableCellComp = () => {
       const [form] = Form.useForm();

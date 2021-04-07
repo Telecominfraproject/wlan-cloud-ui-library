@@ -620,16 +620,20 @@ const CaptivePortalForm = ({
                 Login Success Text
               </Button>
             </div>
-            {!isLoginText && (
-              <Item name="userAcceptancePolicy">
-                <TextArea data-testid="bodyContent" className={globalStyles.field} rows={4} />
-              </Item>
-            )}
-            {isLoginText && (
-              <Item name="successPageMarkdownText">
-                <TextArea data-testid="bodyContent" className={globalStyles.field} rows={4} />
-              </Item>
-            )}
+            <Item name="userAcceptancePolicy" hidden={isLoginText}>
+              <TextArea
+                data-testid="userAcceptancePolicy"
+                className={globalStyles.field}
+                rows={4}
+              />
+            </Item>
+            <Item name="successPageMarkdownText" hidden={!isLoginText}>
+              <TextArea
+                data-testid="successPageMarkdownText"
+                className={globalStyles.field}
+                rows={4}
+              />
+            </Item>
             &nbsp; Markdown and plain text supported.
           </Item>
         </Panel>

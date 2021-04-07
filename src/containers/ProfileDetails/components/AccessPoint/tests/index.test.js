@@ -1,8 +1,15 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import {
+  fireEvent,
+  waitFor,
+  waitForElement,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import faker from 'faker';
 import { Form } from 'antd';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
+import { mockAccessPoint } from '../../../tests/constants';
 
 import AccessPoints from '..';
 
@@ -20,281 +27,19 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    equipmentDiscovery: false,
-    equipmentType: 'AP',
-    ledControlEnabled: true,
-    model_type: 'ApNetworkConfiguration',
-    networkConfigVersion: 'AP-1',
-    ntpServer: { model_type: 'AutoOrManualString', auto: true, value: 'pool.ntp.org' },
-    profileType: 'equipment_ap',
-    radioMap: {
-      is2dot4GHz: {
-        model_type: 'RadioProfileConfiguration',
-        bestApEnabled: true,
-        bestAPSteerType: 'both',
-      },
-      is5GHzL: {
-        model_type: 'RadioProfileConfiguration',
-        bestApEnabled: true,
-        bestAPSteerType: 'both',
-      },
-      is5GHzU: {
-        model_type: 'RadioProfileConfiguration',
-        bestApEnabled: true,
-        bestAPSteerType: 'both',
-      },
-    },
-    rtlsSettings: null,
-    syntheticClientEnabled: true,
-    syslogRelay: null,
-    vlan: 0,
-    vlanNative: true,
-    greTunnelConfigurations: [
-      {
-        model_type: 'GreTunnelConfiguration',
-        greTunnelName: 'gre5',
-        greRemoteInetAddr: '192.168.0.12',
-        greParentIfName: 'wan',
-        greRemoteMacAddr: {
-          addressAsString: '00:0a:95:9d:68:16',
-        },
-      },
-    ],
-  },
-  childProfileIds: [3],
-  childProfiles: [
-    {
-      id: 3,
-      name: 'TipWlan-cloud-3-radios',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: null,
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: null,
-        secureMode: 'open',
-        ssid: 'TipWlan-cloud-3-radios',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-  ],
-  ssidProfiles: [
-    {
-      id: 2,
-      name: 'TipWlan-cloud-Enterprise',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: 'testing123',
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: 'Radius-Profile',
-        secureMode: 'wpaEAP',
-        ssid: 'Default-SSID-1594386919128',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: 3,
-      name: 'TipWlan-cloud-3-radios',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: null,
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: null,
-        secureMode: 'open',
-        ssid: 'TipWlan-cloud-3-radios',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-    {
-      id: 4,
-      name: 'TipWlan-cloud-2-radios',
-      profileType: 'ssid',
-      details: {
-        appliedRadios: ['is2dot4GHz', 'is5GHz'],
-        bandwidthLimitDown: 0,
-        bandwidthLimitUp: 0,
-        bonjourGatewayProfileId: null,
-        broadcastSsid: 'enabled',
-        captivePortalId: null,
-        enable80211w: null,
-        forwardMode: null,
-        keyRefresh: 0,
-        keyStr: null,
-        model_type: 'SsidConfiguration',
-        noLocalSubnets: false,
-        profileType: 'ssid',
-        radioBasedConfigs: {
-          is2dot4GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHz: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzL: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-          is5GHzU: {
-            model_type: 'RadioBasedSsidConfiguration',
-            enable80211r: null,
-            enable80211k: null,
-            enable80211v: null,
-          },
-        },
-        radiusServiceName: null,
-        secureMode: 'open',
-        ssid: 'TipWlan-cloud-2-radios',
-        ssidAdminState: 'enabled',
-        videoTrafficOnly: false,
-        vlanId: 1,
-        wepConfig: null,
-      },
-      __typename: 'Profile',
-    },
-  ],
-  onSearchProfile: () => {},
-};
+function buildGreForm() {
+  return {
+    name: faker.internet.userName(),
+    ip: faker.internet.ip(),
+  };
+}
 
 describe('<AccessPoints />', () => {
-  afterEach(cleanup);
-
   it('should work with vlanNative is undefined', () => {
     const mockDetails = {
-      ...mockProps,
+      ...mockAccessPoint,
       details: {
-        ...mockProps.details,
+        ...mockAccessPoint.details,
         vlanNative: undefined,
       },
     };
@@ -307,9 +52,9 @@ describe('<AccessPoints />', () => {
 
   it('should work with ntpServer is undefined', () => {
     const mockDetails = {
-      ...mockProps,
+      ...mockAccessPoint,
       details: {
-        ...mockProps.details,
+        ...mockAccessPoint.details,
         ntpServer: { auto: undefined },
       },
     };
@@ -322,9 +67,9 @@ describe('<AccessPoints />', () => {
 
   it('should work with rtlsSettings and syslogRelay are enabled', () => {
     const mockDetails = {
-      ...mockProps,
+      ...mockAccessPoint,
       details: {
-        ...mockProps.details,
+        ...mockAccessPoint.details,
         rtlsSettings: { enabled: true },
         syslogRelay: { enabled: true },
         syntheticClientEnabled: false,
@@ -341,7 +86,7 @@ describe('<AccessPoints />', () => {
   it('uncheck Use Default Management VLAN should show the input field for vlan value', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
-      return <AccessPoints {...mockProps} form={form} />;
+      return <AccessPoints {...mockAccessPoint} form={form} />;
     };
     const { getByTestId } = render(<AccessPointComp />);
 
@@ -356,7 +101,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -385,7 +130,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -411,9 +156,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -436,9 +181,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -464,9 +209,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -495,7 +240,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -513,9 +258,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -543,9 +288,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -575,9 +320,9 @@ describe('<AccessPoints />', () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
       const mockData = {
-        ...mockProps,
+        ...mockAccessPoint,
         details: {
-          ...mockProps.details,
+          ...mockAccessPoint.details,
           rtlsSettings: {
             enabled: true,
           },
@@ -609,7 +354,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -628,7 +373,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -646,12 +391,14 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
 
-    const { queryAllByText, getByText, container } = render(<AccessPointComp />);
+    const profileName = mockAccessPoint.ssidProfiles[0].name;
+
+    const { getByText, container, getByRole } = render(<AccessPointComp />);
     const selectInputFiled = container.querySelector(
       '[data-testid=ssidProfile] > .ant-select-selector span input'
     );
@@ -659,23 +406,22 @@ describe('<AccessPoints />', () => {
     fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
 
     const selectInput = container.querySelector('[data-testid=ssidProfile] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectInput);
     fireEvent.keyDown(selectInput, DOWN_ARROW);
 
-    await waitForElement(() => getByText('TipWlan-cloud-Enterprise'));
-    fireEvent.click(getByText('TipWlan-cloud-Enterprise'));
+    await waitForElement(() => getByText(profileName));
+    fireEvent.click(getByText(profileName));
+
     await waitFor(() => {
-      expect(queryAllByText('TipWlan-cloud-Enterprise')[0]).toBeVisible();
-      expect(queryAllByText('TipWlan-cloud-3-radios')[0]).toBeVisible();
+      expect(getByRole('cell', { name: profileName })).toBeVisible();
     });
   });
 
   it('should work when greTunnelConfigurations is undefined', () => {
     const mockDetails = {
-      ...mockProps,
+      ...mockAccessPoint,
       details: {
-        ...mockProps.details,
+        ...mockAccessPoint.details,
         greTunnelConfigurations: undefined,
       },
     };
@@ -691,7 +437,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -707,7 +453,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -729,7 +475,7 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
@@ -737,12 +483,12 @@ describe('<AccessPoints />', () => {
     const { getByText, getByRole, getByTestId, queryByText } = render(<AccessPointComp />);
 
     fireEvent.click(getByTestId('addGre'));
-    expect(getByText('Add GRE Configuration')).toBeVisible();
+    expect(getByText(/add gre configuration/i)).toBeVisible();
 
-    fireEvent.click(getByRole('button', { name: 'Cancel' }));
+    fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     await waitFor(() => {
-      expect(queryByText('Add GRE Configuration', { selector: 'div' })).not.toBeInTheDocument();
+      expect(queryByText(/add gre configuration/i, { selector: 'div' })).not.toBeInTheDocument();
     });
   });
 
@@ -751,26 +497,36 @@ describe('<AccessPoints />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <AccessPoints {...mockProps} form={form} />
+          <AccessPoints {...mockAccessPoint} form={form} />
         </Form>
       );
     };
 
-    const { getByTestId, getByText, getByRole, getByLabelText, queryByText } = render(
-      <AccessPointComp />
-    );
-    const testIp = '192.168.0.13';
+    const { getByTestId, getByText, getByRole, getByLabelText } = render(<AccessPointComp />);
+
+    const { name, ip } = buildGreForm();
 
     fireEvent.click(getByTestId('addGre'));
-    expect(getByText('Add GRE Configuration')).toBeVisible();
-    fireEvent.change(getByLabelText(/Name/i), { target: { value: 'gre2' } });
-    fireEvent.change(getByLabelText(/Remote IP Address/i), { target: { value: testIp } });
-    fireEvent.change(getByLabelText(/VLAN IDs/i), { target: { value: '1,2,3,4,5' } });
+    expect(getByText(/add gre configuration/i)).toBeVisible();
+
+    fireEvent.change(getByLabelText(/name/i), { target: { value: name } });
+    fireEvent.change(getByLabelText(/remote ip address/i), { target: { value: ip } });
 
     fireEvent.click(getByRole('button', { name: /save/i }));
+
+    await waitForElementToBeRemoved(() => getByText(/add gre configuration/i));
+
     await waitFor(() => {
-      expect(queryByText('Add GRE Configuration')).not.toBeInTheDocument();
-      expect(getByText('gre2')).toBeVisible();
+      expect(
+        getByRole('cell', {
+          name,
+        })
+      ).toBeVisible();
+      expect(
+        getByRole('cell', {
+          name: ip,
+        })
+      ).toBeVisible();
     });
   });
 });

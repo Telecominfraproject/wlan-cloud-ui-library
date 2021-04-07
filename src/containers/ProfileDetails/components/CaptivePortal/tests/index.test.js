@@ -1,9 +1,12 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement, within } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement, within } from '@testing-library/react';
 import { Form } from 'antd';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
 import userEvent from '@testing-library/user-event';
+import faker from 'faker';
+
+import { mockCaptivePortal } from '../../../tests/constants';
 
 import CaptivePortalForm from '..';
 
@@ -21,119 +24,17 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    authenticationType: 'guest',
-    backgroundFile: null,
-    backgroundPosition: 'left_top',
-    backgroundRepeat: 'no_repeat',
-    browserTitle: 'Access the network as Guest',
-    expiryType: 'unlimited',
-    externalCaptivePortalURL: null,
-    externalPolicyFile: null,
-    headerContent: 'Captive Portal',
-    logoFile: null,
-    macWhiteList: [],
-    maxUsersWithSameCredentials: 42,
-    model_type: 'CaptivePortalConfiguration',
-    name: 'Captive-portal',
-    profileType: 'captive_portal',
-    radiusAuthMethod: 'CHAP',
-    radiusServiceName: null,
-    redirectURL: '',
-    sessionTimeoutInMinutes: 60,
-    successPageMarkdownText: 'Welcome to the network',
-    userAcceptancePolicy: 'Use this network at your own risk. No warranty of any kind.',
-    userList: [
-      {
-        model_type: 'TimedAccessUserRecord',
-        username: 'test',
-        password: 'test',
-        activationTime: null,
-        expirationTime: null,
-        numDevices: 0,
-        userDetails: {
-          model_type: 'TimedAccessUserDetails',
-          firstName: 'test',
-          lastName: 'test',
-          passwordNeedsReset: false,
-        },
-        userMacAddresses: [],
-        lastModifiedTimestamp: 0,
-      },
-      {
-        model_type: 'TimedAccessUserRecord',
-        username: 'test2',
-        password: 'test2',
-        activationTime: null,
-        expirationTime: null,
-        numDevices: 0,
-        userDetails: {
-          model_type: 'TimedAccessUserDetails',
-          firstName: 'test2',
-          lastName: 'test2',
-          passwordNeedsReset: false,
-        },
-        userMacAddresses: [],
-        lastModifiedTimestamp: 0,
-      },
-    ],
-    usernamePasswordFile: null,
-    walledGardenAllowlist: ['1.1.1.1'],
-  },
-  radiusProfiles: [
-    {
-      id: '1',
-      name: 'Radius-Profile',
-      profileType: 'radius',
-      details: {
-        model_type: 'RadiusProfile',
-        subnetConfiguration: {
-          test: {
-            model_type: 'RadiusSubnetConfiguration',
-            subnetAddress: '111.111.111.11',
-            subnetCidrPrefix: 9,
-            subnetName: 'test',
-            proxyConfig: {
-              model_type: 'RadiusProxyConfiguration',
-              floatingIpAddress: '222.222.222.22',
-              floatingIfCidrPrefix: null,
-              floatingIfGwAddress: null,
-              floatingIfVlan: null,
-              sharedSecret: null,
-            },
-            probeInterval: null,
-            serviceRegionName: 'Ottawa',
-          },
-        },
-        serviceRegionMap: {
-          Ottawa: {
-            model_type: 'RadiusServiceRegion',
-            serverMap: {
-              'Radius-Profile': [
-                {
-                  model_type: 'RadiusServer',
-                  ipAddress: '192.168.0.1',
-                  secret: 'testing123',
-                  authPort: 1812,
-                  timeout: null,
-                },
-              ],
-            },
-            regionName: 'Ottawa',
-          },
-        },
-        profileType: 'radius',
-      },
-      __typename: 'Profile',
-    },
-  ],
-};
-
-const DOWN_ARROW = { keyCode: 40 };
+function buildUserForm() {
+  return {
+    username: faker.internet.userName(),
+    password: faker.internet.password(),
+    firstname: faker.name.firstName(),
+    lastname: faker.name.lastName(),
+  };
+}
 
 // eslint-disable-next-line react/prop-types
-const CaptivePortalFormComp = ({ mockDetails = mockProps }) => {
+const CaptivePortalFormComp = ({ mockDetails = mockCaptivePortal }) => {
   const [form] = Form.useForm();
   return (
     <Form form={form}>
@@ -147,7 +48,6 @@ describe('<CaptivePortalForm />', () => {
 
   beforeEach(() => {
     file = new File([''], 'testImg.png', { type: 'image/png', size: 4000 });
-    cleanup();
   });
 
   beforeAll(done => {
@@ -157,7 +57,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('should work when authenticationType is null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockCaptivePortal.details,
       details: {
         authenticationType: null,
       },
@@ -167,7 +67,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('should work when logoFile and backGroundFile is not null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockCaptivePortal.details,
       details: {
         logoFile: {
           apExportUrl: 'example.com',
@@ -185,7 +85,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('should work when externalCaptivePortalURL is true ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockCaptivePortal.details,
       details: {
         externalCaptivePortalURL: true,
       },
@@ -196,7 +96,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('changing authentication mode to Captive Portal User List should display Manage Captive Portal Users button', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockCaptivePortal.details,
       details: {
         externalCaptivePortalURL: true,
       },
@@ -217,7 +117,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('changing authentication mode to RADIUS should render RADIUS card', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockCaptivePortal.details,
       details: {
         externalCaptivePortalURL: true,
       },
@@ -345,14 +245,14 @@ describe('<CaptivePortalForm />', () => {
         name: /login success text/i,
       })
     );
-    expect(getByTestId('bodyContent')).toHaveDisplayValue('Welcome to the network');
+    expect(getByTestId('successPageMarkdownText')).toHaveDisplayValue('Welcome to the network');
 
     fireEvent.click(
       getByRole('button', {
         name: /user acceptance policy text/i,
       })
     );
-    expect(getByTestId('bodyContent')).toHaveDisplayValue(
+    expect(getByTestId('userAcceptancePolicy')).toHaveDisplayValue(
       'Use this network at your own risk. No warranty of any kind.'
     );
   });
@@ -520,7 +420,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible when new item is added and whitelist have already 32 items in the list', async () => {
     for (let i = 0; i < 40; i += 1) {
-      mockProps.details.walledGardenAllowlist.push(`${i}.${i}.${i}.${i}`);
+      mockCaptivePortal.details.walledGardenAllowlist.push(`${i}.${i}.${i}.${i}`);
     }
 
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
@@ -538,14 +438,14 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if combine length of characters of all items exceeds 2,000 characters ', async () => {
-    mockProps.details.walledGardenAllowlist = [];
+    mockCaptivePortal.details.walledGardenAllowlist = [];
 
     for (let i = 0; i < 20; i += 1) {
       let value;
       for (let j = 0; j < 100; j += 1) {
         value += `${j} `;
       }
-      mockProps.details.walledGardenAllowlist.push(value);
+      mockCaptivePortal.details.walledGardenAllowlist.push(value);
     }
 
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
@@ -565,7 +465,7 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('click on add button should add item to the whitelist', async () => {
-    mockProps.details.walledGardenAllowlist = [];
+    mockCaptivePortal.details.walledGardenAllowlist = [];
 
     const { getByPlaceholderText, getByText, getAllByRole } = render(<CaptivePortalFormComp />);
     const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
@@ -760,7 +660,7 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     const button = getByRole('button', {
-      name: `delete-${mockProps.details.userList[0].username}`,
+      name: `delete-${mockCaptivePortal.details.userList[0].username}`,
     });
 
     fireEvent.click(button);
@@ -800,11 +700,11 @@ describe('<CaptivePortalForm />', () => {
 
     const radiusService = getAllByLabelText('Service')[0];
     fireEvent.keyDown(radiusService, DOWN_ARROW);
-    await waitForElement(() => getAllByText(mockProps.radiusProfiles[0].name)[0]);
-    fireEvent.click(getAllByText(mockProps.radiusProfiles[0].name)[0]);
+    await waitForElement(() => getAllByText(mockCaptivePortal.radiusProfiles[0].name)[0]);
+    fireEvent.click(getAllByText(mockCaptivePortal.radiusProfiles[0].name)[0]);
 
     expect(getAllByText('Password (PAP)')[0]).toBeInTheDocument();
-    expect(getAllByText(mockProps.radiusProfiles[0].name)[0]).toBeInTheDocument();
+    expect(getAllByText(mockCaptivePortal.radiusProfiles[0].name)[0]).toBeInTheDocument();
   });
 
   it('Add User button press should show Add User modal', async () => {
@@ -829,7 +729,7 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     fireEvent.click(
-      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+      getByRole('button', { name: `edit-${mockCaptivePortal.details.userList[0].username}` })
     );
     expect(getByText('Edit User')).toBeVisible();
   });
@@ -843,12 +743,14 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     fireEvent.click(
-      getByRole('button', { name: `delete-${mockProps.details.userList[0].username}` })
+      getByRole('button', { name: `delete-${mockCaptivePortal.details.userList[0].username}` })
     );
 
     const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
-    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+    expect(
+      within(paragraph).getByText(mockCaptivePortal.details.userList[0].username)
+    ).toBeVisible();
   });
 
   it('Cancel button press should hide Add User modal', async () => {
@@ -878,7 +780,7 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     fireEvent.click(
-      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+      getByRole('button', { name: `edit-${mockCaptivePortal.details.userList[0].username}` })
     );
     expect(getByText('Edit User')).toBeVisible();
     fireEvent.click(getByRole('button', { name: /Cancel/i }));
@@ -896,12 +798,14 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     fireEvent.click(
-      getByRole('button', { name: `delete-${mockProps.details.userList[0].username}` })
+      getByRole('button', { name: `delete-${mockCaptivePortal.details.userList[0].username}` })
     );
 
     const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
-    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+    expect(
+      within(paragraph).getByText(mockCaptivePortal.details.userList[0].username)
+    ).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /Cancel/i }));
     await waitFor(() => {
@@ -912,28 +816,34 @@ describe('<CaptivePortalForm />', () => {
   it('Correct form submission on Add User Modal', async () => {
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
 
+    const { username, password, firstname, lastname } = buildUserForm();
+
     const authentication = getByLabelText('Authentication');
     fireEvent.keyDown(authentication, DOWN_ARROW);
-    await waitForElement(() => getByText('Captive Portal User List'));
-    fireEvent.click(getByText('Captive Portal User List'));
+    await waitFor(() => {
+      getByText('Captive Portal User List');
+    });
+    fireEvent.click(getByText(/captive portal user list/i));
 
     fireEvent.click(getByRole('button', { name: /add user/i }));
 
-    const paragraph = getByText('Add User', { selector: 'div' });
-    expect(paragraph).toBeVisible();
+    expect(getByText(/add user/i, { selector: 'div' })).toBeVisible();
 
-    const testUsername = 'username';
+    userEvent.type(getByRole('textbox', { name: /username/i }), username);
+    userEvent.type(getByLabelText(/password/i), password);
+    userEvent.type(getByRole('textbox', { name: /first name/i }), firstname);
+    userEvent.type(getByRole('textbox', { name: /last name/i }), lastname);
 
-    fireEvent.change(getByLabelText('Username'), { target: { value: testUsername } });
-    fireEvent.change(getByLabelText('Password'), { target: { value: 'password' } });
-    fireEvent.change(getByLabelText('First Name'), { target: { value: 'firstname' } });
-    fireEvent.change(getByLabelText('Last Name'), { target: { value: 'lastname' } });
-    fireEvent.click(getByRole('button', { name: `Save` }));
+    fireEvent.click(
+      getByRole('button', {
+        name: /save/i,
+      })
+    );
 
     await waitFor(() => {
-      expect(getByText(testUsername)).toBeInTheDocument();
+      expect(getByRole('cell', { name: username })).toBeInTheDocument();
     });
-  });
+  }, 10000);
 
   it('Correct form submission on Edit User Modal', async () => {
     const { getByLabelText, getByText, getByRole } = render(<CaptivePortalFormComp />);
@@ -944,7 +854,7 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     fireEvent.click(
-      getByRole('button', { name: `edit-${mockProps.details.userList[0].username}` })
+      getByRole('button', { name: `edit-${mockCaptivePortal.details.userList[0].username}` })
     );
     const paragraph = getByText('Edit User');
     expect(paragraph).toBeVisible();
@@ -971,14 +881,16 @@ describe('<CaptivePortalForm />', () => {
     fireEvent.click(getByText('Captive Portal User List'));
 
     const button = getByRole('button', {
-      name: `delete-${mockProps.details.userList[0].username}`,
+      name: `delete-${mockCaptivePortal.details.userList[0].username}`,
     });
 
     fireEvent.click(button);
 
     const paragraph = getByText(/Are you sure you want to delete the user:/i);
     expect(paragraph).toBeVisible();
-    expect(within(paragraph).getByText(mockProps.details.userList[0].username)).toBeVisible();
+    expect(
+      within(paragraph).getByText(mockCaptivePortal.details.userList[0].username)
+    ).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Delete' }));
 

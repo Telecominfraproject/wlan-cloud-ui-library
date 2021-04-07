@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, act } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
+
+import { mockProviderId } from '../../../tests/constants';
 
 import ProviderIdForm from '..';
 
@@ -20,59 +22,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  details: {
-    osuFriendlyname: [
-      {
-        asDuple: 'eng:test',
-        defaultDupleSeparator: ':',
-        dupleIso3Language: 'eng',
-        dupleName: 'test',
-        locale: 'eng',
-        model_type: 'PasspointDuple',
-      },
-    ],
-    osuServiceDescription: [
-      {
-        asDuple: 'eng:test',
-        defaultDupleSeparator: ':',
-        dupleIso3Language: 'eng',
-        dupleName: 'test',
-        locale: 'eng',
-        model_type: 'PasspointDuple',
-      },
-    ],
-    osuIconList: [
-      {
-        imageUrl: 'https://rogers.com/icon32eng.png',
-        model_type: 'PasspointOsuIcon',
-        iconLocale: 'fr_CA',
-      },
-    ],
-    naiRealmList: [
-      {
-        eapMap: {
-          'EAP-TTLS with username/password': ['Expanded EAP Method: Hardware Token'],
-        },
-        encoding: 0,
-        model_type: 'PasspointNaiRealmInformation',
-      },
-    ],
-    osuServerUri: 'https://example.com/oso',
-    roamingOi: [1, 2],
-    mccMncList: [],
-  },
-};
-
 describe('<ProviderIdForm />', () => {
-  afterEach(cleanup);
-
   it('should work when roaming oi is null', async () => {
     const ProviderIdFormComp = () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps, roamingOi: null }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId, roamingOi: null }} form={form} />
         </Form>
       );
     };
@@ -84,7 +40,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={mockProps} form={form} />
+          <ProviderIdForm details={mockProviderId} form={form} />
         </Form>
       );
     };
@@ -113,7 +69,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps.details }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId.details }} form={form} />
         </Form>
       );
     };
@@ -139,7 +95,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps.details }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId.details }} form={form} />
         </Form>
       );
     };
@@ -159,7 +115,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps.details }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId.details }} form={form} />
         </Form>
       );
     };
@@ -182,7 +138,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps.details }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId.details }} form={form} />
         </Form>
       );
     };
@@ -207,7 +163,7 @@ describe('<ProviderIdForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <ProviderIdForm details={{ ...mockProps.details }} form={form} />
+          <ProviderIdForm details={{ ...mockProviderId.details }} form={form} />
         </Form>
       );
     };
@@ -233,7 +189,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
               eapMap: {
                 'EAP-TTLS with username/password': [
                   'Expanded EAP Method: Hardware Token',
@@ -263,7 +219,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -290,7 +246,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -315,7 +271,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -338,7 +294,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -360,7 +316,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -385,7 +341,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -410,7 +366,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -435,7 +391,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -460,7 +416,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -489,7 +445,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -518,7 +474,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -547,7 +503,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />
@@ -576,7 +532,7 @@ describe('<ProviderIdForm />', () => {
         <Form form={form}>
           <ProviderIdForm
             details={{
-              ...mockProps.details,
+              ...mockProviderId.details,
             }}
             form={form}
           />

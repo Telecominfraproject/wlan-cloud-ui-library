@@ -5,6 +5,8 @@ import { render } from '@testing-library/react';
 
 import ThemeProvider from 'contexts/ThemeProvider';
 
+export const DOWN_ARROW = { keyCode: 40 };
+
 export const ROUTES = {
   root: '/',
   login: '/login',

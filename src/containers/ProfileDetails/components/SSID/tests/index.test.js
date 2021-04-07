@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor, waitForElement } from '@testing-library/react';
+import { fireEvent, waitFor, waitForElement } from '@testing-library/react';
 import { Form } from 'antd';
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW } from 'tests/utils';
+
+import { mockSsid } from '../../../tests/constants';
 
 import SSIDForm from '..';
 
@@ -20,106 +22,10 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockProps = {
-  radiusProfiles: [
-    {
-      __typename: 'Profile',
-      id: '9',
-      name: 'Radius-Profile',
-      profileType: 'radius',
-      details: {
-        model_type: 'RadiusProfile',
-        primaryRadiusAuthServer: null,
-        secondaryRadiusAuthServer: null,
-        primaryRadiusAccountingServer: null,
-        secondaryRadiusAccountingServer: null,
-        profileType: 'radius',
-      },
-    },
-
-    {
-      __typename: 'Profile',
-      id: '15',
-      name: 'radius-profile-2021-01-26T19:14:49.513Z',
-      profileType: 'radius',
-      details: {
-        model_type: 'RadiusProfile',
-        primaryRadiusAuthServer: {
-          model_type: 'RadiusServer',
-          ipAddress: '127.0.0.1',
-          secret: 'secret',
-          port: 1812,
-          timeout: 5,
-        },
-        secondaryRadiusAuthServer: null,
-        primaryRadiusAccountingServer: {
-          model_type: 'RadiusServer',
-          ipAddress: '127.0.0.1',
-          secret: 'secret',
-          port: 1813,
-          timeout: 5,
-        },
-        secondaryRadiusAccountingServer: null,
-        profileType: 'radius',
-      },
-    },
-  ],
-  details: {
-    appliedRadios: ['is2dot4GHz', 'is5GHzL', 'is5GHzU'],
-    bandwidthLimitDown: 0,
-    bandwidthLimitUp: 0,
-    bonjourGatewayProfileId: null,
-    broadcastSsid: 'enabled',
-    captivePortalId: null,
-    enable80211w: null,
-    forwardMode: null,
-    keyRefresh: 0,
-    keyStr: 'testing123',
-    model_type: 'SsidConfiguration',
-    noLocalSubnets: false,
-    profileType: 'ssid',
-    radioBasedConfigs: {
-      is2dot4GHz: {
-        model_type: 'RadioBasedSsidConfiguration',
-        enable80211r: null,
-        enable80211k: null,
-        enable80211v: null,
-      },
-      is5GHz: {
-        model_type: 'RadioBasedSsidConfiguration',
-        enable80211r: null,
-        enable80211k: null,
-        enable80211v: null,
-      },
-      is5GHzL: {
-        model_type: 'RadioBasedSsidConfiguration',
-        enable80211r: null,
-        enable80211k: null,
-        enable80211v: null,
-      },
-      is5GHzU: {
-        model_type: 'RadioBasedSsidConfiguration',
-        enable80211r: null,
-        enable80211k: null,
-        enable80211v: null,
-      },
-    },
-    radiusServiceName: 'Radius-Profile',
-    secureMode: 'wep',
-    ssid: 'Default-SSID-1594386919128',
-    ssidAdminState: 'enabled',
-    videoTrafficOnly: false,
-    vlanId: 1,
-    wepConfig: null,
-  },
-};
-
 describe('<SSIDForm />', () => {
-  afterEach(cleanup);
-
   it('should work when secureMode is null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       secureMode: null,
     };
 
@@ -136,7 +42,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when ssid is null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       ssid: null,
     };
 
@@ -153,7 +59,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when broadcastSsid is null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       broadcastSsid: null,
     };
 
@@ -170,7 +76,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when appliedRadios are null ', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       appliedRadios: null,
     };
 
@@ -187,7 +93,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when noLocalSubnets is true', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       noLocalSubnets: true,
     };
 
@@ -204,7 +110,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when captivePortalId is 1', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       captivePortalId: 1,
     };
 
@@ -221,7 +127,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when vlanId is null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       vlanId: null,
     };
 
@@ -238,7 +144,7 @@ describe('<SSIDForm />', () => {
 
   it('should work when wepConfig is not null', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       wepConfig: {
         wepKeys: [
           {
@@ -264,7 +170,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -298,7 +204,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -339,7 +245,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -369,12 +275,12 @@ describe('<SSIDForm />', () => {
     });
   });
 
-  it('input filed should remain empty if value is invalid for WEP Key input filed', async () => {
+  it('input field should remain empty if value is invalid for WEP Key input filed', async () => {
     const SSIDFormComp = () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -395,7 +301,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -403,7 +309,6 @@ describe('<SSIDForm />', () => {
     const { getByText, container } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
     await waitForElement(() => getByText('Open (No Encryption)'));
@@ -415,7 +320,7 @@ describe('<SSIDForm />', () => {
 
   it('changing Mode select option to WPA & WPA2 Personal (mixed mode) should update Roaming card', async () => {
     const mockDetails = {
-      ...mockProps.details,
+      ...mockSsid.details,
       secureMode: 'wpa2Radius',
     };
 
@@ -431,7 +336,6 @@ describe('<SSIDForm />', () => {
     const { getByText, container } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
     await waitForElement(() => getByText('WPA & WPA2 Personal (mixed mode)'));
@@ -446,7 +350,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -454,7 +358,6 @@ describe('<SSIDForm />', () => {
     const { getByText, container } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
     await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
@@ -470,7 +373,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -478,7 +381,6 @@ describe('<SSIDForm />', () => {
     const { getByText, container, getByLabelText } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
     await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
@@ -488,8 +390,8 @@ describe('<SSIDForm />', () => {
     });
     const profile = getByLabelText('RADIUS Profile');
     fireEvent.keyDown(profile, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.radiusProfiles[0].name));
-    fireEvent.click(getByText(mockProps.radiusProfiles[0].name));
+    await waitForElement(() => getByText(mockSsid.radiusProfiles[0].name));
+    fireEvent.click(getByText(mockSsid.radiusProfiles[0].name));
   });
 
   it('Should show errors if Radius Accounting Interval is outside range of 60-600', async () => {
@@ -497,7 +399,7 @@ describe('<SSIDForm />', () => {
       const [form] = Form.useForm();
       return (
         <Form form={form}>
-          <SSIDForm {...mockProps} form={form} />
+          <SSIDForm {...mockSsid} form={form} />
         </Form>
       );
     };
@@ -505,7 +407,6 @@ describe('<SSIDForm />', () => {
     const { getByText, container, getByLabelText } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    const DOWN_ARROW = { keyCode: 40 };
     fireEvent.mouseDown(selectMode);
     fireEvent.keyDown(selectMode, DOWN_ARROW);
     await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));

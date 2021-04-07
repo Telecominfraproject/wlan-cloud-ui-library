@@ -1,8 +1,10 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
+
+import { mockRadius } from '../../../tests/constants';
 
 import Radius from '..';
 
@@ -20,49 +22,16 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const mockData = {
-  details: {
-    model_type: 'RadiusProfile',
-    primaryRadiusAuthServer: {
-      model_type: 'RadiusServer',
-      ipAddress: '127.0.0.1',
-      secret: 'secret',
-      port: 1812,
-    },
-    secondaryRadiusAuthServer: {
-      model_type: 'RadiusServer',
-      ipAddress: '127.0.0.1',
-      secret: 'secret',
-      port: 1812,
-    },
-    primaryRadiusAccountingServer: {
-      model_type: 'RadiusServer',
-      ipAddress: '127.0.0.1',
-      secret: 'secret',
-      port: 1812,
-    },
-    secondaryRadiusAccountingServer: {
-      model_type: 'RadiusServer',
-      ipAddress: '127.0.0.1',
-      secret: 'secret',
-      port: 1812,
-    },
-    profileType: 'radius',
-  },
-};
-
 const RadiusForm = () => {
   const [form] = Form.useForm();
   return (
     <Form form={form}>
-      <Radius form={form} {...mockData} />
+      <Radius form={form} {...mockRadius} />
     </Form>
   );
 };
 
 describe('<RadiusForm />', () => {
-  afterEach(cleanup);
-
   it('Form should load with the initial inputs for Primary Authentication Server if details object is empty', async () => {
     const EmptyRadiusForm = () => {
       const [form] = Form.useForm();

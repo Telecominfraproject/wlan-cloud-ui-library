@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { cleanup, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 
 import React from 'react';
 import { render } from 'tests/utils';
@@ -90,7 +90,6 @@ const mockProps = {
 };
 
 describe('<BulkEditAPTableComp />', () => {
-  afterEach(cleanup);
   it('Should work with default props', () => {
     const BulkEditAPTableComp = () => {
       return <BulkEditAPTable {...mockProps} />;

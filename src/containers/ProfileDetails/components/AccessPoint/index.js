@@ -16,6 +16,7 @@ import { useWritableInput, withWritableInput } from 'contexts/InputDisabledConte
 
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
+import Tooltip from 'components/Tooltip';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
@@ -32,6 +33,8 @@ const Group = withWritableInput(RadioGroup);
 
 const Checkbox = withWritableInput(AntdCheckbox);
 const Input = withWritableInput(AntdInput);
+
+const MAX_GRE_TUNNELS = 1;
 
 const AccessPointForm = ({
   form,
@@ -509,9 +512,22 @@ const AccessPointForm = ({
         title="GRE Tunnel Configuration"
         extra={
           roleIsWritable && (
-            <Button type="solid" onClick={() => setGreModalVisible(true)} data-testid="addGre">
-              Add
-            </Button>
+            <>
+              {greList.length >= MAX_GRE_TUNNELS && (
+                <Tooltip
+                  className={styles.ToolTip}
+                  title={`Maximum ${MAX_GRE_TUNNELS} GRE Tunnel`}
+                />
+              )}
+              <Button
+                type="solid"
+                onClick={() => setGreModalVisible(true)}
+                data-testid="addGre"
+                disabled={greList.length >= MAX_GRE_TUNNELS}
+              >
+                Add
+              </Button>
+            </>
           )
         }
       >
