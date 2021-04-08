@@ -93,7 +93,7 @@ const AccessPointDetails = ({
       setRedirectURL(path);
       setConfirmModal(true);
     } else if (path) {
-      history.replace(path);
+      history.replace({ pathname: path, search: history.location.search });
     } else {
       history.goBack();
     }
@@ -127,7 +127,7 @@ const AccessPointDetails = ({
           setConfirmModal(false);
           setIsFormDirty(false);
           if (redirectURL) {
-            history.replace(redirectURL);
+            history.replace({ pathname: redirectURL, search: history.location.search });
           } else {
             history.goBack();
           }

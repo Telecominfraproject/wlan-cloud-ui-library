@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Layout, Drawer } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 
@@ -27,6 +27,7 @@ const Navbar = ({
   currentUserId,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
+  const history = useHistory();
 
   const renderRightMenuIcon = () => {
     if (isMobile) {
@@ -37,7 +38,10 @@ const Navbar = ({
 
   return (
     <Header className={`${styles.Navbar}`}>
-      <Link className={styles.LogoContainer} to={routes.root}>
+      <Link
+        className={styles.LogoContainer}
+        to={{ pathname: routes.root, search: history.location.search }}
+      >
         <img
           src={`${isMobile ? logoMobile : logo}`}
           alt={company}
@@ -54,7 +58,10 @@ const Navbar = ({
           bodyStyle={{ padding: 0 }}
           width={256}
         >
-          <Link className={styles.LogoContainer} to={routes.root}>
+          <Link
+            className={styles.LogoContainer}
+            to={{ pathname: routes.root, search: history.location.search }}
+          >
             <img src={logo} alt={company} width="200" />
           </Link>
           <Menu

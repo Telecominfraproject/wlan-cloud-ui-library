@@ -23,7 +23,7 @@ const BulkEditAccessPoints = ({
   const [editedRows, setEditedRows] = useState(null);
 
   const handleBackClick = () => {
-    history.push(routes.accessPoints);
+    history.push({ pathname: routes.accessPoints, search: history.location.search });
   };
 
   const breadCrumbs = breadcrumbPath.map(location => (
