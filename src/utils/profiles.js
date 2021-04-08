@@ -104,7 +104,6 @@ export const formatSsidProfileForm = values => {
 export const formatApProfileForm = values => {
   const formattedData = { ...values };
 
-  formattedData.equipmentDiscovery = isBool(values.equipmentDiscovery);
   formattedData.rtlsSettings.enabled = isBool(values.rtlsSettings.enabled);
   formattedData.syntheticClientEnabled = isBool(values.syntheticClientEnabled);
   formattedData.syslogRelay.enabled = isBool(values.syslogRelay.enabled);

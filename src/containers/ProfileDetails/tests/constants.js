@@ -10,7 +10,6 @@ const fakeSsid = generateSsidProfile();
 
 export const mockAccessPoint = {
   details: {
-    equipmentDiscovery: false,
     equipmentType: 'AP',
     ledControlEnabled: true,
     model_type: 'ApNetworkConfiguration',
