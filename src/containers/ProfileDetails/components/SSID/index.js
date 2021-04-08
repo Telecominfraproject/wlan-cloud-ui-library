@@ -74,7 +74,9 @@ const SSIDForm = ({
       },
       ...radioBasedValues,
       childProfileIds: [],
-      radiusAcountingServiceInterval: details?.radiusAcountingServiceInterval || '',
+      radiusAcountingServiceInterval:
+        details?.radiusAcountingServiceInterval ||
+        defaultSsidProfile.radiusAcountingServiceInterval,
       dynamicVlan: details?.dynamicVlan || defaultSsidProfile.dynamicVlan,
     });
   }, [form, details]);
@@ -373,25 +375,32 @@ const SSIDForm = ({
               name="radiusAcountingServiceInterval"
               label="RADIUS Accounting Interval"
               rules={[
+                {
+                  required: true,
+                  message: 'Please enter a RADIUS accounting interval',
+                },
                 () => ({
                   validator(_rule, value) {
-                    if (!value || (value >= 60 && value <= 600)) {
+                    if (!value || (value >= 60 && value <= 600) || value === '0') {
                       return Promise.resolve();
                     }
-                    return Promise.reject(
-                      new Error('RADIUS accounting interval can be a number between 60 and 600')
-                    );
+                    return Promise.reject(new Error('0 or 60 - 600'));
                   },
                 }),
               ]}
             >
               <Input
                 className={globalStyles.field}
-                placeholder="No RADIUS Accounting Interval"
+                placeholder="0 or 60 - 600 "
                 type="number"
                 min={60}
                 max={600}
-                addonAfter={<Tooltip title="Interval range between 60-600" text="Seconds" />}
+                addonAfter={
+                  <Tooltip
+                    title="Interval can be 0 or a number between 60 and 600"
+                    text="Seconds"
+                  />
+                }
               />
             </Item>
           </>

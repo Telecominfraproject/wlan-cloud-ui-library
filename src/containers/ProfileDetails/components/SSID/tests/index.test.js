@@ -394,7 +394,7 @@ describe('<SSIDForm />', () => {
     fireEvent.click(getByText(mockSsid.radiusProfiles[0].name));
   });
 
-  it('Should show errors if Radius Accounting Interval is outside range of 60-600', async () => {
+  it('Should show errors if Radius Accounting Interval is outside range of 60-600 or not 0', async () => {
     const SSIDFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -404,7 +404,7 @@ describe('<SSIDForm />', () => {
       );
     };
 
-    const { getByText, container, getByLabelText } = render(<SSIDFormComp />);
+    const { getByText, container, getByLabelText, queryByText } = render(<SSIDFormComp />);
 
     const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
     fireEvent.mouseDown(selectMode);
@@ -414,12 +414,26 @@ describe('<SSIDForm />', () => {
     await waitFor(() => {
       expect(getByText('RADIUS Accounting Interval')).toBeVisible();
     });
+
+    const errorMsg = '0 or 60 - 600';
     fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '59' } });
     await waitFor(() => {
-      expect(
-        getByText('RADIUS accounting interval can be a number between 60 and 600')
-      ).toBeVisible();
+      expect(getByText(errorMsg)).toBeVisible();
     });
+
+    fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '601' } });
+    await waitFor(() => {
+      expect(getByText(errorMsg)).toBeVisible();
+    });
+
     fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '600' } });
+    await waitFor(() => {
+      expect(queryByText(errorMsg)).not.toBeInTheDocument();
+    });
+
+    fireEvent.change(getByLabelText('RADIUS Accounting Interval'), { target: { value: '0' } });
+    await waitFor(() => {
+      expect(queryByText(errorMsg)).not.toBeInTheDocument();
+    });
   });
 });

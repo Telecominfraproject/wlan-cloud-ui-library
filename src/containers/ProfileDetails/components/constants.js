@@ -203,7 +203,7 @@ const defaultSsidProfile = {
   noLocalSubnets: false,
   radiusServiceName: null,
   radiusAccountingServiceName: null,
-  radiusAcountingServiceInterval: 60,
+  radiusAcountingServiceInterval: 0,
   captivePortalId: null,
   bandwidthLimitDown: 0,
   bandwidthLimitUp: 0,
