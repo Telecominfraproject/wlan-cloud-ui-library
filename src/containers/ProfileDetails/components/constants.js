@@ -276,7 +276,6 @@ const defaultApProfile = {
   },
   syntheticClientEnabled: false,
   ledControlEnabled: true,
-  equipmentDiscovery: false,
   radioMap: {
     is5GHz: {
       model_type: 'RadioProfileConfiguration',

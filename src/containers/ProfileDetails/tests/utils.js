@@ -131,7 +131,6 @@ export function generateApProfile(radioMap) {
     name: faker.commerce.productName(),
     profileType: 'equipment_ap',
     details: {
-      equipmentDiscovery: false,
       equipmentType: 'AP',
       ledControlEnabled: true,
       model_type: 'ApNetworkConfiguration',

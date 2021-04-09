@@ -52,7 +52,6 @@ const apProfiles = [
       rtlsSettings: null,
       syntheticClientEnabled: true,
       ledControlEnabled: true,
-      equipmentDiscovery: false,
       radioMap: {
         is2dot4GHz: {
           model_type: 'RadioProfileConfiguration',
@@ -93,7 +92,6 @@ const apProfiles = [
       rtlsSettings: null,
       syntheticClientEnabled: true,
       ledControlEnabled: true,
-      equipmentDiscovery: false,
       radioMap: {
         is5GHz: {
           model_type: 'RadioProfileConfiguration',
