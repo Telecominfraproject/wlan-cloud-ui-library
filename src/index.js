@@ -36,4 +36,6 @@ export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
 
+export { useHistory } from 'hooks';
+
 export { default as GenericNotFound } from 'components/GenericNotFound';
