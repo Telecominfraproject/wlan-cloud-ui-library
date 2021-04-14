@@ -13,6 +13,7 @@ const Dashboard = ({
   lineChartConfig,
   lineChartData,
   lineChartLoading,
+  refreshAfter,
 }) => {
   return (
     <div className={styles.mainInfoWrap}>
@@ -28,7 +29,13 @@ const Dashboard = ({
           lineChartConfig.map(i => {
             const { key, title, options } = i;
             return (
-              <LineChart key={key} data={lineChartData[key]} title={title} options={options} />
+              <LineChart
+                key={key}
+                data={lineChartData[key]}
+                title={title}
+                options={options}
+                refreshAfter={refreshAfter}
+              />
             );
           })
         )}
@@ -48,6 +55,7 @@ Dashboard.propTypes = {
   lineChartConfig: PropTypes.instanceOf(Object),
   lineChartData: PropTypes.instanceOf(Object),
   lineChartLoading: PropTypes.bool,
+  refreshAfter: PropTypes.number,
 };
 
 Dashboard.defaultProps = {
@@ -56,5 +64,6 @@ Dashboard.defaultProps = {
   lineChartConfig: null,
   lineChartData: null,
   lineChartLoading: true,
+  refreshAfter: 300,
 };
 export default Dashboard;
