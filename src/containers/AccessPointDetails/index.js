@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Card, Breadcrumb } from 'antd';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
 import { getLocationPath } from 'utils/locations';
+import { useHistory } from 'hooks';
 
 import General from './components/General';
 import Firmware from './components/Firmware';
@@ -74,7 +75,7 @@ const AccessPointDetails = ({
 
   const { routes } = useContext(ThemeContext);
   const { id, tab } = useParams();
-  const history = useHistory();
+  const { history, replaceWithSearch } = useHistory();
 
   const [isFormDirty, setIsFormDirty] = useState(false);
 
@@ -93,7 +94,7 @@ const AccessPointDetails = ({
       setRedirectURL(path);
       setConfirmModal(true);
     } else if (path) {
-      history.replace(path);
+      replaceWithSearch(path);
     } else {
       history.goBack();
     }
@@ -127,7 +128,7 @@ const AccessPointDetails = ({
           setConfirmModal(false);
           setIsFormDirty(false);
           if (redirectURL) {
-            history.replace(redirectURL);
+            replaceWithSearch(redirectURL);
           } else {
             history.goBack();
           }

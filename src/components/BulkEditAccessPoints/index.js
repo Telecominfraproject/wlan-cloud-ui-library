@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import { Breadcrumb } from 'antd';
 
 import ThemeContext from 'contexts/ThemeContext';
 import Button from 'components/Button';
+import { useHistory } from 'hooks';
 
 import BulkEditAPTable from './components/BulkEditAPTable';
 import styles from './index.module.scss';
@@ -19,11 +19,11 @@ const BulkEditAccessPoints = ({
   breadcrumbPath,
 }) => {
   const { routes } = useContext(ThemeContext);
-  const history = useHistory();
+  const { pushWithSearch } = useHistory();
   const [editedRows, setEditedRows] = useState(null);
 
   const handleBackClick = () => {
-    history.push(routes.accessPoints);
+    pushWithSearch(routes.accessPoints);
   };
 
   const breadCrumbs = breadcrumbPath.map(location => (
