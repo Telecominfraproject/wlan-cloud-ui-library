@@ -183,19 +183,15 @@ describe('<SSIDForm />', () => {
     await waitFor(() => {
       expect(getByText('Please input your new SSID name')).toBeVisible();
       expect(
-        getByText('Downstream bandwidth limit can be a number between 0 and 100.')
+        getByText('Downstream bandwidth limit can be a number between 0 and 100')
       ).toBeVisible();
-      expect(
-        getByText('Upstream bandwidth limit can be a number between 0 and 100.')
-      ).toBeVisible();
+      expect(getByText('Upstream bandwidth limit can be a number between 0 and 100')).toBeVisible();
       fireEvent.change(getAllByPlaceholderText('0-100')[0], { target: { value: 1000 } });
       fireEvent.change(getAllByPlaceholderText('0-100')[1], { target: { value: 1000 } });
       expect(
-        getByText('Downstream bandwidth limit can be a number between 0 and 100.')
+        getByText('Downstream bandwidth limit can be a number between 0 and 100')
       ).toBeVisible();
-      expect(
-        getByText('Upstream bandwidth limit can be a number between 0 and 100.')
-      ).toBeVisible();
+      expect(getByText('Upstream bandwidth limit can be a number between 0 and 100')).toBeVisible();
     });
   });
 

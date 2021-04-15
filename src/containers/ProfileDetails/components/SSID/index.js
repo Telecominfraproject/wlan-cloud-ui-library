@@ -87,7 +87,26 @@ const SSIDForm = ({
         <Item
           label="SSID Name"
           name="ssid"
-          rules={[{ required: true, message: 'Please input your new SSID name' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Please input your new SSID name',
+            },
+            {
+              pattern: /^[^!#;/+\]?$[\\"/\t\s][^+\]?$[\\"/\t]{0,30}[^ +\]?$[\\"/\t]$|^[^ !#;+\]"\t]$[\t]+$/,
+              message: (
+                <div>
+                  An SSID name can be any alphanumeric, case-sensitive entry from 2 to 32 characters
+                  with the following exceptions:
+                  <ul>
+                    <li>The first character cannot be: !, #, or ;</li>
+                    <li>?, &quot;, $, /, [, \, ], and + are invalid characters</li>
+                    <li>Trailing and leading spaces are not permitted</li>
+                  </ul>
+                </div>
+              ),
+            },
+          ]}
         >
           <Input className={globalStyles.field} name="ssidName" placeholder="Enter SSID name" />
         </Item>
@@ -115,7 +134,7 @@ const SSIDForm = ({
               rules={[
                 {
                   required: true,
-                  message: 'Downstream bandwidth limit can be a number between 0 and 100.',
+                  message: 'Downstream bandwidth limit can be a number between 0 and 100',
                 },
                 () => ({
                   validator(_rule, value) {
@@ -123,7 +142,7 @@ const SSIDForm = ({
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      new Error('Downstream bandwidth limit can be a number between 0 and 100.')
+                      new Error('Downstream bandwidth limit can be a number between 0 and 100')
                     );
                   },
                 }),
@@ -149,7 +168,7 @@ const SSIDForm = ({
               rules={[
                 {
                   required: true,
-                  message: 'Upstream bandwidth limit can be a number between 0 and 100.',
+                  message: 'Upstream bandwidth limit can be a number between 0 and 100',
                 },
                 () => ({
                   validator(_rule, value) {
@@ -157,7 +176,7 @@ const SSIDForm = ({
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      new Error('Upstream bandwidth limit can be a number between 0 and 100.')
+                      new Error('Upstream bandwidth limit can be a number between 0 and 100')
                     );
                   },
                 }),
