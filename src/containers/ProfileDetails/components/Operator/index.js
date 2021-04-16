@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select as AntdSelect, Form, Button, Input as AntdInput } from 'antd';
+import { Card, Form, Button, Select as AntdSelect } from 'antd';
+import { Select, Input } from 'components/WritableInputs';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const Select = withWritableInput(AntdSelect);
-const Input = withWritableInput(AntdInput);
 
 const OperatorForm = ({ details, form, handleOnFormChange }) => {
   const { roleIsWritable } = useWritableInput();

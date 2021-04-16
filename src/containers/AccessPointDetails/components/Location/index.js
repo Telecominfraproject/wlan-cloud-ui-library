@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select as AntdSelect } from 'antd';
+import { Select } from 'components/WritableInputs';
 import Button from 'components/Button';
 import { pageLayout } from 'utils/form';
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import styles from '../../index.module.scss';
 
-const { Option } = AntdSelect;
 const { Item } = Form;
-
-const Select = withWritableInput(AntdSelect);
+const { Option } = AntdSelect;
 
 const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
   const { roleIsWritable } = useWritableInput();

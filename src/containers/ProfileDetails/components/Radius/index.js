@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Input as AntdInput } from 'antd';
+import { Form, Card } from 'antd';
+import { Password, Input } from 'components/WritableInputs';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import styles from '../index.module.scss';
 
 const MAX_RADIUS = 1;
 
 const { Item, List } = Form;
-const { Password: AntdPassword } = AntdInput;
-const Input = withWritableInput(AntdInput);
-const Password = withWritableInput(AntdPassword);
 
 const RadiusForm = ({ form, details }) => {
   const { roleIsWritable } = useWritableInput();

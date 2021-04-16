@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
 
 import ThemeProvider from 'contexts/ThemeProvider';
-import { InputDisabledProvider } from '..';
+import InputDisabledProvider from 'contexts/InputDisabledProvider';
 
 export const DOWN_ARROW = { keyCode: 40 };
 

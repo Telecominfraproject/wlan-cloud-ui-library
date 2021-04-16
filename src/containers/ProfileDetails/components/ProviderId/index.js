@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input as AntdInput, Button, Table } from 'antd';
+import { Card, Form, Button, Table } from 'antd';
+import { Input } from 'components/WritableInputs';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import { modalLayout } from 'utils/form';
 
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import OsuForm from './components/OsuForm';
 import NaiRealm from './components/NaiRealm';
@@ -13,8 +14,6 @@ import NaiRealm from './components/NaiRealm';
 import styles from '../index.module.scss';
 
 const { Item } = Form;
-
-const Input = withWritableInput(AntdInput);
 
 const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   const { roleIsWritable } = useWritableInput();

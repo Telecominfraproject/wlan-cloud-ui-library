@@ -1,27 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Cascader,
-  Button,
-  Table,
-  Select as AntdSelect,
-  Input as AntdInput,
-} from 'antd';
+import { Card, Form, Cascader, Button, Table, Select as AntdSelect } from 'antd';
+import { Select, Input } from 'components/WritableInputs';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import _ from 'lodash';
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const Input = withWritableInput(AntdInput);
-const Select = withWritableInput(AntdSelect);
 
 const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
   const { roleIsWritable } = useWritableInput();

@@ -43,6 +43,7 @@ const AccessPointDetails = ({
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
+  showFirmware,
 }) => {
   const { roleIsWritable } = useWritableInput();
   const TAB_LIST = [
@@ -62,10 +63,14 @@ const AccessPointDetails = ({
       key: 'os',
       tab: 'OS Stats',
     },
-    {
-      key: 'firmware',
-      tab: 'Firmware',
-    },
+    ...(showFirmware
+      ? [
+          {
+            key: 'firmware',
+            tab: 'Firmware',
+          },
+        ]
+      : []),
     ...extraTabs.map(extraTab => {
       return {
         key: extraTab.key,
@@ -276,6 +281,7 @@ AccessPointDetails.propTypes = {
   ),
   extraGeneralCards: PropTypes.node,
   showStatusAlarms: PropTypes.bool,
+  showFirmware: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -294,6 +300,7 @@ AccessPointDetails.defaultProps = {
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,
+  showFirmware: true,
 };
 
 export default AccessPointDetails;

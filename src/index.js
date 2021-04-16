@@ -22,7 +22,7 @@ export { default as NetworkTableContainer } from 'containers/NetworkTableContain
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 export { default as InputDisabledProvider } from 'contexts/InputDisabledProvider';
-export { withWritableInput } from 'contexts/InputDisabledContext';
+export { withWritableInput } from 'components/WritableInputs';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';

@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch as AntdSwitch, Form, Input as AntdInput, Button } from 'antd';
+import { Card, Form, Button } from 'antd';
+import { Switch, Input } from 'components/WritableInputs';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
-
-const Input = withWritableInput(AntdInput);
-const Switch = withWritableInput(AntdSwitch);
 
 const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
   const { roleIsWritable } = useWritableInput();

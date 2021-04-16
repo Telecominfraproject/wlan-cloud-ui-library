@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Form, Input, Select, Table, Upload, message, Empty } from 'antd';
+import { Card, Button, Form, Table, message, Empty, Select as AntdSelect } from 'antd';
+import { Input, Select, Upload } from 'components/WritableInputs';
+
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES } from 'containers/ProfileDetails/constants';
@@ -11,7 +13,7 @@ import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const formatFile = file => {
   return {

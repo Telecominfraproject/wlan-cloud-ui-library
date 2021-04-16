@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input as AntdInput, Checkbox, Radio, Select as AntdSelect, Empty } from 'antd';
+import { Card, Form, Checkbox, Radio, Select as AntdSelect, Empty } from 'antd';
+import {
+  Input,
+  Password,
+  Select,
+  RadioGroup as Group,
+  CheckboxGroup,
+} from 'components/WritableInputs';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
-import { withWritableInput } from 'contexts/InputDisabledContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
@@ -11,21 +17,7 @@ import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
 
 const { Item } = Form;
-
-// Input HOCs
-const Input = withWritableInput(AntdInput);
-const { Password: Pass } = AntdInput;
-const Password = withWritableInput(Pass);
-
-// Select HOCs
-const Select = withWritableInput(AntdSelect);
 const { Option } = AntdSelect;
-
-const { Group: RadioGroup } = Radio;
-const Group = withWritableInput(RadioGroup);
-
-const { Group: CheckGroup } = Checkbox;
-const CheckBoxGroup = withWritableInput(CheckGroup);
 
 const SSIDForm = ({
   form,
@@ -191,13 +183,13 @@ const SSIDForm = ({
         </Item>
 
         <Item name="appliedRadios" label="Use On">
-          <CheckBoxGroup>
+          <CheckboxGroup>
             {Object.keys(radioTypes || [])?.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
             ))}
-          </CheckBoxGroup>
+          </CheckboxGroup>
         </Item>
       </Card>
       <Card title="Network Connectivity">

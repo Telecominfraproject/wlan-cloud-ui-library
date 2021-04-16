@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select as AntdSelect, Form, Button, Table } from 'antd';
+import { Card, Form, Button, Table, Select as AntdSelect } from 'antd';
+import { Select } from 'components/WritableInputs';
 import { DeleteOutlined } from '@ant-design/icons';
 import globalStyles from 'styles/index.scss';
-import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const Select = withWritableInput(AntdSelect);
 
 const VenueForm = ({ form, details, handleOnFormChange }) => {
   const { roleIsWritable } = useWritableInput();

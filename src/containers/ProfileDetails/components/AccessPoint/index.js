@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Input as AntdInput,
-  Checkbox as AntdCheckbox,
-  Radio,
-  Select as AntdSelect,
-  Table,
-  Empty,
-} from 'antd';
+import { Card, Form, Radio, Select as AntdSelect, Table, Empty } from 'antd';
+import { RadioGroup as Group, Select, Input, Checkbox } from 'components/WritableInputs';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
@@ -25,14 +17,6 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const Select = withWritableInput(AntdSelect);
-
-const { Group: RadioGroup } = Radio;
-const Group = withWritableInput(RadioGroup);
-
-const Checkbox = withWritableInput(AntdCheckbox);
-const Input = withWritableInput(AntdInput);
 
 const MAX_GRE_TUNNELS = 1;
 

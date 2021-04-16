@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   Card,
   Form,
-  Input as AntdInput,
   Table,
   Collapse,
   Select as AntdSelect,
@@ -11,9 +10,10 @@ import {
   Alert,
   Empty,
 } from 'antd';
+import { Select, Input } from 'components/WritableInputs';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
-import { withWritableInput, useWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
@@ -25,9 +25,6 @@ const { Item } = Form;
 const { Panel } = Collapse;
 
 const { Option } = AntdSelect;
-const Select = withWritableInput(AntdSelect);
-
-const Input = withWritableInput(AntdInput);
 
 const General = ({
   data,

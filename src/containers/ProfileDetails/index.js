@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input as AntdInput, Card, notification, Select } from 'antd';
+import { Form, Card, notification, Select } from 'antd';
+import { Input } from 'components/WritableInputs';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 import { pageLayout } from 'utils/form';
 
 import globalStyles from 'styles/index.scss';
@@ -26,8 +28,6 @@ import {
   profileTypes,
 } from 'utils/profiles';
 
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
-
 import { PROFILES } from './constants';
 import SSIDForm from './components/SSID';
 import AccessPointForm from './components/AccessPoint';
@@ -41,8 +41,6 @@ import OperatorForm from './components/Operator';
 import VenueForm from './components/Venue';
 
 import styles from './index.module.scss';
-
-const Input = withWritableInput(AntdInput);
 
 const ProfileDetails = ({
   profileType,

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Input, Col, Tooltip, Select, Radio, Row } from 'antd';
+import { Form, Card, Col, Tooltip, Select as AntdSelect, Radio, Row } from 'antd';
+import { Input, Select, TextArea } from 'components/WritableInputs';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
 const { Item, List } = Form;
-const { TextArea } = Input;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const BonjourGateway = ({ form, details }) => {
   const [defaultVlanSelected, setDefaultVlanSelected] = useState(

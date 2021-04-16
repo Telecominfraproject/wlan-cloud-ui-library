@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert, Upload, Input, Form, message, Spin } from 'antd';
+import { Search } from 'components/WritableInputs';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -8,13 +9,11 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
 
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import styles from './index.module.scss';
 
 const { Item } = Form;
-const { Search: AntdSearch } = Input;
-const Search = withWritableInput(AntdSearch);
 
 const layout = {
   labelCol: { span: 2 },

@@ -1,22 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select as AntdSelect, Switch as AntdSwitch, Table, Spin, Alert } from 'antd';
+import { Card, Form, Select as AntdSelect, Table, Spin, Alert } from 'antd';
+import { Select, Switch } from 'components/WritableInputs';
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
 import DeleteButton from 'components/DeleteButton';
 import globalStyles from 'styles/index.scss';
-import { useWritableInput, withWritableInput } from 'contexts/InputDisabledContext';
+import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const Select = withWritableInput(AntdSelect);
-const Switch = withWritableInput(AntdSwitch);
 
 const AutoProvision = ({
   data,
