@@ -104,7 +104,6 @@ const AccessPointForm = ({
         severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
-      equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: currentRfId,
     });
   }, [form, details]);
@@ -423,18 +422,6 @@ const AccessPointForm = ({
             {
               required: true,
               message: 'Please select your Synthetic Client setting',
-            },
-          ]}
-        >
-          {enabledRadioOptions()}
-        </Item>
-        <Item
-          label="Equipment Discovery"
-          name="equipmentDiscovery"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your Equipment Discovery setting',
             },
           ]}
         >

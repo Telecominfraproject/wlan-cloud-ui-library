@@ -12,7 +12,10 @@ const Menu = ({ mode, menuItems, onMenuItemClick, ...restProps }) => {
 
   const getMenuItem = item => (
     <Item key={item.key}>
-      <Link onClick={onMenuItemClick} to={item.path}>
+      <Link
+        onClick={onMenuItemClick}
+        to={{ pathname: item.path, search: item.preserveQueryParams ? location.search : null }}
+      >
         {item.icon || null}
         <span>{item.text}</span>
       </Link>

@@ -21,6 +21,7 @@ const FormModal = ({
   model,
   profileId,
   usedModels,
+  onFetchMoreProfiles,
 }) => {
   const [form] = Form.useForm();
 
@@ -74,7 +75,11 @@ const FormModal = ({
           },
         ]}
       >
-        <Select className={globalStyles.field} placeholder="Select Access Point Profile">
+        <Select
+          className={globalStyles.field}
+          placeholder="Select Access Point Profile"
+          onPopupScroll={e => onFetchMoreProfiles(e)}
+        >
           {profiles.map(i => (
             <Option key={i.id} value={i.id}>
               {i.name}
@@ -133,6 +138,7 @@ FormModal.propTypes = {
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool,
   usedModels: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 FormModal.defaultProps = {
@@ -146,6 +152,7 @@ FormModal.defaultProps = {
   errorProfile: null,
   loadingProfile: true,
   usedModels: [],
+  onFetchMoreProfiles: () => {},
 };
 
 export default FormModal;

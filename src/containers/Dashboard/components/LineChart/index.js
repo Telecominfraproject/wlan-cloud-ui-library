@@ -27,9 +27,9 @@ const dateTimeLabelFormats = {
   year: '',
 };
 
-const LineChart = ({ title, data, options }) => {
+const LineChart = ({ title, data, options, refreshAfter }) => {
   return (
-    <Card title={title} extra={<Timer refreshAfter={300} />}>
+    <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
       <HighchartsChart
         time={{
           useUTC: false,
@@ -88,11 +88,13 @@ LineChart.propTypes = {
   title: PropTypes.string,
   data: PropTypes.instanceOf(Object),
   options: PropTypes.instanceOf(Object),
+  refreshAfter: PropTypes.number,
 };
 
 LineChart.defaultProps = {
   title: '',
   data: {},
   options: {},
+  refreshAfter: 300,
 };
 export default withHighcharts(LineChart, Highcharts);
