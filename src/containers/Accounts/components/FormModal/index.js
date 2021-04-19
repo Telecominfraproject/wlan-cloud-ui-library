@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select, Typography } from 'antd';
 
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
@@ -8,6 +8,7 @@ import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 const { Option } = Select;
+const { Text } = Typography;
 
 const strongRegex = new RegExp(
   /(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])).*/
@@ -49,7 +50,11 @@ const FormModal = ({
           },
         ]}
       >
-        <Input className={styles.field} />
+        {isAuth0Enabled && title === 'Edit User' ? (
+          <Text>{userEmail}</Text>
+        ) : (
+          <Input className={styles.field} />
+        )}
       </Item>
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
