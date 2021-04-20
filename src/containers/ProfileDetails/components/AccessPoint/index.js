@@ -4,7 +4,7 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
-import { PROFILES } from 'containers/ProfileDetails/constants';
+import { PROFILES, IP_REGEX } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import globalStyles from 'styles/index.scss';
@@ -269,7 +269,7 @@ const AccessPointForm = ({
               rules={[
                 {
                   required: rtls,
-                  pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                  pattern: IP_REGEX,
                   message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                 },
               ]}
@@ -339,7 +339,7 @@ const AccessPointForm = ({
                   rules={[
                     {
                       required: syslog,
-                      pattern: /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/,
+                      pattern: IP_REGEX,
                       message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
                   ]}
