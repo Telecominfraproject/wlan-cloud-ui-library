@@ -309,11 +309,13 @@ const SSIDForm = ({
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            prevValues.captivePortal !== currentValues.captivePortal
+            prevValues.captivePortal !== currentValues.captivePortal ||
+            prevValues.forwardMode !== currentValues.forwardMode
           }
         >
           {({ getFieldValue }) => {
-            return getFieldValue('captivePortal') === 'usePortal' ? (
+            return getFieldValue('forwardMode') === 'BRIDGE' &&
+              getFieldValue('captivePortal') === 'usePortal' ? (
               <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
                   className={globalStyles.field}
