@@ -269,44 +269,53 @@ const SSIDForm = ({
         >
           {({ getFieldValue }) => {
             return (
-              <Item
-                name="noLocalSubnets"
-                label={
-                  <span>
-                    <Tooltip
-                      title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
-                      text="Local Access"
-                    />
-                  </span>
-                }
-              >
-                {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Radio.Group>
-                    <Radio value="false">Allow Local Access</Radio>
-                    <Radio value="true">No Local Access</Radio>
-                  </Radio.Group>
-                ) : (
-                  <span className={styles.Disclaimer}>Not Applicable</span>
-                )}
-              </Item>
+              <>
+                <Item
+                  name="noLocalSubnets"
+                  label={
+                    <span>
+                      <Tooltip
+                        title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
+                        text="Local Access"
+                      />
+                    </span>
+                  }
+                >
+                  {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                    <Radio.Group>
+                      <Radio value="false">Allow Local Access</Radio>
+                      <Radio value="true">No Local Access</Radio>
+                    </Radio.Group>
+                  ) : (
+                    <span className={styles.Disclaimer}>Not Applicable</span>
+                  )}
+                </Item>
+
+                <Item label="Captive Portal" name="captivePortal">
+                  {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                    <Radio.Group>
+                      <Radio value="notPortal">Do Not Use</Radio>
+                      <Radio value="usePortal">Use</Radio>
+                    </Radio.Group>
+                  ) : (
+                    <span className={styles.Disclaimer}>Not Applicable</span>
+                  )}
+                </Item>
+              </>
             );
           }}
         </Item>
 
-        <Item label="Captive Portal" name="captivePortal">
-          <Radio.Group>
-            <Radio value="notPortal">Do Not Use</Radio>
-            <Radio value="usePortal">Use</Radio>
-          </Radio.Group>
-        </Item>
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode ||
             prevValues.captivePortal !== currentValues.captivePortal
           }
         >
           {({ getFieldValue }) => {
-            return getFieldValue('captivePortal') === 'usePortal' ? (
+            return getFieldValue('forwardMode') === 'BRIDGE' &&
+              getFieldValue('captivePortal') === 'usePortal' ? (
               <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
                   className={globalStyles.field}
