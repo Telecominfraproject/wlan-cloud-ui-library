@@ -115,9 +115,9 @@
 }
 
 .Whitelist {
-  margin-left: 16.66666667%;
+  margin-left: 21%;
   max-width: 50%;
-
+  word-wrap: break-word;
   &:global(.ant-list) {
     padding: 0;
   }
