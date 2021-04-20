@@ -309,8 +309,8 @@ const SSIDForm = ({
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            prevValues.captivePortal !== currentValues.captivePortal ||
-            prevValues.forwardMode !== currentValues.forwardMode
+            prevValues.forwardMode !== currentValues.forwardMode ||
+            prevValues.captivePortal !== currentValues.captivePortal
           }
         >
           {({ getFieldValue }) => {
