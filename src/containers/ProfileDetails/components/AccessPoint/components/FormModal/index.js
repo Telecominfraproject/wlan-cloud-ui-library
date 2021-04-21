@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
 import Modal from 'components/Modal';
+import { IP_REGEX } from 'containers/ProfileDetails/constants';
 
 import globalStyles from 'styles/index.scss';
 
@@ -36,8 +37,8 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
             message: 'Remote IP Address field cannot be empty',
           },
           {
-            pattern: /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm,
-            message: 'Please enter a valid IP Address format.',
+            pattern: IP_REGEX,
+            message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
           },
         ]}
         hasFeedback

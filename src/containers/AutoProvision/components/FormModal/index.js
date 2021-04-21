@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
+import ContainedSelect from 'components/ContainedSelect';
 import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -75,7 +76,7 @@ const FormModal = ({
           },
         ]}
       >
-        <Select
+        <ContainedSelect
           className={globalStyles.field}
           placeholder="Select Access Point Profile"
           onPopupScroll={e => onFetchMoreProfiles(e)}
@@ -85,7 +86,7 @@ const FormModal = ({
               {i.name}
             </Option>
           ))}
-        </Select>
+        </ContainedSelect>
       </Item>
     </Form>
   );
