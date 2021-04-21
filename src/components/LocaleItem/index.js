@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Form } from 'antd';
+import ContainedSelect from 'components/ContainedSelect';
 
 const { Option } = Select;
 const { Item } = Form;
@@ -17,10 +18,10 @@ const LocaleDropdown = ({ name }) => {
         },
       ]}
     >
-      <Select placeholder="Please select" data-testid="localeItem">
+      <ContainedSelect placeholder="Please select" data-testid="localeItem">
         <Option value="en_CA">English</Option>
         <Option value="fr_CA">Francais</Option>
-      </Select>
+      </ContainedSelect>
     </Item>
   );
 };
