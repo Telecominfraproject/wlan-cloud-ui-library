@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select, Form } from 'antd';
 import Modal from 'components/Modal';
-import ModalSelect from 'components/ModalSelect';
+import ContainedSelect from 'components/ContainedSelect';
 import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
@@ -40,21 +40,21 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
             name="connectionCapabilitiesStatus"
             rules={[{ required: true, message: 'Status field cannot be empty' }]}
           >
-            <ModalSelect placeholder="Select a status">
+            <ContainedSelect placeholder="Select a status">
               <Option value="open">Open</Option>
               <Option value="closed">Closed</Option>
-            </ModalSelect>
+            </ContainedSelect>
           </Item>
           <Item
             label="Protocol"
             name="connectionCapabilitiesIpProtocol"
             rules={[{ required: true, message: 'Protocol field cannot be empty' }]}
           >
-            <ModalSelect placeholder="Select a protocol">
+            <ContainedSelect placeholder="Select a protocol">
               <Option value="ICMP">ICMP</Option>
               <Option value="TCP">TCP</Option>
               <Option value="UDP">UDP</Option>
-            </ModalSelect>
+            </ContainedSelect>
           </Item>
           <Item
             label="Port"

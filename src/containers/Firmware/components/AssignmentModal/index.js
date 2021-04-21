@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Select, Spin, Alert } from 'antd';
 
 import Modal from 'components/Modal';
-import ModalSelect from 'components/ModalSelect';
+import ContainedSelect from 'components/ContainedSelect';
 import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -64,7 +64,7 @@ const AssignmentModal = ({
           },
         ]}
       >
-        <ModalSelect
+        <ContainedSelect
           className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
@@ -75,7 +75,7 @@ const AssignmentModal = ({
               {filteredModels[i]}
             </Option>
           ))}
-        </ModalSelect>
+        </ContainedSelect>
       </Item>
 
       <Item
@@ -91,7 +91,7 @@ const AssignmentModal = ({
         {firmwareVersionLoading ? (
           <Spin data-testid="firmwareVersionLoading" className={styles.spinner} size="large" />
         ) : (
-          <ModalSelect
+          <ContainedSelect
             className={globalStyles.field}
             placeholder="Select Firmware Version"
             disabled={title === 'Add Model Target Version' && !model}
@@ -101,7 +101,7 @@ const AssignmentModal = ({
                 {firmwareVersionData[i].versionName}
               </Option>
             ))}
-          </ModalSelect>
+          </ContainedSelect>
         )}
       </Item>
     </Form>

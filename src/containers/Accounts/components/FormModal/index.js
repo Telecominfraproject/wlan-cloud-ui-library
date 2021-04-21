@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Form, Input, Select, Typography } from 'antd';
 
 import Modal from 'components/Modal';
-import ModalSelect from 'components/ModalSelect';
+import ContainedSelect from 'components/ContainedSelect';
 import styles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 
@@ -59,10 +59,10 @@ const FormModal = ({
       </Item>
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
-        <ModalSelect placeholder="Select role">
+        <ContainedSelect placeholder="Select role">
           <Option value="SuperUser">SuperUser</Option>
           <Option value="CustomerIT">CustomerIT</Option>
-        </ModalSelect>
+        </ContainedSelect>
       </Item>
       {!isAuth0Enabled && (
         <>
