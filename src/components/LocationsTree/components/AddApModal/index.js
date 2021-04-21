@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
+import ModalSelect from 'components/ModalSelect';
 import { modalLayout } from 'utils/form';
 import styles from 'styles/index.scss';
 
@@ -60,7 +61,7 @@ const AddApModal = ({
           },
         ]}
       >
-        <Select
+        <ModalSelect
           className={styles.field}
           placeholder="Select Access Point Profile"
           onPopupScroll={onFetchMoreProfiles}
@@ -71,7 +72,7 @@ const AddApModal = ({
               {profiles[i].name}
             </Option>
           ))}
-        </Select>
+        </ModalSelect>
       </Item>
     </Form>
   );

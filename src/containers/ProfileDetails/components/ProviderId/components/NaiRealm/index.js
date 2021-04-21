@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Button, Table, Select, Input } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
+import ModalSelect from 'components/ModalSelect';
 import _ from 'lodash';
 import { authOptions } from './constants';
 
@@ -162,7 +163,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   },
                 ]}
               >
-                <Select placeholder="Please select" data-testid="method">
+                <ModalSelect placeholder="Please select" data-testid="method">
                   <Option value="EAP-TLS with certificate" data-testid="eapCertificate">
                     EAP-TLS with certificate
                   </Option>
@@ -174,7 +175,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   </Option>
                   <Option value="EAP-AKA Authentication">EAP-AKA Authentication</Option>
                   <Option value="EAP-AKA'">EAP-AKA Prime</Option>
-                </Select>
+                </ModalSelect>
               </Item>
               <Item
                 name="auth"
