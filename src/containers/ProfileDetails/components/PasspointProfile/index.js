@@ -283,7 +283,7 @@ const PasspointProfileForm = ({
             placeholder="Select a Venue Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.venue, name)}
-            onSelect={() => onSearchProfile(PROFILES.venue)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.venue)}
             loading={loadingVenueProfiles}
             notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
@@ -303,7 +303,7 @@ const PasspointProfileForm = ({
             placeholder="Select an Operator Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.operator, name)}
-            onSelect={() => onSearchProfile(PROFILES.operator)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.operator)}
             loading={loadingOperatorProfiles}
             notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
@@ -326,7 +326,7 @@ const PasspointProfileForm = ({
             className={styles.MultipleSelection}
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.providerID, name)}
-            onSelect={() => onSearchProfile(PROFILES.providerID)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.providerID)}
             loading={loadingIdProviderProfiles}
             notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
@@ -346,7 +346,7 @@ const PasspointProfileForm = ({
             placeholder="Select an SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile(PROFILES.ssid)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
@@ -395,7 +395,7 @@ const PasspointProfileForm = ({
             placeholder="Select a SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile(PROFILES.ssid)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}

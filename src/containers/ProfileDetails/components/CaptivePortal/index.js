@@ -488,7 +488,7 @@ const CaptivePortalForm = ({
               showSearch={onSearchProfile}
               filterOption={false}
               onSearch={name => onSearchProfile(PROFILES.radius, name)}
-              onSelect={() => onSearchProfile(PROFILES.radius)}
+              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue

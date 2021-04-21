@@ -324,7 +324,7 @@ const SSIDForm = ({
                   showSearch={onSearchProfile}
                   filterOption={false}
                   onSearch={name => onSearchProfile(PROFILES.captivePortal, name)}
-                  onSelect={() => onSearchProfile(PROFILES.captivePortal)}
+                  onSelect={() => onSearchProfile && onSearchProfile(PROFILES.captivePortal)}
                   loading={loadingCaptiveProfiles}
                   notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
@@ -585,7 +585,7 @@ const SSIDForm = ({
                 showSearch={onSearchProfile}
                 filterOption={false}
                 onSearch={name => onSearchProfile(PROFILES.radius, name)}
-                onSelect={() => onSearchProfile(PROFILES.radius)}
+                onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
                 loading={loadingRadiusProfiles}
                 notFoundContent={!loadingRadiusProfiles && <Empty />}
                 labelInValue

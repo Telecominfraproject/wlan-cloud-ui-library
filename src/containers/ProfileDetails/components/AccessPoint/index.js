@@ -423,7 +423,7 @@ const AccessPointForm = ({
             placeholder="Select a RF Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.rf, name)}
-            onSelect={() => onSearchProfile(PROFILES.rf)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
           >
@@ -444,7 +444,7 @@ const AccessPointForm = ({
             placeholder="Select a SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile(PROFILES.ssid)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}

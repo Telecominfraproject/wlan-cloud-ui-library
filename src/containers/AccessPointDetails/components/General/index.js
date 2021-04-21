@@ -400,7 +400,7 @@ const General = ({
             showSearch={onSearchProfile}
             filterOption={false}
             onSearch={onSearchProfile}
-            onSelect={() => onSearchProfile()}
+            onSelect={() => onSearchProfile && onSearchProfile()}
             loading={loadingProfiles}
             notFoundContent={!loadingProfiles && <Empty />}
           >
