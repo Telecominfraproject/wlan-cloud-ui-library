@@ -300,7 +300,8 @@ const SSIDForm = ({
                   onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
                   showSearch={onSearchProfile}
                   filterOption={false}
-                  onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
+                  onSearch={name => onSearchProfile(PROFILES.captivePortal, name)}
+                  onSelect={() => onSearchProfile(PROFILES.captivePortal)}
                   loading={loadingCaptiveProfiles}
                   notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
@@ -378,7 +379,8 @@ const SSIDForm = ({
                 onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
                 showSearch={onSearchProfile}
                 filterOption={false}
-                onSearch={name => onSearchProfile(name, PROFILES.radius)}
+                onSearch={name => onSearchProfile(PROFILES.radius, name)}
+                onSelect={() => onSearchProfile(PROFILES.radius)}
                 loading={loadingRadiusProfiles}
                 notFoundContent={!loadingRadiusProfiles && <Empty />}
                 labelInValue
