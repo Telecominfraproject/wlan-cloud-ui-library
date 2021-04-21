@@ -288,7 +288,7 @@ AccessPointDetails.defaultProps = {
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
   extraButtons: null,
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   extraFields: [],
   extraTabs: [],
   extraGeneralCards: null,

@@ -397,9 +397,10 @@ const General = ({
             onChange={handleProfileChange}
             placeholder="Select Access Point profile..."
             onPopupScroll={onFetchMoreProfiles}
-            showSearch
+            showSearch={onSearchProfile}
             filterOption={false}
             onSearch={onSearchProfile}
+            onSelect={() => onSearchProfile && onSearchProfile()}
             loading={loadingProfiles}
             notFoundContent={!loadingProfiles && <Empty />}
           >
@@ -600,7 +601,7 @@ General.defaultProps = {
   loadingProfiles: true,
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   extraFields: [],
   extraGeneralCards: null,
 };
