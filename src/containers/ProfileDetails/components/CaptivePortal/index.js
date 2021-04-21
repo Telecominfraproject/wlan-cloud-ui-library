@@ -228,14 +228,16 @@ const CaptivePortalForm = ({
   };
 
   const handleOnWhitelist = value => {
-    validateWhitelist(null, value).then(() => {
-      setWhitelist([...whitelist, value.toLowerCase().trim()]);
-      setWhitelistSearch('');
-      setWhitelistValidation({
-        status: null,
-        help: null,
-      });
-    });
+    validateWhitelist(null, value)
+      .then(() => {
+        setWhitelist([...whitelist, value.toLowerCase().trim()]);
+        setWhitelistSearch('');
+        setWhitelistValidation({
+          status: null,
+          help: null,
+        });
+      })
+      .catch(() => {});
   };
 
   const handleOnChangeWhitelist = event => {
