@@ -43,7 +43,7 @@ const AccessPointDetails = ({
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
-  extraIcon,
+  avatar,
 }) => {
   const TAB_LIST = [
     {
@@ -163,7 +163,7 @@ const AccessPointDetails = ({
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
-            {extraIcon ?? <WifiOutlined className={styles.WifiIcon} />}
+            {avatar ?? <WifiOutlined className={styles.WifiIcon} />}
             <div className={styles.InlineBlockDiv}>
               <div> {data.name} </div>
               <div>
@@ -274,7 +274,7 @@ AccessPointDetails.propTypes = {
   ),
   extraGeneralCards: PropTypes.node,
   showStatusAlarms: PropTypes.bool,
-  extraIcon: PropTypes.node,
+  avatar: PropTypes.node,
 };
 
 AccessPointDetails.defaultProps = {
@@ -293,7 +293,7 @@ AccessPointDetails.defaultProps = {
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,
-  extraIcon: null,
+  avatar: null,
 };
 
 export default AccessPointDetails;
