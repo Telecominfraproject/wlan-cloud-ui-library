@@ -292,7 +292,7 @@ const SSIDForm = ({
                 </Item>
 
                 <Item label="Captive Portal" name="captivePortal">
-                  {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                  {getFieldValue('forwardMode') === 'NAT' ? (
                     <Radio.Group>
                       <Radio value="notPortal">Do Not Use</Radio>
                       <Radio value="usePortal">Use</Radio>
@@ -314,7 +314,7 @@ const SSIDForm = ({
           }
         >
           {({ getFieldValue }) => {
-            return getFieldValue('forwardMode') === 'BRIDGE' &&
+            return getFieldValue('forwardMode') === 'NAT' &&
               getFieldValue('captivePortal') === 'usePortal' ? (
               <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
