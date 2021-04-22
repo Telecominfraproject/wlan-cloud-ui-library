@@ -270,11 +270,11 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('Loading spinner should be visible if loadingLoaction', async () => {
-    const { getByTestId } = render(<AutoProvision {...mockProps} loadingLoaction />);
+  it('Loading spinner should be visible if loadingLocation is true', async () => {
+    const { getByTestId } = render(<AutoProvision {...mockProps} loadingLocation />);
 
     await waitFor(() => {
-      expect(getByTestId('loadingLoaction')).toBeInTheDocument();
+      expect(getByTestId('loadingLocation')).toBeInTheDocument();
     });
   });
 

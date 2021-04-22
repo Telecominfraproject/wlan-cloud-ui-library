@@ -73,7 +73,6 @@ describe('<AccessPoints />', () => {
         rtlsSettings: { enabled: true },
         syslogRelay: { enabled: true },
         syntheticClientEnabled: false,
-        equipmentDiscovery: true,
       },
     };
     const AccessPointComp = () => {

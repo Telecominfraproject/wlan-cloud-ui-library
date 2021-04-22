@@ -4,7 +4,7 @@ import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
-import { PROFILES } from 'containers/ProfileDetails/constants';
+import { PROFILES, IP_REGEX } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import globalStyles from 'styles/index.scss';
@@ -99,7 +99,6 @@ const AccessPointForm = ({
         severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
-      equipmentDiscovery: details?.equipmentDiscovery ? 'true' : 'false',
       rfProfileId: currentRfId,
     });
   }, [form, details]);
@@ -270,7 +269,7 @@ const AccessPointForm = ({
               rules={[
                 {
                   required: rtls,
-                  pattern: /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/,
+                  pattern: IP_REGEX,
                   message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                 },
               ]}
@@ -340,7 +339,7 @@ const AccessPointForm = ({
                   rules={[
                     {
                       required: syslog,
-                      pattern: /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/,
+                      pattern: IP_REGEX,
                       message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                     },
                   ]}
@@ -415,18 +414,6 @@ const AccessPointForm = ({
         >
           {enabledRadioOptions()}
         </Item>
-        <Item
-          label="Equipment Discovery"
-          name="equipmentDiscovery"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your Equipment Discovery setting',
-            },
-          ]}
-        >
-          {enabledRadioOptions()}
-        </Item>
       </Card>
       <Card title="RF Enabled on This Profile">
         <Item name="rfProfileId">
@@ -435,7 +422,8 @@ const AccessPointForm = ({
             showSearch={onSearchProfile}
             placeholder="Select a RF Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.rf)}
+            onSearch={name => onSearchProfile(PROFILES.rf, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
           >
@@ -455,7 +443,8 @@ const AccessPointForm = ({
             showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}

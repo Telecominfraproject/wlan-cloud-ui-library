@@ -68,7 +68,7 @@ export const formatSsidProfileForm = values => {
     });
   });
 
-  if (values.captivePortal === 'usePortal') {
+  if (values.forwardMode === 'BRIDGE' && values.captivePortal === 'usePortal') {
     formattedData.childProfileIds.push(parseInt(values.captivePortalId, 10));
   } else {
     formattedData.captivePortalId = null;
@@ -104,7 +104,6 @@ export const formatSsidProfileForm = values => {
 export const formatApProfileForm = values => {
   const formattedData = { ...values };
 
-  formattedData.equipmentDiscovery = isBool(values.equipmentDiscovery);
   formattedData.rtlsSettings.enabled = isBool(values.rtlsSettings.enabled);
   formattedData.syntheticClientEnabled = isBool(values.syntheticClientEnabled);
   formattedData.syslogRelay.enabled = isBool(values.syslogRelay.enabled);

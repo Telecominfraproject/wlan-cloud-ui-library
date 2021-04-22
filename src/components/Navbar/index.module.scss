@@ -7,10 +7,10 @@
   position: fixed;
   display: flex;
   right: 0;
-  z-index: 9999;
+  z-index: 999;
 
   :global(.ant-layout-header) {
-    z-index: 9999;
+    z-index: 999;
   }
 
   :global(.ant-row) {

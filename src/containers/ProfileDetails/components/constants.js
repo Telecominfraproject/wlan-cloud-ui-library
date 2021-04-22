@@ -203,7 +203,7 @@ const defaultSsidProfile = {
   noLocalSubnets: false,
   radiusServiceName: null,
   radiusAccountingServiceName: null,
-  radiusAcountingServiceInterval: 60,
+  radiusAcountingServiceInterval: 0,
   captivePortalId: null,
   bandwidthLimitDown: 0,
   bandwidthLimitUp: 0,
@@ -243,7 +243,7 @@ const defaultSsidProfile = {
   profileType: 'ssid',
   radiusClientConfiguration: {
     model_type: 'RadiusNasConfiguration',
-    nasClientId: 'DEFAULT',
+    nasClientId: 'BSSID',
     nasClientIp: 'WAN_IP',
     userDefinedNasId: null,
     userDefinedNasIp: null,
@@ -276,7 +276,6 @@ const defaultApProfile = {
   },
   syntheticClientEnabled: false,
   ledControlEnabled: true,
-  equipmentDiscovery: false,
   radioMap: {
     is5GHz: {
       model_type: 'RadioProfileConfiguration',

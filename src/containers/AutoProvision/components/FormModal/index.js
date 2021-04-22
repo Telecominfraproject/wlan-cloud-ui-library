@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
+import ContainedSelect from 'components/ContainedSelect';
 import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -21,6 +22,7 @@ const FormModal = ({
   model,
   profileId,
   usedModels,
+  onFetchMoreProfiles,
 }) => {
   const [form] = Form.useForm();
 
@@ -74,13 +76,17 @@ const FormModal = ({
           },
         ]}
       >
-        <Select className={globalStyles.field} placeholder="Select Access Point Profile">
+        <ContainedSelect
+          className={globalStyles.field}
+          placeholder="Select Access Point Profile"
+          onPopupScroll={e => onFetchMoreProfiles(e)}
+        >
           {profiles.map(i => (
             <Option key={i.id} value={i.id}>
               {i.name}
             </Option>
           ))}
-        </Select>
+        </ContainedSelect>
       </Item>
     </Form>
   );
@@ -133,6 +139,7 @@ FormModal.propTypes = {
   errorProfile: PropTypes.instanceOf(Object),
   loadingProfile: PropTypes.bool,
   usedModels: PropTypes.instanceOf(Array),
+  onFetchMoreProfiles: PropTypes.func,
 };
 
 FormModal.defaultProps = {
@@ -146,6 +153,7 @@ FormModal.defaultProps = {
   errorProfile: null,
   loadingProfile: true,
   usedModels: [],
+  onFetchMoreProfiles: () => {},
 };
 
 export default FormModal;

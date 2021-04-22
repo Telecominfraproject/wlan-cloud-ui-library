@@ -68,14 +68,6 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       dataIndex: 'mnc',
     },
     {
-      title: 'Country',
-      dataIndex: 'country',
-    },
-    {
-      title: 'Network',
-      dataIndex: 'network',
-    },
-    {
       title: '',
       width: 80,
       render: item => (

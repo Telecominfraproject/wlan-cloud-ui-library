@@ -9,7 +9,7 @@ import { COLORS } from 'utils/charts';
 
 import Card from '../Card';
 
-const MyLineChart = ({ title, data, options }) => {
+const MyLineChart = ({ title, data, options, refreshAfter }) => {
   const lineData = useMemo(() => {
     let result = [];
     Object.keys(data).forEach(key => {
@@ -19,7 +19,7 @@ const MyLineChart = ({ title, data, options }) => {
   }, [data]);
 
   return (
-    <Card title={title} extra={<Timer refreshAfter={300} />}>
+    <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
       <div style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart>
@@ -63,11 +63,13 @@ MyLineChart.propTypes = {
   title: PropTypes.string,
   data: PropTypes.instanceOf(Object),
   options: PropTypes.instanceOf(Object),
+  refreshAfter: PropTypes.number,
 };
 
 MyLineChart.defaultProps = {
   title: '',
   data: {},
   options: {},
+  refreshAfter: 300,
 };
 export default MyLineChart;
