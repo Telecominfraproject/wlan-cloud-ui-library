@@ -32,7 +32,9 @@ const AccessPointForm = ({
 
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
-  const [ntpServers, setNtpServers] = useState([]);
+  const [ntpServers, setNtpServers] = useState(
+    !details?.ntpServer?.auto ? details?.ntpServer?.value?.split(':') : []
+  );
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
@@ -80,7 +82,6 @@ const AccessPointForm = ({
       vlan: details?.vlan || defaultApProfile.vlan,
       ntpServer: {
         auto: details?.ntpServer?.auto ?? defaultApProfile.ntpServer.auto,
-        value: details?.ntpServer?.value ?? defaultApProfile.ntpServer.value,
       },
       ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
       rtlsSettings: {
@@ -98,7 +99,6 @@ const AccessPointForm = ({
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       rfProfileId: currentRfId,
     });
-    setNtpServers(details?.ntpServer?.value?.split(':'));
   }, [form, details]);
 
   useEffect(() => {
@@ -338,38 +338,25 @@ const AccessPointForm = ({
                       onChange={handleOnChangeNtpServer}
                     />
                   </Item>
-                  <List
-                    className={styles.List}
-                    itemLayout="horizontal"
-                    dataSource={ntpServers}
-                    locale={{
-                      emptyText: (
-                        <Empty
-                          image={Empty.PRESENTED_IMAGE_SIMPLE}
-                          description={
-                            <span>
-                              <span>
-                                No Data Visible.
-                                <br />
-                                Please enter at least 1 NTP server or use default servers.
-                              </span>
-                            </span>
+                  {ntpServers?.length > 0 && (
+                    <List
+                      className={styles.List}
+                      itemLayout="horizontal"
+                      dataSource={ntpServers}
+                      renderItem={item => (
+                        <List.Item
+                          extra={
+                            <Button type="danger" onClick={() => handleOnDeleteServer(item)}>
+                              Remove
+                            </Button>
                           }
-                        />
-                      ),
-                    }}
-                    renderItem={item => (
-                      <List.Item
-                        extra={
-                          <Button type="danger" onClick={() => handleOnDeleteServer(item)}>
-                            Remove
-                          </Button>
-                        }
-                      >
-                        <List.Item.Meta title={item} />
-                      </List.Item>
-                    )}
-                  />
+                        >
+                          <List.Item.Meta title={item} />
+                        </List.Item>
+                      )}
+                    />
+                  )}
+
                   <Item name={['ntpServer', 'value']} hidden>
                     <Input />
                   </Item>

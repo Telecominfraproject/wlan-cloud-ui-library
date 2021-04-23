@@ -178,15 +178,29 @@ describe('<AccessPoints />', () => {
         </Form>
       );
     };
-    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
+    const { getAllByRole, getByTestId, getByPlaceholderText, getByText } = render(
+      <AccessPointComp />
+    );
 
     const checkbox = getByTestId('ntpCheckbox');
     fireEvent.click(checkbox);
     expect(checkbox.checked).toEqual(false);
     const input = getByPlaceholderText('Enter NTP server...');
     expect(input).toBeInTheDocument();
+
+    const addBtn = getAllByRole('button', { name: 'Add' })[0];
+    const hostname = faker.internet.domainName();
     fireEvent.change(input, {
-      target: { value: mockAccessPoint.details.ntpServer.value },
+      target: { value: hostname },
+    });
+    fireEvent.click(addBtn);
+
+    await waitFor(() => {
+      expect(getByText(hostname)).toBeVisible();
+    });
+
+    fireEvent.change(input, {
+      target: { value: hostname },
     });
 
     await waitFor(() => {
@@ -300,25 +314,29 @@ describe('<AccessPoints />', () => {
     });
   });
 
-  it('Add button should be disabled if there are 4 NTP Servers added to the list', async () => {
+  it('error message should be shown if 4 items are already added to NTP server list', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
 
-      const formattedMockAccessPoint = { ...mockAccessPoint };
-      formattedMockAccessPoint.details.ntpServer.value =
-        '0.pool.ntp.org:1.pool.ntp.org:2.pool.ntp.org:3.pool.ntp.org';
+      const mockDetails = {
+        ...mockAccessPoint,
+        details: {
+          ...mockAccessPoint.details,
+          ntpServer: {
+            auto: false,
+            value: '0.pool.ntp.org:1.pool.ntp.org:2.pool.ntp.org:3.pool.ntp.org',
+          },
+        },
+      };
 
       return (
         <Form form={form}>
-          <AccessPoints {...formattedMockAccessPoint} form={form} />
+          <AccessPoints {...mockDetails} form={form} />
         </Form>
       );
     };
-    const { getByTestId, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+    const { getByPlaceholderText, queryByText } = render(<AccessPointComp />);
 
-    const checkbox = getByTestId('ntpCheckbox');
-    fireEvent.click(checkbox);
-    expect(checkbox.checked).toEqual(false);
     const input = getByPlaceholderText('Enter NTP server...');
     expect(input).toBeInTheDocument();
 
@@ -350,10 +368,20 @@ describe('<AccessPoints />', () => {
     const input = getByPlaceholderText('Enter NTP server...');
     expect(input).toBeInTheDocument();
 
+    const hostname = faker.internet.domainName();
+    fireEvent.change(input, {
+      target: { value: hostname },
+    });
+    fireEvent.click(getAllByRole('button', { name: 'Add' })[0]);
+
+    await waitFor(() => {
+      expect(queryByText(hostname)).toBeVisible();
+    });
+
     fireEvent.click(getAllByRole('button', { name: 'Remove' })[0]);
 
     await waitFor(() => {
-      expect(queryByText(mockAccessPoint.details.ntpServer.value)).not.toBeInTheDocument();
+      expect(queryByText(hostname)).not.toBeInTheDocument();
     });
   });
 
