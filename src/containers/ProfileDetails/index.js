@@ -126,6 +126,14 @@ const ProfileDetails = ({
             });
             return;
           }
+
+          if (!values.ntpServer.auto && !values.ntpServer.value) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 NTP Server is required.',
+            });
+            return;
+          }
           formattedData.childProfileIds.push(values.rfProfileId);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }

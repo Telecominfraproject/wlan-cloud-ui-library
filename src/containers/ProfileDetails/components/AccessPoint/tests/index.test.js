@@ -133,21 +133,227 @@ describe('<AccessPoints />', () => {
         </Form>
       );
     };
+    const { getByTestId, getByPlaceholderText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+  });
+
+  it('error message should be displayed if NTP server does not contain at least 1 subdomain label', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
     const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
 
     const checkbox = getByTestId('ntpCheckbox');
     fireEvent.click(checkbox);
     expect(checkbox.checked).toEqual(false);
-    const input = getByPlaceholderText('Enter NTP server');
-    expect(input).toBeInTheDOM();
-
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
     fireEvent.change(input, {
-      target: { value: '' },
+      target: { value: 'test' },
     });
-    expect(input.value).toBe('');
 
     await waitFor(() => {
-      expect(getByText('Please enter your NTP server')).toBeVisible();
+      expect(
+        getByText('Hostnames must have at least 1 subdomain label. e.g. ntp.pool.org')
+      ).toBeVisible();
+    });
+  });
+
+  it('error message should be displayed if NTP server list contains duplicate values', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: mockAccessPoint.details.ntpServer.value },
+    });
+
+    await waitFor(() => {
+      expect(getByText('This item already exists in the server list')).toBeVisible();
+    });
+  });
+
+  it('error message should be displayed if server is an invalid hostname', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: '!test.com' },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Unrecognized hostname')).toBeVisible();
+    });
+  });
+
+  it('error message should be displayed if hostname label exceeds 63 characters', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: `${faker.helpers.repeatString('test', 16)}.com` },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Hostname labels must be between 1 and 63 characters long')).toBeVisible();
+    });
+  });
+
+  it('error message should be displayed if hostname exceeds 253 characters', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+    fireEvent.change(input, {
+      target: { value: `${faker.helpers.repeatString('test.com', 50)}` },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Hostnames may not exceed 253 characters in length')).toBeVisible();
+    });
+  });
+
+  it('hostname should be added to NTP Server list if it passes all checks', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getByText, getAllByRole } = render(
+      <AccessPointComp />
+    );
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+
+    const hostname = faker.internet.domainName();
+    fireEvent.change(input, {
+      target: { value: hostname },
+    });
+
+    fireEvent.click(getAllByRole('button', { name: 'Add' })[0]);
+
+    await waitFor(() => {
+      expect(getByText(hostname)).toBeVisible();
+    });
+  });
+
+  it('Add button should be disabled if there are 4 NTP Servers added to the list', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+
+      const formattedMockAccessPoint = { ...mockAccessPoint };
+      formattedMockAccessPoint.details.ntpServer.value =
+        '0.pool.ntp.org:1.pool.ntp.org:2.pool.ntp.org:3.pool.ntp.org';
+
+      return (
+        <Form form={form}>
+          <AccessPoints {...formattedMockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, queryByText } = render(<AccessPointComp />);
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+
+    fireEvent.change(input, {
+      target: { value: faker.internet.domainName() },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('Unable to add more than 4 items to the server list')).toBeVisible();
+    });
+  });
+
+  it('removing a NTP Server should remove it from the server list', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+    const { getByTestId, getByPlaceholderText, getAllByRole, queryByText } = render(
+      <AccessPointComp />
+    );
+
+    const checkbox = getByTestId('ntpCheckbox');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toEqual(false);
+    const input = getByPlaceholderText('Enter NTP server...');
+    expect(input).toBeInTheDocument();
+
+    fireEvent.click(getAllByRole('button', { name: 'Remove' })[0]);
+
+    await waitFor(() => {
+      expect(queryByText(mockAccessPoint.details.ntpServer.value)).not.toBeInTheDocument();
     });
   });
 
