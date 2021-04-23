@@ -7,8 +7,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
-
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import WithRoles from 'components/WithRoles';
 
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
@@ -26,7 +25,6 @@ const Accounts = ({
   allUserRoles,
   extraFields,
 }) => {
-  const { roleIsWritable } = useWritableInput();
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [activeUser, setActiveUser] = useState({});
@@ -61,68 +59,63 @@ const Accounts = ({
       width: 120,
       render: r => r?.join(',  '),
     },
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            key: 'edit',
-            width: 64,
-            render: (_, record) => (
-              <Button
-                title={`edit-${record.email}`}
-                className={styles.InfoButton}
-                type="primary"
-                icon={<FormOutlined />}
-                onClick={() => {
-                  setEditModal(true);
-                  setActiveUser({
-                    ...record,
-                  });
-                }}
-              />
-            ),
-          },
-        ]
-      : []),
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            key: 'delete',
-            width: 64,
-            render: (_, record) =>
-              currentUserId?.toString() !== record.id && (
-                <DeleteButton
-                  className={styles.InfoButton}
-                  title={`delete-${record.email}`}
-                  extraOnClick={() => {
-                    setActiveUser({
-                      ...record,
-                    });
-                  }}
-                  onSuccess={deleteUser}
-                  content={
-                    <p>
-                      Are you sure you want to delete the User: <strong>{activeUser.email}</strong>?
-                    </p>
-                  }
-                />
-              ),
-          },
-        ]
-      : []),
+    {
+      title: '',
+      key: 'edit',
+      width: 64,
+      render: (_, record) => (
+        <WithRoles>
+          <Button
+            title={`edit-${record.email}`}
+            className={styles.InfoButton}
+            type="primary"
+            icon={<FormOutlined />}
+            onClick={() => {
+              setEditModal(true);
+              setActiveUser({
+                ...record,
+              });
+            }}
+          />
+        </WithRoles>
+      ),
+    },
+    {
+      title: '',
+      key: 'delete',
+      width: 64,
+      render: (_, record) =>
+        currentUserId?.toString() !== record.id && (
+          <WithRoles>
+            <DeleteButton
+              className={styles.InfoButton}
+              title={`delete-${record.email}`}
+              extraOnClick={() => {
+                setActiveUser({
+                  ...record,
+                });
+              }}
+              onSuccess={deleteUser}
+              content={
+                <p>
+                  Are you sure you want to delete the User: <strong>{activeUser.email}</strong>?
+                </p>
+              }
+            />
+          </WithRoles>
+        ),
+    },
   ];
 
   return (
     <Container>
       <Header>
         <h1>Users</h1>
-
-        {roleIsWritable && (
+        <WithRoles>
           <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
             Add User
           </Button>
-        )}
+        </WithRoles>
       </Header>
 
       <FormModal

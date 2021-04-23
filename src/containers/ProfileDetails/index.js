@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card, notification, Select } from 'antd';
-import { Input } from 'components/WritableInputs';
+import WithRoles, { Input } from 'components/WithRoles';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
-import { useWritableInput } from 'contexts/InputDisabledContext';
 import { pageLayout } from 'utils/form';
 
 import globalStyles from 'styles/index.scss';
@@ -72,7 +71,6 @@ const ProfileDetails = ({
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
-  const { roleIsWritable } = useWritableInput();
   const history = useHistory();
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -227,14 +225,14 @@ const ProfileDetails = ({
           </Button>
           <h1>{`Edit ${name}`}</h1>
         </div>
-        {roleIsWritable && (
+        <WithRoles>
           <div className={styles.HeaderDiv}>
             <div className={styles.HeaderButton}>{extraButtons}</div>
             <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
               Save
             </Button>
           </div>
-        )}
+        </WithRoles>
       </Header>
 
       <Form

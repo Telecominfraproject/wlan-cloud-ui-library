@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Checkbox, Radio, Select as AntdSelect, Empty } from 'antd';
-import {
-  Input,
-  Password,
-  Select,
-  RadioGroup as Group,
-  CheckboxGroup,
-} from 'components/WritableInputs';
+import { Input, Password, Select, RadioGroup as Group, CheckboxGroup } from 'components/WithRoles';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 

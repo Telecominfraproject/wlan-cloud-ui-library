@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Button, Form, Table, message, Empty, Select as AntdSelect } from 'antd';
-import { Input, Select, Upload } from 'components/WritableInputs';
+import { Input, Select, Upload } from 'components/WithRoles';
 
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';

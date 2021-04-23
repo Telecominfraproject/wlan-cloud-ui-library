@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card, Col, Tooltip, Select as AntdSelect, Radio, Row } from 'antd';
-import { Input, Select, TextArea } from 'components/WritableInputs';
+import { Input, Select, TextArea } from 'components/WithRoles';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import globalStyles from 'styles/index.scss';

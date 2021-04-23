@@ -12,20 +12,19 @@ import {
   Empty,
   Modal,
 } from 'antd';
-import {
+import WithRoles, {
   Select,
   Input,
   Search,
   Upload,
   RadioGroup as Group,
   TextArea,
-} from 'components/WritableInputs';
+} from 'components/WithRoles';
+
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-
-import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import globalStyles from 'styles/index.scss';
 import Users from './components/Users';
@@ -63,7 +62,6 @@ const CaptivePortalForm = ({
   loadingRadiusProfiles,
   handleOnFormChange,
 }) => {
-  const { roleIsWritable } = useWritableInput();
   const formatFile = async file => {
     const src = await onDownloadFile(file?.apExportUrl);
     return [
@@ -728,11 +726,11 @@ const CaptivePortalForm = ({
               renderItem={item => (
                 <List.Item
                   extra={
-                    roleIsWritable && (
+                    <WithRoles>
                       <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
                         Remove
                       </Button>
-                    )
+                    </WithRoles>
                   }
                 >
                   <List.Item.Meta title={item} />

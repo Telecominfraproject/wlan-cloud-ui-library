@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Button, Table, Select as AntdSelect } from 'antd';
-import { Select, Input } from 'components/WritableInputs';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
+import WithRoles, { Select, Input } from 'components/WithRoles';
 import _ from 'lodash';
-import { useWritableInput } from 'contexts/InputDisabledContext';
 import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
@@ -14,7 +13,6 @@ const { Item } = Form;
 const { Option } = AntdSelect;
 
 const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
-  const { roleIsWritable } = useWritableInput();
   const [eapModal, setEapModal] = useState(false);
 
   const columnsNai = [
@@ -30,24 +28,22 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         return obj.map(i => <div key={i}>{i}</div>);
       },
     },
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            width: 80,
-            render: item => (
-              <Button
-                title="removeEapMethod"
-                icon={<DeleteOutlined />}
-                className={styles.iconButton}
-                onClick={() => {
-                  removeEap(item);
-                }}
-              />
-            ),
-          },
-        ]
-      : []),
+    {
+      title: '',
+      width: 80,
+      render: item => (
+        <WithRoles>
+          <Button
+            title="removeEapMethod"
+            icon={<DeleteOutlined />}
+            className={styles.iconButton}
+            onClick={() => {
+              removeEap(item);
+            }}
+          />
+        </WithRoles>
+      ),
+    },
   ];
 
   const naiLayout = {
@@ -139,11 +135,11 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         title="Extensible Authentication (EAP) Methods:"
         bordered={false}
         extra={
-          roleIsWritable && (
+          <WithRoles>
             <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
               Add
             </Button>
-          )
+          </WithRoles>
         }
       >
         <Table

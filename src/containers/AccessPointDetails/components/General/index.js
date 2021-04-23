@@ -10,10 +10,10 @@ import {
   Alert,
   Empty,
 } from 'antd';
-import { Select, Input } from 'components/WritableInputs';
+import WithRoles, { Input, Select } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import { useRoles } from 'contexts/RolesContext';
 
 import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
@@ -38,7 +38,7 @@ const General = ({
   extraFields,
   extraGeneralCards,
 }) => {
-  const { roleIsWritable } = useWritableInput();
+  const { roleIsWritable } = useRoles();
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const columns = [
@@ -365,13 +365,13 @@ const General = ({
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-      {roleIsWritable && (
+      <WithRoles>
         <div className={styles.InlineEndDiv}>
           <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
             Save
           </Button>
         </div>
-      )}
+      </WithRoles>
 
       <Card title="Identity">
         <Item

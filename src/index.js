@@ -21,8 +21,7 @@ export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
 export { default as NetworkTableContainer } from 'containers/NetworkTableContainer';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
-export { default as InputDisabledProvider } from 'contexts/InputDisabledProvider';
-export { withWritableInput } from 'components/WritableInputs';
+export { default as RolesProvider } from 'contexts/RolesProvider';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';
@@ -37,6 +36,7 @@ export { default as Header } from 'components/Header';
 export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
+export { default as WithRoles } from 'components/WithRoles';
 
 export { useHistory } from 'hooks';
 

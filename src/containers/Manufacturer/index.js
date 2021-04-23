@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert, Upload, Input, Form, message, Spin } from 'antd';
-import { Search } from 'components/WritableInputs';
+import { Search } from 'components/WithRoles';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -9,7 +9,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
 
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import { useRoles } from 'contexts/RolesContext';
 
 import styles from './index.module.scss';
 
@@ -21,7 +21,7 @@ const layout = {
 };
 
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadingFileUpload }) => {
-  const { roleIsWritable } = useWritableInput();
+  const { roleIsWritable } = useRoles();
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);

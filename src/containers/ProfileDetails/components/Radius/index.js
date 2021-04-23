@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Card } from 'antd';
-import { Password, Input } from 'components/WritableInputs';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import WithRoles, { Input, Password } from 'components/WithRoles';
 
 import styles from '../index.module.scss';
 
@@ -14,7 +13,6 @@ const MAX_RADIUS = 1;
 const { Item, List } = Form;
 
 const RadiusForm = ({ form, details }) => {
-  const { roleIsWritable } = useWritableInput();
   const formatInitialAuthenticationValues = () => {
     const values = [details?.primaryRadiusAuthServer];
     if (details?.secondaryRadiusAuthServer) {
@@ -249,7 +247,7 @@ const RadiusForm = ({ form, details }) => {
                       data-testid={`accountingPort${field.name}`}
                     />
                   </Item>
-                  {roleIsWritable && (
+                  <WithRoles>
                     <Button
                       className={styles.RadiusDelete}
                       type="danger"
@@ -260,7 +258,7 @@ const RadiusForm = ({ form, details }) => {
                     >
                       Remove
                     </Button>
-                  )}
+                  </WithRoles>
                 </div>
               ))}
             </Card>

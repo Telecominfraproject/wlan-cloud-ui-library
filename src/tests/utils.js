@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { render } from '@testing-library/react';
 
 import ThemeProvider from 'contexts/ThemeProvider';
-import InputDisabledProvider from 'contexts/InputDisabledProvider';
+import RolesProvider from 'contexts/RolesProvider';
 
 export const DOWN_ARROW = { keyCode: 40 };
 
@@ -42,7 +42,7 @@ const AllTheProviders = ({ children }) => {
         is5GHz: '5GHz',
       }}
     >
-      <InputDisabledProvider roleIsWritable>{children}</InputDisabledProvider>
+      <RolesProvider roleIsWritable>{children}</RolesProvider>
     </ThemeProvider>
   );
 };

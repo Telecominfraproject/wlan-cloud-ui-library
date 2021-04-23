@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Radio, Select as AntdSelect, Table, Empty } from 'antd';
-import { RadioGroup as Group, Select, Input, Checkbox } from 'components/WritableInputs';
+import WithRoles, { RadioGroup as Group, Select, Input, Checkbox } from 'components/WithRoles';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
-import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
@@ -32,7 +31,6 @@ const AccessPointForm = ({
   loadingRFProfiles,
   handleOnFormChange,
 }) => {
-  const { roleIsWritable } = useWritableInput();
   const { radioTypes } = useContext(ThemeContext);
 
   const [greModalVisible, setGreModalVisible] = useState(false);
@@ -133,21 +131,19 @@ const AccessPointForm = ({
       dataIndex: ['details', 'appliedRadios'],
       render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
     },
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            width: 80,
-            render: (_, record) => (
-              <Button
-                title="removeSsid"
-                icon={<DeleteFilled />}
-                onClick={() => handleRemoveSsid(record?.id)}
-              />
-            ),
-          },
-        ]
-      : []),
+    {
+      title: '',
+      width: 80,
+      render: (_, record) => (
+        <WithRoles>
+          <Button
+            title="removeSsid"
+            icon={<DeleteFilled />}
+            onClick={() => handleRemoveSsid(record?.id)}
+          />
+        </WithRoles>
+      ),
+    },
   ];
 
   const columnsGre = [
@@ -164,23 +160,21 @@ const AccessPointForm = ({
       dataIndex: 'vlanIdsInGreTunnel',
       render: items => (!items?.length ? 'N/A' : items?.join(', ')),
     },
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            width: 80,
-            render: item => (
-              <Button
-                title="removeGre"
-                icon={<DeleteFilled />}
-                onClick={() => {
-                  handleRemoveGre(item);
-                }}
-              />
-            ),
-          },
-        ]
-      : []),
+    {
+      title: '',
+      width: 80,
+      render: item => (
+        <WithRoles>
+          <Button
+            title="removeGre"
+            icon={<DeleteFilled />}
+            onClick={() => {
+              handleRemoveGre(item);
+            }}
+          />
+        </WithRoles>
+      ),
+    },
   ];
 
   const enabledRadioOptions = () => (
@@ -482,7 +476,7 @@ const AccessPointForm = ({
       <Card
         title="GRE Tunnel Configuration"
         extra={
-          roleIsWritable && (
+          <WithRoles>
             <>
               {greList.length >= MAX_GRE_TUNNELS && (
                 <Tooltip
@@ -499,7 +493,7 @@ const AccessPointForm = ({
                 Add
               </Button>
             </>
-          )
+          </WithRoles>
         }
       >
         <Table

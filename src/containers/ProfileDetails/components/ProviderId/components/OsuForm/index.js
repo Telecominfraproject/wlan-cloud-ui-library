@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Button } from 'antd';
-import { Switch, Input } from 'components/WritableInputs';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import WithRoles, { Switch, Input } from 'components/WithRoles';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
 
 const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
-  const { roleIsWritable } = useWritableInput();
   const [osuEnabled, setOsuEnabled] = useState(
     osuDetails?.osuServerUri !== null && osuDetails?.osuServerUri !== ''
   );
@@ -69,11 +67,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Name:"
             bordered={false}
             extra={
-              roleIsWritable && (
+              <WithRoles>
                 <Button onClick={() => setNameModal(true)} data-testid="osuName">
                   Add
                 </Button>
-              )
+              </WithRoles>
             }
           >
             <PasspointLocaleTable
@@ -96,11 +94,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Description:"
             bordered={false}
             extra={
-              roleIsWritable && (
+              <WithRoles>
                 <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
                   Add
                 </Button>
-              )
+              </WithRoles>
             }
           >
             <PasspointLocaleTable
@@ -123,11 +121,11 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Icons:"
             bordered={false}
             extra={
-              roleIsWritable && (
+              <WithRoles>
                 <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
                   Add
                 </Button>
-              )
+              </WithRoles>
             }
           >
             <PasspointLocaleTable

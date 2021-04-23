@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal as AntdModal, Button } from 'antd';
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import { useRoles } from 'contexts/RolesContext';
 
 import styles from './index.module.scss';
 
@@ -15,7 +15,7 @@ const Modal = ({
   content,
   ...restProps
 }) => {
-  const { roleIsWritable } = useWritableInput();
+  const { roleIsWritable } = useRoles();
   return (
     <AntdModal
       className={styles.Modal}

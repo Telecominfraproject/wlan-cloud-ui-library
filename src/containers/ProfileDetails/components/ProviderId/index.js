@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Button, Table } from 'antd';
-import { Input } from 'components/WritableInputs';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
+import WithRoles, { Input } from 'components/WithRoles';
 import { modalLayout } from 'utils/form';
-
-import { useWritableInput } from 'contexts/InputDisabledContext';
 
 import OsuForm from './components/OsuForm';
 import NaiRealm from './components/NaiRealm';
@@ -16,7 +14,6 @@ import styles from '../index.module.scss';
 const { Item } = Form;
 
 const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
-  const { roleIsWritable } = useWritableInput();
   const [modalForm] = Form.useForm();
   const [plmnModal, setPlmnModal] = useState(false);
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
@@ -80,25 +77,23 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       title: 'Network',
       dataIndex: 'network',
     },
-    ...(roleIsWritable
-      ? [
-          {
-            title: '',
-            width: 80,
-            render: item => (
-              <Button
-                title="removePlmn"
-                icon={<DeleteOutlined />}
-                className={styles.iconButton}
-                onClick={() => {
-                  setMccMncList([...mccMncList.filter(i => i !== item)]);
-                  handleOnFormChange();
-                }}
-              />
-            ),
-          },
-        ]
-      : []),
+    {
+      title: '',
+      width: 80,
+      render: item => (
+        <WithRoles>
+          <Button
+            title="removePlmn"
+            icon={<DeleteOutlined />}
+            className={styles.iconButton}
+            onClick={() => {
+              setMccMncList([...mccMncList.filter(i => i !== item)]);
+              handleOnFormChange();
+            }}
+          />
+        </WithRoles>
+      ),
+    },
   ];
 
   const handleAddPlmnItem = () => {
@@ -187,11 +182,11 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Public Land Mobile Networks (PLMN)"
         extra={
-          roleIsWritable && (
+          <WithRoles>
             <Button type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
               Add
             </Button>
-          )
+          </WithRoles>
         }
       >
         <Table dataSource={mccMncList} columns={columnsPlmn} pagination={false} rowKey="mcc" />

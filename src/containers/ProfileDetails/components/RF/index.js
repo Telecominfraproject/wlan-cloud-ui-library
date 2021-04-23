@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select as AntdSelect } from 'antd';
-import { Input, Select } from 'components/WritableInputs';
+import { Input, Select } from 'components/WithRoles';
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';

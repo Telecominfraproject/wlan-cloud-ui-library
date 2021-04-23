@@ -8,8 +8,8 @@ import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import WithRoles from 'components/WithRoles';
 import ThemeContext from 'contexts/ThemeContext';
-import { useWritableInput } from 'contexts/InputDisabledContext';
 import { getLocationPath } from 'utils/locations';
 import { useHistory } from 'hooks';
 
@@ -46,7 +46,6 @@ const AccessPointDetails = ({
   showStatusAlarms,
   showFirmware,
 }) => {
-  const { roleIsWritable } = useWritableInput();
   const TAB_LIST = [
     {
       key: 'general',
@@ -154,7 +153,7 @@ const AccessPointDetails = ({
         </div>
         <div className={styles.HeaderDiv}>
           <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
-          {roleIsWritable && (
+          <WithRoles>
             <DeleteButton
               showText
               isDanger
@@ -165,7 +164,7 @@ const AccessPointDetails = ({
                 </p>
               }
             />
-          )}
+          </WithRoles>
         </div>
       </Header>
       <Card

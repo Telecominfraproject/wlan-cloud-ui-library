@@ -7,8 +7,7 @@ import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Loading from 'components/Loading';
 import Modal from 'components/Modal';
-
-import { useWritableInput } from 'contexts/InputDisabledContext';
+import WithRoles from 'components/WithRoles';
 
 import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -31,7 +30,6 @@ const Firmware = ({
   loadingFirmware,
   errorFirmware,
 }) => {
-  const { roleIsWritable } = useWritableInput();
   const [form] = Form.useForm();
 
   const [version, setVersion] = useState(null);
@@ -134,7 +132,7 @@ const Firmware = ({
         buttonText="Confirm"
       />
       <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-        {roleIsWritable && (
+        <WithRoles>
           <div className={styles.InlineEndDiv}>
             <Button
               className={styles.saveButton}
@@ -145,7 +143,7 @@ const Firmware = ({
               Reboot AP
             </Button>
           </div>
-        )}
+        </WithRoles>
 
         <Card title="Firmware">
           <Item label="Active Version">
@@ -157,7 +155,7 @@ const Firmware = ({
 
           <Item label="Inactive Version">
             {status.alternateSwVersion}
-            {roleIsWritable && (
+            <WithRoles>
               <Button
                 className={styles.UpgradeState}
                 icon={<LoginOutlined />}
@@ -166,10 +164,10 @@ const Firmware = ({
               >
                 Switch to Inactive Bank and Reboot
               </Button>
-            )}
+            </WithRoles>
           </Item>
         </Card>
-        {roleIsWritable && (
+        <WithRoles>
           <Card title="Upgrade">
             <Item label="Target Version">
               <div className={styles.InlineDiv}>
@@ -216,7 +214,7 @@ const Firmware = ({
               </Item>
             )}
           </Card>
-        )}
+        </WithRoles>
       </Form>
     </>
   );
