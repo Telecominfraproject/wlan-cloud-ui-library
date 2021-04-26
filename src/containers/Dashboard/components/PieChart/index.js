@@ -20,7 +20,7 @@ const MyPieChart = ({ chartData, title }) => {
         <div style={{ width: '100%', height: 400 }}>
           <ResponsiveContainer>
             <PieChart>
-              <Pie dataKey="value" data={pieData} label={entry => entry.name}>
+              <Pie dataKey="value" data={pieData} label={entry => entry.name} stroke={false}>
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
                 ))}

@@ -22,20 +22,22 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
       <div style={{ width: '100%', height: 400 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart>
+          <LineChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
             <XAxis
               dataKey="timestamp"
               type="number"
               domain={['dataMin', 'dataMax']}
               tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
               stroke="white"
+              tick={{ style: { fontSize: 12 } }}
+              scale="time"
             />
             <YAxis
               dataKey="value"
               tickFormatter={tick => (options.formatter ? options.formatter(tick) : tick)}
               stroke="white"
               allowDecimals={false}
-              domain={['dataMin', 'dataMax']}
+              domain={[0, 'auto']}
               tick={{ style: { fontSize: 12 } }}
             />
             <Tooltip content={<LineGraphTooltip formatter={options.formatter} />} />
