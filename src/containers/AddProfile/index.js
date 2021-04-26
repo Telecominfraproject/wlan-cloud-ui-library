@@ -102,6 +102,20 @@ const AddProfile = ({
         let formattedData = { ...values };
 
         if (profileType === PROFILES.ssid) {
+          if (
+            (values.secureMode === 'wpaRadius' ||
+              values.secureMode === 'wpa2Radius' ||
+              values.secureMode === 'wpa2OnlyRadius' ||
+              values.secureMode === 'wpa3OnlyEAP' ||
+              values.secureMode === 'wpa3MixedEAP') &&
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+          ) {
+            notification.error({
+              message: 'Error',
+              description: 'A RADIUS Profile is required.',
+            });
+            return;
+          }
           formattedData.model_type = 'SsidConfiguration';
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
@@ -125,6 +139,16 @@ const AddProfile = ({
         }
 
         if (profileType === PROFILES.captivePortal) {
+          if (
+            values.authenticationType === 'radius' &&
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+          ) {
+            notification.error({
+              message: 'Error',
+              description: 'RADIUS Profile is required for authentication.',
+            });
+            return;
+          }
           formattedData.model_type = 'CaptivePortalConfiguration';
           formattedData = Object.assign(
             formattedData,
@@ -164,7 +188,7 @@ const AddProfile = ({
             });
             return;
           }
-          if (!values.osuSsidProfileId) {
+          if (!values.osuSsidProfileId?.value || !values.osuSsidProfileId?.label) {
             notification.error({
               message: 'Error',
               description: 'An SSID Profile is required.',
