@@ -284,7 +284,8 @@ const PasspointProfileForm = ({
             showSearch={onSearchProfile}
             placeholder="Select a Venue Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.venue)}
+            onSearch={name => onSearchProfile(PROFILES.venue, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.venue)}
             loading={loadingVenueProfiles}
             notFoundContent={!loadingVenueProfiles && <Empty />}
             labelInValue
@@ -303,7 +304,8 @@ const PasspointProfileForm = ({
             showSearch={onSearchProfile}
             placeholder="Select an Operator Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.operator)}
+            onSearch={name => onSearchProfile(PROFILES.operator, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.operator)}
             loading={loadingOperatorProfiles}
             notFoundContent={!loadingOperatorProfiles && <Empty />}
             labelInValue
@@ -325,7 +327,8 @@ const PasspointProfileForm = ({
             placeholder="Select ID Providers (check to select)"
             className={styles.MultipleSelection}
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.providerID)}
+            onSearch={name => onSearchProfile(PROFILES.providerID, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.providerID)}
             loading={loadingIdProviderProfiles}
             notFoundContent={!loadingIdProviderProfiles && <Empty />}
             labelInValue
@@ -344,7 +347,8 @@ const PasspointProfileForm = ({
             showSearch={onSearchProfile}
             placeholder="Select an SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
@@ -392,7 +396,8 @@ const PasspointProfileForm = ({
             showSearch={onSearchProfile}
             placeholder="Select a SSID Profile"
             filterOption={false}
-            onSearch={name => onSearchProfile(name, PROFILES.ssid)}
+            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             onChange={handleOnChangeSsid}

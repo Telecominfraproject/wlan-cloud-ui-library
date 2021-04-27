@@ -18,11 +18,20 @@ function containsRole(userRoles, givenRoles) {
 }
 
 // This is for hiding/showing components
-const WithRoles = ({ children, access }) => {
+const WithRoles = ({ children, access, needsWritable }) => {
   const { roleIsWritable, roles } = useRoles();
 
-  if (access && !containsRole(roles, access)) {
+  if (access) {
+    if (!containsRole(roles, access)) {
+      return null;
+    }
     return children;
+  }
+
+  if (needsWritable) {
+    if (!roleIsWritable && !needsWritable) {
+      return children;
+    }
   }
 
   if (roleIsWritable) {

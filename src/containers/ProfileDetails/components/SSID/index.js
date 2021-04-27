@@ -1,17 +1,21 @@
+// import { Input, Password, Select, RadioGroup as Group, CheckboxGroup } from 'components/WithRoles';
+
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Checkbox, Radio, Select as AntdSelect, Empty } from 'antd';
-import { Input, Password, Select, RadioGroup as Group, CheckboxGroup } from 'components/WithRoles';
+// import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
+import { Form, Card, Radio, Checkbox, Empty } from 'antd';
+import { Input, Password, Select, RadioGroup, CheckboxGroup } from 'components/WithRoles';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING, PROFILES } from '../../constants/index';
+import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
-const { Option } = AntdSelect;
+
+const { Option } = Select;
 
 const SSIDForm = ({
   form,
@@ -79,6 +83,20 @@ const SSIDForm = ({
         details?.radiusAcountingServiceInterval ||
         defaultSsidProfile.radiusAcountingServiceInterval,
       dynamicVlan: details?.dynamicVlan || defaultSsidProfile.dynamicVlan,
+      radiusClientConfiguration: {
+        nasClientId:
+          details?.radiusClientConfiguration?.nasClientId ??
+          defaultSsidProfile.radiusClientConfiguration.nasClientId,
+        nasClientIp:
+          details?.radiusClientConfiguration?.nasClientIp ??
+          defaultSsidProfile.radiusClientConfiguration.nasClientIp,
+        userDefinedNasId:
+          details?.radiusClientConfiguration?.userDefinedNasId ??
+          defaultSsidProfile.radiusClientConfiguration.userDefinedNasId,
+        userDefinedNasIp:
+          details?.radiusClientConfiguration?.userDefinedNasIp ??
+          defaultSsidProfile.radiusClientConfiguration.userDefinedNasIp,
+      },
     });
   }, [form, details]);
 
@@ -109,7 +127,7 @@ const SSIDForm = ({
             },
           ]}
         >
-          <Input className={globalStyles.field} name="ssidName" placeholder="Enter SSID name" />
+          <Input className={globalStyles.field} placeholder="Enter SSID name" />
         </Item>
 
         <Item
@@ -122,10 +140,10 @@ const SSIDForm = ({
             },
           ]}
         >
-          <Group>
+          <RadioGroup>
             <Radio value="enabled">Show SSID</Radio>
             <Radio value="disabled">Hide SSID</Radio>
-          </Group>
+          </RadioGroup>
         </Item>
 
         <Item label="Bandwidth">
@@ -233,7 +251,7 @@ const SSIDForm = ({
             </span>
           }
         >
-          <Group>
+          <RadioGroup>
             <Radio value="BRIDGE" defaultSelected>
               Bridge
             </Radio>
@@ -245,7 +263,7 @@ const SSIDForm = ({
             >
               NAT
             </Radio>
-          </Group>
+          </RadioGroup>
         </Item>
 
         <Item
@@ -256,44 +274,53 @@ const SSIDForm = ({
         >
           {({ getFieldValue }) => {
             return (
-              <Item
-                name="noLocalSubnets"
-                label={
-                  <span>
-                    <Tooltip
-                      title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
-                      text="Local Access"
-                    />
-                  </span>
-                }
-              >
-                {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Group>
-                    <Radio value="false">Allow Local Access</Radio>
-                    <Radio value="true">No Local Access</Radio>
-                  </Group>
-                ) : (
-                  <span className={styles.Disclaimer}>Not Applicable</span>
-                )}
-              </Item>
+              <>
+                <Item
+                  name="noLocalSubnets"
+                  label={
+                    <span>
+                      <Tooltip
+                        title="When a wireless network is configured with 'No Local Access', users will have internet access only. Any traffic to internal resources (other than DHCP and DNS) will be denied."
+                        text="Local Access"
+                      />
+                    </span>
+                  }
+                >
+                  {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                    <RadioGroup>
+                      <Radio value="false">Allow Local Access</Radio>
+                      <Radio value="true">No Local Access</Radio>
+                    </RadioGroup>
+                  ) : (
+                    <span className={styles.Disclaimer}>Not Applicable</span>
+                  )}
+                </Item>
+
+                <Item label="Captive Portal" name="captivePortal">
+                  {getFieldValue('forwardMode') === 'NAT' ? (
+                    <RadioGroup>
+                      <Radio value="notPortal">Do Not Use</Radio>
+                      <Radio value="usePortal">Use</Radio>
+                    </RadioGroup>
+                  ) : (
+                    <span className={styles.Disclaimer}>Not Applicable</span>
+                  )}
+                </Item>
+              </>
             );
           }}
         </Item>
 
-        <Item label="Captive Portal" name="captivePortal">
-          <Group>
-            <Radio value="notPortal">Do Not Use</Radio>
-            <Radio value="usePortal">Use</Radio>
-          </Group>
-        </Item>
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode ||
             prevValues.captivePortal !== currentValues.captivePortal
           }
         >
           {({ getFieldValue }) => {
-            return getFieldValue('captivePortal') === 'usePortal' ? (
+            return getFieldValue('forwardMode') === 'NAT' &&
+              getFieldValue('captivePortal') === 'usePortal' ? (
               <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
                   className={globalStyles.field}
@@ -301,7 +328,8 @@ const SSIDForm = ({
                   onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
                   showSearch={onSearchProfile}
                   filterOption={false}
-                  onSearch={name => onSearchProfile(name, PROFILES.captivePortal)}
+                  onSearch={name => onSearchProfile(PROFILES.captivePortal, name)}
+                  onSelect={() => onSearchProfile && onSearchProfile(PROFILES.captivePortal)}
                   loading={loadingCaptiveProfiles}
                   notFoundContent={!loadingCaptiveProfiles && <Empty />}
                 >
@@ -356,74 +384,6 @@ const SSIDForm = ({
               SSID.
             </span>
           </Item>
-        )}
-        {(mode === 'wpaRadius' ||
-          mode === 'wpa2Radius' ||
-          mode === 'wpa2OnlyRadius' ||
-          mode === 'wpa3OnlyEAP' ||
-          mode === 'wpa3MixedEAP') && (
-          <>
-            <Item
-              name="radiusServiceId"
-              label="RADIUS Profile"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please select a RADIUS profile',
-                },
-              ]}
-            >
-              <Select
-                className={globalStyles.field}
-                placeholder="Select RADIUS Profile"
-                onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-                showSearch={onSearchProfile}
-                filterOption={false}
-                onSearch={name => onSearchProfile(name, PROFILES.radius)}
-                loading={loadingRadiusProfiles}
-                notFoundContent={!loadingRadiusProfiles && <Empty />}
-                labelInValue
-              >
-                {radiusProfiles.map(profile => (
-                  <Option key={profile.id} value={profile.id}>
-                    {profile.name}
-                  </Option>
-                ))}
-              </Select>
-            </Item>
-            <Item
-              name="radiusAcountingServiceInterval"
-              label="RADIUS Accounting Interval"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter a RADIUS accounting interval',
-                },
-                () => ({
-                  validator(_rule, value) {
-                    if (!value || (value >= 60 && value <= 600) || value === '0') {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('0 or 60 - 600'));
-                  },
-                }),
-              ]}
-            >
-              <Input
-                className={globalStyles.field}
-                placeholder="0 or 60 - 600 "
-                type="number"
-                min={60}
-                max={600}
-                addonAfter={
-                  <Tooltip
-                    title="Interval can be 0 or a number between 60 and 600"
-                    text="Seconds"
-                  />
-                }
-              />
-            </Item>
-          </>
         )}
 
         {(mode === 'wpaPSK' ||
@@ -515,10 +475,10 @@ const SSIDForm = ({
             return (
               <Item label="VLAN" name="vlan">
                 {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Group>
+                  <Radio.Group>
                     <Radio value="customVLAN">Use Custom VLAN</Radio>
                     <Radio value="defaultVLAN">Use Default VLAN</Radio>
-                  </Group>
+                  </Radio.Group>
                 ) : (
                   <span className={styles.Disclaimer}>Not Applicable</span>
                 )}
@@ -602,6 +562,178 @@ const SSIDForm = ({
                   <span className={styles.Disclaimer}>Disabled</span>
                 )}
               </Item>
+            );
+          }}
+        </Item>
+      </Card>
+      <Card title="RADIUS">
+        {(mode === 'wpaRadius' ||
+          mode === 'wpa2Radius' ||
+          mode === 'wpa2OnlyRadius' ||
+          mode === 'wpa3OnlyEAP' ||
+          mode === 'wpa3MixedEAP') && (
+          <>
+            <Item
+              name="radiusServiceId"
+              label="RADIUS Profile"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select a RADIUS profile',
+                },
+              ]}
+            >
+              <Select
+                className={globalStyles.field}
+                placeholder="Select RADIUS Profile"
+                onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+                showSearch={onSearchProfile}
+                filterOption={false}
+                onSearch={name => onSearchProfile(PROFILES.radius, name)}
+                onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
+                loading={loadingRadiusProfiles}
+                notFoundContent={!loadingRadiusProfiles && <Empty />}
+                labelInValue
+              >
+                {radiusProfiles.map(profile => (
+                  <Option key={profile.id} value={profile.id}>
+                    {profile.name}
+                  </Option>
+                ))}
+              </Select>
+            </Item>
+            <Item
+              name="radiusAcountingServiceInterval"
+              label="RADIUS Accounting Interval"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a RADIUS accounting interval',
+                },
+                () => ({
+                  validator(_rule, value) {
+                    if (!value || (value >= 60 && value <= 600) || value === '0') {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('0 or 60 - 600'));
+                  },
+                }),
+              ]}
+            >
+              <Input
+                className={globalStyles.field}
+                placeholder="0 or 60 - 600 "
+                type="number"
+                min={60}
+                max={600}
+                addonAfter={
+                  <Tooltip
+                    title="Interval can be 0 or a number between 60 and 600"
+                    text="Seconds"
+                  />
+                }
+              />
+            </Item>
+          </>
+        )}
+        <Item
+          label="NAS ID"
+          name={['radiusClientConfiguration', 'nasClientId']}
+          rules={[
+            {
+              required: true,
+              message: 'Please select NAS ID',
+            },
+          ]}
+        >
+          <Select
+            data-testid="securityMode"
+            className={globalStyles.field}
+            placeholder="Select NAS ID"
+          >
+            <Option value="BSSID">BSSID</Option>
+            <Option value="AP_BASE_MAC">AP Base MAC Address</Option>
+            <Option value="USER_DEFINED">Manual</Option>
+          </Select>
+        </Item>
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.radiusClientConfiguration?.nasClientId !==
+            currentValues.radiusClientConfiguration?.nasClientId
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              getFieldValue(['radiusClientConfiguration', 'nasClientId']) === 'USER_DEFINED' && (
+                <Item
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name={['radiusClientConfiguration', 'userDefinedNasId']}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter NAS ID',
+                    },
+                    {
+                      pattern: /^\s*(?:\S\s*){3,}$/,
+                      message: 'NAS-ID must be atleast 3 characters',
+                    },
+                  ]}
+                >
+                  <Input className={globalStyles.field} placeholder="Enter NAS ID" />
+                </Item>
+              )
+            );
+          }}
+        </Item>
+        <Item
+          label="NAS IP"
+          name={['radiusClientConfiguration', 'nasClientIp']}
+          rules={[
+            {
+              required: true,
+              message: 'Please select NAS IP',
+            },
+          ]}
+        >
+          <Select
+            data-testid="securityMode"
+            className={globalStyles.field}
+            placeholder="Select NAS IP"
+          >
+            <Option value="WAN_IP">WAN</Option>
+            <Option value="PROXY_IP">Proxy</Option>
+            <Option value="USER_DEFINED">Manual</Option>
+          </Select>
+        </Item>
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.radiusClientConfiguration?.nasClientIp !==
+            currentValues.radiusClientConfiguration?.nasClientIp
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              getFieldValue(['radiusClientConfiguration', 'nasClientIp']) === 'USER_DEFINED' && (
+                <Item
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name={['radiusClientConfiguration', 'userDefinedNasIp']}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter NAS IP',
+                    },
+                    {
+                      pattern: IP_REGEX,
+                      message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                    },
+                  ]}
+                >
+                  <Input className={globalStyles.field} placeholder="Enter NAS IP" />
+                </Item>
+              )
             );
           }}
         </Item>

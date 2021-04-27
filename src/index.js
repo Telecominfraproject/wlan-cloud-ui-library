@@ -22,6 +22,7 @@ export { default as NetworkTableContainer } from 'containers/NetworkTableContain
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 export { default as RolesProvider } from 'contexts/RolesProvider';
+export { useRoles } from 'contexts/RolesContext';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';
@@ -32,11 +33,13 @@ export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints
 export { default as Button } from 'components/Button';
 export { default as ToggleButton } from 'components/ToggleButton';
 export { default as Modal } from 'components/Modal';
+export { default as ContainedSelect } from 'components/ContainedSelect';
 export { default as Header } from 'components/Header';
 export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
 export { default as WithRoles } from 'components/WithRoles';
+export { Input, Select, Switch } from 'components/WithRoles';
 
 export { useHistory } from 'hooks';
 

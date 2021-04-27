@@ -45,6 +45,7 @@ const AccessPointDetails = ({
   extraGeneralCards,
   showStatusAlarms,
   showFirmware,
+  avatar,
 }) => {
   const TAB_LIST = [
     {
@@ -170,7 +171,7 @@ const AccessPointDetails = ({
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
-            <WifiOutlined className={styles.WifiIcon} />
+            {avatar ?? <WifiOutlined className={styles.WifiIcon} />}
             <div className={styles.InlineBlockDiv}>
               <div> {data.name} </div>
               <div>
@@ -282,6 +283,7 @@ AccessPointDetails.propTypes = {
   extraGeneralCards: PropTypes.node,
   showStatusAlarms: PropTypes.bool,
   showFirmware: PropTypes.bool,
+  avatar: PropTypes.node,
 };
 
 AccessPointDetails.defaultProps = {
@@ -295,12 +297,13 @@ AccessPointDetails.defaultProps = {
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
   extraButtons: null,
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   extraFields: [],
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,
   showFirmware: true,
+  avatar: null,
 };
 
 export default AccessPointDetails;
