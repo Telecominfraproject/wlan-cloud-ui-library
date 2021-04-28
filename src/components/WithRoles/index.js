@@ -14,16 +14,16 @@ const { Search: AntdSearch, TextArea: AntdTextArea, Password: AntdPassword } = A
 const { Group } = Radio;
 const { Group: CheckGroup } = AntdCheckbox;
 
-function containsRole(userRoles, givenRoles) {
-  return givenRoles.filter(i => userRoles.indexOf(i) !== -1).length > 0;
+export function containsRole(userRole, givenRoles) {
+  return givenRoles.indexOf(userRole) >= 0;
 }
 
 // This is for hiding/showing components
 const WithRoles = ({ children, access, needsWritable }) => {
-  const { roleIsWritable, roles } = useRoles();
+  const { roleIsWritable, role } = useRoles();
 
   if (access) {
-    if (!containsRole(roles, access)) {
+    if (!containsRole(role, access)) {
       return null;
     }
     return children;
@@ -51,10 +51,10 @@ const withDisabledRoles = Component => ({ disabled, ...restProps }) => {
 
 // eslint-disable-next-line react/prop-types
 const withRoles = Component => ({ access, ...restProps }) => {
-  const { roleIsWritable, roles } = useRoles();
+  const { roleIsWritable, role } = useRoles();
 
   if (access) {
-    if (!containsRole(roles, access)) {
+    if (!containsRole(role, access)) {
       return null;
     }
 
