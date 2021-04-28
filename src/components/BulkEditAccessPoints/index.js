@@ -5,6 +5,7 @@ import { Breadcrumb } from 'antd';
 
 import ThemeContext from 'contexts/ThemeContext';
 import Button from 'components/Button';
+import { RoleProtectedBtn } from 'components/WithRoles';
 import { useHistory } from 'hooks';
 
 import BulkEditAPTable from './components/BulkEditAPTable';
@@ -46,7 +47,7 @@ const BulkEditAccessPoints = ({
           Bulk Edit Access Points:
           <Breadcrumb separator=">">{breadCrumbs}</Breadcrumb>
         </div>
-        <Button
+        <RoleProtectedBtn
           onClick={() => {
             onSaveChanges(editedRows);
             setEditedRows(null);
@@ -56,7 +57,7 @@ const BulkEditAccessPoints = ({
           type="primary"
         >
           Save
-        </Button>
+        </RoleProtectedBtn>
       </div>
       <BulkEditAPTable
         tableColumns={tableColumns}
