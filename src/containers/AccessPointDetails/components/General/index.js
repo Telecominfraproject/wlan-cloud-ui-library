@@ -13,7 +13,6 @@ import {
 import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
-import { useRoles } from 'contexts/RolesContext';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
@@ -37,7 +36,6 @@ const General = ({
   extraFields,
   extraGeneralCards,
 }) => {
-  const { roleIsWritable } = useRoles();
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
   const columns = [
@@ -350,7 +348,7 @@ const General = ({
                   min={1}
                   max={165}
                   addonAfter={channel.addOnText}
-                  disabled={isEnabled || !roleIsWritable}
+                  disabled={isEnabled}
                 />
               </Item>
             );
