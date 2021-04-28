@@ -722,7 +722,7 @@ const CaptivePortalForm = ({
 
           {whitelist.length > 0 && (
             <List
-              className={styles.Whitelist}
+              className={styles.List}
               itemLayout="horizontal"
               dataSource={whitelist}
               renderItem={item => (

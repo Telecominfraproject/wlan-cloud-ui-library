@@ -436,8 +436,8 @@ export const defaultProps = {
             rfConfigMap: {
               is2dot4GHz: generateRfConfig('is2dot4GHz', true),
               is5GHz: generateRfConfig('is5GHz', true),
-              is5GHzL: generateRfConfig('is5GHzL', true),
-              is5GHzU: generateRfConfig('is5GHzU', true),
+              is5GHzL: generateRfConfig('is5GHzL', false),
+              is5GHzU: generateRfConfig('is5GHzU', false),
             },
             profileType: 'rf',
           },

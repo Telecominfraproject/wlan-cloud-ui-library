@@ -383,13 +383,9 @@ describe('<General />', () => {
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    const input = getByPlaceholderText('Enter Active Channel for 5GHz (L)');
-
-    fireEvent.change(input, {
+    fireEvent.change(getByPlaceholderText('Enter Active Channel for 5GHz (L)'), {
       target: { value: 166 },
     });
-
-    fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
       expect(getByText('1 - 165')).toBeVisible();
@@ -401,16 +397,37 @@ describe('<General />', () => {
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
-    const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
-
-    fireEvent.change(input, {
+    fireEvent.change(getByPlaceholderText('Enter Backup Channel for 5GHz (U)'), {
       target: { value: 166 },
     });
 
-    fireEvent.click(getByRole('button', { name: 'Save' }));
-
     await waitFor(() => {
       expect(getByText('1 - 165')).toBeVisible();
+    });
+  });
+
+  it('error if active and backup channel inputs are the same', async () => {
+    const { getByText, getByRole, getByPlaceholderText, queryByText } = render(
+      <General {...defaultProps} />
+    );
+
+    fireEvent.click(getByRole('button', { name: /settings/i }));
+
+    const input = getByPlaceholderText('Enter Backup Channel for 5GHz (L)');
+    fireEvent.change(input, {
+      target: { value: defaultProps.data.details.radioMap.is5GHzL.manualChannelNumber },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Active and backup channels must be different')).toBeVisible();
+    });
+
+    fireEvent.change(input, {
+      target: { value: 39 },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('Active and backup channels must be different')).not.toBeInTheDocument();
     });
   });
 });
