@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select as AntdSelect, Table, Spin, Alert } from 'antd';
-import WithRoles, { Switch, Select } from 'components/WithRoles';
+import WithRoles, { Switch, Select, RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -130,18 +130,16 @@ const AutoProvision = ({
       key: 'editModel',
       width: 60,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title={`edit-model-${record.model}`}
-            className={styles.InfoButton}
-            type="primary"
-            icon={<FormOutlined />}
-            onClick={() => {
-              setActiveModel({ ...record });
-              setEditModal(true);
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title={`edit-model-${record.model}`}
+          className={styles.InfoButton}
+          type="primary"
+          icon={<FormOutlined />}
+          onClick={() => {
+            setActiveModel({ ...record });
+            setEditModal(true);
+          }}
+        />
       ),
     },
 
@@ -266,9 +264,7 @@ const AutoProvision = ({
             <Card
               title="Target Equipment Profiles"
               extra={
-                <WithRoles>
-                  <Button onClick={() => setAddModal(true)}>Add Model</Button>
-                </WithRoles>
+                <RoleProtectedBtn onClick={() => setAddModal(true)}>Add Model</RoleProtectedBtn>
               }
             >
               <div className={styles.Content}>

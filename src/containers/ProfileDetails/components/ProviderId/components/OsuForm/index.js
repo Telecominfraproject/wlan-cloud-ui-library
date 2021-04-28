@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Button } from 'antd';
+import { Card, Form } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import WithRoles, { Switch, Input } from 'components/WithRoles';
+import { Switch, Input, RoleProtectedBtn } from 'components/WithRoles';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
@@ -67,11 +67,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Name:"
             bordered={false}
             extra={
-              <WithRoles>
-                <Button onClick={() => setNameModal(true)} data-testid="osuName">
-                  Add
-                </Button>
-              </WithRoles>
+              <RoleProtectedBtn onClick={() => setNameModal(true)} data-testid="osuName">
+                Add
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable
@@ -94,11 +92,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Description:"
             bordered={false}
             extra={
-              <WithRoles>
-                <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
-                  Add
-                </Button>
-              </WithRoles>
+              <RoleProtectedBtn onClick={() => setDescModal(true)} data-testid="osuDesc">
+                Add
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable
@@ -121,11 +117,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Icons:"
             bordered={false}
             extra={
-              <WithRoles>
-                <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
-                  Add
-                </Button>
-              </WithRoles>
+              <RoleProtectedBtn onClick={() => setIconModal(true)} data-testid="osuIcon">
+                Add
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable

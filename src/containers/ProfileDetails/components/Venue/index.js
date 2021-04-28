@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Button, Table, Select as AntdSelect } from 'antd';
-import WithRoles, { Select } from 'components/WithRoles';
+import { Card, Form, Table, Select as AntdSelect } from 'antd';
+import { Select, RoleProtectedBtn } from 'components/WithRoles';
 import { DeleteOutlined } from '@ant-design/icons';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
@@ -64,14 +64,12 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title="remove"
-            icon={<DeleteOutlined />}
-            className={styles.iconButton}
-            onClick={() => handleRemove(record)}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title="remove"
+          icon={<DeleteOutlined />}
+          className={styles.iconButton}
+          onClick={() => handleRemove(record)}
+        />
       ),
     },
   ];
@@ -225,11 +223,9 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Venue Name"
         extra={
-          <WithRoles>
-            <Button type="solid" onClick={() => setModalVisible(true)}>
-              Add Name
-            </Button>
-          </WithRoles>
+          <RoleProtectedBtn type="solid" onClick={() => setModalVisible(true)}>
+            Add Name
+          </RoleProtectedBtn>
         }
       >
         <Item noStyle name="venueNameSet">

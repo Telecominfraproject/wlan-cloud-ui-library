@@ -4,7 +4,7 @@ import { Form, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import WithRoles, { Input, Password } from 'components/WithRoles';
+import { Input, Password, RoleProtectedBtn } from 'components/WithRoles';
 
 import { IP_REGEX } from 'containers/ProfileDetails/constants';
 import styles from '../index.module.scss';
@@ -248,18 +248,17 @@ const RadiusForm = ({ form, details }) => {
                       data-testid={`accountingPort${field.name}`}
                     />
                   </Item>
-                  <WithRoles>
-                    <Button
-                      className={styles.RadiusDelete}
-                      type="danger"
-                      onClick={() => {
-                        remove(field.name);
-                      }}
-                      data-testid={`accountingDelete${field.name}`}
-                    >
-                      Remove
-                    </Button>
-                  </WithRoles>
+
+                  <RoleProtectedBtn
+                    className={styles.RadiusDelete}
+                    type="danger"
+                    onClick={() => {
+                      remove(field.name);
+                    }}
+                    data-testid={`accountingDelete${field.name}`}
+                  >
+                    Remove
+                  </RoleProtectedBtn>
                 </div>
               ))}
             </Card>

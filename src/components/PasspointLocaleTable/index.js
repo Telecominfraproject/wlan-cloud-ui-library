@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Button } from 'antd';
+import { Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
-import WithRoles from 'components/WithRoles';
+import { RoleProtectedBtn } from 'components/WithRoles';
 
 const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
   const formatCols = useMemo(() => {
@@ -32,13 +32,11 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
         title: '',
         width: 80,
         render: item => (
-          <WithRoles>
-            <Button
-              title="removeItem"
-              icon={<DeleteOutlined />}
-              onClick={() => removeRow(item, dataIndex)}
-            />
-          </WithRoles>
+          <RoleProtectedBtn
+            title="removeItem"
+            icon={<DeleteOutlined />}
+            onClick={() => removeRow(item, dataIndex)}
+          />
         ),
       },
     ];

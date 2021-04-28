@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Button, Select as AntdSelect } from 'antd';
+import { Card, Form, Select as AntdSelect } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import WithRoles, { Select, Input } from 'components/WithRoles';
+import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
 import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
@@ -86,11 +86,9 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
       <Card
         title="Operator Name"
         extra={
-          <WithRoles>
-            <Button type="solid" onClick={() => setModalVisible(true)}>
-              Add Name
-            </Button>
-          </WithRoles>
+          <RoleProtectedBtn type="solid" onClick={() => setModalVisible(true)}>
+            Add Name
+          </RoleProtectedBtn>
         }
       >
         <PasspointLocaleTable

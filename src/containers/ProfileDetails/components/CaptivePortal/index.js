@@ -12,13 +12,14 @@ import {
   Empty,
   Modal,
 } from 'antd';
-import WithRoles, {
+import {
   Select,
   Input,
   Search,
   Upload,
   RadioGroup as Group,
   TextArea,
+  RoleProtectedBtn,
 } from 'components/WithRoles';
 
 import { QuestionCircleFilled } from '@ant-design/icons';
@@ -727,11 +728,9 @@ const CaptivePortalForm = ({
               renderItem={item => (
                 <List.Item
                   extra={
-                    <WithRoles>
-                      <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
-                        Remove
-                      </Button>
-                    </WithRoles>
+                    <RoleProtectedBtn type="danger" onClick={() => handleDeleteWhitelist(item)}>
+                      Remove
+                    </RoleProtectedBtn>
                   }
                 >
                   <List.Item.Meta title={item} />

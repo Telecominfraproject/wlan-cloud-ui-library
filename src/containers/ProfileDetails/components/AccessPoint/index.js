@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Radio, Select as AntdSelect, Table, Empty } from 'antd';
-import WithRoles, { RadioGroup as Group, Select, Input, Checkbox } from 'components/WithRoles';
+import WithRoles, {
+  RadioGroup as Group,
+  Select,
+  Input,
+  Checkbox,
+  RoleProtectedBtn,
+} from 'components/WithRoles';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -135,13 +141,11 @@ const AccessPointForm = ({
       title: '',
       width: 80,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title="removeSsid"
-            icon={<DeleteFilled />}
-            onClick={() => handleRemoveSsid(record?.id)}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title="removeSsid"
+          icon={<DeleteFilled />}
+          onClick={() => handleRemoveSsid(record?.id)}
+        />
       ),
     },
   ];
@@ -164,15 +168,13 @@ const AccessPointForm = ({
       title: '',
       width: 80,
       render: item => (
-        <WithRoles>
-          <Button
-            title="removeGre"
-            icon={<DeleteFilled />}
-            onClick={() => {
-              handleRemoveGre(item);
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title="removeGre"
+          icon={<DeleteFilled />}
+          onClick={() => {
+            handleRemoveGre(item);
+          }}
+        />
       ),
     },
   ];

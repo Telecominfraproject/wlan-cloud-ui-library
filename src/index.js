@@ -39,7 +39,7 @@ export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
 export { default as WithRoles } from 'components/WithRoles';
-export { Input, Select, Switch } from 'components/WithRoles';
+export { Input, Select, Switch, RoleProtectedBtn } from 'components/WithRoles';
 
 export { useHistory } from 'hooks';
 

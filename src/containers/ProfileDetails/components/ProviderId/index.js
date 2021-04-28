@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Button, Table } from 'antd';
+import { Card, Form, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
-import WithRoles, { Input } from 'components/WithRoles';
+import { Input, RoleProtectedBtn } from 'components/WithRoles';
 import { modalLayout } from 'utils/form';
 
 import OsuForm from './components/OsuForm';
@@ -81,17 +81,15 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       title: '',
       width: 80,
       render: item => (
-        <WithRoles>
-          <Button
-            title="removePlmn"
-            icon={<DeleteOutlined />}
-            className={styles.iconButton}
-            onClick={() => {
-              setMccMncList([...mccMncList.filter(i => i !== item)]);
-              handleOnFormChange();
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title="removePlmn"
+          icon={<DeleteOutlined />}
+          className={styles.iconButton}
+          onClick={() => {
+            setMccMncList([...mccMncList.filter(i => i !== item)]);
+            handleOnFormChange();
+          }}
+        />
       ),
     },
   ];
@@ -182,11 +180,9 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Public Land Mobile Networks (PLMN)"
         extra={
-          <WithRoles>
-            <Button type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
-              Add
-            </Button>
-          </WithRoles>
+          <RoleProtectedBtn type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
+            Add
+          </RoleProtectedBtn>
         }
       >
         <Table dataSource={mccMncList} columns={columnsPlmn} pagination={false} rowKey="mcc" />

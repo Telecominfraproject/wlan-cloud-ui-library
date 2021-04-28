@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Cascader, Button, Table, Select as AntdSelect } from 'antd';
+import { Card, Form, Cascader, Table, Select as AntdSelect } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
-import WithRoles, { Select, Input } from 'components/WithRoles';
+import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import { authOptions } from './constants';
 
@@ -32,16 +32,14 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       title: '',
       width: 80,
       render: item => (
-        <WithRoles>
-          <Button
-            title="removeEapMethod"
-            icon={<DeleteOutlined />}
-            className={styles.iconButton}
-            onClick={() => {
-              removeEap(item);
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title="removeEapMethod"
+          icon={<DeleteOutlined />}
+          className={styles.iconButton}
+          onClick={() => {
+            removeEap(item);
+          }}
+        />
       ),
     },
   ];
@@ -135,11 +133,9 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         title="Extensible Authentication (EAP) Methods:"
         bordered={false}
         extra={
-          <WithRoles>
-            <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
-              Add
-            </Button>
-          </WithRoles>
+          <RoleProtectedBtn onClick={() => setEapModal(true)} data-testid="addEapMethod">
+            Add
+          </RoleProtectedBtn>
         }
       >
         <Table

@@ -67,7 +67,10 @@ const FormModal = ({
       </Item>
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
-        <Select placeholder="Select role">
+        <Select
+          placeholder="Select role"
+          getPopupContainer={triggerNode => triggerNode.parentElement}
+        >
           {allUserRoles.map(i => (
             <Option value={i}>{i}</Option>
           ))}

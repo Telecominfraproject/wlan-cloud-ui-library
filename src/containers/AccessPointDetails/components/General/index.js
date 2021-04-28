@@ -10,12 +10,11 @@ import {
   Alert,
   Empty,
 } from 'antd';
-import WithRoles, { Input, Select } from 'components/WithRoles';
+import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
 import { useRoles } from 'contexts/RolesContext';
 
-import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
 
@@ -365,13 +364,16 @@ const General = ({
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-      <WithRoles>
-        <div className={styles.InlineEndDiv}>
-          <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
-            Save
-          </Button>
-        </div>
-      </WithRoles>
+      <div className={styles.InlineEndDiv}>
+        <RoleProtectedBtn
+          className={styles.saveButton}
+          onClick={handleOnSave}
+          type="primary"
+          name="save"
+        >
+          Save
+        </RoleProtectedBtn>
+      </div>
 
       <Card title="Identity">
         <Item

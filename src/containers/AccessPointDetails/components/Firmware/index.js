@@ -7,7 +7,7 @@ import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Loading from 'components/Loading';
 import Modal from 'components/Modal';
-import WithRoles from 'components/WithRoles';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -155,16 +155,14 @@ const Firmware = ({
 
           <Item label="Inactive Version">
             {status.alternateSwVersion}
-            <WithRoles>
-              <Button
-                className={styles.UpgradeState}
-                icon={<LoginOutlined />}
-                onClick={handleOnSwitchInactiveBank}
-                disabled={status.alternateSwVersion === status.activeSwVersion}
-              >
-                Switch to Inactive Bank and Reboot
-              </Button>
-            </WithRoles>
+            <RoleProtectedBtn
+              className={styles.UpgradeState}
+              icon={<LoginOutlined />}
+              onClick={handleOnSwitchInactiveBank}
+              disabled={status.alternateSwVersion === status.activeSwVersion}
+            >
+              Switch to Inactive Bank and Reboot
+            </RoleProtectedBtn>
           </Item>
         </Card>
         <WithRoles>

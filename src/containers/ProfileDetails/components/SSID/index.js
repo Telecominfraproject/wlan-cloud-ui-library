@@ -1,9 +1,6 @@
-// import { Input, Password, Select, RadioGroup as Group, CheckboxGroup } from 'components/WithRoles';
-
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-// import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
-import { Form, Card, Radio, Checkbox, Empty } from 'antd';
+import { Form, Card, Radio, Checkbox, Empty, Select as AntdSelect } from 'antd';
 import { Input, Password, Select, RadioGroup, CheckboxGroup } from 'components/WithRoles';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
@@ -15,7 +12,7 @@ import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
 
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const SSIDForm = ({
   form,

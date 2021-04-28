@@ -6,6 +6,7 @@ import {
   Radio,
   Checkbox as AntdCheckbox,
   Upload as AntdUpload,
+  Button as AntdButton,
 } from 'antd';
 import { useRoles } from 'contexts/RolesContext';
 
@@ -42,10 +43,34 @@ const WithRoles = ({ children, access, needsWritable }) => {
 };
 
 // This is for disabling components
-const withDisabledRoles = Component => props => {
+// eslint-disable-next-line react/prop-types
+const withDisabledRoles = Component => ({ disabled, ...restProps }) => {
   const { roleIsWritable } = useRoles();
-  return <Component disabled={!roleIsWritable} {...props} />;
+  return <Component disabled={!roleIsWritable || disabled} {...restProps} />;
 };
+
+// eslint-disable-next-line react/prop-types
+const withRoles = Component => ({ access, ...restProps }) => {
+  const { roleIsWritable, roles } = useRoles();
+
+  if (access) {
+    if (!containsRole(roles, access)) {
+      return null;
+    }
+
+    if (roleIsWritable) {
+      return <Component {...restProps} />;
+    }
+  }
+
+  if (roleIsWritable) {
+    return <Component {...restProps} />;
+  }
+
+  return null;
+};
+
+export const RoleProtectedBtn = withRoles(AntdButton);
 
 export const Input = withDisabledRoles(AntdInput);
 export const Select = withDisabledRoles(AntdSelect);

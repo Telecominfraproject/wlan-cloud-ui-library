@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Table } from 'antd';
-import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
-import WithRoles from 'components/WithRoles';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
 
 import FormModal from '../FormModal';
@@ -67,18 +66,16 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
     {
       width: 64,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            className={styles.InfoButton}
-            title={`edit-${record.username}`}
-            type="primary"
-            icon={<FormOutlined />}
-            onClick={() => {
-              setEditUserModal(true);
-              setActiveUser({ ...record });
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          className={styles.InfoButton}
+          title={`edit-${record.username}`}
+          type="primary"
+          icon={<FormOutlined />}
+          onClick={() => {
+            setEditUserModal(true);
+            setActiveUser({ ...record });
+          }}
+        />
       ),
     },
     {
@@ -125,11 +122,7 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
       />
       <Card
         title="User List"
-        extra={
-          <WithRoles>
-            <Button onClick={() => setAddUserModal(true)}> Add User</Button>
-          </WithRoles>
-        }
+        extra={<RoleProtectedBtn onClick={() => setAddUserModal(true)}> Add User</RoleProtectedBtn>}
       >
         <Table rowKey="username" columns={columns} dataSource={userList} pagination={false} />
       </Card>

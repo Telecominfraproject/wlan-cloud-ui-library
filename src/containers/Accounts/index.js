@@ -7,7 +7,7 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
-import WithRoles from 'components/WithRoles';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
@@ -64,20 +64,18 @@ const Accounts = ({
       key: 'edit',
       width: 64,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title={`edit-${record.email}`}
-            className={styles.InfoButton}
-            type="primary"
-            icon={<FormOutlined />}
-            onClick={() => {
-              setEditModal(true);
-              setActiveUser({
-                ...record,
-              });
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title={`edit-${record.email}`}
+          className={styles.InfoButton}
+          type="primary"
+          icon={<FormOutlined />}
+          onClick={() => {
+            setEditModal(true);
+            setActiveUser({
+              ...record,
+            });
+          }}
+        />
       ),
     },
     {
@@ -111,11 +109,9 @@ const Accounts = ({
     <Container>
       <Header>
         <h1>Users</h1>
-        <WithRoles>
-          <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
-            Add User
-          </Button>
-        </WithRoles>
+        <RoleProtectedBtn title="addaccount" type="primary" onClick={() => setAddModal(true)}>
+          Add User
+        </RoleProtectedBtn>
       </Header>
 
       <FormModal

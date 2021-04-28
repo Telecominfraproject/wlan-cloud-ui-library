@@ -5,10 +5,9 @@ import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Container from 'components/Container';
 import Header from 'components/Header';
-import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 
-import WithRoles from 'components/WithRoles';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import styles from './index.module.scss';
 import AssignmentModal from './components/AssignmentModal';
@@ -149,18 +148,16 @@ const Firmware = ({
       key: 'editAssignment',
       width: 60,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title={`edit-track-${record.modelId}`}
-            className={styles.InfoButton}
-            type="primary"
-            icon={<FormOutlined />}
-            onClick={() => {
-              setTaskAssignmentValues({ ...record });
-              setEditAssignmentModal(true);
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title={`edit-track-${record.modelId}`}
+          className={styles.InfoButton}
+          type="primary"
+          icon={<FormOutlined />}
+          onClick={() => {
+            setTaskAssignmentValues({ ...record });
+            setEditAssignmentModal(true);
+          }}
+        />
       ),
     },
     {
@@ -228,18 +225,16 @@ const Firmware = ({
       key: 'editFirmware',
       width: 60,
       render: (_, record) => (
-        <WithRoles>
-          <Button
-            title={`edit-firmware-${record.modelId}`}
-            className={styles.InfoButton}
-            type="primary"
-            icon={<FormOutlined />}
-            onClick={() => {
-              setFirmwareValues({ ...record });
-              setEditVersionModal(true);
-            }}
-          />
-        </WithRoles>
+        <RoleProtectedBtn
+          title={`edit-firmware-${record.modelId}`}
+          className={styles.InfoButton}
+          type="primary"
+          icon={<FormOutlined />}
+          onClick={() => {
+            setFirmwareValues({ ...record });
+            setEditVersionModal(true);
+          }}
+        />
       ),
     },
     {
@@ -325,9 +320,9 @@ const Firmware = ({
       <Header>
         <h1>Model Target Version</h1>
         {trackAssignmentReady && (
-          <WithRoles>
-            <Button onClick={() => setAddAssignmentModal(true)}> Add Model Target Version</Button>
-          </WithRoles>
+          <RoleProtectedBtn onClick={() => setAddAssignmentModal(true)}>
+            Add Model Target Version
+          </RoleProtectedBtn>
         )}
       </Header>
       {trackAssignmentReady && (
@@ -353,9 +348,7 @@ const Firmware = ({
       <Header>
         <h1>All Versions</h1>
         {firmwareReady && (
-          <WithRoles>
-            <Button onClick={() => setAddVersionModal(true)}>Add Version</Button>
-          </WithRoles>
+          <RoleProtectedBtn onClick={() => setAddVersionModal(true)}>Add Version</RoleProtectedBtn>
         )}
       </Header>
       {firmwareReady && (
