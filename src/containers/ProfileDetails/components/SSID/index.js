@@ -7,7 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
+import { RADIOS, ROAMING, DEFAULT_ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -35,7 +35,6 @@ const SSIDForm = ({
 
   const dropdownOptions = (
     <Select className={globalStyles.field}>
-      <Option value="auto">Auto</Option>
       <Option value="true">Enabled</Option>
       <Option value="false">Disabled</Option>
     </Select>
@@ -46,7 +45,8 @@ const SSIDForm = ({
 
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
-        radioBasedValues[`${j}${i}`] = details?.radioBasedConfigs?.[i]?.[j]?.toString() ?? 'auto';
+        radioBasedValues[`${j}${i}`] =
+          details?.radioBasedConfigs?.[i]?.[j]?.toString() ?? DEFAULT_ROAMING[j];
       });
     });
 
