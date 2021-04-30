@@ -36,7 +36,9 @@ export { default as Header } from 'components/Header';
 export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
+export { default as LineGraphTooltip } from 'components/GraphTooltips/LineGraphTooltip';
+export { default as PieGraphTooltip } from 'components/GraphTooltips/PieGraphTooltip';
 
-export { useHistory } from 'hooks';
+export { useHistory, useChartLegend, useChartHover } from 'hooks';
 
 export { default as GenericNotFound } from 'components/GenericNotFound';

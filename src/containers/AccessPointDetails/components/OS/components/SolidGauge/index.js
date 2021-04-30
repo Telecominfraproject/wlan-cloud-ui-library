@@ -49,7 +49,7 @@ const SolidGauge = ({ data, title, label }) => {
               value={`${data} ${label}`}
               position="center"
               fill="white"
-              style={{ fontSize: 32 }}
+              style={{ fontSize: 22 }}
             />
             {pieData.map((entry, i) => (
               <Cell key={`cell-${entry.name}`} fill={i === 0 ? fillColor : colors.empty} />

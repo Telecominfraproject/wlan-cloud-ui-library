@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import styles from './index.module.scss';
+import styles from '../index.module.scss';
 
 const LineGraphTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className={styles.customTooltip}>
+      <div className={styles.customTooltip} style={{ border: `1px solid ${payload[0].stroke}` }}>
         <p className={styles.label}>{moment(label).format('MMM D, YYYY h:mm a')}</p>
         {payload.map(series => {
           return (

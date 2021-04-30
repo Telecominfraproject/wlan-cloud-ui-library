@@ -1,0 +1,17 @@
+.Container {
+  :global(.recharts-legend-item) {
+    cursor: pointer;
+  }
+  :global(.recharts-legend-item-text) {
+    &:hover {
+      font-weight: bold;
+    }
+  }
+  .Message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ccc;
+  }
+}

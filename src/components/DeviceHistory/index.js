@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import moment from 'moment';
-import LineGraphTooltip from 'components/LineGraphTooltip';
+import LineGraphTooltip from 'components/GraphTooltips/LineGraphTooltip';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const colors = ['#265EAC', '#00A3CC'];
@@ -54,14 +54,16 @@ const DeviceHistoryChart = ({ data, width }) => {
               <stop offset="100%" stopColor={colors[0]} stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="timestamp" hide domain={['dataMin', 'dataMax']} scale="time" />
+          <XAxis dataKey="timestamp" hide domain={['dataMin', 'dataMax']} />
           <YAxis
             orientation="right"
             label={{ value: 'RSSI', angle: 90, position: 'insideRight', stroke: 'white' }}
             domain={[-100, 0]}
             stroke="white"
+            tickLine={false}
+            axisLine={false}
           />
-          <Tooltip content={<LineGraphTooltip />} />
+          <Tooltip content={<LineGraphTooltip />} cursor={false} />
           <Area type="monotone" dataKey="rssi" stroke={colors[0]} fill="url(#colorUv)" />
         </AreaChart>
       </ResponsiveContainer>
@@ -83,14 +85,16 @@ const DeviceHistoryChart = ({ data, width }) => {
               <stop offset="100%" stopColor={colors[1]} stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="timestamp" hide domain={['dataMin', 'dataMax']} scale="time" />
+          <XAxis dataKey="timestamp" hide domain={['dataMin', 'dataMax']} />
           <YAxis
             orientation="right"
             label={{ value: 'Rx Bytes', angle: 90, position: 'insideRight', stroke: 'white' }}
             domain={[0, 1000]}
             stroke="white"
+            tickLine={false}
+            axisLine={false}
           />
-          <Tooltip content={<LineGraphTooltip />} />
+          <Tooltip content={<LineGraphTooltip />} cursor={false} />
           <Area type="monotone" dataKey="rx" stroke={colors[1]} fill="url(#colorUv2)" />
         </AreaChart>
       </ResponsiveContainer>
@@ -116,7 +120,6 @@ const DeviceHistoryChart = ({ data, width }) => {
             dataKey="timestamp"
             tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
             domain={['dataMin', 'dataMax']}
-            scale="time"
             stroke="white"
           />
           <YAxis
@@ -124,8 +127,10 @@ const DeviceHistoryChart = ({ data, width }) => {
             label={{ value: 'Tx Bytes', angle: 90, position: 'insideRight', stroke: 'white' }}
             domain={[0, 1000]}
             stroke="white"
+            tickLine={false}
+            axisLine={false}
           />
-          <Tooltip content={<LineGraphTooltip />} />
+          <Tooltip content={<LineGraphTooltip />} cursor={false} />
           <Area type="monotone" dataKey="tx" stroke={colors[0]} fill="url(#colorUv3)" />
         </AreaChart>
       </ResponsiveContainer>
