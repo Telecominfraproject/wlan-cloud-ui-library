@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../index.module.scss';
 
-const PieChartTooltip = props => {
-  const { active, payload } = props;
-
+const PieChartTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <div
