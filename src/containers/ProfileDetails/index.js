@@ -112,7 +112,7 @@ const ProfileDetails = ({
           ) {
             notification.error({
               message: 'Error',
-              description: 'At least 1 RADIUS Profile is required.',
+              description: 'A RADIUS Profile is required.',
             });
             return;
           }
@@ -123,6 +123,14 @@ const ProfileDetails = ({
             notification.error({
               message: 'Error',
               description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+
+          if (!values.ntpServer.auto && !values.ntpServer.value) {
+            notification.error({
+              message: 'Error',
+              description: 'At least 1 NTP Server is required.',
             });
             return;
           }
@@ -177,7 +185,7 @@ const ProfileDetails = ({
             });
             return;
           }
-          if (!values.osuSsidProfileId) {
+          if (!values.osuSsidProfileId?.value || !values.osuSsidProfileId?.label) {
             notification.error({
               message: 'Error',
               description: 'An SSID Profile is required.',
