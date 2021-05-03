@@ -43,17 +43,14 @@ module.exports = {
         amd: 'moment',
       },
     },
-    /^highcharts\/.+$/,
     'react-dom',
     'antd',
     '@ant-design/icons',
     '@babel/core',
-    'highcharts-react-official',
     'prop-types',
     'react-router-dom',
-    'react-jsx-highcharts',
-    'react-jsx-highstock',
     'uuid',
+    'recharts',
   ],
 
   module: {

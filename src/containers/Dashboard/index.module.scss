@@ -1,6 +1,6 @@
 .mainInfoWrap {
   flex: 1;
-  margin: 20px;
+  padding: 20px;
 }
 
 .cardWrapper {
@@ -13,7 +13,7 @@
   justify-content: center;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1350px) {
   .cardWrapper {
     flex-direction: column;
   }
