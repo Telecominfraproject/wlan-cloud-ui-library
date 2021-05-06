@@ -25,7 +25,7 @@ const MyPieChart = ({ chartData, title }) => {
       startAngle={startAngle}
       endAngle={endAngle}
       fill={fill}
-      stroke="#fff"
+      stroke={pieData.length > 1 ? '#fff' : ''}
       strokeWidth={1}
     />
   );
@@ -62,6 +62,7 @@ const MyPieChart = ({ chartData, title }) => {
                 <Cell
                   key={`cell-${entry.name}`}
                   fill={COLORS[index % COLORS.length]}
+                  stroke={pieData.length > 1 ? '#fff' : COLORS[index % COLORS.length]}
                   fillOpacity={index === activeIndex || activeIndex === null ? 1 : 0.6}
                 />
               ))}

@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const useHistoryCustom = () => {
   const history = useHistory();
@@ -12,15 +12,11 @@ const useHistoryCustom = () => {
   return { history, pushWithSearch, replaceWithSearch, preserveQueryParams };
 };
 
-const useChartLegend = (data = []) => {
+const initialValue = [];
+const useChartLegend = (data = initialValue) => {
   const [hover, setHover] = useState(null);
 
-  const [legendOptions, setLegendOptions] = useState(
-    data.reduce((accumulator, currentValue) => {
-      accumulator[currentValue] = true;
-      return accumulator;
-    }, {})
-  );
+  const [legendOptions, setLegendOptions] = useState({});
 
   const handleLegendMouseEnter = useCallback(e => {
     setHover(e.value);
@@ -37,11 +33,20 @@ const useChartLegend = (data = []) => {
     });
   };
 
-  const allLegendsItemsHidden = Object.keys(legendOptions).every(i => !legendOptions[i]);
+  useEffect(() => {
+    setLegendOptions(
+      data.reduce((accumulator, currentValue) => {
+        accumulator[currentValue] = true;
+        return accumulator;
+      }, {})
+    );
+  }, [data]);
+
+  const allLegendItemsHidden = Object.keys(legendOptions).every(i => !legendOptions[i]);
 
   return {
     hover,
-    allLegendsItemsHidden,
+    allLegendItemsHidden,
     legendOptions,
     handleLegendMouseEnter,
     handleLegendMouseLeave,

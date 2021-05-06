@@ -28,7 +28,7 @@ const LineGraphTooltip = ({ active, payload, label }) => {
 LineGraphTooltip.propTypes = {
   active: PropTypes.bool,
   payload: PropTypes.instanceOf(Object),
-  label: PropTypes.number,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 LineGraphTooltip.defaultProps = {
