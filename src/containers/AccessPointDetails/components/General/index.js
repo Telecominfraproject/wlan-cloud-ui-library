@@ -286,17 +286,27 @@ const General = ({
             if (label === 'Active Channel') {
               channel = isEnabled
                 ? { dataIndex: 'channelNumber', addOnText: 'Auto' }
-                : { dataIndex: 'manualChannelNumber', addOnText: 'Manual' };
+                : {
+                    dataIndex: 'manualChannelNumber',
+                    addOnText: 'Manual',
+                    dependencies: ['radioMap', key, 'manualBackupChannelNumber'],
+                  };
             }
             if (label === 'Backup Channel') {
               channel = isEnabled
                 ? { dataIndex: 'backupChannelNumber', addOnText: 'Auto' }
-                : { dataIndex: 'manualBackupChannelNumber', addOnText: 'Manual' };
+                : {
+                    dataIndex: 'manualBackupChannelNumber',
+                    addOnText: 'Manual',
+                    dependencies: ['radioMap', key, 'manualChannelNumber'],
+                  };
             }
+
             return (
               <Item
                 key={`radioMap${key}${channel.dataIndex}`}
                 name={['radioMap', key, channel.dataIndex]}
+                dependencies={[channel.dependencies]}
                 rules={[
                   { required: true, message: '1 - 165' },
                   ({ getFieldValue }) => ({
@@ -397,9 +407,10 @@ const General = ({
             onChange={handleProfileChange}
             placeholder="Select Access Point profile..."
             onPopupScroll={onFetchMoreProfiles}
-            showSearch
+            showSearch={onSearchProfile}
             filterOption={false}
             onSearch={onSearchProfile}
+            onSelect={() => onSearchProfile && onSearchProfile()}
             loading={loadingProfiles}
             notFoundContent={!loadingProfiles && <Empty />}
           >
@@ -600,7 +611,7 @@ General.defaultProps = {
   loadingProfiles: true,
   errorProfiles: null,
   onFetchMoreProfiles: () => {},
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   extraFields: [],
   extraGeneralCards: null,
 };

@@ -448,7 +448,8 @@ const CaptivePortalForm = ({
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch={onSearchProfile}
               filterOption={false}
-              onSearch={name => onSearchProfile(name, PROFILES.radius)}
+              onSearch={name => onSearchProfile(PROFILES.radius, name)}
+              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
               loading={loadingRadiusProfiles}
               notFoundContent={!loadingRadiusProfiles && <Empty />}
               labelInValue
@@ -674,7 +675,7 @@ const CaptivePortalForm = ({
 
           {whitelist.length > 0 && (
             <List
-              className={styles.Whitelist}
+              className={styles.List}
               itemLayout="horizontal"
               dataSource={whitelist}
               renderItem={item => (

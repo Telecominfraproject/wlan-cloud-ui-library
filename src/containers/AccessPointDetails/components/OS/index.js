@@ -5,7 +5,7 @@ import { LineChartOutlined } from '@ant-design/icons';
 
 import Timer from 'components/Timer';
 import SolidGauge from './components/SolidGauge';
-import HighChartGraph from './components/HighChartGraph';
+import CombinedGraph from './components/CombinedGraph';
 
 import styles from '../../index.module.scss';
 
@@ -31,15 +31,14 @@ const OS = ({ data, osData, handleRefresh }) => {
 
     metrics.forEach(i => {
       if (i?.detailsJSON?.apPerformance) {
-        const time = parseInt(i.createdTimestamp, 10);
-        // Convert freeMemory (Kb) to (Bytes) for byte formatters
-        freeMemory.push([time, i.detailsJSON.apPerformance.freeMemory * 1000]);
-        cpuTemperature.push([time, i.detailsJSON.apPerformance.cpuTemperature]);
+        const timestamp = parseInt(i.createdTimestamp, 10);
+        freeMemory.push({ timestamp, value: i.detailsJSON.apPerformance.freeMemory * 1000 });
+        cpuTemperature.push({ timestamp, value: i.detailsJSON.apPerformance.cpuTemperature });
         i.detailsJSON.apPerformance.cpuUtilized.forEach((j, index) => {
           if (!(index in cpuUtilCores)) {
             cpuUtilCores[index] = [];
           }
-          cpuUtilCores[index].push([time, j]);
+          cpuUtilCores[index].push({ timestamp, value: j });
         });
       }
     });
@@ -91,7 +90,7 @@ const OS = ({ data, osData, handleRefresh }) => {
         <SolidGauge data={memory} title="Current Free Memory" />
         <SolidGauge data={temperature} title="Current CPU Temp" label="°C" />
       </div>
-      <HighChartGraph
+      <CombinedGraph
         loading={osData?.loading}
         cpuUsage={metrics.cpuUtilCores}
         freeMemory={metrics.freeMemory}

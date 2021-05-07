@@ -114,12 +114,13 @@
   justify-content: flex-end;
 }
 
-.Whitelist {
-  margin-left: 21%;
+.List {
+  margin-left: 22%;
   max-width: 50%;
   word-wrap: break-word;
   &:global(.ant-list) {
     padding: 0;
+    margin-bottom: 20px;
   }
 }
 

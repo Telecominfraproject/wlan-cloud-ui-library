@@ -43,6 +43,7 @@ const AccessPointDetails = ({
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
+  avatar,
 }) => {
   const TAB_LIST = [
     {
@@ -162,7 +163,7 @@ const AccessPointDetails = ({
       <Card
         title={
           <div className={styles.InlineBlockDiv}>
-            <WifiOutlined className={styles.WifiIcon} />
+            {avatar ?? <WifiOutlined className={styles.WifiIcon} />}
             <div className={styles.InlineBlockDiv}>
               <div> {data.name} </div>
               <div>
@@ -177,16 +178,15 @@ const AccessPointDetails = ({
         extra={
           <div>
             <div>
-              <strong> Model:</strong> &nbsp; {data.model}
+              <strong> Model:</strong> &nbsp; {data.model ?? 'N/A'}
             </div>
             <div>
               <strong>IP Address:</strong> &nbsp;
-              {data.status.protocol.detailsJSON &&
-                data.status.protocol.detailsJSON.reportedIpV4Addr}
+              {data?.status?.protocol?.detailsJSON?.reportedIpV4Addr ?? 'N/A'}
             </div>
             <div>
               <strong>MAC:</strong> &nbsp;
-              {data.baseMacAddress}
+              {data.baseMacAddress ?? 'N/A'}
             </div>
           </div>
         }
@@ -273,6 +273,7 @@ AccessPointDetails.propTypes = {
   ),
   extraGeneralCards: PropTypes.node,
   showStatusAlarms: PropTypes.bool,
+  avatar: PropTypes.node,
 };
 
 AccessPointDetails.defaultProps = {
@@ -286,11 +287,12 @@ AccessPointDetails.defaultProps = {
   errorFirmware: null,
   onFetchMoreProfiles: () => {},
   extraButtons: null,
-  onSearchProfile: () => {},
+  onSearchProfile: null,
   extraFields: [],
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,
+  avatar: null,
 };
 
 export default AccessPointDetails;

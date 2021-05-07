@@ -243,7 +243,7 @@ const defaultSsidProfile = {
   profileType: 'ssid',
   radiusClientConfiguration: {
     model_type: 'RadiusNasConfiguration',
-    nasClientId: 'DEFAULT',
+    nasClientId: 'BSSID',
     nasClientIp: 'WAN_IP',
     userDefinedNasId: null,
     userDefinedNasIp: null,

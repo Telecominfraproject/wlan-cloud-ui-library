@@ -1,7 +1,10 @@
 export const RADIOS = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
 export const ROAMING = ['enable80211r', 'enable80211k', 'enable80211v'];
+
 export const DEFAULT_NTP_SERVER = 'pool.ntp.org';
 export const DEFAULT_HESS_ID = '00:00:00:00:00:00';
+
+export const IP_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
 
 export const PROFILES = {
   ssid: 'ssid',

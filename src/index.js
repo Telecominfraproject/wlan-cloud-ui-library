@@ -31,11 +31,14 @@ export { default as BulkEditAccessPoints } from 'components/BulkEditAccessPoints
 export { default as Button } from 'components/Button';
 export { default as ToggleButton } from 'components/ToggleButton';
 export { default as Modal } from 'components/Modal';
+export { default as ContainedSelect } from 'components/ContainedSelect';
 export { default as Header } from 'components/Header';
 export { default as Container } from 'components/Container';
 export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
+export { default as LineGraphTooltip } from 'components/GraphTooltips/LineGraphTooltip';
+export { default as PieGraphTooltip } from 'components/GraphTooltips/PieGraphTooltip';
 
-export { useHistory } from 'hooks';
+export { useHistory, useChartLegend, useChartHover } from 'hooks';
 
 export { default as GenericNotFound } from 'components/GenericNotFound';

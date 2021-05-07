@@ -67,7 +67,7 @@ export const formatSsidProfileForm = values => {
     });
   });
 
-  if (values.captivePortal === 'usePortal') {
+  if (values.forwardMode === 'NAT' && values.captivePortal === 'usePortal') {
     formattedData.childProfileIds.push(parseInt(values.captivePortalId, 10));
   } else {
     formattedData.captivePortalId = null;

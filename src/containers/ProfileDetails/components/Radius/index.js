@@ -5,6 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 
+import { IP_REGEX } from 'containers/ProfileDetails/constants';
 import styles from '../index.module.scss';
 
 const MAX_RADIUS = 1;
@@ -74,7 +75,7 @@ const RadiusForm = ({ form, details }) => {
                     rules={[
                       {
                         required: true,
-                        pattern: /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/,
+                        pattern: IP_REGEX,
                         message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                       },
                     ]}
@@ -188,7 +189,7 @@ const RadiusForm = ({ form, details }) => {
                     rules={[
                       {
                         required: true,
-                        pattern: /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/,
+                        pattern: IP_REGEX,
                         message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                       },
                     ]}
