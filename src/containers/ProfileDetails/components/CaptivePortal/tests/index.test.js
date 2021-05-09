@@ -194,47 +194,6 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  // it('changing radio button of Splash Page to Externally should render External Splash Page Card', async () => {
-  //   const { getByText } = render(<CaptivePortalFormComp />);
-  //   fireEvent.click(getByText('Externally Hosted'));
-
-  //   await waitFor(() => {
-  //     expect(getByText('External Splash Page')).toBeVisible();
-  //   });
-
-  //   fireEvent.click(getByText('Access Point Hosted'));
-  // });
-
-  // it('error message should be displayed when input value for URL for External Splash Page is invalid', async () => {
-  //   const { getAllByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-  //   fireEvent.click(getByText('Externally Hosted'));
-  //   fireEvent.change(getAllByPlaceholderText('http://... or https://...')[1], {
-  //     target: { value: '1' },
-  //   });
-
-  //   await waitFor(() => {
-  //     expect(getByText('Please enter URL in the format http://... or https://...')).toBeVisible();
-  //   });
-  // });
-
-  // it('tips should be displayed when Show Splash Page Tips button is clicked', async () => {
-  //   const { getByRole, getByText } = render(<CaptivePortalFormComp />);
-  //   fireEvent.click(getByText('Externally Hosted'));
-  //   fireEvent.click(
-  //     getByRole('button', {
-  //       name: /show splash page tips/i,
-  //     })
-  //   );
-
-  //   await waitFor(() => {
-  //     expect(
-  //       getByText(
-  //         'Add your external Splash Page URL into the field above. Save your configuration once satisfied.'
-  //       )
-  //     ).toBeVisible();
-  //   });
-  // });
-
   it('body content of Splash Page Content should change when User Acceptance Policy Text and Login Success Text button are cicked', async () => {
     const { getByRole, getByText, getByTestId } = render(<CaptivePortalFormComp />);
 
