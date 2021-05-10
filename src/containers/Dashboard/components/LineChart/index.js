@@ -19,19 +19,21 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     return result;
   }, [data]);
 
+  const names = useMemo(() => lineData.map(s => s.key), []);
+
   const {
     hover,
-    allLegendsItemsHidden,
+    allLegendItemsHidden,
     legendOptions,
     handleLegendMouseEnter,
     handleLegendMouseLeave,
     selectItem,
-  } = useChartLegend(lineData.map(s => s.key));
+  } = useChartLegend(names);
 
   return (
     <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
       <div className={styles.Container}>
-        {allLegendsItemsHidden && <span className={styles.Message}>No Data Available</span>}
+        {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
         <ResponsiveContainer width="100%" height={400}>
           <LineChart margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
             <XAxis
@@ -42,7 +44,7 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
               stroke="white"
               tick={{ style: { fontSize: 11 } }}
               scale="time"
-              hide={allLegendsItemsHidden}
+              hide={allLegendItemsHidden}
             />
             <YAxis
               dataKey="value"
@@ -52,7 +54,7 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
               domain={[0, 'auto']}
               tick={{ style: { fontSize: 11 } }}
               axisLine={false}
-              hide={allLegendsItemsHidden}
+              hide={allLegendItemsHidden}
               tickLine={false}
             />
             <Tooltip content={<LineGraphTooltip formatter={options.formatter} />} cursor={false} />

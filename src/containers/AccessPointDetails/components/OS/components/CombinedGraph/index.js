@@ -51,14 +51,16 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
     return result;
   }, [cpuUsage, freeMemory, cpuTemp]);
 
+  const names = useMemo(() => lineData.map(s => s.key), [lineData]);
+
   const {
     hover,
-    allLegendsItemsHidden,
+    allLegendItemsHidden,
     legendOptions,
     handleLegendMouseEnter,
     handleLegendMouseLeave,
     selectItem,
-  } = useChartLegend(lineData.map(s => s.key));
+  } = useChartLegend(names);
 
   if (loading) {
     return <Loading />;
@@ -66,7 +68,7 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
 
   return (
     <div className={styles.Container}>
-      {allLegendsItemsHidden && <span className={styles.Message}>No Data Available</span>}
+      {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
       <ResponsiveContainer width="100%" height={400}>
         <LineChart margin={{ top: 15 }}>
           <XAxis
@@ -78,9 +80,9 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
             stroke="white"
             tick={{ style: { fontSize: 11 } }}
             scale="time"
-            hide={allLegendsItemsHidden}
+            hide={allLegendItemsHidden}
           />
-          {!allLegendsItemsHidden && <CartesianGrid vertical={false} />}
+          {!allLegendItemsHidden && <CartesianGrid vertical={false} />}
           {lineData.map((s, i) => (
             <YAxis
               key={`axis-${s.key}`}
