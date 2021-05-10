@@ -362,7 +362,10 @@ const SSIDForm = ({
         </Item>
         <Item
           noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.vlan !== currentValues.vlan}
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.vlan !== currentValues.vlan ||
+            prevValues.forwardMode !== currentValues.forwardMode
+          }
         >
           {({ getFieldValue }) => {
             return (
