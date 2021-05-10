@@ -194,47 +194,6 @@ describe('<CaptivePortalForm />', () => {
     });
   });
 
-  it('changing radio button of Splash Page to Externally should render External Splash Page Card', async () => {
-    const { getByText } = render(<CaptivePortalFormComp />);
-    fireEvent.click(getByText('Externally Hosted'));
-
-    await waitFor(() => {
-      expect(getByText('External Splash Page')).toBeVisible();
-    });
-
-    fireEvent.click(getByText('Access Point Hosted'));
-  });
-
-  it('error message should be displayed when input value for URL for External Splash Page is invalid', async () => {
-    const { getAllByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    fireEvent.click(getByText('Externally Hosted'));
-    fireEvent.change(getAllByPlaceholderText('http://... or https://...')[1], {
-      target: { value: '1' },
-    });
-
-    await waitFor(() => {
-      expect(getByText('Please enter URL in the format http://... or https://...')).toBeVisible();
-    });
-  });
-
-  it('tips should be displayed when Show Splash Page Tips button is clicked', async () => {
-    const { getByRole, getByText } = render(<CaptivePortalFormComp />);
-    fireEvent.click(getByText('Externally Hosted'));
-    fireEvent.click(
-      getByRole('button', {
-        name: /show splash page tips/i,
-      })
-    );
-
-    await waitFor(() => {
-      expect(
-        getByText(
-          'Add your external Splash Page URL into the field above. Save your configuration once satisfied.'
-        )
-      ).toBeVisible();
-    });
-  });
-
   it('body content of Splash Page Content should change when User Acceptance Policy Text and Login Success Text button are cicked', async () => {
     const { getByRole, getByText, getByTestId } = render(<CaptivePortalFormComp />);
 
@@ -259,11 +218,10 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if input value exceeds length of 253 characters ', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
     fireEvent.change(whileListInput, {
       target: {
-        value:
-          'oogle.asdasdasdasdasdasdasdkahsdhakshdkjahsdasdasdasdasdasdasdaassss.sddasdasdasdsadsadasdasdasdsadsadsadsadasdasdasdasdasd.sadsadsadasasdsaddsad.ssaassasdsdsdsdsdsdsdsd.sdddsadsadsadsdsadasvdjhsadhasbdhbashdbjasbdjhasbdhjbasdsabha.asdadsagdsahjdhsajhdgasj',
+        value: `${faker.helpers.repeatString('test.com', 50)}`,
       },
     });
 
@@ -274,7 +232,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if input value is unrecognized and invalid', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
@@ -282,39 +240,13 @@ describe('<CaptivePortalForm />', () => {
       },
     });
     await waitFor(() => {
-      expect(getByText('Unrecognized hostname, IPv4 address, or IP range.')).toBeVisible();
-    });
-
-    fireEvent.change(whileListInput, {
-      target: {
-        value:
-          '*oogle.asdasdasdasdasdasdasdkahsdhakshdkjahsdasdasdasdasdasdasdaassss.sddasdasdasdsadsadasdasdasdsadsadsadsadasdasdasdasdasd.sadsadsadasasdsaddsad.ssaassasdsdsdsdsdsdsdsd.sdddsadsadsadsdsadasvdjhsadhasbdhbashdbjasbdjhasbdhjbasdsabha.asdadsagdsahjdhsajhdgasj',
-      },
-    });
-    await waitFor(() => {
-      expect(getByText('Unrecognized hostname, IPv4 address, or IP range.')).toBeVisible();
-    });
-    fireEvent.change(whileListInput, {
-      target: {
-        value: '192.168.1.1-1 1.1.1.1',
-      },
-    });
-    await waitFor(() => {
-      expect(getByText('Unrecognized hostname, IPv4 address, or IP range.')).toBeVisible();
-    });
-    fireEvent.change(whileListInput, {
-      target: {
-        value: '0 0 0 0',
-      },
-    });
-    await waitFor(() => {
-      expect(getByText('Unrecognized hostname, IPv4 address, or IP range.')).toBeVisible();
+      expect(getByText('Unrecognized hostname.')).toBeVisible();
     });
   });
 
   it('should work when input value for Configure is valid', async () => {
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
@@ -341,7 +273,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if Hostname label cotain * wildcard', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
@@ -358,7 +290,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if Second-level domain labels contain * wildcard', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
@@ -374,7 +306,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if Hostname Label greater than 63 ', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
@@ -390,7 +322,7 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible if input value does`t have subdomain ', async () => {
     const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: { value: 'a b c' },
@@ -404,12 +336,23 @@ describe('<CaptivePortalForm />', () => {
   });
 
   it('error should be visible if input value in whitelist is already exists', async () => {
-    const { getByPlaceholderText, getByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const { getByPlaceholderText, getByText, getAllByRole } = render(<CaptivePortalFormComp />);
+    const whileListInput = getByPlaceholderText('Hostname...');
+
+    const hostname = faker.internet.domainName();
+    fireEvent.change(whileListInput, {
+      target: {
+        value: hostname,
+      },
+    });
+    fireEvent.click(getAllByRole('button', 'Add')[7]);
+    await waitFor(() => {
+      expect(getByText(hostname)).toBeVisible();
+    });
 
     fireEvent.change(whileListInput, {
       target: {
-        value: '1.1.1.1',
+        value: hostname,
       },
     });
 
@@ -420,15 +363,15 @@ describe('<CaptivePortalForm />', () => {
 
   it('error should be visible when new item is added and whitelist have already 32 items in the list', async () => {
     for (let i = 0; i < 40; i += 1) {
-      mockCaptivePortal.details.walledGardenAllowlist.push(`${i}.${i}.${i}.${i}`);
+      mockCaptivePortal.details.walledGardenAllowlist.push(faker.internet.domainName());
     }
 
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
-        value: '1.1.1.1',
+        value: faker.internet.domainName(),
       },
     });
 
@@ -443,17 +386,17 @@ describe('<CaptivePortalForm />', () => {
     for (let i = 0; i < 20; i += 1) {
       let value;
       for (let j = 0; j < 100; j += 1) {
-        value += `${j} `;
+        value += faker.internet.domainName();
       }
       mockCaptivePortal.details.walledGardenAllowlist.push(value);
     }
 
     const { getByPlaceholderText, queryByText } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
     fireEvent.change(whileListInput, {
       target: {
-        value: '1.1.1.1',
+        value: faker.internet.domainName(),
       },
     });
 
@@ -468,16 +411,17 @@ describe('<CaptivePortalForm />', () => {
     mockCaptivePortal.details.walledGardenAllowlist = [];
 
     const { getByPlaceholderText, getByText, getAllByRole } = render(<CaptivePortalFormComp />);
-    const whileListInput = getByPlaceholderText('Hostname, IP, or IP range...');
+    const whileListInput = getByPlaceholderText('Hostname...');
 
+    const hostname = faker.internet.domainName();
     fireEvent.change(whileListInput, {
       target: {
-        value: '1.1.1.1',
+        value: hostname,
       },
     });
     fireEvent.click(getAllByRole('button', 'Add')[7]);
     await waitFor(() => {
-      expect(getByText('1.1.1.1')).toBeVisible();
+      expect(getByText(hostname)).toBeVisible();
     });
   });
 

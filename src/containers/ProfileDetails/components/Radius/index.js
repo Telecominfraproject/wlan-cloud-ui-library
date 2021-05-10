@@ -34,7 +34,6 @@ const RadiusForm = ({ form, details }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      profileDescription: details.profileDescription,
       authenticationServer: formatInitialAuthenticationValues(),
       accountingServer: formatInitialAccountingnValues(),
     });
@@ -109,6 +108,7 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'port']}
                     label="Port"
+                    initialValue={1812}
                     rules={[
                       {
                         required: true,
@@ -222,6 +222,7 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'port']}
                     label="Port"
+                    initialValue={1813}
                     rules={[
                       {
                         required: true,

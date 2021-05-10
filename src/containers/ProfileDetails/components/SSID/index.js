@@ -7,7 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
-import { RADIOS, ROAMING, DEFAULT_ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
+import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -33,11 +33,11 @@ const SSIDForm = ({
     }
   };
 
-  const dropdownOptions = (
-    <Select className={globalStyles.field}>
-      <Option value="true">Enabled</Option>
-      <Option value="false">Disabled</Option>
-    </Select>
+  const radioOptions = (
+    <Radio.Group>
+      <Radio value="true">Enabled</Radio>
+      <Radio value="false">Disabled</Radio>
+    </Radio.Group>
   );
 
   useEffect(() => {
@@ -46,7 +46,8 @@ const SSIDForm = ({
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
         radioBasedValues[`${j}${i}`] =
-          details?.radioBasedConfigs?.[i]?.[j]?.toString() ?? DEFAULT_ROAMING[j];
+          details?.radioBasedConfigs?.[i]?.[j]?.toString() ??
+          defaultSsidProfile.radioBasedConfigs[i][j].toString();
       });
     });
 
@@ -141,7 +142,7 @@ const SSIDForm = ({
           </Radio.Group>
         </Item>
 
-        <Item label="Bandwidth">
+        <Item label="Client Rate Limit">
           <div className={styles.InlineDiv}>
             <Item
               name="bandwidthLimitDown"
@@ -338,6 +339,109 @@ const SSIDForm = ({
             ) : null;
           }}
         </Item>
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              <Item label="VLAN" name="vlan">
+                {getFieldValue('forwardMode') === 'BRIDGE' ? (
+                  <Radio.Group>
+                    <Radio value="customVLAN">Use Custom VLAN</Radio>
+                    <Radio value="defaultVLAN">Use Default VLAN</Radio>
+                  </Radio.Group>
+                ) : (
+                  <span className={styles.Disclaimer}>Not Applicable</span>
+                )}
+              </Item>
+            );
+          }}
+        </Item>
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.vlan !== currentValues.vlan ||
+            prevValues.forwardMode !== currentValues.forwardMode
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              getFieldValue('forwardMode') === 'BRIDGE' &&
+              getFieldValue('vlan') === 'customVLAN' && (
+                <Item
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name="vlanId"
+                  rules={[
+                    {
+                      required: getFieldValue('vlan'),
+                      message: 'Vlan expected between 1 and 4095',
+                    },
+                    () => ({
+                      validator(_rule, value) {
+                        if (
+                          !value ||
+                          (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
+                        ) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
+                      },
+                    }),
+                  ]}
+                  style={{ marginTop: '10px' }}
+                  hasFeedback
+                >
+                  <Input
+                    className={globalStyles.field}
+                    placeholder="1-4095"
+                    type="number"
+                    min={1}
+                    max={4095}
+                    maxLength={4}
+                  />
+                </Item>
+              )
+            );
+          }}
+        </Item>
+
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.forwardMode !== currentValues.forwardMode ||
+            prevValues.vlan !== currentValues.vlan
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              <Item name="dynamicVlan" label="Dynamic VLAN">
+                {getFieldValue('forwardMode') === 'BRIDGE' &&
+                getFieldValue('vlan') === 'defaultVLAN' &&
+                (mode === 'wpa3OnlyEAP' ||
+                  mode === 'wpa3MixedEAP' ||
+                  mode === 'wpa2OnlyRadius' ||
+                  mode === 'wpa2Radius' ||
+                  mode === 'wpaRadius') ? (
+                  <Select className={globalStyles.field} placeholder="Select Dynamic VLAN">
+                    <Option value="disabled">Disabled</Option>
+                    <Option value="enabled">Enabled</Option>
+                    <Option value="enabled_reject_if_no_radius_dynamic_vlan">
+                      <Tooltip
+                        title="RADIUS Authentication is rejected if Dynamic VLAN is not given by the RADIUS"
+                        text="Qualified Enabled"
+                      />
+                    </Option>
+                  </Select>
+                ) : (
+                  <span className={styles.Disclaimer}>Disabled</span>
+                )}
+              </Item>
+            );
+          }}
+        </Item>
       </Card>
 
       <Card title="Security and Encryption">
@@ -460,106 +564,6 @@ const SSIDForm = ({
             </Item>
           </>
         )}
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.forwardMode !== currentValues.forwardMode
-          }
-        >
-          {({ getFieldValue }) => {
-            return (
-              <Item label="VLAN" name="vlan">
-                {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Radio.Group>
-                    <Radio value="customVLAN">Use Custom VLAN</Radio>
-                    <Radio value="defaultVLAN">Use Default VLAN</Radio>
-                  </Radio.Group>
-                ) : (
-                  <span className={styles.Disclaimer}>Not Applicable</span>
-                )}
-              </Item>
-            );
-          }}
-        </Item>
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.vlan !== currentValues.vlan}
-        >
-          {({ getFieldValue }) => {
-            return (
-              getFieldValue('forwardMode') === 'BRIDGE' &&
-              getFieldValue('vlan') === 'customVLAN' && (
-                <Item
-                  wrapperCol={{ offset: 5, span: 15 }}
-                  name="vlanId"
-                  rules={[
-                    {
-                      required: getFieldValue('vlan'),
-                      message: 'Vlan expected between 1 and 4095',
-                    },
-                    () => ({
-                      validator(_rule, value) {
-                        if (
-                          !value ||
-                          (getFieldValue('vlanId') <= 4095 && getFieldValue('vlanId') > 0)
-                        ) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
-                      },
-                    }),
-                  ]}
-                  style={{ marginTop: '10px' }}
-                  hasFeedback
-                >
-                  <Input
-                    className={globalStyles.field}
-                    placeholder="1-4095"
-                    type="number"
-                    min={1}
-                    max={4095}
-                    maxLength={4}
-                  />
-                </Item>
-              )
-            );
-          }}
-        </Item>
-
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.forwardMode !== currentValues.forwardMode ||
-            prevValues.vlan !== currentValues.vlan
-          }
-        >
-          {({ getFieldValue }) => {
-            return (
-              <Item name="dynamicVlan" label="Dynamic VLAN">
-                {getFieldValue('forwardMode') === 'BRIDGE' &&
-                getFieldValue('vlan') === 'defaultVLAN' &&
-                (mode === 'wpa3OnlyEAP' ||
-                  mode === 'wpa3MixedEAP' ||
-                  mode === 'wpa2OnlyRadius' ||
-                  mode === 'wpa2Radius' ||
-                  mode === 'wpaRadius') ? (
-                  <Select className={globalStyles.field} placeholder="Select Dynamic VLAN">
-                    <Option value="disabled">Disabled</Option>
-                    <Option value="enabled">Enabled</Option>
-                    <Option value="enabled_reject_if_no_radius_dynamic_vlan">
-                      <Tooltip
-                        title="RADIUS Authentication is rejected if Dynamic VLAN is not given by the RADIUS"
-                        text="Qualified Enabled"
-                      />
-                    </Option>
-                  </Select>
-                ) : (
-                  <span className={styles.Disclaimer}>Disabled</span>
-                )}
-              </Item>
-            );
-          }}
-        </Item>
       </Card>
       {(mode === 'wpaRadius' ||
         mode === 'wpa2Radius' ||
@@ -756,7 +760,7 @@ const SSIDForm = ({
               <div className={styles.InlineDiv}>
                 {RADIOS.map(i => (
                   <Item key={i} name={`enable80211r${i}`}>
-                    {dropdownOptions}
+                    {radioOptions}
                   </Item>
                 ))}
               </div>
@@ -767,7 +771,7 @@ const SSIDForm = ({
           <div className={styles.InlineDiv}>
             {RADIOS.map(i => (
               <Item key={i} name={`enable80211k${i}`}>
-                {dropdownOptions}
+                {radioOptions}
               </Item>
             ))}
           </div>
@@ -777,7 +781,7 @@ const SSIDForm = ({
           <div className={styles.InlineDiv}>
             {RADIOS.map(i => (
               <Item key={i} name={`enable80211v${i}`}>
-                {dropdownOptions}
+                {radioOptions}
               </Item>
             ))}
           </div>
