@@ -6,6 +6,7 @@ import { render } from 'tests/utils';
 import DeviceHistoryChart from '..';
 
 const mockProp = {
+  width: 700,
   data: [
     {
       createdTimestamp: moment()
@@ -31,7 +32,7 @@ const mockProp = {
 describe('<DeviceHistoryChart />', () => {
   it('tooltip should be visible on mouse-hover over chart', () => {
     const { container } = render(<DeviceHistoryChart {...mockProp} />);
-    const chart = container.querySelector('.highcharts-pane-group');
+    const chart = container.querySelector('.recharts-surface');
     fireEvent.mouseOver(chart);
   });
 });

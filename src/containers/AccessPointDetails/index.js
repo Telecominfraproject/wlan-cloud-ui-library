@@ -186,16 +186,15 @@ const AccessPointDetails = ({
         extra={
           <div>
             <div>
-              <strong> Model:</strong> &nbsp; {data.model}
+              <strong> Model:</strong> &nbsp; {data.model ?? 'N/A'}
             </div>
             <div>
               <strong>IP Address:</strong> &nbsp;
-              {data.status.protocol.detailsJSON &&
-                data.status.protocol.detailsJSON.reportedIpV4Addr}
+              {data?.status?.protocol?.detailsJSON?.reportedIpV4Addr ?? 'N/A'}
             </div>
             <div>
               <strong>MAC:</strong> &nbsp;
-              {data.baseMacAddress}
+              {data.baseMacAddress ?? 'N/A'}
             </div>
           </div>
         }

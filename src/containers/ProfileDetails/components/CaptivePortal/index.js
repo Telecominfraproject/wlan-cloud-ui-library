@@ -35,22 +35,6 @@ const { Item } = Form;
 const { Panel } = Collapse;
 const { Option } = AntdSelect;
 
-const validateIPv4 = inputString => {
-  // allow spaces in place of dots
-  const inputStr = inputString.replace(' ', '.');
-  // from http://www.regextester.com/22
-  if (
-    inputStr.match(
-      /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/gm
-    )
-  ) {
-    // blacklist certain IPs
-    const disallowed = ['0.0.0.0', '255.255.255.255', '127.0.0.1', '256.1.1.1'];
-    return disallowed.indexOf(inputStr) < 0;
-  }
-  return false;
-};
-
 const CaptivePortalForm = ({
   details,
   childProfiles,
@@ -172,88 +156,63 @@ const CaptivePortalForm = ({
   const validateWhitelist = (_rule, value) => {
     let inputString = value.toLowerCase().trim();
 
-    if (inputString.match(/[a-z]/i)) {
-      // contains letters, so validate as hostname
+    // remove all spaces
+    inputString = inputString.replace(' ', '');
 
-      // remove all spaces
-      inputString = inputString.replace(' ', '');
+    const hostnameParts = inputString.split('.').reverse();
 
-      const hostnameParts = inputString.split('.').reverse();
+    // hostname must contain at least two parts (e.g. google.com)
+    if (hostnameParts.length < 2) {
+      return Promise.reject(
+        new Error('Hostnames must have at least 1 subdomain label. e.g. mycompany.com')
+      );
+    }
 
-      // hostname must contain at least two parts (e.g. google.com)
-      if (hostnameParts.length < 2) {
-        return Promise.reject(
-          new Error('Hostnames must have at least 1 subdomain label. e.g. mycompany.com')
-        );
+    // hostname labels must be between 1 and 63 characters
+    let isValidLabelLengths = true;
+    hostnameParts.some(part => {
+      if (part.length < 1 || part.length > 63) {
+        isValidLabelLengths = false;
+        return true;
       }
+      return false;
+    });
+    if (!isValidLabelLengths) {
+      return Promise.reject(new Error('Hostname labels must be between 1 and 63 characters long.'));
+    }
 
-      // hostname labels must be between 1 and 63 characters
-      let isValidLabelLengths = true;
+    // second-level domain cannot be a wildcard
+    if (hostnameParts[1].indexOf('*') >= 0) {
+      return Promise.reject(new Error('Second-level domain labels may not contain a * wildcard.'));
+    }
+
+    // the * wildcard cannot be combined with any other characters
+    if (inputString.indexOf('*')) {
+      let isValid = true;
       hostnameParts.some(part => {
-        if (part.length < 1 || part.length > 63) {
-          isValidLabelLengths = false;
+        if (part.indexOf('*') >= 0 && part !== '*') {
+          isValid = false;
           return true;
         }
         return false;
       });
-      if (!isValidLabelLengths) {
+      if (!isValid) {
         return Promise.reject(
-          new Error('Hostname labels must be between 1 and 63 characters long.')
+          new Error('The * wildcard may not be combined with other characters in a hostname label.')
         );
       }
+    }
 
-      // second-level domain cannot be a wildcard
-      if (hostnameParts[1].indexOf('*') >= 0) {
-        return Promise.reject(
-          new Error('Second-level domain labels may not contain a * wildcard.')
-        );
-      }
+    // overall hostname length must be <= 253 characters
+    if (inputString.length > 253) {
+      return Promise.reject(new Error('Hostnames may not exceed 253 characters in length.'));
+    }
 
-      // the * wildcard cannot be combined with any other characters
-      if (inputString.indexOf('*')) {
-        let isValid = true;
-        hostnameParts.some(part => {
-          if (part.indexOf('*') >= 0 && part !== '*') {
-            isValid = false;
-            return true;
-          }
-          return false;
-        });
-        if (!isValid) {
-          return Promise.reject(
-            new Error(
-              'The * wildcard may not be combined with other characters in a hostname label.'
-            )
-          );
-        }
-      }
-
-      // validate the hostname format & characters
-      if (
-        !inputString.match(
-          /^((\*\.)|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*(\*|[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$/gm
-        )
-      ) {
-        return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
-      }
-
-      // overall hostname length must be <= 253 characters
-      if (inputString.length > 253) {
-        return Promise.reject(new Error('Hostnames may not exceed 253 characters in length.'));
-      }
-    } else {
-      const ipAddrs = inputString.split('-');
-      if (ipAddrs.length === 2) {
-        // validate as IP Range
-        ipAddrs[0] = ipAddrs[0].trim();
-        ipAddrs[1] = ipAddrs[1].trim();
-
-        if (!validateIPv4(ipAddrs[0]) || !validateIPv4(ipAddrs[1])) {
-          return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
-        }
-      } else if (!validateIPv4(inputString)) {
-        return Promise.reject(new Error('Unrecognized hostname, IPv4 address, or IP range.'));
-      }
+    // validate the hostname format & characters
+    if (
+      !inputString.match(/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/g)
+    ) {
+      return Promise.reject(new Error('Unrecognized hostname.'));
     }
 
     // limit whitelist to 32 items
@@ -277,14 +236,16 @@ const CaptivePortalForm = ({
   };
 
   const handleOnWhitelist = value => {
-    validateWhitelist(null, value).then(() => {
-      setWhitelist([...whitelist, value.toLowerCase().trim()]);
-      setWhitelistSearch('');
-      setWhitelistValidation({
-        status: null,
-        help: null,
-      });
-    });
+    validateWhitelist(null, value)
+      .then(() => {
+        setWhitelist([...whitelist, value.toLowerCase().trim()]);
+        setWhitelistSearch('');
+        setWhitelistValidation({
+          status: null,
+          help: null,
+        });
+      })
+      .catch(() => {});
   };
 
   const handleOnChangeWhitelist = event => {
@@ -441,7 +402,7 @@ const CaptivePortalForm = ({
             <Radio value="false" onChange={disableExternalSplashChange}>
               Access Point Hosted
             </Radio>
-            <Radio value="true" onChange={() => setExternalSplash(true)}>
+            <Radio value="true" disabled onChange={() => setExternalSplash(true)}>
               Externally Hosted
             </Radio>
           </Group>
@@ -712,7 +673,7 @@ const CaptivePortalForm = ({
             help={whitelistValidation.help}
           >
             <Search
-              placeholder="Hostname, IP, or IP range..."
+              placeholder="Hostname..."
               enterButton="Add"
               value={whitelistSearch}
               onSearch={handleOnWhitelist}

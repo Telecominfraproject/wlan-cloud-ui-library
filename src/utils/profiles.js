@@ -63,8 +63,7 @@ export const formatSsidProfileForm = values => {
   RADIOS.forEach(i => {
     formattedData.radioBasedConfigs[i] = {};
     ROAMING.forEach(j => {
-      formattedData.radioBasedConfigs[i][j] =
-        values[`${j}${i}`] === 'auto' ? null : isBool(values[`${j}${i}`]);
+      formattedData.radioBasedConfigs[i][j] = isBool(values[`${j}${i}`]);
     });
   });
 

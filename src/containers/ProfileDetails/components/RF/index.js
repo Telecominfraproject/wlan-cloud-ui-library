@@ -49,7 +49,9 @@ const RFForm = ({ form, details, extraFields }) => {
           details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
           defaultRfProfile[radio].clientDisconnectThresholdDb,
         eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
-        autoChannelSelection: details.rfConfigMap[radio]?.autoChannelSelection ? 'true' : 'false',
+        autoChannelSelection:
+          details.rfConfigMap[radio]?.autoChannelSelection?.toString() ??
+          defaultRfProfile[radio].autoChannelSelection.toString(),
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
@@ -58,14 +60,6 @@ const RFForm = ({ form, details, extraFields }) => {
           scanDurationMillis:
             details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ||
             defaultRfProfile[radio].activeScanSettings.scanDurationMillis,
-        },
-        neighbouringListApConfig: {
-          minSignal:
-            details.rfConfigMap[radio]?.neighbouringListApConfig?.minSignal ||
-            defaultRfProfile[radio].neighbouringListApConfig.minSignal,
-          maxAps:
-            details.rfConfigMap[radio]?.neighbouringListApConfig?.maxAps ||
-            defaultRfProfile[radio].neighbouringListApConfig.maxAps,
         },
         channelHopSettings: {
           noiseFloorThresholdInDB:
@@ -207,9 +201,7 @@ const RFForm = ({ form, details, extraFields }) => {
                 {key !== 'is2dot4GHz' && (
                   <>
                     <Option value="modeAC">AC</Option>
-                    <Option value="modeGN">GN</Option>
                     <Option value="modeA">A</Option>
-                    <Option value="modeAB">AB</Option>
                   </>
                 )}
                 <Option value="modeAX">AX</Option>
@@ -328,18 +320,7 @@ const RFForm = ({ form, details, extraFields }) => {
             addOnText: 'ms',
           }
         )}
-        <p>Neighbouring AP List:</p>
-        {renderItem('Minimum Signal', ['neighbouringListApConfig', 'minSignal'], renderInputItem, {
-          min: -90,
-          max: -50,
-          error: '-90 - -50 dBm',
-          addOnText: 'dBm',
-        })}
-        {renderItem('Maximum APs', ['neighbouringListApConfig', 'maxAps'], renderInputItem, {
-          min: 0,
-          max: 512,
-          error: '0 - 512 APs',
-        })}
+
         <p>Client Steering Thresholds:</p>
         {renderItem('Min Load', ['bestApSettings', 'minLoadFactor'], renderInputItem, {
           min: 0,
@@ -401,8 +382,8 @@ const RFForm = ({ form, details, extraFields }) => {
         {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
-              <Option value="NON_WIFI">Non-Wifi</Option>
-              <Option value="NON_WIFI_AND_OBSS">Non-Wifi and OBSS</Option>
+              <Option value="NON_WIFI">Non-IBSS</Option>
+              <Option value="NON_WIFI_AND_OBSS">Non-IBSS Time</Option>
             </Select>
           ),
         })}
