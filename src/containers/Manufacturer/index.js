@@ -21,7 +21,7 @@ const layout = {
 };
 
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadingFileUpload }) => {
-  const { roleIsWritable } = useRoles();
+  const { isReadOnly } = useRoles();
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);
@@ -116,7 +116,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
                 data-testid="ouiUpload"
                 disabled={loadingFileUpload}
               >
-                <Button disabled={loadingFileUpload || !roleIsWritable} icon={<UploadOutlined />}>
+                <Button disabled={loadingFileUpload || isReadOnly} icon={<UploadOutlined />}>
                   Select File to Import...
                 </Button>
               </Upload>

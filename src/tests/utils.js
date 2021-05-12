@@ -42,7 +42,7 @@ const AllTheProviders = ({ children }) => {
         is5GHz: '5GHz',
       }}
     >
-      <RolesProvider roleIsWritable>{children}</RolesProvider>
+      <RolesProvider>{children}</RolesProvider>
     </ThemeProvider>
   );
 };

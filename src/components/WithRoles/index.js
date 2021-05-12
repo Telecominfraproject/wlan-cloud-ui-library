@@ -19,8 +19,8 @@ export function containsRole(userRole, givenRoles) {
 }
 
 // This is for hiding/showing components
-const WithRoles = ({ children, access, needsWritable }) => {
-  const { roleIsWritable, role } = useRoles();
+const WithRoles = ({ children, access }) => {
+  const { isReadOnly, role } = useRoles();
 
   if (access) {
     if (!containsRole(role, access)) {
@@ -29,13 +29,7 @@ const WithRoles = ({ children, access, needsWritable }) => {
     return children;
   }
 
-  if (needsWritable) {
-    if (!roleIsWritable && !needsWritable) {
-      return children;
-    }
-  }
-
-  if (roleIsWritable) {
+  if (!isReadOnly) {
     return children;
   }
 
@@ -45,25 +39,21 @@ const WithRoles = ({ children, access, needsWritable }) => {
 // This is for disabling components
 // eslint-disable-next-line react/prop-types
 const withDisabledRoles = Component => ({ disabled, ...restProps }) => {
-  const { roleIsWritable } = useRoles();
-  return <Component disabled={!roleIsWritable || disabled} {...restProps} />;
+  const { isReadOnly } = useRoles();
+  return <Component disabled={isReadOnly || disabled} {...restProps} />;
 };
 
 // eslint-disable-next-line react/prop-types
 const withRoles = Component => ({ access, ...restProps }) => {
-  const { roleIsWritable, role } = useRoles();
+  const { isReadOnly, role } = useRoles();
 
   if (access) {
     if (!containsRole(role, access)) {
       return null;
     }
-
-    if (roleIsWritable) {
-      return <Component {...restProps} />;
-    }
   }
 
-  if (roleIsWritable) {
+  if (!isReadOnly) {
     return <Component {...restProps} />;
   }
 

@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import RolesContext from 'contexts/RolesContext';
 
-const RolesProvider = ({ children, roleIsWritable, role, featureRoles }) => {
+const RolesProvider = ({ children, isReadOnly, role, featureRoles, ...restProps }) => {
   return (
     <RolesContext.Provider
       value={{
         role,
-        roleIsWritable,
+        isReadOnly,
         featureRoles,
+        ...restProps,
       }}
     >
       {children}
@@ -18,13 +19,13 @@ const RolesProvider = ({ children, roleIsWritable, role, featureRoles }) => {
 
 RolesProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  roleIsWritable: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
   role: PropTypes.string,
   featureRoles: PropTypes.instanceOf(Array),
 };
 
 RolesProvider.defaultProps = {
-  roleIsWritable: true,
+  isReadOnly: false,
   role: '',
   featureRoles: null,
 };

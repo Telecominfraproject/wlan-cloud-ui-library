@@ -34,14 +34,14 @@ const Accounts = ({
     onDeleteUser(id);
   };
 
-  const addUser = ({ email, roles, password }) => {
-    onCreateUser(email, password, roles);
+  const addUser = ({ email, roles, password, ...extra }) => {
+    onCreateUser({ email, password, roles, ...extra });
     setAddModal(false);
   };
 
-  const editUser = ({ email, roles, password }) => {
+  const editUser = ({ email, roles, password, ...extra }) => {
     const { id, lastModifiedTimestamp } = activeUser;
-    onEditUser(id, email, password, roles, lastModifiedTimestamp);
+    onEditUser({ id, email, password, roles, lastModifiedTimestamp, ...extra });
     setEditModal(false);
   };
 
@@ -119,9 +119,7 @@ const Accounts = ({
         visible={editModal}
         onSubmit={editUser}
         title="Edit User"
-        userRole={activeUser?.roles}
-        userEmail={activeUser.email}
-        userId={activeUser?.id}
+        data={activeUser}
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
         allUserRoles={allUserRoles}

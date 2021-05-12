@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Select, Typography } from 'antd';
 
@@ -19,29 +19,24 @@ const FormModal = ({
   onSubmit,
   visible,
   title,
-  userEmail,
-  userRole,
-  userId,
+  data,
   isAuth0Enabled,
   onResetUserPassword,
   allUserRoles,
   extraFields,
 }) => {
   const [form] = Form.useForm();
-  const [checked, setChecked] = useState(userRole.includes('ManagePortalUser'));
 
   useEffect(() => {
     if (visible) {
+      // eslint-disable-next-line no-return-assign
       form.resetFields();
-      form.setFieldsValue({ email: userEmail, roles: userRole, checked });
+      form.setFieldsValue({
+        email: data?.email,
+        roles: data?.roles,
+      });
     }
   }, [visible]);
-
-  const handleChange = e => {
-    if (e.target.type === 'checkbox') {
-      setChecked(!checked);
-    }
-  };
 
   const content = (
     <Form {...modalLayout} form={form}>
@@ -60,7 +55,7 @@ const FormModal = ({
         ]}
       >
         {isAuth0Enabled && title === 'Edit User' ? (
-          <Text>{userEmail}</Text>
+          <Text>{data?.email}</Text>
         ) : (
           <Input className={styles.field} />
         )}
@@ -79,10 +74,7 @@ const FormModal = ({
 
       {extraFields?.map(field => (
         <Item name={field.name} label={field.label} {...field}>
-          {React.cloneElement(field.component, {
-            checked,
-            onChange: handleChange,
-          })}
+          {field.component}
         </Item>
       ))}
 
@@ -139,7 +131,7 @@ const FormModal = ({
       )}
       {isAuth0Enabled && title === 'Edit User' && (
         <Item label="Password">
-          <Button onClick={() => onResetUserPassword(userId)}>Reset Password</Button>
+          <Button onClick={() => onResetUserPassword(data?.id)}>Reset Password</Button>
         </Item>
       )}
     </Form>
@@ -149,23 +141,8 @@ const FormModal = ({
     form
       .validateFields()
       .then(values => {
-        const valuesCopy = JSON.parse(JSON.stringify(values));
-
-        if (!Array.isArray(valuesCopy.roles)) {
-          valuesCopy.roles = [valuesCopy.roles];
-        }
-
-        if (checked) {
-          valuesCopy.roles.push('ManagePortalUser');
-        } else {
-          valuesCopy.roles = valuesCopy.roles.filter(
-            i => i !== 'ManagePortalUser' && i !== 'Unknown'
-          );
-        }
-
-        onSubmit(valuesCopy);
+        onSubmit(values);
         form.resetFields();
-        setChecked(userRole.includes('ManagePortalUser'));
       })
       .catch(() => {});
   };
@@ -182,13 +159,11 @@ const FormModal = ({
 };
 
 FormModal.propTypes = {
-  onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
-  userEmail: PropTypes.string,
-  userRole: PropTypes.string,
-  userId: PropTypes.string,
+  data: PropTypes.instanceOf(Object),
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
   allUserRoles: PropTypes.instanceOf(Array),
@@ -197,9 +172,7 @@ FormModal.propTypes = {
 
 FormModal.defaultProps = {
   title: '',
-  userEmail: '',
-  userRole: 'CustomerIT',
-  userId: '',
+  data: {},
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
   allUserRoles: ['SuperUser', 'CustomerIT'],

@@ -15,7 +15,7 @@ const Modal = ({
   content,
   ...restProps
 }) => {
-  const { roleIsWritable } = useRoles();
+  const { isReadOnly } = useRoles();
   return (
     <AntdModal
       className={styles.Modal}
@@ -25,7 +25,7 @@ const Modal = ({
       footer={
         <>
           <div className={styles.Buttons}>
-            {roleIsWritable ? (
+            {!isReadOnly ? (
               <>
                 <Button className={styles.Button} onClick={onCancel}>
                   Cancel
