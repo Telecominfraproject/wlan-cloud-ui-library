@@ -27,6 +27,7 @@ const SSIDForm = ({
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || defaultSsidProfile.secureMode);
+  const [modeChanged, setModeChanged] = useState(false);
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -97,6 +98,29 @@ const SSIDForm = ({
       },
     });
   }, [form, details]);
+
+  const handleOnModeChanged = () => {
+    if (!modeChanged) {
+      setModeChanged(true);
+    }
+  };
+
+  useEffect(() => {
+    if (modeChanged) {
+      const radioBasedValues = {};
+      RADIOS.forEach(i => {
+        radioBasedValues[`enable80211r${i}`] =
+          mode === 'wpa3OnlyEAP' ||
+          mode === 'wpa3MixedEAP' ||
+          mode === 'wpa2OnlyRadius' ||
+          mode === 'wpa2Radius' ||
+          mode === 'wpaRadius'
+            ? 'true'
+            : 'false';
+      });
+      form.setFieldsValue({ ...radioBasedValues });
+    }
+  }, [mode, modeChanged]);
 
   return (
     <div className={styles.ProfilePage}>
@@ -460,7 +484,10 @@ const SSIDForm = ({
           <Select
             data-testid="securityMode"
             className={globalStyles.field}
-            onChange={value => setMode(value)}
+            onChange={value => {
+              setMode(value);
+              handleOnModeChanged();
+            }}
             placeholder="Select Security and Encryption Mode"
           >
             <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
