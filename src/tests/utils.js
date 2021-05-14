@@ -7,6 +7,7 @@ import ThemeProvider from 'contexts/ThemeProvider';
 import RolesProvider from 'contexts/RolesProvider';
 
 export const DOWN_ARROW = { keyCode: 40 };
+export const ENTER_KEY = { keyCode: 13 };
 
 export const ROUTES = {
   root: '/',

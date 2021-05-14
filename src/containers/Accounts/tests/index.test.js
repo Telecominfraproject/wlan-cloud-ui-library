@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor, within } from '@testing-library/react';
 
-import { render } from 'tests/utils';
+import { render, DOWN_ARROW, ENTER_KEY } from 'tests/utils';
 import Accounts from '..';
 
 Object.defineProperty(window, 'matchMedia', {
@@ -268,6 +268,13 @@ describe('<Accounts />', () => {
     fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'Password0' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'Password0' } });
+
+    const role = getByLabelText('Role');
+    fireEvent.keyDown(role, DOWN_ARROW);
+    // await waitForElement(() => getByText('SuperUser', { selector: 'div' }));
+    fireEvent.keyDown(role, ENTER_KEY);
+    // fireEvent.click(getByText('SuperUser', { selector: 'div' }));
+
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {

@@ -94,7 +94,6 @@ const AppLayout = ({
 AppLayout.propTypes = {
   children: PropTypes.node.isRequired,
   onLogout: PropTypes.func.isRequired,
-
   menuItems: PropTypes.instanceOf(Array),
   mobileMenuItems: PropTypes.instanceOf(Array),
   totalAlarms: PropTypes.number,

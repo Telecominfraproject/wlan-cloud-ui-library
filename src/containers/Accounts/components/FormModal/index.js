@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Select, Typography } from 'antd';
 
+import ContainedSelect from 'components/ContainedSelect';
+
 import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
@@ -29,7 +31,6 @@ const FormModal = ({
 
   useEffect(() => {
     if (visible) {
-      // eslint-disable-next-line no-return-assign
       form.resetFields();
       form.setFieldsValue({
         email: data?.email,
@@ -62,14 +63,14 @@ const FormModal = ({
       </Item>
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
-        <Select
+        <ContainedSelect
           placeholder="Select role"
           getPopupContainer={triggerNode => triggerNode.parentElement}
         >
           {allUserRoles.map(i => (
             <Option value={i}>{i}</Option>
           ))}
-        </Select>
+        </ContainedSelect>
       </Item>
 
       {extraFields?.map(field => (
