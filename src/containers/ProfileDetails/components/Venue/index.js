@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Select, Form, Button, Table } from 'antd';
+import { Card, Form, Table, Select as AntdSelect } from 'antd';
+import { Select, RoleProtectedBtn } from 'components/WithRoles';
 import { DeleteOutlined } from '@ant-design/icons';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const VenueForm = ({ form, details, handleOnFormChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -63,7 +64,7 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button
+        <RoleProtectedBtn
           title="remove"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
@@ -222,9 +223,9 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Venue Name"
         extra={
-          <Button type="solid" onClick={() => setModalVisible(true)}>
+          <RoleProtectedBtn type="solid" onClick={() => setModalVisible(true)}>
             Add Name
-          </Button>
+          </RoleProtectedBtn>
         }
       >
         <Item noStyle name="venueNameSet">

@@ -8,6 +8,7 @@ import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import Header from 'components/Header';
 import Modal from 'components/Modal';
+import WithRoles from 'components/WithRoles';
 import ThemeContext from 'contexts/ThemeContext';
 import { getLocationPath } from 'utils/locations';
 import { useHistory } from 'hooks';
@@ -43,6 +44,7 @@ const AccessPointDetails = ({
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
+  showFirmware,
   avatar,
 }) => {
   const TAB_LIST = [
@@ -62,10 +64,14 @@ const AccessPointDetails = ({
       key: 'os',
       tab: 'OS Stats',
     },
-    {
-      key: 'firmware',
-      tab: 'Firmware',
-    },
+    ...(showFirmware
+      ? [
+          {
+            key: 'firmware',
+            tab: 'Firmware',
+          },
+        ]
+      : []),
     ...extraTabs.map(extraTab => {
       return {
         key: extraTab.key,
@@ -148,16 +154,18 @@ const AccessPointDetails = ({
         </div>
         <div className={styles.HeaderDiv}>
           <div className={styles.troubleshootBtnsDiv}>{extraButtons}</div>
-          <DeleteButton
-            showText
-            isDanger
-            onSuccess={handleDeleteEquipment}
-            content={
-              <p>
-                Are you sure you want to delete this access point: <strong>{data.name}</strong>?
-              </p>
-            }
-          />
+          <WithRoles>
+            <DeleteButton
+              showText
+              isDanger
+              onSuccess={handleDeleteEquipment}
+              content={
+                <p>
+                  Are you sure you want to delete this access point: <strong>{data.name}</strong>?
+                </p>
+              }
+            />
+          </WithRoles>
         </div>
       </Header>
       <Card
@@ -273,6 +281,7 @@ AccessPointDetails.propTypes = {
   ),
   extraGeneralCards: PropTypes.node,
   showStatusAlarms: PropTypes.bool,
+  showFirmware: PropTypes.bool,
   avatar: PropTypes.node,
 };
 
@@ -292,6 +301,7 @@ AccessPointDetails.defaultProps = {
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,
+  showFirmware: true,
   avatar: null,
 };
 

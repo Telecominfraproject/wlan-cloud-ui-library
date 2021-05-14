@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Card, notification, Select } from 'antd';
+import { Form, Card, notification, Select } from 'antd';
+import WithRoles, { Input } from 'components/WithRoles';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
@@ -232,12 +233,14 @@ const ProfileDetails = ({
           </Button>
           <h1>{`Edit ${name}`}</h1>
         </div>
-        <div className={styles.HeaderDiv}>
-          <div className={styles.HeaderButton}>{extraButtons}</div>
-          <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
-            Save
-          </Button>
-        </div>
+        <WithRoles>
+          <div className={styles.HeaderDiv}>
+            <div className={styles.HeaderButton}>{extraButtons}</div>
+            <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
+              Save
+            </Button>
+          </div>
+        </WithRoles>
       </Header>
 
       <Form

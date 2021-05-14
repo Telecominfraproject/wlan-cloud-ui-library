@@ -1,18 +1,28 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Table, Collapse, Select, notification, Alert, Empty } from 'antd';
+import {
+  Card,
+  Form,
+  Table,
+  Collapse,
+  Select as AntdSelect,
+  notification,
+  Alert,
+  Empty,
+} from 'antd';
+import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
 
-import Button from 'components/Button';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
 
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
 const { Panel } = Collapse;
+
+const { Option } = AntdSelect;
 
 const General = ({
   data,
@@ -363,10 +373,16 @@ const General = ({
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
       <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary" name="save">
+        <RoleProtectedBtn
+          className={styles.saveButton}
+          onClick={handleOnSave}
+          type="primary"
+          name="save"
+        >
           Save
-        </Button>
+        </RoleProtectedBtn>
       </div>
+
       <Card title="Identity">
         <Item
           label="Access Point Name"

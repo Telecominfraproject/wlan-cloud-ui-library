@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select } from 'antd';
+import { Card, Form, Select as AntdSelect } from 'antd';
 import Button from 'components/Button';
 import { pageLayout } from 'utils/form';
+import WithRoles, { Select } from 'components/WithRoles';
 import styles from '../../index.module.scss';
 
-const { Option } = Select;
 const { Item } = Form;
+const { Option } = AntdSelect;
 
 const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }) => {
   const [form] = Form.useForm();
@@ -113,11 +114,13 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange }
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-      <div className={styles.InlineEndDiv}>
-        <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
-          Save
-        </Button>
-      </div>
+      <WithRoles>
+        <div className={styles.InlineEndDiv}>
+          <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
+            Save
+          </Button>
+        </div>
+      </WithRoles>
 
       <Card title="Location">
         <Form.List name="locations">

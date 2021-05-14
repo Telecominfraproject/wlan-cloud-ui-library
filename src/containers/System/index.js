@@ -8,7 +8,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 const { TabPane } = Tabs;
 
-const System = ({ hasCustomer, children }) => {
+const System = ({ hasCustomer, children, showsFirmware }) => {
   const { routes } = useContext(ThemeContext);
   const location = useLocation();
   const history = useHistory();
@@ -31,7 +31,7 @@ const System = ({ hasCustomer, children }) => {
           <TabPane tab="Device Manufacturer" key="manufacturer" />
           {hasCustomer && (
             <>
-              <TabPane tab="Firmware" key="firmware" />
+              {showsFirmware && <TabPane tab="Firmware" key="firmware" />}
               <TabPane tab="Auto-Provisioning" key="autoprovision" />
               <TabPane tab="Client Blocked List" key="blockedlist" />
             </>
@@ -46,10 +46,12 @@ const System = ({ hasCustomer, children }) => {
 System.propTypes = {
   hasCustomer: PropTypes.bool,
   children: PropTypes.node.isRequired,
+  showsFirmware: PropTypes.bool,
 };
 
 System.defaultProps = {
   hasCustomer: true,
+  showsFirmware: true,
 };
 
 export default System;

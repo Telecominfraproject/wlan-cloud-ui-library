@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Table } from 'antd';
-import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
+
 import FormModal from '../FormModal';
 import styles from '../../../index.module.scss';
 
@@ -65,7 +66,7 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
     {
       width: 64,
       render: (_, record) => (
-        <Button
+        <RoleProtectedBtn
           className={styles.InfoButton}
           title={`edit-${record.username}`}
           type="primary"
@@ -77,24 +78,25 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
         />
       ),
     },
-
     {
       width: 64,
       render: (_, record) => (
-        <DeleteButton
-          title={`delete-${record.username}`}
-          className={styles.InfoButton}
-          type="primary"
-          extraOnClick={() => {
-            setActiveUser({ ...record });
-          }}
-          onSuccess={deleteUser}
-          content={
-            <p>
-              Are you sure you want to delete the user: <strong> {activeUser.username}</strong>?
-            </p>
-          }
-        />
+        <WithRoles>
+          <DeleteButton
+            title={`delete-${record.username}`}
+            className={styles.InfoButton}
+            type="primary"
+            extraOnClick={() => {
+              setActiveUser({ ...record });
+            }}
+            onSuccess={deleteUser}
+            content={
+              <p>
+                Are you sure you want to delete the user: <strong> {activeUser.username}</strong>?
+              </p>
+            }
+          />
+        </WithRoles>
       ),
     },
   ];
@@ -120,7 +122,7 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
       />
       <Card
         title="User List"
-        extra={<Button onClick={() => setAddUserModal(true)}> Add User</Button>}
+        extra={<RoleProtectedBtn onClick={() => setAddUserModal(true)}> Add User</RoleProtectedBtn>}
       >
         <Table rowKey="username" columns={columns} dataSource={userList} pagination={false} />
       </Card>

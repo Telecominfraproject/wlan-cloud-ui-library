@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form, Input, Select, Typography } from 'antd';
 
-import Modal from 'components/Modal';
 import ContainedSelect from 'components/ContainedSelect';
+
+import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 
@@ -20,18 +21,21 @@ const FormModal = ({
   onSubmit,
   visible,
   title,
-  userEmail,
-  userRole,
-  userId,
+  data,
   isAuth0Enabled,
   onResetUserPassword,
+  allUserRoles,
+  extraFields,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (visible) {
       form.resetFields();
-      form.setFieldsValue({ email: userEmail, roles: userRole });
+      form.setFieldsValue({
+        email: data?.email,
+        roles: data?.roles,
+      });
     }
   }, [visible]);
 
@@ -52,18 +56,29 @@ const FormModal = ({
         ]}
       >
         {isAuth0Enabled && title === 'Edit User' ? (
-          <Text>{userEmail}</Text>
+          <Text>{data?.email}</Text>
         ) : (
           <Input className={styles.field} />
         )}
       </Item>
 
       <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
-        <ContainedSelect placeholder="Select role">
-          <Option value="SuperUser">SuperUser</Option>
-          <Option value="CustomerIT">CustomerIT</Option>
+        <ContainedSelect
+          placeholder="Select role"
+          getPopupContainer={triggerNode => triggerNode.parentElement}
+        >
+          {allUserRoles.map(i => (
+            <Option value={i}>{i}</Option>
+          ))}
         </ContainedSelect>
       </Item>
+
+      {extraFields?.map(field => (
+        <Item name={field.name} label={field.label} {...field}>
+          {field.component}
+        </Item>
+      ))}
+
       {!isAuth0Enabled && (
         <>
           <Item
@@ -117,7 +132,7 @@ const FormModal = ({
       )}
       {isAuth0Enabled && title === 'Edit User' && (
         <Item label="Password">
-          <Button onClick={() => onResetUserPassword(userId)}>Reset Password</Button>
+          <Button onClick={() => onResetUserPassword(data?.id)}>Reset Password</Button>
         </Item>
       )}
     </Form>
@@ -127,8 +142,8 @@ const FormModal = ({
     form
       .validateFields()
       .then(values => {
-        form.resetFields();
         onSubmit(values);
+        form.resetFields();
       })
       .catch(() => {});
   };
@@ -145,24 +160,24 @@ const FormModal = ({
 };
 
 FormModal.propTypes = {
-  onCancel: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
-  userEmail: PropTypes.string,
-  userRole: PropTypes.string,
-  userId: PropTypes.string,
+  data: PropTypes.instanceOf(Object),
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
+  allUserRoles: PropTypes.instanceOf(Array),
+  extraFields: PropTypes.instanceOf(Object),
 };
 
 FormModal.defaultProps = {
   title: '',
-  userEmail: '',
-  userRole: 'CustomerIT',
-  userId: '',
+  data: {},
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
+  allUserRoles: ['SuperUser', 'CustomerIT'],
+  extraFields: null,
 };
 
 export default FormModal;

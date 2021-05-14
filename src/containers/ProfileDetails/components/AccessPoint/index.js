@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Table, Empty, List } from 'antd';
+import { Card, Form, Radio, Select as AntdSelect, Table, Empty, List } from 'antd';
+import WithRoles, {
+  RadioGroup as Group,
+  Select,
+  Input,
+  Checkbox,
+  RoleProtectedBtn,
+  Search,
+} from 'components/WithRoles';
 import { DeleteFilled } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -13,7 +21,11 @@ import { defaultApProfile } from '../constants';
 
 import FormModal from './components/FormModal';
 
+const { Item } = Form;
+const { Option } = AntdSelect;
+
 const MAX_GRE_TUNNELS = 1;
+
 const AccessPointForm = ({
   form,
   details,
@@ -27,8 +39,6 @@ const AccessPointForm = ({
   handleOnFormChange,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
-  const { Item } = Form;
-  const { Option } = Select;
 
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
@@ -130,7 +140,7 @@ const AccessPointForm = ({
       title: '',
       width: 80,
       render: (_, record) => (
-        <Button
+        <RoleProtectedBtn
           title="removeSsid"
           icon={<DeleteFilled />}
           onClick={() => handleRemoveSsid(record?.id)}
@@ -157,7 +167,7 @@ const AccessPointForm = ({
       title: '',
       width: 80,
       render: item => (
-        <Button
+        <RoleProtectedBtn
           title="removeGre"
           icon={<DeleteFilled />}
           onClick={() => {
@@ -169,10 +179,10 @@ const AccessPointForm = ({
   ];
 
   const enabledRadioOptions = () => (
-    <Radio.Group>
+    <Group>
       <Radio value="false">Disabled</Radio>
       <Radio value="true">Enabled</Radio>
-    </Radio.Group>
+    </Group>
   );
 
   const filteredOptions = ssidProfiles.filter(
@@ -330,7 +340,7 @@ const AccessPointForm = ({
                     validateStatus={ntpServerValidation.status}
                     help={ntpServerValidation.help}
                   >
-                    <Input.Search
+                    <Search
                       placeholder="Enter NTP server..."
                       enterButton="Add"
                       onSearch={handleOnAddServer}
@@ -378,10 +388,10 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group disabled>
+          <Group disabled>
             <Radio value="false">Disabled</Radio>
             <Radio value="true">Enabled</Radio>
-          </Radio.Group>
+          </Group>
         </Item>
         <Item
           noStyle
@@ -455,10 +465,10 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <Group>
             <Radio value="false">Disabled</Radio>
             <Radio value="true">Enabled</Radio>
-          </Radio.Group>
+          </Group>
         </Item>
         <Item
           noStyle
@@ -613,19 +623,24 @@ const AccessPointForm = ({
       <Card
         title="GRE Tunnel Configuration"
         extra={
-          <>
-            {greList.length >= MAX_GRE_TUNNELS && (
-              <Tooltip className={styles.ToolTip} title={`Maximum ${MAX_GRE_TUNNELS} GRE Tunnel`} />
-            )}
-            <Button
-              type="solid"
-              onClick={() => setGreModalVisible(true)}
-              data-testid="addGre"
-              disabled={greList.length >= MAX_GRE_TUNNELS}
-            >
-              Add
-            </Button>
-          </>
+          <WithRoles>
+            <>
+              {greList.length >= MAX_GRE_TUNNELS && (
+                <Tooltip
+                  className={styles.ToolTip}
+                  title={`Maximum ${MAX_GRE_TUNNELS} GRE Tunnel`}
+                />
+              )}
+              <Button
+                type="solid"
+                onClick={() => setGreModalVisible(true)}
+                data-testid="addGre"
+                disabled={greList.length >= MAX_GRE_TUNNELS}
+              >
+                Add
+              </Button>
+            </>
+          </WithRoles>
         }
       >
         <Table

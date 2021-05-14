@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Checkbox, Radio, Select, Empty } from 'antd';
+import { Form, Card, Radio, Checkbox, Empty, Select as AntdSelect } from 'antd';
+import { Input, Password, Select, RadioGroup, CheckboxGroup } from 'components/WithRoles';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -10,7 +11,8 @@ import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
-const { Option } = Select;
+
+const { Option } = AntdSelect;
 
 const SSIDForm = ({
   form,
@@ -160,10 +162,10 @@ const SSIDForm = ({
             },
           ]}
         >
-          <Radio.Group>
+          <RadioGroup>
             <Radio value="enabled">Show SSID</Radio>
             <Radio value="disabled">Hide SSID</Radio>
-          </Radio.Group>
+          </RadioGroup>
         </Item>
 
         <Item label="Client Rate Limit">
@@ -236,13 +238,13 @@ const SSIDForm = ({
         </Item>
 
         <Item name="appliedRadios" label="Use On">
-          <Checkbox.Group>
+          <CheckboxGroup>
             {Object.keys(radioTypes || [])?.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
             ))}
-          </Checkbox.Group>
+          </CheckboxGroup>
         </Item>
       </Card>
       <Card title="Network Connectivity">
@@ -271,7 +273,7 @@ const SSIDForm = ({
             </span>
           }
         >
-          <Radio.Group>
+          <RadioGroup>
             <Radio value="BRIDGE" defaultSelected>
               Bridge
             </Radio>
@@ -283,7 +285,7 @@ const SSIDForm = ({
             >
               NAT
             </Radio>
-          </Radio.Group>
+          </RadioGroup>
         </Item>
 
         <Item
@@ -307,10 +309,10 @@ const SSIDForm = ({
                   }
                 >
                   {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                    <Radio.Group>
+                    <RadioGroup>
                       <Radio value="false">Allow Local Access</Radio>
                       <Radio value="true">No Local Access</Radio>
-                    </Radio.Group>
+                    </RadioGroup>
                   ) : (
                     <span className={styles.Disclaimer}>Not Applicable</span>
                   )}
@@ -318,10 +320,10 @@ const SSIDForm = ({
 
                 <Item label="Captive Portal" name="captivePortal">
                   {getFieldValue('forwardMode') === 'NAT' ? (
-                    <Radio.Group>
+                    <RadioGroup>
                       <Radio value="notPortal">Do Not Use</Radio>
                       <Radio value="usePortal">Use</Radio>
-                    </Radio.Group>
+                    </RadioGroup>
                   ) : (
                     <span className={styles.Disclaimer}>Not Applicable</span>
                   )}
@@ -530,7 +532,7 @@ const SSIDForm = ({
             ]}
             hasFeedback
           >
-            <Input.Password
+            <Password
               visibilityToggle
               className={globalStyles.field}
               placeholder="8-63 characters"

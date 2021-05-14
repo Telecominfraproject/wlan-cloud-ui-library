@@ -7,6 +7,8 @@ import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
+
 import styles from './index.module.scss';
 import FormModal from './components/FormModal';
 
@@ -20,6 +22,8 @@ const Accounts = ({
   onLoadMore,
   isLastPage,
   isAuth0Enabled,
+  allUserRoles,
+  extraFields,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -30,14 +34,14 @@ const Accounts = ({
     onDeleteUser(id);
   };
 
-  const addUser = ({ email, roles, password }) => {
-    onCreateUser(email, password, roles);
+  const addUser = ({ email, roles, password, ...extra }) => {
+    onCreateUser({ email, password, roles, ...extra });
     setAddModal(false);
   };
 
-  const editUser = ({ email, roles, password }) => {
+  const editUser = ({ email, roles, password, ...extra }) => {
     const { id, lastModifiedTimestamp } = activeUser;
-    onEditUser(id, email, password, roles, lastModifiedTimestamp);
+    onEditUser({ id, email, password, roles, lastModifiedTimestamp, ...extra });
     setEditModal(false);
   };
 
@@ -60,7 +64,7 @@ const Accounts = ({
       key: 'edit',
       width: 64,
       render: (_, record) => (
-        <Button
+        <RoleProtectedBtn
           title={`edit-${record.email}`}
           className={styles.InfoButton}
           type="primary"
@@ -80,21 +84,23 @@ const Accounts = ({
       width: 64,
       render: (_, record) =>
         currentUserId?.toString() !== record.id && (
-          <DeleteButton
-            className={styles.InfoButton}
-            title={`delete-${record.email}`}
-            extraOnClick={() => {
-              setActiveUser({
-                ...record,
-              });
-            }}
-            onSuccess={deleteUser}
-            content={
-              <p>
-                Are you sure you want to delete the User: <strong>{activeUser.email}</strong>?
-              </p>
-            }
-          />
+          <WithRoles>
+            <DeleteButton
+              className={styles.InfoButton}
+              title={`delete-${record.email}`}
+              extraOnClick={() => {
+                setActiveUser({
+                  ...record,
+                });
+              }}
+              onSuccess={deleteUser}
+              content={
+                <p>
+                  Are you sure you want to delete the User: <strong>{activeUser.email}</strong>?
+                </p>
+              }
+            />
+          </WithRoles>
         ),
     },
   ];
@@ -103,9 +109,9 @@ const Accounts = ({
     <Container>
       <Header>
         <h1>Users</h1>
-        <Button title="addaccount" type="primary" onClick={() => setAddModal(true)}>
+        <RoleProtectedBtn title="addaccount" type="primary" onClick={() => setAddModal(true)}>
           Add User
-        </Button>
+        </RoleProtectedBtn>
       </Header>
 
       <FormModal
@@ -113,11 +119,11 @@ const Accounts = ({
         visible={editModal}
         onSubmit={editUser}
         title="Edit User"
-        userRole={activeUser?.roles?.[0]}
-        userEmail={activeUser.email}
-        userId={activeUser?.id}
+        data={activeUser}
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
+        allUserRoles={allUserRoles}
+        extraFields={extraFields}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
@@ -125,6 +131,8 @@ const Accounts = ({
         onSubmit={addUser}
         title="Add User"
         isAuth0Enabled={isAuth0Enabled}
+        allUserRoles={allUserRoles}
+        extraFields={extraFields}
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
@@ -146,6 +154,8 @@ Accounts.propTypes = {
   isLastPage: PropTypes.bool,
   currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
+  allUserRoles: PropTypes.instanceOf(Array),
+  extraFields: PropTypes.instanceOf(Object),
 };
 
 Accounts.defaultProps = {
@@ -155,6 +165,8 @@ Accounts.defaultProps = {
   isLastPage: true,
   currentUserId: null,
   isAuth0Enabled: false,
+  allUserRoles: ['SuperUser', 'CustomerIT'],
+  extraFields: null,
 };
 
 export default Accounts;

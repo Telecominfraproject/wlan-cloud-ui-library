@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select, Switch, Table, Spin, Alert } from 'antd';
+import { Card, Form, Select as AntdSelect, Table, Spin, Alert } from 'antd';
+import WithRoles, { Switch, Select, RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -12,7 +13,7 @@ import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const AutoProvision = ({
   data,
@@ -129,7 +130,7 @@ const AutoProvision = ({
       key: 'editModel',
       width: 60,
       render: (_, record) => (
-        <Button
+        <RoleProtectedBtn
           title={`edit-model-${record.model}`}
           className={styles.InfoButton}
           type="primary"
@@ -141,6 +142,7 @@ const AutoProvision = ({
         />
       ),
     },
+
     {
       title: '',
       dataIndex: '',
@@ -148,19 +150,21 @@ const AutoProvision = ({
       width: 60,
       render: (_, record) => {
         return record.model !== 'default' ? (
-          <DeleteButton
-            className={styles.InfoButton}
-            title={`delete-model-${record.model}`}
-            extraOnClick={() => {
-              setActiveModel({ ...record });
-            }}
-            onSuccess={deleteModel}
-            content={
-              <p>
-                Are you sure you want to delete the model: <strong>{activeModel.model}</strong>?
-              </p>
-            }
-          />
+          <WithRoles>
+            <DeleteButton
+              className={styles.InfoButton}
+              title={`delete-model-${record.model}`}
+              extraOnClick={() => {
+                setActiveModel({ ...record });
+              }}
+              onSuccess={deleteModel}
+              content={
+                <p>
+                  Are you sure you want to delete the model: <strong>{activeModel.model}</strong>?
+                </p>
+              }
+            />
+          </WithRoles>
         ) : null;
       },
     },
@@ -211,11 +215,13 @@ const AutoProvision = ({
               unCheckedChildren="Disabled"
             />
           </Item>
-          <div>
-            <Button type="primary" onClick={onSubmit}>
-              Save
-            </Button>
-          </div>
+          <WithRoles>
+            <div>
+              <Button type="primary" onClick={onSubmit}>
+                Save
+              </Button>
+            </div>
+          </WithRoles>
         </div>
 
         {enabled && (
@@ -257,7 +263,9 @@ const AutoProvision = ({
 
             <Card
               title="Target Equipment Profiles"
-              extra={<Button onClick={() => setAddModal(true)}>Add Model</Button>}
+              extra={
+                <RoleProtectedBtn onClick={() => setAddModal(true)}>Add Model</RoleProtectedBtn>
+              }
             >
               <div className={styles.Content}>
                 <Table rowKey="model" columns={columns} dataSource={tableData} pagination={false} />

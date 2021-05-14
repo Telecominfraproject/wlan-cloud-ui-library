@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Button, Table } from 'antd';
+import { Card, Form, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
+import { Input, RoleProtectedBtn } from 'components/WithRoles';
 import { modalLayout } from 'utils/form';
+
 import OsuForm from './components/OsuForm';
 import NaiRealm from './components/NaiRealm';
 
@@ -68,10 +70,18 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       dataIndex: 'mnc',
     },
     {
+      title: 'Country',
+      dataIndex: 'country',
+    },
+    {
+      title: 'Network',
+      dataIndex: 'network',
+    },
+    {
       title: '',
       width: 80,
       render: item => (
-        <Button
+        <RoleProtectedBtn
           title="removePlmn"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
@@ -170,9 +180,9 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       <Card
         title="Public Land Mobile Networks (PLMN)"
         extra={
-          <Button type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
+          <RoleProtectedBtn type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
             Add
-          </Button>
+          </RoleProtectedBtn>
         }
       >
         <Table dataSource={mccMncList} columns={columnsPlmn} pagination={false} rowKey="mcc" />

@@ -7,6 +7,7 @@ import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Loading from 'components/Loading';
 import Modal from 'components/Modal';
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import { pageLayout } from 'utils/form';
 import styles from '../../index.module.scss';
@@ -131,16 +132,19 @@ const Firmware = ({
         buttonText="Confirm"
       />
       <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
-        <div className={styles.InlineEndDiv}>
-          <Button
-            className={styles.saveButton}
-            onClick={handleOnReboot}
-            name="reboot"
-            disabled={getRebootStatus()}
-          >
-            Reboot AP
-          </Button>
-        </div>
+        <WithRoles>
+          <div className={styles.InlineEndDiv}>
+            <Button
+              className={styles.saveButton}
+              onClick={handleOnReboot}
+              name="reboot"
+              disabled={getRebootStatus()}
+            >
+              Reboot AP
+            </Button>
+          </div>
+        </WithRoles>
+
         <Card title="Firmware">
           <Item label="Active Version">
             {status.activeSwVersion}
@@ -151,62 +155,64 @@ const Firmware = ({
 
           <Item label="Inactive Version">
             {status.alternateSwVersion}
-            <Button
+            <RoleProtectedBtn
               className={styles.UpgradeState}
               icon={<LoginOutlined />}
               onClick={handleOnSwitchInactiveBank}
               disabled={status.alternateSwVersion === status.activeSwVersion}
             >
               Switch to Inactive Bank and Reboot
-            </Button>
+            </RoleProtectedBtn>
           </Item>
         </Card>
-        <Card title="Upgrade">
-          <Item label="Target Version">
-            <div className={styles.InlineDiv}>
-              <Item name="targetVersion">
-                <Select
-                  className={styles.Field}
-                  onChange={handleOnChangeVersion}
-                  placeholder="Select a version to apply..."
-                >
-                  {Object.keys(firmware).map(i => (
-                    <Option key={firmware[i].id} value={firmware[i].id}>
-                      {firmware[i].versionName}
-                    </Option>
-                  ))}
-                </Select>
-              </Item>
-              <Item noStyle>
-                <Button
-                  icon={<DownloadOutlined />}
-                  disabled={!version || version.id === data?.status?.firmware?.id}
-                  onClick={handleOnDownload}
-                >
-                  Download, Flash, and Reboot
-                </Button>
-              </Item>
-            </div>
-          </Item>
-
-          {version && (
-            <Item wrapperCol={{ offset: 5, span: 15 }}>
-              <TextArea
-                readOnly
-                rows={6}
-                value={
-                  `Version:  ${`${version.versionName.replace(/-([^-]*)$/, '($1')})`}  \n` +
-                  `Release Date:  ${moment(version.releaseDate, 'x').format(
-                    'DD MMM YYYY, hh:mm a'
-                  )} \n` +
-                  `Device:  ${version.modelId} \n` +
-                  `\n` +
-                  `Release Notes:  ${version.description}`
-                }
-              />
+        <WithRoles>
+          <Card title="Upgrade">
+            <Item label="Target Version">
+              <div className={styles.InlineDiv}>
+                <Item name="targetVersion">
+                  <Select
+                    className={styles.Field}
+                    onChange={handleOnChangeVersion}
+                    placeholder="Select a version to apply..."
+                  >
+                    {Object.keys(firmware).map(i => (
+                      <Option key={firmware[i].id} value={firmware[i].id}>
+                        {firmware[i].versionName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Item>
+                <Item noStyle>
+                  <Button
+                    icon={<DownloadOutlined />}
+                    disabled={!version || version.id === data?.status?.firmware?.id}
+                    onClick={handleOnDownload}
+                  >
+                    Download, Flash, and Reboot
+                  </Button>
+                </Item>
+              </div>
             </Item>
-          )}
-        </Card>
+
+            {version && (
+              <Item wrapperCol={{ offset: 5, span: 15 }}>
+                <TextArea
+                  readOnly
+                  rows={6}
+                  value={
+                    `Version:  ${`${version.versionName.replace(/-([^-]*)$/, '($1')})`}  \n` +
+                    `Release Date:  ${moment(version.releaseDate, 'x').format(
+                      'DD MMM YYYY, hh:mm a'
+                    )} \n` +
+                    `Device:  ${version.modelId} \n` +
+                    `\n` +
+                    `Release Notes:  ${version.description}`
+                  }
+                />
+              </Item>
+            )}
+          </Card>
+        </WithRoles>
       </Form>
     </>
   );

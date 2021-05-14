@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Alert, Upload, Input, Form, message, Spin } from 'antd';
+import { Search } from 'components/WithRoles';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
+
+import { useRoles } from 'contexts/RolesContext';
 
 import styles from './index.module.scss';
 
@@ -18,6 +21,7 @@ const layout = {
 };
 
 const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadingFileUpload }) => {
+  const { isReadOnly } = useRoles();
   const [form] = Form.useForm();
   const [cancel, setCancel] = useState(false);
   const [ouiFileList, setOUIFileList] = useState([]);
@@ -112,7 +116,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
                 data-testid="ouiUpload"
                 disabled={loadingFileUpload}
               >
-                <Button disabled={loadingFileUpload} icon={<UploadOutlined />}>
+                <Button disabled={loadingFileUpload || isReadOnly} icon={<UploadOutlined />}>
                   Select File to Import...
                 </Button>
               </Upload>
@@ -121,7 +125,7 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
           </Card>
           <Card title="Set a Manufacturer Alias">
             <Item name="oui" label="OUI">
-              <Input.Search
+              <Search
                 placeholder="OUI String"
                 enterButton="Find"
                 maxLength={8}

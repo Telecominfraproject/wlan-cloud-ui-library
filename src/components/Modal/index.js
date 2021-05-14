@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal as AntdModal, Button } from 'antd';
+import { useRoles } from 'contexts/RolesContext';
 
 import styles from './index.module.scss';
 
@@ -14,6 +15,7 @@ const Modal = ({
   content,
   ...restProps
 }) => {
+  const { isReadOnly } = useRoles();
   return (
     <AntdModal
       className={styles.Modal}
@@ -23,12 +25,20 @@ const Modal = ({
       footer={
         <>
           <div className={styles.Buttons}>
-            <Button className={styles.Button} onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
-              {buttonText}
-            </Button>
+            {!isReadOnly ? (
+              <>
+                <Button className={styles.Button} onClick={onCancel}>
+                  Cancel
+                </Button>
+                <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
+                  {buttonText}
+                </Button>
+              </>
+            ) : (
+              <Button className={styles.Button} type="primary" onClick={onCancel}>
+                Close
+              </Button>
+            )}
           </div>
         </>
       }

@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Select } from 'antd';
+import { Card, Form, Select as AntdSelect } from 'antd';
+import { Input, Select } from 'components/WithRoles';
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';
@@ -8,7 +9,7 @@ import styles from '../index.module.scss';
 import { RADIOS } from '../../constants';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);

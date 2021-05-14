@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Switch, Form, Input, Button } from 'antd';
+import { Card, Form } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
+import { Switch, Input, RoleProtectedBtn } from 'components/WithRoles';
 import FormModal from '../FormModal';
 
 const { Item } = Form;
@@ -31,7 +32,7 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
     <Card
       title={
         <>
-          Online Sign Up (OSU){' '}
+          Online Sign Up (OSU)
           <Switch
             checkedChildren="Enabled"
             unCheckedChildren="Disabled"
@@ -66,9 +67,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Name:"
             bordered={false}
             extra={
-              <Button onClick={() => setNameModal(true)} data-testid="osuName">
+              <RoleProtectedBtn onClick={() => setNameModal(true)} data-testid="osuName">
                 Add
-              </Button>
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable
@@ -91,9 +92,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Description:"
             bordered={false}
             extra={
-              <Button onClick={() => setDescModal(true)} data-testid="osuDesc">
+              <RoleProtectedBtn onClick={() => setDescModal(true)} data-testid="osuDesc">
                 Add
-              </Button>
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable
@@ -116,9 +117,9 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             title="Icons:"
             bordered={false}
             extra={
-              <Button onClick={() => setIconModal(true)} data-testid="osuIcon">
+              <RoleProtectedBtn onClick={() => setIconModal(true)} data-testid="osuIcon">
                 Add
-              </Button>
+              </RoleProtectedBtn>
             }
           >
             <PasspointLocaleTable

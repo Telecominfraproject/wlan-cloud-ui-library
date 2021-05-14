@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Input } from 'antd';
+import { Form, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import { Input, Password, RoleProtectedBtn } from 'components/WithRoles';
 
 import { IP_REGEX } from 'containers/ProfileDetails/constants';
 import styles from '../index.module.scss';
@@ -98,7 +99,7 @@ const RadiusForm = ({ form, details }) => {
                       },
                     ]}
                   >
-                    <Input.Password
+                    <Password
                       className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`authenticationSecret${field.name}`}
@@ -212,7 +213,7 @@ const RadiusForm = ({ form, details }) => {
                       },
                     ]}
                   >
-                    <Input.Password
+                    <Password
                       className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`accountingSecret${field.name}`}
@@ -249,7 +250,7 @@ const RadiusForm = ({ form, details }) => {
                     />
                   </Item>
 
-                  <Button
+                  <RoleProtectedBtn
                     className={styles.RadiusDelete}
                     type="danger"
                     onClick={() => {
@@ -258,7 +259,7 @@ const RadiusForm = ({ form, details }) => {
                     data-testid={`accountingDelete${field.name}`}
                   >
                     Remove
-                  </Button>
+                  </RoleProtectedBtn>
                 </div>
               ))}
             </Card>

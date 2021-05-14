@@ -21,6 +21,8 @@ export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
 export { default as NetworkTableContainer } from 'containers/NetworkTableContainer';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
+export { default as RolesProvider } from 'contexts/RolesProvider';
+export { useRoles } from 'contexts/RolesContext';
 
 export { default as RouteWithLayout } from 'components/RouteWithLayout';
 export { default as NetworkTable } from 'components/NetworkTable';
@@ -38,6 +40,9 @@ export { default as DeleteButton } from 'components/DeleteButton';
 export { default as Tooltip } from 'components/Tooltip';
 export { default as LineGraphTooltip } from 'components/GraphTooltips/LineGraphTooltip';
 export { default as PieGraphTooltip } from 'components/GraphTooltips/PieGraphTooltip';
+
+export { default as WithRoles } from 'components/WithRoles';
+export { Input, Select, Switch, RoleProtectedBtn } from 'components/WithRoles';
 
 export { useHistory, useChartLegend, useChartHover } from 'hooks';
 

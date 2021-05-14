@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import {
   Card,
   Form,
-  Input,
   Radio,
-  Select,
-  Upload,
+  Select as AntdSelect,
   Alert,
   Collapse,
   message,
@@ -14,18 +12,28 @@ import {
   Empty,
   Modal,
 } from 'antd';
+import {
+  Select,
+  Input,
+  Search,
+  Upload,
+  RadioGroup as Group,
+  TextArea,
+  RoleProtectedBtn,
+} from 'components/WithRoles';
+
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+
 import globalStyles from 'styles/index.scss';
 import Users from './components/Users';
 import styles from '../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
 const { Panel } = Collapse;
-const { TextArea } = Input;
+const { Option } = AntdSelect;
 
 const CaptivePortalForm = ({
   details,
@@ -390,14 +398,14 @@ const CaptivePortalForm = ({
           <Input className={globalStyles.field} placeholder="http://... or https://..." />
         </Item>
         <Item label="Splash Page" name="externalSplashPage">
-          <Radio.Group>
+          <Group>
             <Radio value="false" onChange={disableExternalSplashChange}>
               Access Point Hosted
             </Radio>
             <Radio value="true" disabled onChange={() => setExternalSplash(true)}>
               Externally Hosted
             </Radio>
-          </Radio.Group>
+          </Group>
         </Item>
       </Card>
 
@@ -664,7 +672,7 @@ const CaptivePortalForm = ({
             validateStatus={whitelistValidation.status}
             help={whitelistValidation.help}
           >
-            <Input.Search
+            <Search
               placeholder="Hostname..."
               enterButton="Add"
               value={whitelistSearch}
@@ -681,9 +689,9 @@ const CaptivePortalForm = ({
               renderItem={item => (
                 <List.Item
                   extra={
-                    <Button type="danger" onClick={() => handleDeleteWhitelist(item)}>
+                    <RoleProtectedBtn type="danger" onClick={() => handleDeleteWhitelist(item)}>
                       Remove
-                    </Button>
+                    </RoleProtectedBtn>
                   }
                 >
                   <List.Item.Meta title={item} />

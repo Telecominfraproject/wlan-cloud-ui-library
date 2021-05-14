@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import { Table } from 'antd';
 
-import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import Container from 'components/Container';
 import Header from 'components/Header';
 import ThemeContext from 'contexts/ThemeContext';
+
+import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
@@ -47,21 +48,23 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
       key: 'deleteMac',
       width: 60,
       render: (_, record) => (
-        <DeleteButton
-          className={styles.InfoButton}
-          title={`delete-mac-${record.macAddress}`}
-          extraOnClick={() => {
-            setActiveMac({ ...record });
-          }}
-          onSuccess={deleteClient}
-          content={
-            <p>
-              Are you sure you want to remove the Client: <strong>{activeMac.macAddress} </strong>
-              from the Blocked List?
-            </p>
-          }
-          modalButtonText="Remove"
-        />
+        <WithRoles>
+          <DeleteButton
+            className={styles.InfoButton}
+            title={`delete-mac-${record.macAddress}`}
+            extraOnClick={() => {
+              setActiveMac({ ...record });
+            }}
+            onSuccess={deleteClient}
+            content={
+              <p>
+                Are you sure you want to remove the Client: <strong>{activeMac.macAddress} </strong>
+                from the Blocked List?
+              </p>
+            }
+            modalButtonText="Remove"
+          />
+        </WithRoles>
       ),
     },
   ];
@@ -77,9 +80,10 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
       <div className={styles.BlockedList}>
         <Header>
           <h1>Client Blocked List</h1>
-          <Button type="primary" onClick={() => setAddModal(true)}>
+
+          <RoleProtectedBtn type="primary" onClick={() => setAddModal(true)}>
             Add Client
-          </Button>
+          </RoleProtectedBtn>
         </Header>
 
         <Table rowKey="macAddress" dataSource={data} columns={columns} pagination={false} />

@@ -1,16 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Cascader, Button, Table, Select, Input } from 'antd';
+import { Card, Form, Cascader, Table, Select as AntdSelect } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
-import ContainedSelect from 'components/ContainedSelect';
+import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
 
 const { Item } = Form;
-const { Option } = Select;
+const { Option } = AntdSelect;
 
 const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
   const [eapModal, setEapModal] = useState(false);
@@ -32,7 +32,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       title: '',
       width: 80,
       render: item => (
-        <Button
+        <RoleProtectedBtn
           title="removeEapMethod"
           icon={<DeleteOutlined />}
           className={styles.iconButton}
@@ -133,9 +133,9 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         title="Extensible Authentication (EAP) Methods:"
         bordered={false}
         extra={
-          <Button onClick={() => setEapModal(true)} data-testid="addEapMethod">
+          <RoleProtectedBtn onClick={() => setEapModal(true)} data-testid="addEapMethod">
             Add
-          </Button>
+          </RoleProtectedBtn>
         }
       >
         <Table
@@ -163,7 +163,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   },
                 ]}
               >
-                <ContainedSelect placeholder="Please select" data-testid="method">
+                <Select placeholder="Please select" data-testid="method">
                   <Option value="EAP-TLS with certificate" data-testid="eapCertificate">
                     EAP-TLS with certificate
                   </Option>
@@ -175,7 +175,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
                   </Option>
                   <Option value="EAP-AKA Authentication">EAP-AKA Authentication</Option>
                   <Option value="EAP-AKA'">EAP-AKA Prime</Option>
-                </ContainedSelect>
+                </Select>
               </Item>
               <Item
                 name="auth"
