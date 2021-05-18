@@ -61,6 +61,7 @@ const AddProfile = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
+  fileUpload,
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
@@ -108,7 +109,8 @@ const AddProfile = ({
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
               values.secureMode === 'wpa3MixedEAP') &&
-            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
+            values?.useRadiusProxy === 'false'
           ) {
             notification.error({
               message: 'Error',
@@ -136,6 +138,30 @@ const AddProfile = ({
             });
             return;
           }
+
+          const proxyEnabledProfiles = values.selectedSsidProfiles?.filter(
+            profile => profile?.details?.useRadiusProxy
+          );
+
+          if (proxyEnabledProfiles.length && !values.radiusProxyConfigurations?.length) {
+            notification.error({
+              message: 'Error',
+              description: (
+                <div>
+                  The following wireless networks have RADIUS Proxy enabled:
+                  <ul>
+                    {proxyEnabledProfiles.map(profile => (
+                      <li key={profile?.id}>{profile?.name}</li>
+                    ))}
+                  </ul>
+                  Please remove these wireless networks from this profile or configure a RADIUS
+                  Proxy.
+                </div>
+              ),
+            });
+            return;
+          }
+
           formattedData.childProfileIds.push(values.rfProfileId);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
@@ -316,6 +342,7 @@ const AddProfile = ({
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingSSIDProfiles={loadingSSIDProfiles}
               loadingRFProfiles={loadingRFProfiles}
+              fileUpload={fileUpload}
             />
           )}
           {profileType === PROFILES.bonjour && (
@@ -329,6 +356,7 @@ const AddProfile = ({
               onSearchProfile={onSearchProfile}
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
+              fileUpload={fileUpload}
             />
           )}
 
@@ -353,6 +381,7 @@ const AddProfile = ({
               loadingVenueProfiles={loadingVenueProfiles}
               loadingOperatorProfiles={loadingOperatorProfiles}
               loadingIdProviderProfiles={loadingIdProviderProfiles}
+              fileUpload={fileUpload}
             />
           )}
           {profileType === PROFILES.providerID && (
@@ -389,6 +418,7 @@ AddProfile.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  fileUpload: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
 };
 
@@ -410,6 +440,7 @@ AddProfile.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
+  fileUpload: () => {},
   extraFields: [],
 };
 

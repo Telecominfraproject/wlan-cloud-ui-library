@@ -46,7 +46,7 @@ const RadiusForm = ({ form, details }) => {
         {(fields, { add, remove }) => {
           return (
             <Card
-              title="Radius Authentication Server"
+              title="RADIUS Authentication Server"
               extra={
                 <>
                   {fields.length >= MAX_RADIUS && (
@@ -159,7 +159,7 @@ const RadiusForm = ({ form, details }) => {
         {(fields, { add, remove }) => {
           return (
             <Card
-              title="Radius Accounting Server"
+              title="RADIUS Accounting Server"
               bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
               extra={
                 <>

@@ -80,8 +80,13 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa3OnlyEAP' ||
     values.secureMode === 'wpa3MixedEAP'
   ) {
-    formattedData.childProfileIds.push(values.radiusServiceId.value);
-    formattedData.radiusServiceId = values.radiusServiceId.value;
+    if (!isBool(values.useRadiusProxy)) {
+      formattedData.childProfileIds.push(values.radiusServiceId.value);
+      formattedData.radiusServiceId = values.radiusServiceId.value;
+    } else {
+      formattedData.radiusServiceId = null;
+    }
+    formattedData.useRadiusProxy = isBool(values.useRadiusProxy);
   }
 
   if (
@@ -110,6 +115,42 @@ export const formatApProfileForm = values => {
   if (formattedData.ntpServer.auto) {
     formattedData.ntpServer.value = DEFAULT_NTP_SERVER;
   }
+
+  if (values.radiusProxyConfigurations?.length) {
+    formattedData.radiusProxyConfigurations = [];
+    values.radiusProxyConfigurations.forEach((config, index) => {
+      const useRadSec = isBool(config.useRadSec);
+
+      formattedData.radiusProxyConfigurations.push({
+        ...config,
+        useRadSec,
+        name: `ProxyConfiguration${index + 1}`,
+        caCert: useRadSec
+          ? {
+              apExportUrl: config.caCert.file.name,
+              fileType: 'PEM',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        clientCert: useRadSec
+          ? {
+              apExportUrl: config.clientCert.file.name,
+              fileType: 'PEM',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        clientKey: useRadSec
+          ? {
+              apExportUrl: config.clientKey.file.name,
+              fileType: 'KEY',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        passphrase: useRadSec ? config.passphrase : null,
+      });
+    });
+  }
+
   return formattedData;
 };
 

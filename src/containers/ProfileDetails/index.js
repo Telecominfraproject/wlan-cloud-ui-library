@@ -109,7 +109,8 @@ const ProfileDetails = ({
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
               values.secureMode === 'wpa3MixedEAP') &&
-            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
+            values?.useRadiusProxy === 'false'
           ) {
             notification.error({
               message: 'Error',
@@ -132,6 +133,29 @@ const ProfileDetails = ({
             notification.error({
               message: 'Error',
               description: 'At least 1 NTP Server is required.',
+            });
+            return;
+          }
+
+          const proxyEnabledProfiles = values.selectedSsidProfiles?.filter(
+            profile => profile?.details?.useRadiusProxy
+          );
+
+          if (proxyEnabledProfiles.length && !values.radiusProxyConfigurations?.length) {
+            notification.error({
+              message: 'Error',
+              description: (
+                <div>
+                  The following wireless networks have RADIUS Proxy enabled:
+                  <ul>
+                    {proxyEnabledProfiles.map(profile => (
+                      <li key={profile?.id}>{profile?.name}</li>
+                    ))}
+                  </ul>
+                  Please remove these wireless networks from this profile or configure a RADIUS
+                  Proxy.
+                </div>
+              ),
             });
             return;
           }
@@ -287,6 +311,7 @@ const ProfileDetails = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingSSIDProfiles={loadingSSIDProfiles}
             loadingRFProfiles={loadingRFProfiles}
+            fileUpload={fileUpload}
             handleOnFormChange={handleOnFormChange}
           />
         )}
