@@ -121,6 +121,7 @@ export const formatApProfileForm = values => {
     values.radiusProxyConfigurations.forEach((config, index) => {
       const useRadSec = isBool(config.useRadSec);
 
+      const { useAccounting } = config;
       formattedData.radiusProxyConfigurations.push({
         ...config,
         useRadSec,
@@ -147,6 +148,7 @@ export const formatApProfileForm = values => {
             }
           : null,
         passphrase: useRadSec ? config.passphrase : null,
+        ...(!useAccounting && { acctPort: null, acctServer: null, acctSharedSecret: null }),
       });
     });
   }

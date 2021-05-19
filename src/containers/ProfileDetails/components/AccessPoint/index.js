@@ -141,6 +141,7 @@ const AccessPointForm = ({
         ?.slice()
         .sort((a, b) => a.name.localeCompare(b.name))
         .map(config => ({
+          useAccounting: !!config.acctPort,
           acctPort: config.acctPort,
           acctServer: config.acctServer,
           acctSharedSecret: config.acctSharedSecret,
@@ -761,6 +762,20 @@ const AccessPointForm = ({
               <div key={field.name}>
                 <Divider orientation="left"> Proxy Configuration {field.name + 1}</Divider>
                 <Item
+                  name={[field.name, 'useRadSec']}
+                  label="RADSEC"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please select your RADSEC setting',
+                    },
+                  ]}
+                  initialValue="true"
+                >
+                  {enabledRadioOptions({ onChange: () => onChangeRadSec(field.name) })}
+                </Item>
+
+                <Item
                   name={[field.name, 'server']}
                   label="Authentication Server"
                   rules={[
@@ -794,19 +809,129 @@ const AccessPointForm = ({
                   hasFeedback
                   initialValue="2083"
                 >
-                  <Input placeholder="Enter Port" type="number" min={1} max={65535} />
+                  <Input
+                    placeholder="Enter Authentication Port"
+                    type="number"
+                    min={1}
+                    max={65535}
+                  />
                 </Item>
                 <Item
-                  name={[field.name, 'sharedSecret']}
-                  label="Authentication Shared Secret"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Shared Secret is required',
-                    },
-                  ]}
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.useRadSec !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
+                  }
                 >
-                  <Password className={globalStyles.field} placeholder="Enter Shared Secret" />
+                  <Item
+                    name={[field.name, 'sharedSecret']}
+                    label="Authentication Shared Secret"
+                    rules={[
+                      {
+                        required:
+                          form.getFieldValue([
+                            'radiusProxyConfigurations',
+                            field.name,
+                            'useRadSec',
+                          ]) === 'false',
+                        message: 'Shared Secret is required',
+                      },
+                    ]}
+                  >
+                    <Password className={globalStyles.field} placeholder="Enter Shared Secret" />
+                  </Item>
+                </Item>
+
+                <Item
+                  label="RADIUS Accounting"
+                  name={[field.name, 'useAccounting']}
+                  valuePropName="checked"
+                  initialValue
+                >
+                  <Checkbox>Use RADIUS Accounting Server</Checkbox>
+                </Item>
+
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.useAccounting !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.useAccounting
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    return (
+                      getFieldValue(['radiusProxyConfigurations', field.name, 'useAccounting']) && (
+                        <>
+                          <Item wrapperCol={{ offset: 5, span: 15 }}>
+                            <div className={styles.InlineDiv}>
+                              <Item
+                                name={[field.name, 'acctServer']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    pattern: IP_REGEX,
+                                    message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                                  },
+                                ]}
+                                hasFeedback
+                              >
+                                <Input
+                                  className={globalStyles.field}
+                                  placeholder="Enter Accounting Server"
+                                  addonBefore="Accounting Server"
+                                />
+                              </Item>
+                              <Item
+                                name={[field.name, 'acctPort']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Accounting Port is required',
+                                  },
+                                  () => ({
+                                    validator(_rule, value) {
+                                      if (!value || (value > 0 && value < 65535)) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        new Error('Port expected between 1 - 65535')
+                                      );
+                                    },
+                                  }),
+                                ]}
+                                hasFeedback
+                                initialValue="2083"
+                              >
+                                <Input
+                                  placeholder="Enter Accounting Port"
+                                  type="number"
+                                  min={1}
+                                  max={65535}
+                                  addonBefore="Accounting Port"
+                                />
+                              </Item>
+                            </div>
+                          </Item>
+                          <Item
+                            wrapperCol={{ offset: 5, span: 15 }}
+                            name={[field.name, 'acctSharedSecret']}
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Accounting Shared Secret is required',
+                              },
+                            ]}
+                          >
+                            <Password
+                              className={globalStyles.field}
+                              placeholder="Enter Accounting Shared Secret"
+                              addonBefore="Accounting Secret"
+                            />
+                          </Item>
+                        </>
+                      )
+                    );
+                  }}
                 </Item>
 
                 <Item label="Realm">
@@ -872,58 +997,6 @@ const AccessPointForm = ({
                       );
                     }}
                   </Form.List>
-                </Item>
-
-                <Item
-                  name={[field.name, 'useRadSec']}
-                  label="RADSEC"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please select your RADSEC setting',
-                    },
-                  ]}
-                  initialValue="true"
-                >
-                  {enabledRadioOptions({ onChange: () => onChangeRadSec(field.name) })}
-                </Item>
-
-                <Item
-                  name={[field.name, 'acctServer']}
-                  label="Accounting Server"
-                  rules={[
-                    {
-                      pattern: IP_REGEX,
-                      message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input className={globalStyles.field} placeholder="Enter Accounting Server" />
-                </Item>
-                <Item
-                  name={[field.name, 'acctPort']}
-                  label="Accounting Port"
-                  rules={[
-                    () => ({
-                      validator(_rule, value) {
-                        if (!value || (value > 0 && value < 65535)) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error('Port expected between 1 - 65535'));
-                      },
-                    }),
-                  ]}
-                  hasFeedback
-                  initialValue="2083"
-                >
-                  <Input placeholder="Enter Port" type="number" min={1} max={65535} />
-                </Item>
-                <Item name={[field.name, 'acctSharedSecret']} label="Accounting Shared Secret">
-                  <Password
-                    className={globalStyles.field}
-                    placeholder="Enter Accounting Shared Secret"
-                  />
                 </Item>
 
                 <Item

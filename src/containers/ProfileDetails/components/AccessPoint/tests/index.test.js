@@ -822,7 +822,9 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByTestId, getByText, getByLabelText, queryByText } = render(<AccessPointComp />);
+    const { getByTestId, getByText, getByLabelText, queryByText, getByPlaceholderText } = render(
+      <AccessPointComp />
+    );
 
     fireEvent.click(getByTestId('addProxy'));
     expect(getByText(/proxy configuration 1/i)).toBeVisible();
@@ -845,7 +847,7 @@ describe('<AccessPoints />', () => {
       expect(queryByText(errorMessage)).not.toBeInTheDocument();
     });
 
-    fireEvent.change(getByLabelText('Accounting Server'), {
+    fireEvent.change(getByPlaceholderText('Enter Accounting Server'), {
       target: { value: faker.lorem.word() },
     });
 
@@ -853,7 +855,9 @@ describe('<AccessPoints />', () => {
       expect(getByText(errorMessage)).toBeVisible();
     });
 
-    fireEvent.change(getByLabelText('Accounting Server'), { target: { value: acctServer } });
+    fireEvent.change(getByPlaceholderText('Enter Accounting Server'), {
+      target: { value: acctServer },
+    });
 
     await waitFor(() => {
       expect(queryByText(errorMessage)).not.toBeInTheDocument();
@@ -870,7 +874,9 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByTestId, getByText, getByLabelText, queryByText } = render(<AccessPointComp />);
+    const { getByTestId, getByText, getByLabelText, queryByText, getByPlaceholderText } = render(
+      <AccessPointComp />
+    );
 
     fireEvent.click(getByTestId('addProxy'));
     expect(getByText(/proxy configuration 1/i)).toBeVisible();
@@ -893,7 +899,7 @@ describe('<AccessPoints />', () => {
       expect(queryByText(errorMessage)).not.toBeInTheDocument();
     });
 
-    fireEvent.change(getByLabelText('Accounting Port'), {
+    fireEvent.change(getByPlaceholderText('Enter Accounting Port'), {
       target: {
         value: faker.random.number({ min: 65536, max: 100000 }),
       },
@@ -903,7 +909,9 @@ describe('<AccessPoints />', () => {
       expect(getByText(errorMessage)).toBeVisible();
     });
 
-    fireEvent.change(getByLabelText('Accounting Port'), { target: { value: acctPort } });
+    fireEvent.change(getByPlaceholderText('Enter Accounting Port'), {
+      target: { value: acctPort },
+    });
 
     await waitFor(() => {
       expect(queryByText(errorMessage)).not.toBeInTheDocument();
@@ -1243,7 +1251,9 @@ describe('<AccessPoints />', () => {
       );
     };
 
-    const { getByTestId, getByText, getByLabelText, container } = render(<AccessPointComp />);
+    const { getByTestId, getByText, getByLabelText, getByPlaceholderText, container } = render(
+      <AccessPointComp />
+    );
 
     fireEvent.click(getByTestId('addProxy'));
     expect(getByText(/proxy configuration 1/i)).toBeVisible();
@@ -1251,7 +1261,7 @@ describe('<AccessPoints />', () => {
     const authPort = getByLabelText('Authentication Port');
     expect(authPort.value).toBe('2083');
 
-    const acctPort = getByLabelText('Accounting Port');
+    const acctPort = getByPlaceholderText('Enter Accounting Port');
     expect(acctPort.value).toBe('2083');
 
     // disable button
