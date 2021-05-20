@@ -17,6 +17,7 @@ import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES, IP_REGEX, DOMAIN_REGEX } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
+import { formatFile } from 'utils/profiles';
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
@@ -28,17 +29,6 @@ const { Option } = AntdSelect;
 
 const MAX_GRE_TUNNELS = 1;
 const MAX_RADIUS_PROXIES = 5;
-
-const formatFile = file => {
-  if (file) {
-    return {
-      uid: file.apExportUrl,
-      name: file.apExportUrl,
-      type: file.fileType,
-    };
-  }
-  return null;
-};
 
 const AccessPointForm = ({
   form,
@@ -105,7 +95,7 @@ const AccessPointForm = ({
 
   useEffect(() => {
     setCertFiles(
-      (details?.radiusProxyConfigurations ?? []).reduce(
+      details?.radiusProxyConfigurations?.reduce(
         (prev, curr, index) => ({
           ...prev,
           [`caCert${index}`]: curr.caCert ? [formatFile(curr.caCert)] : [],
@@ -137,24 +127,14 @@ const AccessPointForm = ({
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       rfProfileId: currentRfId,
-      radiusProxyConfigurations: details?.radiusProxyConfigurations
-        ?.slice()
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(config => ({
-          useAccounting: !!config.acctPort,
-          acctPort: config.acctPort,
-          acctServer: config.acctServer,
-          acctSharedSecret: config.acctSharedSecret,
-          passphrase: config.passphrase,
-          port: config.port,
-          server: config.server,
-          sharedSecret: config.sharedSecret,
-          useRadSec: config.useRadSec.toString(),
-          realm: config.realm,
-          caCert: config.caCert ? { file: formatFile(config.caCert) } : null,
-          clientCert: config.clientCert ? { file: formatFile(config.clientCert) } : null,
-          clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
-        })),
+      radiusProxyConfigurations: details?.radiusProxyConfigurations?.map(config => ({
+        ...config,
+        useAccounting: !!config.acctPort,
+        useRadSec: config.useRadSec.toString(),
+        caCert: config.caCert ? { file: formatFile(config.caCert) } : null,
+        clientCert: config.clientCert ? { file: formatFile(config.clientCert) } : null,
+        clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
+      })),
     });
   }, [form, details]);
 
@@ -249,7 +229,7 @@ const AccessPointForm = ({
   };
 
   const handleOnChangeCertFile = (fileList, key) => {
-    const list = handleOnFileChange(fileList, key);
+    const list = handleOnFileChange(fileList);
     if (list) setCertFiles({ ...certFiles, [key]: list });
   };
 
@@ -329,15 +309,13 @@ const AccessPointForm = ({
     });
   }, [ntpServers]);
 
-  const onChangeRadSec = index => {
-    const radSecEnabled =
-      form.getFieldValue(['radiusProxyConfigurations', index, 'useRadSec']) === 'true';
+  const onChangeRadSec = (e, index) => {
     const fields = form.getFieldValue(['radiusProxyConfigurations']);
 
     form.setFieldsValue({
       radiusProxyConfigurations: fields.map((field, i) => {
         if (i === index) {
-          return radSecEnabled
+          return e.target.value === 'true'
             ? { ...fields[index], port: 2083, acctPort: 2083 }
             : { ...fields[index], port: 1812, acctPort: 1813 };
         }
@@ -772,7 +750,7 @@ const AccessPointForm = ({
                   ]}
                   initialValue="true"
                 >
-                  {enabledRadioOptions({ onChange: () => onChangeRadSec(field.name) })}
+                  {enabledRadioOptions({ onChange: e => onChangeRadSec(e, field.name) })}
                 </Item>
 
                 <Item
@@ -1028,7 +1006,7 @@ const AccessPointForm = ({
                             <Upload
                               data-testid={`caCertFile${field.key}`}
                               accept="application/x-x509-ca-cert"
-                              fileList={certFiles[`caCert${field.key}`]}
+                              fileList={certFiles?.[`caCert${field.key}`]}
                               beforeUpload={handleFileUpload}
                               onChange={({ fileList }) =>
                                 handleOnChangeCertFile(fileList, `caCert${field.key}`)
@@ -1055,7 +1033,7 @@ const AccessPointForm = ({
                             <Upload
                               data-testid={`clientCertFile${field.key}`}
                               accept="application/x-x509-ca-cert"
-                              fileList={certFiles[`clientCert${field.key}`]}
+                              fileList={certFiles?.[`clientCert${field.key}`]}
                               beforeUpload={handleFileUpload}
                               onChange={({ fileList }) =>
                                 handleOnChangeCertFile(fileList, `clientCert${field.key}`)
@@ -1082,7 +1060,7 @@ const AccessPointForm = ({
                             <Upload
                               accept=".key"
                               data-testid={`clientKeyFile${field.key}`}
-                              fileList={certFiles[`clientKey${field.key}`]}
+                              fileList={certFiles?.[`clientKey${field.key}`]}
                               beforeUpload={handleFileUpload}
                               onChange={({ fileList }) =>
                                 handleOnChangeCertFile(fileList, `clientKey${field.key}`)

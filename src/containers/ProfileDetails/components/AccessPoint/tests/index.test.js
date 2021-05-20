@@ -1138,7 +1138,7 @@ describe('<AccessPoints />', () => {
     });
   });
 
-  it('Client Certificate File should not be uploaded is not a .pem file', async () => {
+  it('Client Certificate File should not be uploaded if it is not a .pem file', async () => {
     const uploadSpy = jest.fn();
     const AccessPointComp = () => {
       const [form] = Form.useForm();
@@ -1207,7 +1207,7 @@ describe('<AccessPoints />', () => {
     });
   });
 
-  it('Client Key File should not be uploaded is not a .key file', async () => {
+  it('Client Key File should not be uploaded if it is not a .key file', async () => {
     const uploadSpy = jest.fn();
     const AccessPointComp = () => {
       const [form] = Form.useForm();

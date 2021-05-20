@@ -5,6 +5,14 @@ import {
   DEFAULT_HESS_ID,
 } from '../containers/ProfileDetails/constants/index';
 
+export const formatFile = file => {
+  return {
+    uid: file.apExportUrl,
+    name: file.apExportUrl,
+    type: file.fileType,
+  };
+};
+
 const isBool = value => value === 'true';
 
 const getFileType = type => {

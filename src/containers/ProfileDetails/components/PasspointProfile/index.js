@@ -6,6 +6,7 @@ import { Input, Select, Upload } from 'components/WithRoles';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES } from 'containers/ProfileDetails/constants';
+import { formatFile } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
 
@@ -14,14 +15,6 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const formatFile = file => {
-  return {
-    uid: file.apExportUrl,
-    name: file.apExportUrl,
-    type: file.fileType,
-  };
-};
 
 const PasspointProfileForm = ({
   form,
