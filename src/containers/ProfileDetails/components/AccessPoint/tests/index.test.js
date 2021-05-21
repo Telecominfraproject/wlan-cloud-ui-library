@@ -6,6 +6,7 @@ import {
   waitForElement,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import faker from 'faker';
 import { Form } from 'antd';
 import { render, DOWN_ARROW } from 'tests/utils';
@@ -31,6 +32,19 @@ function buildGreForm() {
   return {
     name: faker.internet.userName(),
     ip: faker.internet.ip(),
+  };
+}
+
+function buildProxyForm() {
+  return {
+    acctPort: faker.internet.port(),
+    acctServer: faker.internet.ip(),
+    acctSharedSecret: faker.internet.password(),
+    passphrase: faker.internet.password(),
+    port: faker.internet.port(),
+    server: faker.internet.ip(),
+    sharedSecret: faker.internet.password(),
+    realm: faker.internet.domainName(),
   };
 }
 
@@ -120,7 +134,7 @@ describe('<AccessPoints />', () => {
     });
     expect(vlanInput.value).toBe('123456');
     await waitFor(() => {
-      expect(getByText('Vlan expected between 2 and 4095')).toBeVisible();
+      expect(getByText('VLAN expected between 2 and 4095')).toBeVisible();
     });
   });
 
@@ -761,5 +775,509 @@ describe('<AccessPoints />', () => {
         })
       ).toBeVisible();
     });
+  });
+
+  it('Clicking the Add Radius Proxy Configuration button should show the first Proxy Configuration form', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+  });
+
+  it('Clicking the Remove Proxy button should remove the associated Proxy Configuration form', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, queryByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    fireEvent.click(getByTestId('removeProxy0'));
+    expect(queryByText(/proxy configuration 1/i)).not.toBeInTheDocument();
+  });
+
+  it('Error should show if Authentication server and Accounting server are not valid', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByLabelText, queryByText, getByPlaceholderText } = render(
+      <AccessPointComp />
+    );
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const { acctServer, server } = buildProxyForm();
+
+    fireEvent.change(getByLabelText('Authentication Server'), {
+      target: { value: faker.lorem.word() },
+    });
+
+    const errorMessage = 'Enter in the format [0-255].[0-255].[0-255].[0-255]';
+
+    await waitFor(() => {
+      expect(getByText(errorMessage)).toBeVisible();
+    });
+
+    fireEvent.change(getByLabelText('Authentication Server'), { target: { value: server } });
+
+    await waitFor(() => {
+      expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    });
+
+    fireEvent.change(getByPlaceholderText('Enter Accounting Server'), {
+      target: { value: faker.lorem.word() },
+    });
+
+    await waitFor(() => {
+      expect(getByText(errorMessage)).toBeVisible();
+    });
+
+    fireEvent.change(getByPlaceholderText('Enter Accounting Server'), {
+      target: { value: acctServer },
+    });
+
+    await waitFor(() => {
+      expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Error should show if Authentication port and Accounting port are not valid', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByLabelText, queryByText, getByPlaceholderText } = render(
+      <AccessPointComp />
+    );
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const { acctPort, port } = buildProxyForm();
+
+    fireEvent.change(getByLabelText('Authentication Port'), {
+      target: { value: faker.random.number({ min: -100, max: 0 }) },
+    });
+
+    const errorMessage = 'Port expected between 1 - 65535';
+
+    await waitFor(() => {
+      expect(getByText(errorMessage)).toBeVisible();
+    });
+
+    fireEvent.change(getByLabelText('Authentication Port'), { target: { value: port } });
+
+    await waitFor(() => {
+      expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    });
+
+    fireEvent.change(getByPlaceholderText('Enter Accounting Port'), {
+      target: {
+        value: faker.random.number({ min: 65536, max: 100000 }),
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByText(errorMessage)).toBeVisible();
+    });
+
+    fireEvent.change(getByPlaceholderText('Enter Accounting Port'), {
+      target: { value: acctPort },
+    });
+
+    await waitFor(() => {
+      expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Clicking the Add Realm button should add another Realm Domain input', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByRole, getByPlaceholderText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /add realm/i }));
+
+    await waitFor(() => {
+      expect(getByPlaceholderText('Enter Realm 2')).toBeInTheDocument();
+    });
+  });
+
+  it('Clicking the Remove Realm button should remove Realm Domain input', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByRole, getByPlaceholderText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    fireEvent.click(getByRole('button', { name: /add realm/i }));
+
+    const input = getByPlaceholderText('Enter Realm 2');
+    await waitFor(() => {
+      expect(input).toBeInTheDocument();
+    });
+
+    fireEvent.click(getByTestId('removeRealm1'));
+
+    await waitFor(() => {
+      expect(input).not.toBeInTheDocument();
+    });
+  });
+
+  it('Should show error if Realm input is not a valid domain', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByPlaceholderText, queryByText } = render(
+      <AccessPointComp />
+    );
+
+    const { realm } = buildProxyForm();
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const errorMessage = 'Enter a valid Realm Domain';
+
+    const realmInput = getByPlaceholderText('Enter Realm 1');
+    fireEvent.change(realmInput, { target: { value: faker.lorem.word() } });
+    await waitFor(() => {
+      expect(getByText(errorMessage)).toBeVisible();
+    });
+
+    fireEvent.change(realmInput, { target: { value: realm } });
+    await waitFor(() => {
+      expect(queryByText(errorMessage)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Should show error if Realm input is not unique', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByPlaceholderText, getByRole } = render(<AccessPointComp />);
+
+    const { realm } = buildProxyForm();
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const realmInput = getByPlaceholderText('Enter Realm 1');
+    fireEvent.change(realmInput, { target: { value: realm } });
+
+    fireEvent.click(getByRole('button', { name: /add realm/i }));
+
+    const realmInput2 = getByPlaceholderText('Enter Realm 2');
+    fireEvent.change(realmInput2, { target: { value: realm } });
+
+    await waitFor(() => {
+      expect(getByText('Enter a unique Realm Domain')).toBeVisible();
+    });
+  });
+
+  it('CA Certification File should be uploaded and added if it is a .pem file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'cacert.pem',
+      type: 'application/x-x509-ca-cert',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('caCertFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(1);
+      expect(getByText(file.name)).toBeVisible();
+    });
+  });
+
+  it('CA Certificate File should not be uploaded if it is not a .pem file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'test.jpeg',
+      type: 'image/jpeg',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText, queryByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('caCertFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(uploadSpy).not.toBeCalled();
+      expect(queryByText(file.name)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Client Certification File should be uploaded and added if it is a .pem file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'clientcert.pem',
+      type: 'application/x-x509-ca-cert',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('clientCertFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(1);
+      expect(getByText(file.name)).toBeVisible();
+    });
+  });
+
+  it('Client Certificate File should not be uploaded if it is not a .pem file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'test.jpeg',
+      type: 'image/jpeg',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText, queryByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('clientCertFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(uploadSpy).not.toBeCalled();
+      expect(queryByText(file.name)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Client Key File should be uploaded and added if it is a .key file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'clientkey_dec.key',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('clientKeyFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(input.files[0]).toStrictEqual(file);
+      expect(input.files).toHaveLength(1);
+      expect(uploadSpy).toBeCalledTimes(1);
+      expect(getByText(file.name)).toBeVisible();
+    });
+  });
+
+  it('Client Key File should not be uploaded if it is not a .key file', async () => {
+    const uploadSpy = jest.fn();
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} fileUpload={uploadSpy} />
+        </Form>
+      );
+    };
+
+    const file = {
+      uid: 'rc-upload-1621356980215-7',
+      lastModified: 1596641328733,
+      name: 'test.jpeg',
+      type: 'image/jpeg',
+      originFileObj: { uid: 'rc-upload-1621356980215-7' },
+      response: { url: 'test' },
+    };
+
+    const { getByTestId, getByText, queryByText } = render(<AccessPointComp />);
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const input = getByTestId('clientKeyFile0');
+    userEvent.upload(input, file);
+
+    await waitFor(() => {
+      expect(uploadSpy).not.toBeCalled();
+      expect(queryByText(file.name)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Changing the RadSec setting should change default values for Accounting Port and Authentication Port', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByTestId, getByText, getByLabelText, getByPlaceholderText, container } = render(
+      <AccessPointComp />
+    );
+
+    fireEvent.click(getByTestId('addProxy'));
+    expect(getByText(/proxy configuration 1/i)).toBeVisible();
+
+    const authPort = getByLabelText('Authentication Port');
+    expect(authPort.value).toBe('2083');
+
+    const acctPort = getByPlaceholderText('Enter Accounting Port');
+    expect(acctPort.value).toBe('2083');
+
+    // disable button
+    fireEvent.click(
+      container.querySelector('#radiusProxyConfigurations_0_useRadSec > label:nth-child(1)')
+    );
+
+    expect(authPort.value).toBe('1812');
+    expect(acctPort.value).toBe('1813');
+
+    // enable button
+    fireEvent.click(
+      container.querySelector('#radiusProxyConfigurations_0_useRadSec > label:nth-child(2)')
+    );
+
+    expect(authPort.value).toBe('2083');
+    expect(acctPort.value).toBe('2083');
   });
 });
