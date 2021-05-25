@@ -11,6 +11,7 @@ const defaultRfProfile = {
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
+    autoCellSizeSelection: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -58,6 +59,7 @@ const defaultRfProfile = {
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
+    autoCellSizeSelection: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -105,6 +107,7 @@ const defaultRfProfile = {
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
+    autoCellSizeSelection: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -152,6 +155,7 @@ const defaultRfProfile = {
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
+    autoCellSizeSelection: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,

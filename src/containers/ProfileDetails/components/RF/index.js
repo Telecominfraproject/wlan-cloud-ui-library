@@ -1,7 +1,10 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { startCase } from 'lodash';
 import { Card, Form, Select as AntdSelect } from 'antd';
 import { Input, Select } from 'components/WithRoles';
+import DisabledText from 'components/DisabledText';
+
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';
@@ -52,6 +55,12 @@ const RFForm = ({ form, details, extraFields }) => {
         autoChannelSelection:
           details.rfConfigMap[radio]?.autoChannelSelection?.toString() ??
           defaultRfProfile[radio].autoChannelSelection.toString(),
+        autoCellSizeSelection:
+          details.rfConfigMap[radio]?.autoCellSizeSelection?.toString() ??
+          defaultRfProfile[radio].autoCellSizeSelection.toString(),
+        maxAutoCellSize: details.rfConfigMap[radio]?.maxAutoCellSize,
+        minAutoCellSize:
+          details.rfConfigMap[radio]?.minAutoCellSize ?? defaultRfProfile[radio].minAutoCellSize,
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
@@ -100,59 +109,145 @@ const RFForm = ({ form, details, extraFields }) => {
     </Select>
   );
 
-  const renderItem = (label, dataIndex, renderInput, options = {}) => (
-    <Item label={label} colon={false} key={label}>
-      <div className={styles.InlineDiv}>
-        {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
-      </div>
-    </Item>
-  );
+  const renderItem = (label, dataIndex, renderInput, options = {}) => {
+    const Wrapper = (
+      <Item label={label} key={label}>
+        <div className={styles.InlineDiv}>
+          {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
+        </div>
+      </Item>
+    );
 
-  const renderInputItem = (dataIndex, key, label, options = {}) => (
-    <Item
-      name={['rfConfigMap', key, ...dataIndex]}
-      key={key}
-      rules={[
-        { required: true, message: options.error },
-        ({ getFieldValue }) => ({
-          validator(_rule, value) {
-            if (
-              !value ||
-              (getFieldValue(['rfConfigMap', key, ...dataIndex]) <= options.max &&
-                getFieldValue(['rfConfigMap', key, ...dataIndex]) >= options.min)
-            ) {
-              return Promise.resolve();
-            }
-            return Promise.reject(new Error(options.error));
+    if (options.dependency) {
+      return (
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            currentRadios.some(
+              key =>
+                prevValues.rfConfigMap?.[key]?.[options.dependency] !==
+                currentValues.rfConfigMap?.[key]?.[options.dependency]
+            )
+          }
+          key={label}
+        >
+          {({ getFieldValue }) => {
+            return currentRadios.some(
+              i => getFieldValue(['rfConfigMap', i, options.dependency]) === options.condition
+            )
+              ? Wrapper
+              : null;
+          }}
+        </Item>
+      );
+    }
+
+    return Wrapper;
+  };
+
+  const renderInputItem = (dataIndex, key, label, options = {}) => {
+    const InputField = (
+      <Item
+        name={['rfConfigMap', key, ...dataIndex]}
+        key={key}
+        rules={[
+          { required: true, message: options.error },
+          ({ getFieldValue }) => ({
+            validator(_rule, value) {
+              if (
+                !value ||
+                (getFieldValue(['rfConfigMap', key, ...dataIndex]) <= options.max &&
+                  getFieldValue(['rfConfigMap', key, ...dataIndex]) >= options.min)
+              ) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error(options.error));
+            },
+          }),
+        ]}
+      >
+        <Input
+          className={styles.Field}
+          placeholder={`Enter ${label} for ${key}`}
+          type="number"
+          min={options.min}
+          max={options.max}
+          addonAfter={options?.addOnText ? options?.addOnText : ''}
+        />
+      </Item>
+    );
+
+    if (options.dependency) {
+      return (
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.rfConfigMap?.[key]?.[options.dependency] !==
+            currentValues.rfConfigMap?.[key]?.[options.dependency]
+          }
+          key={key}
+        >
+          {({ getFieldValue }) => {
+            const value = getFieldValue(['rfConfigMap', key, options.dependency])?.toString();
+            return value === options.condition ? (
+              InputField
+            ) : (
+              <DisabledText
+                title={`The ${radioTypes[key]} radio has ${startCase(options.dependency)} ${
+                  value === 'true' ? 'enabled' : 'disabled'
+                }.`}
+              />
+            );
+          }}
+        </Item>
+      );
+    }
+    return InputField;
+  };
+
+  const renderOptionItem = (dataIndex, key, label, options = {}) => {
+    const InputField = (
+      <Item
+        key={key}
+        name={['rfConfigMap', key, ...dataIndex]}
+        rules={[
+          {
+            required: true,
+            message: `Enter ${label} for ${key}`,
           },
-        }),
-      ]}
-    >
-      <Input
-        className={styles.Field}
-        placeholder={`Enter ${label} for ${key}`}
-        type="number"
-        min={options.min}
-        max={options.max}
-        addonAfter={options?.addOnText ? options?.addOnText : ''}
-      />
-    </Item>
-  );
+        ]}
+      >
+        {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
+      </Item>
+    );
 
-  const renderOptionItem = (dataIndex, key, label, options = {}) => (
-    <Item
-      key={key}
-      name={['rfConfigMap', key, ...dataIndex]}
-      rules={[
-        {
-          required: true,
-          message: `Enter ${label} for ${key}`,
-        },
-      ]}
-    >
-      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
-    </Item>
-  );
+    if (options.dependency) {
+      return (
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.rfConfigMap?.[key]?.[options.dependency] !==
+            currentValues.rfConfigMap?.[key]?.[options.dependency]
+          }
+          key={key}
+        >
+          {({ getFieldValue }) => {
+            const value = getFieldValue(['rfConfigMap', key, options.dependency])?.toString();
+            return value === options.condition ? (
+              InputField
+            ) : (
+              <DisabledText
+                title={`The ${radioTypes[key]} radio has ${startCase(options.dependency)} ${
+                  value === 'true' ? 'enabled' : 'disabled'
+                }.`}
+              />
+            );
+          }}
+        </Item>
+      );
+    }
+    return InputField;
+  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -232,6 +327,14 @@ const RFForm = ({ form, details, extraFields }) => {
             </Select>
           ),
         })}
+        {extraFields.map(field =>
+          renderItem(
+            field.label,
+            field.dataIndex,
+            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+            field.options
+          )
+        )}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
@@ -247,6 +350,8 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate24mbps">24</Option>
             </Select>
           ),
+          dependency: 'autoCellSizeSelection',
+          condition: 'false',
         })}
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
@@ -262,20 +367,16 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate54mbps">54</Option>
             </Select>
           ),
+          dependency: 'autoCellSizeSelection',
+          condition: 'false',
         })}
-        {extraFields.map(field =>
-          renderItem(
-            field.label,
-            field.dataIndex,
-            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
-            field.options
-          )
-        )}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
           error: '-100 - 100 dBm',
           addOnText: 'dBm',
+          dependency: 'autoCellSizeSelection',
+          condition: 'false',
         })}
         {renderItem(
           'Client Disconnect Threshold',
@@ -286,6 +387,8 @@ const RFForm = ({ form, details, extraFields }) => {
             max: 0,
             error: '-100 - 0 dBm',
             addOnText: 'dBm',
+            dependency: 'autoCellSizeSelection',
+            condition: 'false',
           }
         )}
         {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
@@ -293,6 +396,8 @@ const RFForm = ({ form, details, extraFields }) => {
           max: 32,
           error: '1 - 32 dBm',
           addOnText: 'dBm',
+          dependency: 'autoCellSizeSelection',
+          condition: 'false',
         })}
         <p>Active Scan Setting:</p>
         {renderItem('Enable', ['activeScanSettings', 'enabled'], renderOptionItem, {

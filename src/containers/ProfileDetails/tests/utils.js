@@ -148,7 +148,7 @@ export function generateApProfile(radioMap) {
   };
 }
 
-export function generateRfConfig(radioType, autoChannelSelection) {
+export function generateRfConfig(radioType, autoChannelSelection, autoCellSizeSelection) {
   return {
     model_type: 'RfElementConfiguration',
     radioType,
@@ -161,6 +161,7 @@ export function generateRfConfig(radioType, autoChannelSelection) {
     mimoMode: 'twoByTwo',
     maxNumClients: 100,
     autoChannelSelection: autoChannelSelection || false,
+    autoCellSizeSelection: autoCellSizeSelection || false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,

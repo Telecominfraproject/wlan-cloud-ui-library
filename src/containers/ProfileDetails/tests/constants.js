@@ -491,6 +491,8 @@ export const mockRf = {
         max: 100,
         error: '-100 - 100 dBm',
         addOnText: 'dBm',
+        dependency: 'autoCellSizeSelection',
+        condition: 'false',
       },
     },
   ],

@@ -13,6 +13,8 @@ import {
 import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
+import DisabledText from 'components/DisabledText';
+import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
@@ -210,30 +212,70 @@ const General = ({
 
   const defaultOptions = (
     <Select className={styles.Field}>
-      <Option value="enabled">enabled</Option>
-      <Option value="disabled">disabled</Option>
+      <Option value="enabled">Enabled</Option>
+      <Option value="disabled">Disabled</Option>
     </Select>
   );
 
   const defaultOptionsBoolean = (
     <Select className={styles.Field}>
-      <Option value="true">enabled</Option>
-      <Option value="false">disabled</Option>
+      <Option value="true">Enabled</Option>
+      <Option value="false">Disabled</Option>
     </Select>
   );
 
-  const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => (
-    <Item label={label} colon={false} key={label}>
+  const renderItem = (label, obj = {}, dataIndex, renderInput, options = {}) => {
+    if (extraFields.some(field => field.label === label)) {
+      return null;
+    }
+    return (
+      <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
+        <div className={styles.InlineDiv}>
+          {sortRadioTypes(Object.keys(obj)).map(i =>
+            renderInput ? (
+              renderInput(dataIndex, i, label, options)
+            ) : (
+              <span key={i} className={styles.spanStyle}>
+                {dataIndex === 'radioType'
+                  ? radioTypes?.[obj[i]?.[dataIndex]]
+                  : obj[i]?.[dataIndex]}
+              </span>
+            )
+          )}
+        </div>
+      </Item>
+    );
+  };
+
+  const renderConditionalItem = (label, obj = {}, dataIndex, dependency) => (
+    <Item label={label} key={label}>
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(obj)).map(i =>
-          renderInput ? (
-            renderInput(dataIndex, i, label, options)
-          ) : (
-            <span key={i} className={styles.spanStyle}>
-              {dataIndex === 'radioType' ? radioTypes?.[obj[i]?.[dataIndex]] : obj[i]?.[dataIndex]}
-            </span>
-          )
-        )}
+        {sortRadioTypes(Object.keys(obj)).map(key => {
+          const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key][dependency];
+
+          if (isEnabled) {
+            return (
+              <DisabledText
+                key={key}
+                text={obj[key][dataIndex].value}
+                title={`The ${radioTypes[key]} radio has ${_.startCase(
+                  dependency
+                )} enabled in the RF Profile.`}
+                addOnText="Auto"
+              />
+            );
+          }
+          return (
+            <DisabledText
+              key={key}
+              text={childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]}
+              title={`The ${radioTypes[key]} radio has ${_.startCase(
+                dependency
+              )} disabled in the RF Profile.`}
+              addOnText="Profile"
+            />
+          );
+        })}
       </div>
     </Item>
   );
@@ -295,7 +337,15 @@ const General = ({
             let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
-                ? { dataIndex: 'channelNumber', addOnText: 'Auto' }
+                ? {
+                    dataIndex: 'channelNumber',
+                    addOnText: (
+                      <Tooltip
+                        text="Auto"
+                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                      />
+                    ),
+                  }
                 : {
                     dataIndex: 'manualChannelNumber',
                     addOnText: 'Manual',
@@ -304,7 +354,15 @@ const General = ({
             }
             if (label === 'Backup Channel') {
               channel = isEnabled
-                ? { dataIndex: 'backupChannelNumber', addOnText: 'Auto' }
+                ? {
+                    dataIndex: 'backupChannelNumber',
+                    addOnText: (
+                      <Tooltip
+                        text="Auto"
+                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                      />
+                    ),
+                  }
                 : {
                     dataIndex: 'manualBackupChannelNumber',
                     addOnText: 'Manual',
@@ -477,6 +535,9 @@ const General = ({
           })}
           {renderChannelItem('Active Channel')}
           {renderChannelItem('Backup Channel')}
+          {extraFields.map(field =>
+            renderConditionalItem(field.label, field.obj, field.dataIndex, field.dependencies)
+          )}
           {renderItem(
             'Management Rate (Mbps)',
             advancedRadioMap,
@@ -520,16 +581,6 @@ const General = ({
               ),
             }
           )}
-          {extraFields.map(field =>
-            renderItem(
-              field.label,
-              field.obj,
-              field.dataIndex,
-              field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
-              field.options
-            )
-          )}
-
           {renderItem(
             'Probe Response Threshold',
             radioMap,
