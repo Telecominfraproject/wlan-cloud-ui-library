@@ -4,7 +4,7 @@
   justify-content: space-between;
   border-radius: 8px;
   border: 1px solid #3e4042;
-  max-height: 36px;
+  min-height: 36px;
   height: 100%;
   background-color: #18191a;
   color: #646565;
@@ -17,9 +17,8 @@
     text-transform: capitalize;
   }
   .AddOnText {
-    background-color: #252526;
+    background-color: #242526;
     color: #fff;
-    opacity: 0.85;
     border-radius: 0px 8px 8px 0px;
     border-left: 1px solid #3e4042;
     &:hover {

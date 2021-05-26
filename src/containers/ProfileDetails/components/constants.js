@@ -12,6 +12,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
+    useMaxTxPower: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -24,6 +25,7 @@ const defaultRfProfile = {
       maxAps: 25,
     },
     minAutoCellSize: -65,
+    maxAutoCellSize: -90,
     perimeterDetectionEnabled: true,
     channelHopSettings: {
       model_type: 'ChannelHopSettings',
@@ -60,6 +62,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
+    useMaxTxPower: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -72,6 +75,7 @@ const defaultRfProfile = {
       maxAps: 25,
     },
     minAutoCellSize: -65,
+    maxAutoCellSize: -90,
     perimeterDetectionEnabled: true,
     channelHopSettings: {
       model_type: 'ChannelHopSettings',
@@ -108,6 +112,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
+    useMaxTxPower: false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -120,6 +125,7 @@ const defaultRfProfile = {
       maxAps: 25,
     },
     minAutoCellSize: -65,
+    maxAutoCellSize: -90,
     perimeterDetectionEnabled: true,
     channelHopSettings: {
       model_type: 'ChannelHopSettings',
@@ -156,6 +162,8 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
+    useMaxTxPower: false,
+    maxAutoCellSize: -90,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
