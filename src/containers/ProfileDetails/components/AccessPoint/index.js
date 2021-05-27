@@ -908,7 +908,7 @@ const AccessPointForm = ({
                                   >
                                     <Password
                                       placeholder="Enter Accounting Shared Secret"
-                                      addonBefore="Accounting Secret"
+                                      addonBefore="Accounting Shared Secret"
                                     />
                                   </Item>
                                 )
