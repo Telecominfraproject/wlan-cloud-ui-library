@@ -1,28 +1,6 @@
-.Text {
+.Input {
   flex: 1;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 8px;
-  border: 1px solid #3e4042;
-  min-height: 36px;
-  height: 100%;
-  background-color: #18191a;
-  color: #646565;
-  &:hover {
-    cursor: not-allowed;
-  }
-  & > span {
-    display: inline-block;
-    padding: 5px 12px;
+  input {
     text-transform: capitalize;
-  }
-  .AddOnText {
-    background-color: #242526;
-    color: #fff;
-    border-radius: 0px 8px 8px 0px;
-    border-left: 1px solid #3e4042;
-    &:hover {
-      cursor: default;
-    }
   }
 }

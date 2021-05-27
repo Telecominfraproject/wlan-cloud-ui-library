@@ -257,22 +257,22 @@ const General = ({
             return (
               <DisabledText
                 key={key}
-                text={obj[key][dataIndex].value}
-                title={`The ${radioTypes[key]} radio has ${_.startCase(
+                value={obj[key][dataIndex].value}
+                title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
-                )} enabled in the RF Profile.`}
-                addOnText="Auto"
+                )}" enabled in the RF Profile.`}
+                text="Auto"
               />
             );
           }
           return (
             <DisabledText
               key={key}
-              text={childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]}
-              title={`The ${radioTypes[key]} radio has ${_.startCase(
+              value={childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]}
+              title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
-              )} disabled in the RF Profile.`}
-              addOnText="Profile"
+              )}" disabled in the RF Profile.`}
+              text="Profile"
             />
           );
         })}
@@ -342,7 +342,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
                       />
                     ),
                   }
@@ -359,7 +359,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
                       />
                     ),
                   }
