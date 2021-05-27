@@ -1028,7 +1028,9 @@ describe('<AccessPoints />', () => {
     fireEvent.change(realmInput2, { target: { value: realm } });
 
     await waitFor(() => {
-      expect(getByText('Enter a unique Realm Domain')).toBeVisible();
+      expect(
+        getByText('Realm domains across all RADIUS Proxy Configurations must be unique')
+      ).toBeVisible();
     });
   });
 
