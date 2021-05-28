@@ -61,7 +61,7 @@ const Status = ({ data, showAlarms, extraFields }) => {
           if (fn) {
             return (
               <span key={i} className={styles.spanStyle}>
-                {fn(i)}
+                {fn(i) ?? 'N/A'}
               </span>
             );
           }
