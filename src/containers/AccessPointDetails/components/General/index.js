@@ -18,6 +18,7 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
+import { USER_FRIENDLY_RATES } from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -257,7 +258,7 @@ const General = ({
             return (
               <DisabledText
                 key={key}
-                value={obj[key][dataIndex].value}
+                value={USER_FRIENDLY_RATES[obj[key][dataIndex].value] ?? obj[key][dataIndex].value}
                 title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
                 )}" enabled in the RF Profile.`}
@@ -268,7 +269,10 @@ const General = ({
           return (
             <DisabledText
               key={key}
-              value={childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]}
+              value={
+                USER_FRIENDLY_RATES[childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]] ??
+                childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]
+              }
               title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
               )}" disabled in the RF Profile.`}

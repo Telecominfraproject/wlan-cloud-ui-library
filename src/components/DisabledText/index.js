@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tooltip from 'components/Tooltip';
 import styles from './index.module.scss';
 
-const DisabledText = ({ text, value, title }) => (
+const DisabledText = ({ value, title, text }) => (
   <Input
     className={styles.Input}
     value={value}
