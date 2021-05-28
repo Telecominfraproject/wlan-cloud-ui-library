@@ -23,9 +23,6 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-const generateRandomHex = size =>
-  [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
-
 describe('<ProviderIdForm />', () => {
   it('should work when roaming oi is null', async () => {
     const ProviderIdFormComp = () => {
@@ -103,7 +100,8 @@ describe('<ProviderIdForm />', () => {
       expect(getByText(errorMsg)).toBeVisible();
     });
 
-    fireEvent.change(input, { target: { value: generateRandomHex(8) } });
+    // all faker hexaDecimal values are prepended by "0x" which the OI regex does not support
+    fireEvent.change(input, { target: { value: faker.random.hexaDecimal(8).substring(2) } });
 
     await waitFor(() => {
       expect(queryByText(errorMsg)).not.toBeInTheDocument();
@@ -122,7 +120,8 @@ describe('<ProviderIdForm />', () => {
     const { getByText, getByPlaceholderText } = render(<ProviderIdFormComp />);
 
     const errorMsg = 'Enter a unique OI';
-    const hexString = generateRandomHex(8);
+    // all faker hexaDecimal values are prepended by "0x" which the OI regex does not support
+    const hexString = faker.random.hexaDecimal(8).substring(2);
 
     fireEvent.click(getByText(/add roaming oi/i));
     const input = getByPlaceholderText('Enter OI 1');
