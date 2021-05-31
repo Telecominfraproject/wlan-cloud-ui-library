@@ -331,7 +331,6 @@ export const formatPasspointForm = (values, details) => {
 
 export const formatProviderProfileForm = values => {
   const formattedData = { ...values };
-  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
 
   if (!formattedData.osuServerUri) {
     formattedData.osuServerUri = '';

@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, waitFor, act } from '@testing-library/react';
+import faker from 'faker';
 import { Form } from 'antd';
 import { render } from 'tests/utils';
 
@@ -33,6 +34,106 @@ describe('<ProviderIdForm />', () => {
       );
     };
     render(<ProviderIdFormComp />);
+  });
+
+  it('Clicking Add Roaming OI should add the first OI input to the form', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm details={mockProviderId} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getByPlaceholderText } = render(<ProviderIdFormComp />);
+
+    fireEvent.click(getByText(/add roaming oi/i));
+
+    await waitFor(() => {
+      expect(getByPlaceholderText('Enter OI 1')).toBeVisible();
+    });
+  });
+
+  it('Clicking the delete OI button should remove the associated OI input from the form', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm details={mockProviderId} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getByPlaceholderText, getByTestId } = render(<ProviderIdFormComp />);
+
+    fireEvent.click(getByText(/add roaming oi/i));
+
+    const input = getByPlaceholderText('Enter OI 1');
+    await waitFor(() => {
+      expect(input).toBeVisible();
+    });
+
+    fireEvent.click(getByTestId('removeRoamingOI0'));
+
+    await waitFor(() => {
+      expect(input).not.toBeInTheDocument();
+    });
+  });
+
+  it('Error message should show if Roaming OI is not between 3 and 15 octets and configured as a hexstring', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm details={mockProviderId} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getByPlaceholderText, queryByText } = render(<ProviderIdFormComp />);
+
+    fireEvent.click(getByText(/add roaming oi/i));
+
+    const input = getByPlaceholderText('Enter OI 1');
+    fireEvent.change(input, { target: { value: faker.internet.userName() } });
+
+    const errorMsg = 'Each OI must be between 3 and 15 octets and configured as a hexstring';
+    await waitFor(() => {
+      expect(getByText(errorMsg)).toBeVisible();
+    });
+
+    // all faker hexaDecimal values are prepended by "0x" which the OI regex does not support
+    fireEvent.change(input, { target: { value: faker.random.hexaDecimal(8).substring(2) } });
+
+    await waitFor(() => {
+      expect(queryByText(errorMsg)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Error message should show if Roaming OI is duplicated', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm details={mockProviderId} form={form} />
+        </Form>
+      );
+    };
+    const { getByText, getByPlaceholderText } = render(<ProviderIdFormComp />);
+
+    const errorMsg = 'Enter a unique OI';
+    // all faker hexaDecimal values are prepended by "0x" which the OI regex does not support
+    const hexString = faker.random.hexaDecimal(8).substring(2);
+
+    fireEvent.click(getByText(/add roaming oi/i));
+    const input = getByPlaceholderText('Enter OI 1');
+    fireEvent.change(input, { target: { value: hexString } });
+
+    fireEvent.click(getByText(/add roaming oi/i));
+    const input2 = getByPlaceholderText('Enter OI 2');
+    fireEvent.change(input2, { target: { value: hexString } });
+
+    await waitFor(() => {
+      expect(getByText(errorMsg)).toBeVisible();
+    });
   });
 
   it('should add a new PLMN to the table', async () => {
