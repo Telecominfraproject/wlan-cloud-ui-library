@@ -40,7 +40,8 @@ const AccessPointDetails = ({
   onDeleteEquipment,
   extraButtons,
   onSearchProfile,
-  extraFields,
+  extraGeneralFields,
+  extraStatusFields,
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
@@ -214,11 +215,13 @@ const AccessPointDetails = ({
           errorProfiles={errorProfiles}
           onFetchMoreProfiles={onFetchMoreProfiles}
           onSearchProfile={onSearchProfile}
-          extraFields={extraFields}
+          extraFields={extraGeneralFields}
           extraGeneralCards={extraGeneralCards}
         />
       )}
-      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} />}
+      {tab === 'status' && (
+        <Status data={data} showAlarms={showStatusAlarms} extraFields={extraStatusFields} />
+      )}
       {tab === 'location' && (
         <Location
           data={data}
@@ -271,7 +274,8 @@ AccessPointDetails.propTypes = {
   onDeleteEquipment: PropTypes.func.isRequired,
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
-  extraFields: PropTypes.instanceOf(Array),
+  extraGeneralFields: PropTypes.instanceOf(Array),
+  extraStatusFields: PropTypes.instanceOf(Array),
   extraTabs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -297,7 +301,8 @@ AccessPointDetails.defaultProps = {
   onFetchMoreProfiles: () => {},
   extraButtons: null,
   onSearchProfile: null,
-  extraFields: [],
+  extraGeneralFields: [],
+  extraStatusFields: [],
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,

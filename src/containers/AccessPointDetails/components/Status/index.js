@@ -8,7 +8,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
-const Status = ({ data, showAlarms }) => {
+const Status = ({ data, showAlarms, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
@@ -54,14 +54,23 @@ const Status = ({ data, showAlarms }) => {
     return obj?.[i]?.[dataIndex];
   };
 
-  const renderSpanItem = (label, obj, dataIndex) => (
-    <Item label={label} colon={false}>
+  const renderSpanItem = (label, obj, dataIndex, fn) => (
+    <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(radioMap)).map(i => (
-          <span key={i} className={styles.spanStyle}>
-            {(dataIndex ? renderData(obj, dataIndex, i) : obj?.[i]) ?? 'N/A'}
-          </span>
-        ))}
+        {sortRadioTypes(Object.keys(radioMap)).map(i => {
+          if (fn) {
+            return (
+              <span key={i} className={styles.spanStyle}>
+                {fn(i) ?? 'N/A'}
+              </span>
+            );
+          }
+          return (
+            <span key={i} className={styles.spanStyle}>
+              {(dataIndex ? renderData(obj, dataIndex, i) : obj?.[i]) ?? 'N/A'}
+            </span>
+          );
+        })}
       </div>
     </Item>
   );
@@ -81,6 +90,9 @@ const Status = ({ data, showAlarms }) => {
             'Available Capacity',
             status?.radioUtilization?.detailsJSON?.capacityDetails,
             'availableCapacity'
+          )}
+          {extraFields.map(field =>
+            renderSpanItem(field.label, field.obj, field.dataIndex, field.fn)
           )}
         </Card>
 
@@ -103,11 +115,13 @@ const Status = ({ data, showAlarms }) => {
 Status.propTypes = {
   data: PropTypes.instanceOf(Object),
   showAlarms: PropTypes.bool,
+  extraFields: PropTypes.instanceOf(Array),
 };
 
 Status.defaultProps = {
   data: {},
   showAlarms: true,
+  extraFields: [],
 };
 
 export default Status;
