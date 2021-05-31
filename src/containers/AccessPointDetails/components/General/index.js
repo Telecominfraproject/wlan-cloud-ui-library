@@ -18,6 +18,7 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
+import { USER_FRIENDLY_RATES } from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -257,22 +258,25 @@ const General = ({
             return (
               <DisabledText
                 key={key}
-                text={obj[key][dataIndex].value}
-                title={`The ${radioTypes[key]} radio has ${_.startCase(
+                value={USER_FRIENDLY_RATES[obj[key][dataIndex].value] ?? obj[key][dataIndex].value}
+                title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
-                )} enabled in the RF Profile.`}
-                addOnText="Auto"
+                )}" enabled in the RF Profile.`}
+                text="Auto"
               />
             );
           }
           return (
             <DisabledText
               key={key}
-              text={childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]}
-              title={`The ${radioTypes[key]} radio has ${_.startCase(
+              value={
+                USER_FRIENDLY_RATES[childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]] ??
+                childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]
+              }
+              title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
-              )} disabled in the RF Profile.`}
-              addOnText="Profile"
+              )}" disabled in the RF Profile.`}
+              text="Profile"
             />
           );
         })}
@@ -342,7 +346,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
                       />
                     ),
                   }
@@ -359,7 +363,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has Auto Channel Selection Enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
                       />
                     ),
                   }

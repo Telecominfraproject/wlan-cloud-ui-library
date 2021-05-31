@@ -58,9 +58,13 @@ const RFForm = ({ form, details, extraFields }) => {
         autoCellSizeSelection:
           details.rfConfigMap[radio]?.autoCellSizeSelection?.toString() ??
           defaultRfProfile[radio].autoCellSizeSelection.toString(),
-        maxAutoCellSize: details.rfConfigMap[radio]?.maxAutoCellSize,
+        maxAutoCellSize:
+          details.rfConfigMap[radio]?.maxAutoCellSize ?? defaultRfProfile[radio].maxAutoCellSize,
         minAutoCellSize:
           details.rfConfigMap[radio]?.minAutoCellSize ?? defaultRfProfile[radio].minAutoCellSize,
+        useMaxTxPower:
+          details.rfConfigMap[radio]?.useMaxTxPower?.toString() ??
+          defaultRfProfile[radio].useMaxTxPower.toString(),
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
@@ -109,6 +113,34 @@ const RFForm = ({ form, details, extraFields }) => {
     </Select>
   );
 
+  const itemWithDependency = (dependencies, key, inputField) => (
+    <Item
+      noStyle
+      shouldUpdate={(prevValues, currentValues) =>
+        Object.keys(dependencies).some(
+          i => prevValues.rfConfigMap?.[key]?.[i] !== currentValues.rfConfigMap?.[key]?.[i]
+        )
+      }
+      key={key}
+    >
+      {({ getFieldValue }) => {
+        const field = Object.keys(dependencies).find(
+          i => getFieldValue(['rfConfigMap', key, i]) !== dependencies[i]
+        );
+        const value = getFieldValue(['rfConfigMap', key, field]);
+        return !field ? (
+          inputField
+        ) : (
+          <DisabledText
+            title={`The ${radioTypes[key]} radio has "${startCase(field)}" ${
+              value === 'true' ? 'enabled' : 'disabled'
+            }.`}
+          />
+        );
+      }}
+    </Item>
+  );
+
   const renderItem = (label, dataIndex, renderInput, options = {}) => {
     const Wrapper = (
       <Item label={label} key={label}>
@@ -118,22 +150,26 @@ const RFForm = ({ form, details, extraFields }) => {
       </Item>
     );
 
-    if (options.dependency) {
+    if (options.dependencies) {
       return (
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            currentRadios.some(
-              key =>
-                prevValues.rfConfigMap?.[key]?.[options.dependency] !==
-                currentValues.rfConfigMap?.[key]?.[options.dependency]
+            Object.keys(options.dependencies).some(key =>
+              currentRadios.some(
+                radio =>
+                  prevValues.rfConfigMap?.[radio]?.[key] !==
+                  currentValues.rfConfigMap?.[radio]?.[key]
+              )
             )
           }
           key={label}
         >
           {({ getFieldValue }) => {
-            return currentRadios.some(
-              i => getFieldValue(['rfConfigMap', i, options.dependency]) === options.condition
+            return Object.keys(options.dependencies).every(key =>
+              currentRadios.some(
+                radio => getFieldValue(['rfConfigMap', radio, key]) === options.dependencies[key]
+              )
             )
               ? Wrapper
               : null;
@@ -146,7 +182,7 @@ const RFForm = ({ form, details, extraFields }) => {
   };
 
   const renderInputItem = (dataIndex, key, label, options = {}) => {
-    const InputField = (
+    const inputField = (
       <Item
         name={['rfConfigMap', key, ...dataIndex]}
         key={key}
@@ -177,36 +213,14 @@ const RFForm = ({ form, details, extraFields }) => {
       </Item>
     );
 
-    if (options.dependency) {
-      return (
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.rfConfigMap?.[key]?.[options.dependency] !==
-            currentValues.rfConfigMap?.[key]?.[options.dependency]
-          }
-          key={key}
-        >
-          {({ getFieldValue }) => {
-            const value = getFieldValue(['rfConfigMap', key, options.dependency])?.toString();
-            return value === options.condition ? (
-              InputField
-            ) : (
-              <DisabledText
-                title={`The ${radioTypes[key]} radio has ${startCase(options.dependency)} ${
-                  value === 'true' ? 'enabled' : 'disabled'
-                }.`}
-              />
-            );
-          }}
-        </Item>
-      );
+    if (options.dependencies) {
+      return itemWithDependency(options.dependencies, key, inputField);
     }
-    return InputField;
+    return inputField;
   };
 
   const renderOptionItem = (dataIndex, key, label, options = {}) => {
-    const InputField = (
+    const inputField = (
       <Item
         key={key}
         name={['rfConfigMap', key, ...dataIndex]}
@@ -221,32 +235,10 @@ const RFForm = ({ form, details, extraFields }) => {
       </Item>
     );
 
-    if (options.dependency) {
-      return (
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.rfConfigMap?.[key]?.[options.dependency] !==
-            currentValues.rfConfigMap?.[key]?.[options.dependency]
-          }
-          key={key}
-        >
-          {({ getFieldValue }) => {
-            const value = getFieldValue(['rfConfigMap', key, options.dependency])?.toString();
-            return value === options.condition ? (
-              InputField
-            ) : (
-              <DisabledText
-                title={`The ${radioTypes[key]} radio has ${startCase(options.dependency)} ${
-                  value === 'true' ? 'enabled' : 'disabled'
-                }.`}
-              />
-            );
-          }}
-        </Item>
-      );
+    if (options.dependencies) {
+      return itemWithDependency(options.dependencies, key, inputField);
     }
-    return InputField;
+    return inputField;
   };
 
   return (
@@ -324,6 +316,7 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>
               <Option value="fourByFour">4x4</Option>
+              <Option value="eightByEight">8x8</Option>
             </Select>
           ),
         })}
@@ -350,8 +343,7 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate24mbps">24</Option>
             </Select>
           ),
-          dependency: 'autoCellSizeSelection',
-          condition: 'false',
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
@@ -367,16 +359,14 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate54mbps">54</Option>
             </Select>
           ),
-          dependency: 'autoCellSizeSelection',
-          condition: 'false',
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
           error: '-100 - 100 dBm',
           addOnText: 'dBm',
-          dependency: 'autoCellSizeSelection',
-          condition: 'false',
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
         {renderItem(
           'Client Disconnect Threshold',
@@ -387,17 +377,19 @@ const RFForm = ({ form, details, extraFields }) => {
             max: 0,
             error: '-100 - 0 dBm',
             addOnText: 'dBm',
-            dependency: 'autoCellSizeSelection',
-            condition: 'false',
+            dependencies: { autoCellSizeSelection: 'false' },
           }
         )}
+        {renderItem('Max EIRP Tx Power', ['useMaxTxPower'], renderOptionItem, {
+          dropdown: defaultOptions,
+          dependencies: { autoCellSizeSelection: 'false' },
+        })}
         {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
           min: 1,
           max: 32,
           error: '1 - 32 dBm',
           addOnText: 'dBm',
-          dependency: 'autoCellSizeSelection',
-          condition: 'false',
+          dependencies: { autoCellSizeSelection: 'false', useMaxTxPower: 'false' },
         })}
         <p>Active Scan Setting:</p>
         {renderItem('Enable', ['activeScanSettings', 'enabled'], renderOptionItem, {

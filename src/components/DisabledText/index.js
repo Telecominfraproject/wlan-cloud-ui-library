@@ -1,29 +1,28 @@
 import React from 'react';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
 import Tooltip from 'components/Tooltip';
 import styles from './index.module.scss';
 
-const DisabledText = ({ text, addOnText, title }) => (
-  <div className={styles.Text}>
-    <span className={styles.DisplayText}>{text}</span>
-    {title && (
-      <span className={styles.AddOnText}>
-        <Tooltip title={title} text={addOnText} />
-      </span>
-    )}
-  </div>
+const DisabledText = ({ value, title, text }) => (
+  <Input
+    className={styles.Input}
+    value={value}
+    disabled
+    addonAfter={<Tooltip title={title} text={text} />}
+  />
 );
 
 export default DisabledText;
 
 DisabledText.propTypes = {
-  text: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   title: PropTypes.string,
-  addOnText: PropTypes.string,
+  text: PropTypes.string,
 };
 
 DisabledText.defaultProps = {
-  text: 'N/A',
+  value: 'N/A',
   title: null,
-  addOnText: null,
+  text: null,
 };
