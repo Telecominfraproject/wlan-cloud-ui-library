@@ -159,7 +159,7 @@ const ProfileDetails = ({
             });
             return;
           }
-          formattedData.childProfileIds.push(values.rfProfileId);
+          formattedData.childProfileIds.push(values.rfProfileId?.value);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === PROFILES.radius) {

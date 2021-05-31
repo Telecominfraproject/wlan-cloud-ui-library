@@ -18,7 +18,6 @@ import { PROFILES, IP_REGEX, DOMAIN_REGEX } from 'containers/ProfileDetails/cons
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { formatFile } from 'utils/profiles';
-import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
 
@@ -53,7 +52,7 @@ const AccessPointForm = ({
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
-  const currentRfId = useMemo(() => childProfiles.find(i => i.profileType === 'rf')?.id, [
+  const currentRfProfile = useMemo(() => childProfiles.find(i => i.profileType === 'rf'), [
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectedChildProfiles] = useState(
@@ -94,8 +93,12 @@ const AccessPointForm = ({
   };
 
   useEffect(() => {
+    const sortedProxyConfigurations = details?.radiusProxyConfigurations
+      ?.slice()
+      .sort((a, b) => a.name.localeCompare(b.name));
+
     setCertFiles(
-      details?.radiusProxyConfigurations?.reduce(
+      sortedProxyConfigurations?.reduce(
         (prev, curr, index) => ({
           ...prev,
           [`caCert${index}`]: curr.caCert ? [formatFile(curr.caCert)] : [],
@@ -126,8 +129,11 @@ const AccessPointForm = ({
         severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
-      rfProfileId: currentRfId,
-      radiusProxyConfigurations: details?.radiusProxyConfigurations?.map(config => ({
+      rfProfileId: {
+        value: currentRfProfile?.id || null,
+        label: currentRfProfile?.name || null,
+      },
+      radiusProxyConfigurations: sortedProxyConfigurations?.map(config => ({
         ...config,
         useAccounting: !!config.acctPort,
         useRadSec: config.useRadSec.toString(),
@@ -363,7 +369,6 @@ const AccessPointForm = ({
                 >
                   <Input
                     data-testid="vlanInput"
-                    className={globalStyles.field}
                     placeholder="2-4095"
                     type="number"
                     min={2}
@@ -471,11 +476,7 @@ const AccessPointForm = ({
                     ]}
                     hasFeedback
                   >
-                    <Input
-                      className={globalStyles.field}
-                      placeholder="IP Address"
-                      data-testid="svrIpAdress"
-                    />
+                    <Input placeholder="IP Address" data-testid="svrIpAdress" />
                   </Item>
                   <Item
                     wrapperCol={{ offset: 5, span: 15 }}
@@ -497,7 +498,6 @@ const AccessPointForm = ({
                     hasFeedback
                   >
                     <Input
-                      className={globalStyles.field}
                       placeholder="Port"
                       type="number"
                       min={1}
@@ -545,7 +545,7 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input className={globalStyles.field} placeholder="IP Address" />
+                        <Input placeholder="IP Address" />
                       </Item>
                       <Item
                         name={['syslogRelay', 'srvHostPort']}
@@ -565,13 +565,7 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input
-                          className={globalStyles.field}
-                          placeholder="Port"
-                          type="number"
-                          min={1}
-                          max={65535}
-                        />
+                        <Input placeholder="Port" type="number" min={1} max={65535} />
                       </Item>
                     </div>
                   </Item>
@@ -585,11 +579,7 @@ const AccessPointForm = ({
                       },
                     ]}
                   >
-                    <Select
-                      data-testid="select"
-                      className={globalStyles.field}
-                      placeholder="Select Syslog Mode"
-                    >
+                    <Select data-testid="select" placeholder="Select Syslog Mode">
                       <Option value="DEBUG">Debug (DEBUG)</Option>
                       <Option value="INFO">Info. (INFO)</Option>
                       <Option value="NOTICE">Notice (NOTICE)</Option>
@@ -630,6 +620,7 @@ const AccessPointForm = ({
             onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
+            labelInValue
           >
             {rfProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -765,7 +756,7 @@ const AccessPointForm = ({
                   ]}
                   hasFeedback
                 >
-                  <Input className={globalStyles.field} placeholder="Enter Server" />
+                  <Input placeholder="Enter Server" />
                 </Item>
                 <Item
                   name={[field.name, 'port']}
@@ -801,23 +792,25 @@ const AccessPointForm = ({
                     currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
                   }
                 >
-                  <Item
-                    name={[field.name, 'sharedSecret']}
-                    label="Authentication Shared Secret"
-                    rules={[
-                      {
-                        required:
-                          form.getFieldValue([
-                            'radiusProxyConfigurations',
-                            field.name,
-                            'useRadSec',
-                          ]) === 'false',
-                        message: 'Shared Secret is required',
-                      },
-                    ]}
-                  >
-                    <Password className={globalStyles.field} placeholder="Enter Shared Secret" />
-                  </Item>
+                  {({ getFieldValue }) => {
+                    return (
+                      getFieldValue(['radiusProxyConfigurations', field.name, 'useRadSec']) ===
+                        'false' && (
+                        <Item
+                          name={[field.name, 'sharedSecret']}
+                          label="Authentication Shared Secret"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Authentication Shared Secret is required',
+                            },
+                          ]}
+                        >
+                          <Password placeholder="Enter Authentication Shared Secret" />
+                        </Item>
+                      )
+                    );
+                  }}
                 </Item>
 
                 <Item
@@ -854,7 +847,6 @@ const AccessPointForm = ({
                                 hasFeedback
                               >
                                 <Input
-                                  className={globalStyles.field}
                                   placeholder="Enter Accounting Server"
                                   addonBefore="Accounting Server"
                                 />
@@ -891,20 +883,37 @@ const AccessPointForm = ({
                             </div>
                           </Item>
                           <Item
-                            wrapperCol={{ offset: 5, span: 15 }}
-                            name={[field.name, 'acctSharedSecret']}
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Accounting Shared Secret is required',
-                              },
-                            ]}
+                            noStyle
+                            shouldUpdate={(prevValues, currentValues) =>
+                              prevValues.radiusProxyConfigurations?.[field.name]?.useRadSec !==
+                              currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
+                            }
                           >
-                            <Password
-                              className={globalStyles.field}
-                              placeholder="Enter Accounting Shared Secret"
-                              addonBefore="Accounting Secret"
-                            />
+                            {() => {
+                              return (
+                                getFieldValue([
+                                  'radiusProxyConfigurations',
+                                  field.name,
+                                  'useRadSec',
+                                ]) === 'false' && (
+                                  <Item
+                                    wrapperCol={{ offset: 5, span: 15 }}
+                                    name={[field.name, 'acctSharedSecret']}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Accounting Shared Secret is required',
+                                      },
+                                    ]}
+                                  >
+                                    <Password
+                                      placeholder="Enter Accounting Shared Secret"
+                                      addonBefore="Accounting Shared Secret"
+                                    />
+                                  </Item>
+                                )
+                              );
+                            }}
                           </Item>
                         </>
                       )
@@ -921,6 +930,11 @@ const AccessPointForm = ({
                             <div key={realm.name}>
                               <Item
                                 name={realm.name}
+                                dependencies={fields.map(item => [
+                                  'radiusProxyConfigurations',
+                                  item.name,
+                                  'realm',
+                                ])}
                                 rules={[
                                   {
                                     required: true,
@@ -932,12 +946,11 @@ const AccessPointForm = ({
                                   },
                                   () => ({
                                     validator(_rule, value) {
-                                      const domains = realmFields.map(item =>
+                                      const domains = fields.flatMap(item =>
                                         form.getFieldValue([
                                           'radiusProxyConfigurations',
-                                          field.name,
-                                          'realm',
                                           item.name,
+                                          'realm',
                                         ])
                                       );
 
@@ -948,7 +961,9 @@ const AccessPointForm = ({
                                         return Promise.resolve();
                                       }
                                       return Promise.reject(
-                                        new Error('Enter a unique Realm Domain')
+                                        new Error(
+                                          'Realm domains across all RADIUS Proxy Configurations must be unique'
+                                        )
                                       );
                                     },
                                   }),
@@ -1082,10 +1097,7 @@ const AccessPointForm = ({
                               },
                             ]}
                           >
-                            <Password
-                              className={globalStyles.field}
-                              placeholder="Enter Passphrase"
-                            />
+                            <Password placeholder="Enter Passphrase" />
                           </Item>
                         </>
                       )

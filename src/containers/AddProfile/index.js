@@ -162,7 +162,7 @@ const AddProfile = ({
             return;
           }
 
-          formattedData.childProfileIds.push(values.rfProfileId);
+          formattedData.childProfileIds.push(values.rfProfileId?.value);
           formattedData.model_type = 'ApNetworkConfiguration';
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
