@@ -326,6 +326,11 @@ export const formatPasspointForm = (values, details) => {
   if (!values.hessid.addressAsString) {
     formattedData.hessid.addressAsString = DEFAULT_HESS_ID;
   }
+
+  formattedData.additionalStepsRequiredForAccess = isBool(values.additionalStepsRequiredForAccess)
+    ? 1
+    : 0;
+
   return formattedData;
 };
 
