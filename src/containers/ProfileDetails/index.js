@@ -213,7 +213,7 @@ const ProfileDetails = ({
           if (!values.osuSsidProfileId?.value || !values.osuSsidProfileId?.label) {
             notification.error({
               message: 'Error',
-              description: 'An SSID Profile is required.',
+              description: 'An OSU SSID Profile is required.',
             });
             return;
           }

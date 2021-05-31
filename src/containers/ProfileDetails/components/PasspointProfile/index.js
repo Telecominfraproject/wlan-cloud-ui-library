@@ -110,6 +110,7 @@ const PasspointProfileForm = ({
       disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding
         ? 'true'
         : 'false',
+      additionalStepsRequiredForAccess: details.additionalStepsRequiredForAccess ? 'true' : 'false',
       childProfileIds: [],
     });
   }, [form, details]);
@@ -378,6 +379,13 @@ const PasspointProfileForm = ({
           ]}
         >
           <Input placeholder="00:00:00:00:00:00" className={globalStyles.field} />
+        </Item>
+        <Item
+          label="ASRA"
+          name="additionalStepsRequiredForAccess"
+          tooltip="Additional Steps Required For Access"
+        >
+          {defaultOptions}
         </Item>
       </Card>
 
