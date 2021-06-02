@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Card, Form, Table } from 'antd';
+import { Card, Form, Table, Tag } from 'antd';
+import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ThemeContext from 'contexts/ThemeContext';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
@@ -78,7 +79,36 @@ const Status = ({ data, showAlarms, extraFields }) => {
   return (
     <>
       <Form {...layout}>
-        <Card title="Status">
+        <Card title="System">
+          <p>RADIUS Proxy:</p>
+          <Item label="Status">
+            {status?.protocol?.detailsJSON?.isApcConnected ? (
+              <Tag color="success" icon={<CheckCircleOutlined />}>
+                Connected
+              </Tag>
+            ) : (
+              <Tag color="warning" icon={<InfoCircleOutlined />}>
+                Disconnected
+              </Tag>
+            )}
+          </Item>
+          {status?.protocol?.detailsJSON?.isApcConnected && (
+            <>
+              <Item label="Mode">
+                <Tag>{status?.protocol?.detailsJSON?.apcMode ?? 'N/A'}</Tag>
+              </Item>
+              <Item label="Designated Proxy">
+                <Tag>{status?.protocol?.detailsJSON?.apcDesignatedRouterIpAddress ?? 'N/A'}</Tag>
+              </Item>
+              <Item label="Backup Proxy">
+                <Tag>
+                  {status?.protocol?.detailsJSON?.apcBackupDesignatedRouterIpAddress ?? 'N/A'}
+                </Tag>
+              </Item>
+            </>
+          )}
+        </Card>
+        <Card title="Radio">
           {renderSpanItem(' ', radioMap, 'radioType')}
           {renderSpanItem('Channel', status?.channel?.detailsJSON?.channelNumberStatusDataMap)}
           {renderSpanItem('Noise Floor', status?.radioUtilization?.detailsJSON?.avgNoiseFloor)}
