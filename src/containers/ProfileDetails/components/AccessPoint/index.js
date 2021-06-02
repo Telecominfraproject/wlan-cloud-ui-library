@@ -1020,7 +1020,7 @@ const AccessPointForm = ({
                           >
                             <Upload
                               data-testid={`caCertFile${field.key}`}
-                              accept="application/x-x509-ca-cert"
+                              accept=".pem"
                               fileList={certFiles?.[`caCert${field.key}`]}
                               beforeUpload={handleFileUpload}
                               onChange={({ fileList }) =>
@@ -1047,7 +1047,7 @@ const AccessPointForm = ({
                           >
                             <Upload
                               data-testid={`clientCertFile${field.key}`}
-                              accept="application/x-x509-ca-cert"
+                              accept=".pem"
                               fileList={certFiles?.[`clientCert${field.key}`]}
                               beforeUpload={handleFileUpload}
                               onChange={({ fileList }) =>
