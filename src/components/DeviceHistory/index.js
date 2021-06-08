@@ -11,25 +11,14 @@ const chartHeight = 150;
 const DeviceHistoryChart = ({ data, width }) => {
   const lineData = useMemo(() => {
     const result = [];
-    let curr = 0;
     data.forEach(datum => {
-      const timestamp = parseInt(datum.createdTimestamp, 10);
-      if (timestamp - curr < 120000) {
-        result.push({
-          timestamp,
-          rssi: datum.rssi,
-          rx: datum.detailsJSON.averageRxRate,
-          tx: datum.detailsJSON.averageTxRate,
-        });
-      } else {
-        result.push({
-          timestamp,
-          rssi: null,
-          rx: null,
-          tx: null,
-        });
-      }
-      curr = timestamp;
+      const timestamp = parseInt(datum?.detailsJSON?.sourceTimestampMs, 10);
+      result.push({
+        timestamp,
+        rssi: datum.rssi,
+        rx: datum.detailsJSON.averageRxRate,
+        tx: datum.detailsJSON.averageTxRate,
+      });
     });
     return result;
   }, [data]);
@@ -44,7 +33,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
           baseValue={-100}
         >
@@ -76,7 +65,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -107,7 +96,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -118,7 +107,7 @@ const DeviceHistoryChart = ({ data, width }) => {
           </defs>
           <XAxis
             dataKey="timestamp"
-            tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+            tickFormatter={timestamp => (lineData.length ? moment(timestamp).format('h:mm a') : '')}
             domain={['dataMin', 'dataMax']}
             stroke="white"
           />
