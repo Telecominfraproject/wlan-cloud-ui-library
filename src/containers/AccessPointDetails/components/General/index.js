@@ -549,14 +549,18 @@ const General = ({
             renderOptionItem,
             {
               mapName: 'advancedRadioMap',
-              dropdown: (
+              dropdown: key => (
                 <Select className={styles.Field}>
-                  <Option value="rate1mbps">1</Option>
-                  <Option value="rate2mbps">2</Option>
-                  <Option value="rate5dot5mbps">5.5</Option>
+                  {key === 'is2dot4GHz' && (
+                    <>
+                      <Option value="rate1mbps">1</Option>
+                      <Option value="rate2mbps">2</Option>
+                      <Option value="rate5dot5mbps">5.5</Option>
+                    </>
+                  )}
                   <Option value="rate6mbps">6</Option>
                   <Option value="rate9mbps">9</Option>
-                  <Option value="rate11mbps">11</Option>
+                  {key === 'is2dot4GHz' && <Option value="rate11mbps">11</Option>}
                   <Option value="rate12mbps">12</Option>
                   <Option value="rate18mbps">18</Option>
                   <Option value="rate24mbps">24</Option>
