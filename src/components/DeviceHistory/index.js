@@ -11,14 +11,25 @@ const chartHeight = 150;
 const DeviceHistoryChart = ({ data, width }) => {
   const lineData = useMemo(() => {
     const result = [];
+    let curr = 0;
     data.forEach(datum => {
       const timestamp = parseInt(datum?.detailsJSON?.sourceTimestampMs, 10);
-      result.push({
-        timestamp,
-        rssi: datum.rssi,
-        rx: datum.detailsJSON.averageRxRate,
-        tx: datum.detailsJSON.averageTxRate,
-      });
+      if (timestamp - curr < 120000) {
+        result.push({
+          timestamp,
+          rssi: datum.rssi,
+          rx: datum.detailsJSON.averageRxRate,
+          tx: datum.detailsJSON.averageTxRate,
+        });
+      } else {
+        result.push({
+          timestamp,
+          rssi: null,
+          rx: null,
+          tx: null,
+        });
+      }
+      curr = timestamp;
     });
     return result;
   }, [data]);
