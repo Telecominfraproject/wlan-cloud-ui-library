@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Select as AntdSelect } from 'antd';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
 import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
+import { DOMAIN_REGEX } from 'containers/ProfileDetails/constants';
 import FormModal from '../ProviderId/components/FormModal';
 
 import styles from '../index.module.scss';
@@ -22,10 +24,15 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
       serverOnlyAuthenticatedL2EncryptionNetwork: details?.serverOnlyAuthenticatedL2EncryptionNetwork
         ? 'true'
         : 'false',
-      operatorFriendlyName: operatorFriendlyName || [],
-      domainNameList: details?.domainNameList?.join(', ') || '',
+      domainNameList: details?.domainNameList || [''],
     });
-  }, [form, details, operatorFriendlyName]);
+  }, [form, details]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      operatorFriendlyName: operatorFriendlyName || [],
+    });
+  }, [operatorFriendlyName]);
 
   const addName = values => {
     setOperatorFriendlyName([...operatorFriendlyName, values]);
@@ -59,27 +66,62 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
             <Option value="false">Disabled</Option>
           </Select>
         </Item>
-        <Item
-          label="Domain Name List:"
-          name="domainNameList"
-          rules={[
-            { required: true, message: 'Domain name list cannot be empty' },
-            ({ getFieldValue }) => ({
-              validator(_rule, value) {
-                if (
-                  !value ||
-                  getFieldValue('domainNameList').match(
-                    /^\s*([\w-]+(\.[\w-]+)+\s*,\s*)*[\w-]+(\.[\w-]+)+\s*$/g
-                  )
-                ) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Please enter a comma separated list of domains'));
-              },
-            }),
-          ]}
-        >
-          <Input placeholder="Enter Domain Name List" />
+
+        <Item label="Domain Name List">
+          <Form.List name="domainNameList">
+            {(fields, { add, remove }) => {
+              return (
+                <>
+                  {fields.map(field => (
+                    <div key={field.name}>
+                      <Item
+                        name={field.name}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Domain Name is required',
+                          },
+                          {
+                            pattern: DOMAIN_REGEX,
+                            message: 'Enter a valid Domain Name',
+                          },
+                          () => ({
+                            validator(_rule, value) {
+                              const domains = fields.map(item =>
+                                form.getFieldValue(['domainNameList', item.name])
+                              );
+
+                              const occurence = domains.filter(item => item === value).length;
+
+                              if (!value || occurence <= 1) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(new Error('Enter a unique Domain Name'));
+                            },
+                          }),
+                        ]}
+                      >
+                        <Input
+                          placeholder={`Enter Domain Name ${field.name + 1}`}
+                          addonAfter={
+                            fields.length > 1 && (
+                              <MinusCircleOutlined
+                                data-testid={`removeDomain${field.name}`}
+                                onClick={() => remove(field.name)}
+                              />
+                            )
+                          }
+                        />
+                      </Item>
+                    </div>
+                  ))}
+                  <RoleProtectedBtn type="dashed" onClick={() => add()}>
+                    <PlusOutlined /> Add Domain Name
+                  </RoleProtectedBtn>
+                </>
+              );
+            }}
+          </Form.List>
         </Item>
       </Card>
 

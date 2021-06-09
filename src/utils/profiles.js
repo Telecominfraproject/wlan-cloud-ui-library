@@ -363,13 +363,6 @@ export const formatProviderProfileForm = values => {
   return formattedData;
 };
 
-export const formatOperatorForm = values => {
-  const formattedData = { ...values };
-  formattedData.domainNameList = values.domainNameList.replace(/\s/g, '').split(',');
-
-  return formattedData;
-};
-
 export const profileTypes = {
   ssid: 'SSID',
   equipment_ap: 'Access Point',
