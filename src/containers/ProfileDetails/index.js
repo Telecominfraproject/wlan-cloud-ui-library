@@ -23,7 +23,6 @@ import {
   formatRfProfileForm,
   formatPasspointForm,
   formatProviderProfileForm,
-  formatOperatorForm,
   profileTypes,
 } from 'utils/profiles';
 
@@ -222,7 +221,6 @@ const ProfileDetails = ({
         }
         if (profileType === PROFILES.operator) {
           formattedData.model_type = 'PasspointOperatorProfile';
-          formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
         if (profileType === PROFILES.providerID) {
           formattedData.model_type = 'PasspointOsuProviderProfile';
