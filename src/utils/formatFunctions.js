@@ -46,3 +46,12 @@ function formatPercentage(percentage) {
 export function percentageLabelFormatter() {
   return formatPercentage(this.value);
 }
+
+export const formatTicks = (firstTs, lastTs, interval) => {
+  const step = (lastTs - firstTs) / interval;
+  const MINUTE_UNIX = 60000;
+  if (firstTs && lastTs) {
+    return _.range(firstTs, lastTs, Math.ceil(step - (step % MINUTE_UNIX)));
+  }
+  return [];
+};

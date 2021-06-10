@@ -7,6 +7,8 @@ import Timer from 'components/Timer';
 import LineGraphTooltip from 'components/GraphTooltips/LineGraphTooltip';
 import { COLORS } from 'utils/charts';
 import { useChartLegend } from 'hooks';
+import { formatTicks } from 'utils/formatFunctions';
+
 import Card from '../Card';
 import styles from './index.module.scss';
 
@@ -14,7 +16,10 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
   const lineData = useMemo(() => {
     let result = [];
     Object.keys(data).forEach(key => {
-      result = [...result, data[key]];
+      result = [
+        ...result,
+        { ...data[key], value: data[key].value.sort((a, b) => a.timestamp - b.timestamp) },
+      ];
     });
     return result;
   }, [data]);
@@ -30,12 +35,27 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     selectItem,
   } = useChartLegend(names);
 
+  const formattedGraphTicks = useMemo(() => {
+    let firstTs = Number.MAX_SAFE_INTEGER;
+    let lastTs = 0;
+
+    lineData.forEach(type => {
+      firstTs = Math.min(type?.value[0]?.timestamp, firstTs);
+      lastTs = Math.max(type?.value[type.value.length - 1]?.timestamp, lastTs);
+    });
+
+    if (firstTs && lastTs) {
+      return formatTicks(firstTs, lastTs, 5);
+    }
+    return [];
+  }, [lineData]);
+
   return (
     <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
       <div className={styles.Container}>
         {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
+          <LineChart margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
             <XAxis
               dataKey="timestamp"
               type="number"
@@ -45,6 +65,8 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
               tick={{ style: { fontSize: 11 } }}
               scale="time"
               hide={allLegendItemsHidden}
+              ticks={formattedGraphTicks}
+              interval="preserveStartEnd"
             />
             <YAxis
               dataKey="value"
