@@ -40,10 +40,8 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     let lastTs = 0;
 
     lineData.forEach(type => {
-      if (type?.value) {
-        firstTs = Math.min(type.value[0]?.timestamp, firstTs);
-        lastTs = Math.max(type.value[type.value.length - 1]?.timestamp, lastTs);
-      }
+      firstTs = Math.min(type?.value?.[0]?.timestamp, firstTs);
+      lastTs = Math.max(type.value?.[type.value.length - 1]?.timestamp, lastTs);
     });
 
     if (firstTs && lastTs) {
