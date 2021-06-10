@@ -18,7 +18,7 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     Object.keys(data).forEach(key => {
       result = [
         ...result,
-        { ...data[key], value: data[key].value.sort((a, b) => a.timestamp - b.timestamp) },
+        { ...data[key], value: data[key]?.value?.sort((a, b) => a.timestamp - b.timestamp) },
       ];
     });
     return result;
@@ -40,8 +40,10 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     let lastTs = 0;
 
     lineData.forEach(type => {
-      firstTs = Math.min(type?.value[0]?.timestamp, firstTs);
-      lastTs = Math.max(type?.value[type.value.length - 1]?.timestamp, lastTs);
+      if (type?.value) {
+        firstTs = Math.min(type.value[0]?.timestamp, firstTs);
+        lastTs = Math.max(type.value[type.value.length - 1]?.timestamp, lastTs);
+      }
     });
 
     if (firstTs && lastTs) {

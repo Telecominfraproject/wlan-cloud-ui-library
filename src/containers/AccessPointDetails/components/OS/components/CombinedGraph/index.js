@@ -58,8 +58,10 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
     let lastTs = 0;
 
     lineData.forEach(type => {
-      firstTs = Math.min(type?.data[0]?.timestamp, firstTs);
-      lastTs = Math.max(type?.data[type.data.length - 1]?.timestamp, lastTs);
+      if (type?.data) {
+        firstTs = Math.min(type.data[0]?.timestamp, firstTs);
+        lastTs = Math.max(type.data[type.data.length - 1]?.timestamp, lastTs);
+      }
     });
 
     if (firstTs && lastTs) {
