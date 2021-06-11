@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { formatBytes } from 'utils/formatFunctions';
+import { formatBytes, formatTicks } from 'utils/formatFunctions';
 import { useChartLegend } from 'hooks';
 import {
   LineChart,
@@ -53,6 +53,21 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
 
   const names = useMemo(() => lineData.map(s => s.key), [lineData]);
 
+  const formattedGraphTicks = useMemo(() => {
+    let firstTs = Number.MAX_SAFE_INTEGER;
+    let lastTs = 0;
+
+    lineData.forEach(type => {
+      firstTs = Math.min(type?.data?.[0]?.timestamp, firstTs);
+      lastTs = Math.max(type?.data?.[type.data.length - 1]?.timestamp, lastTs);
+    });
+
+    if (firstTs && lastTs) {
+      return formatTicks(firstTs, lastTs, 11);
+    }
+    return [];
+  }, [lineData]);
+
   const {
     hover,
     allLegendItemsHidden,
@@ -81,6 +96,8 @@ const CombinedGraph = ({ loading, cpuUsage, freeMemory, cpuTemp, maxFreeMemory }
             tick={{ style: { fontSize: 11 } }}
             scale="time"
             hide={allLegendItemsHidden}
+            ticks={formattedGraphTicks}
+            interval="preserveStartEnd"
           />
           {!allLegendItemsHidden && <CartesianGrid vertical={false} />}
           {lineData.map((s, i) => (
