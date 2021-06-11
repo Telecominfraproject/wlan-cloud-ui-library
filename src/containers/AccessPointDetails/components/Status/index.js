@@ -55,20 +55,22 @@ const Status = ({ data, showAlarms, extraFields }) => {
     return obj?.[i]?.[dataIndex];
   };
 
-  const renderSpanItem = (label, obj, dataIndex, fn) => (
+  const renderSpanItem = ({ label, obj, dataIndex, unit = '', fn }) => (
     <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(radioMap)).map(i => {
           if (fn) {
+            const value = fn(i);
             return (
               <span key={i} className={styles.spanStyle}>
-                {fn(i) ?? 'N/A'}
+                {typeof value !== 'undefined' ? `${value} ${unit}` : 'N/A'}
               </span>
             );
           }
+          const value = dataIndex ? renderData(obj, dataIndex, i) : obj?.[i];
           return (
             <span key={i} className={styles.spanStyle}>
-              {(dataIndex ? renderData(obj, dataIndex, i) : obj?.[i]) ?? 'N/A'}
+              {typeof value !== 'undefined' ? `${value} ${unit}` : 'N/A'}
             </span>
           );
         })}
@@ -109,21 +111,27 @@ const Status = ({ data, showAlarms, extraFields }) => {
           )}
         </Card>
         <Card title="Radio">
-          {renderSpanItem(' ', radioMap, 'radioType')}
-          {renderSpanItem('Channel', status?.channel?.detailsJSON?.channelNumberStatusDataMap)}
-          {renderSpanItem('Noise Floor', status?.radioUtilization?.detailsJSON?.avgNoiseFloor)}
-          {renderSpanItem(
-            'Number of Devices',
-            status?.clientDetails?.detailsJSON?.numClientsPerRadio
-          )}
-          {renderSpanItem(
-            'Available Capacity',
-            status?.radioUtilization?.detailsJSON?.capacityDetails,
-            'availableCapacity'
-          )}
-          {extraFields.map(field =>
-            renderSpanItem(field.label, field.obj, field.dataIndex, field.fn)
-          )}
+          {renderSpanItem({ label: ' ', obj: radioMap, dataIndex: 'radioType' })}
+          {renderSpanItem({
+            label: 'Channel',
+            obj: status?.channel?.detailsJSON?.channelNumberStatusDataMap,
+          })}
+          {renderSpanItem({
+            label: 'Noise Floor',
+            obj: status?.radioUtilization?.detailsJSON?.avgNoiseFloor,
+            unit: 'dBm',
+          })}
+          {renderSpanItem({
+            label: 'Number of Devices',
+            obj: status?.clientDetails?.detailsJSON?.numClientsPerRadio,
+          })}
+          {renderSpanItem({
+            label: 'Available Capacity',
+            obj: status?.radioUtilization?.detailsJSON?.capacityDetails,
+            dataIndex: 'availableCapacity',
+            unit: '%',
+          })}
+          {extraFields.map(field => renderSpanItem(field))}
         </Card>
 
         {showAlarms && (
