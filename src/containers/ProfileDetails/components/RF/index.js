@@ -25,33 +25,33 @@ const RFForm = ({ form, details, extraFields }) => {
 
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
-        radioType: details.rfConfigMap[radio]?.radioType || radio,
-        radioMode: details.rfConfigMap[radio]?.radioMode || defaultRfProfile[radio].radioMode,
+        radioType: details.rfConfigMap[radio]?.radioType ?? radio,
+        radioMode: details.rfConfigMap[radio]?.radioMode ?? defaultRfProfile[radio].radioMode,
         beaconInterval:
-          details.rfConfigMap[radio]?.beaconInterval || defaultRfProfile[radio].beaconInterval,
+          details.rfConfigMap[radio]?.beaconInterval ?? defaultRfProfile[radio].beaconInterval,
         forceScanDuringVoice:
-          details.rfConfigMap[radio]?.forceScanDuringVoice ||
+          details.rfConfigMap[radio]?.forceScanDuringVoice ??
           defaultRfProfile[radio].forceScanDuringVoice,
         rtsCtsThreshold:
-          details.rfConfigMap[radio]?.rtsCtsThreshold || defaultRfProfile[radio].rtsCtsThreshold,
+          details.rfConfigMap[radio]?.rtsCtsThreshold ?? defaultRfProfile[radio].rtsCtsThreshold,
         channelBandwidth:
-          details.rfConfigMap[radio]?.channelBandwidth || defaultRfProfile[radio].channelBandwidth,
-        mimoMode: details.rfConfigMap[radio]?.mimoMode || defaultRfProfile[radio].mimoMode,
+          details.rfConfigMap[radio]?.channelBandwidth ?? defaultRfProfile[radio].channelBandwidth,
+        mimoMode: details.rfConfigMap[radio]?.mimoMode ?? defaultRfProfile[radio].mimoMode,
         maxNumClients:
-          details.rfConfigMap[radio]?.maxNumClients || defaultRfProfile[radio].maxNumClients,
+          details.rfConfigMap[radio]?.maxNumClients ?? defaultRfProfile[radio].maxNumClients,
         multicastRate:
-          details.rfConfigMap[radio]?.multicastRate || defaultRfProfile[radio].multicastRate,
+          details.rfConfigMap[radio]?.multicastRate ?? defaultRfProfile[radio].multicastRate,
         managementRate:
-          details.rfConfigMap[radio]?.managementRate || defaultRfProfile[radio].managementRate,
+          details.rfConfigMap[radio]?.managementRate ?? defaultRfProfile[radio].managementRate,
         rxCellSizeDb:
-          details.rfConfigMap[radio]?.rxCellSizeDb || defaultRfProfile[radio].rxCellSizeDb,
+          details.rfConfigMap[radio]?.rxCellSizeDb ?? defaultRfProfile[radio].rxCellSizeDb,
         probeResponseThresholdDb:
-          details.rfConfigMap[radio]?.probeResponseThresholdDb ||
+          details.rfConfigMap[radio]?.probeResponseThresholdDb ??
           defaultRfProfile[radio].probeResponseThresholdDb,
         clientDisconnectThresholdDb:
-          details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
+          details.rfConfigMap[radio]?.clientDisconnectThresholdDb ??
           defaultRfProfile[radio].clientDisconnectThresholdDb,
-        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
+        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower ?? defaultRfProfile[radio].eirpTxPower,
         autoChannelSelection:
           details.rfConfigMap[radio]?.autoChannelSelection?.toString() ??
           defaultRfProfile[radio].autoChannelSelection.toString(),
@@ -68,36 +68,36 @@ const RFForm = ({ form, details, extraFields }) => {
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ||
+            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ??
             defaultRfProfile[radio].activeScanSettings.scanFrequencySeconds,
           scanDurationMillis:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ||
+            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ??
             defaultRfProfile[radio].activeScanSettings.scanDurationMillis,
         },
         channelHopSettings: {
           noiseFloorThresholdInDB:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ||
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ??
             defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdInDB,
           noiseFloorThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ||
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ??
             defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdTimeInSeconds,
           nonWifiThresholdInPercentage:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ||
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ??
             defaultRfProfile[radio].channelHopSettings.nonWifiThresholdInPercentage,
           nonWifiThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ||
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ??
             defaultRfProfile[radio].channelHopSettings.nonWifiThresholdTimeInSeconds,
           obssHopMode:
-            details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ||
+            details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ??
             defaultRfProfile[radio].channelHopSettings.obssHopMode,
         },
         bestApSettings: {
-          mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed || 'true',
+          mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed ?? 'true',
           dropInSnrPercentage:
-            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ||
+            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ??
             defaultRfProfile[radio].bestApSettings.dropInSnrPercentage,
           minLoadFactor:
-            details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ||
+            details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ??
             defaultRfProfile[radio].bestApSettings.minLoadFactor,
         },
       };
