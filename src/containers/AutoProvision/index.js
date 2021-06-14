@@ -126,7 +126,6 @@ const AutoProvision = ({
     },
     {
       title: '',
-      dataIndex: '',
       key: 'editModel',
       width: 60,
       render: (_, record) => (
@@ -145,7 +144,6 @@ const AutoProvision = ({
 
     {
       title: '',
-      dataIndex: '',
       key: 'deleteModel',
       width: 60,
       render: (_, record) => {
@@ -268,7 +266,13 @@ const AutoProvision = ({
               }
             >
               <div className={styles.Content}>
-                <Table rowKey="model" columns={columns} dataSource={tableData} pagination={false} />
+                <Table
+                  scroll={{ x: 'max-content' }}
+                  rowKey="model"
+                  columns={columns}
+                  dataSource={tableData}
+                  pagination={false}
+                />
               </div>
             </Card>
           </div>

@@ -86,7 +86,13 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
           </RoleProtectedBtn>
         </Header>
 
-        <Table rowKey="macAddress" dataSource={data} columns={columns} pagination={false} />
+        <Table
+          scroll={{ x: 'max-content' }}
+          rowKey="macAddress"
+          dataSource={data}
+          columns={columns}
+          pagination={false}
+        />
       </div>
     </Container>
   );

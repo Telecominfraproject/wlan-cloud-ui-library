@@ -502,6 +502,7 @@ const PasspointProfileForm = ({
           </Button>
         </Item>
         <Table
+          scroll={{ x: 'max-content' }}
           dataSource={connectionCapabilitySetList}
           columns={columns}
           pagination={false}
