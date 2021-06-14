@@ -278,6 +278,7 @@ const RFForm = ({ form, details, extraFields }) => {
           dropdown: key => {
             return (
               <Select className={styles.Field}>
+                <Option value="auto">Auto</Option>
                 <Option value="modeN">N</Option>
                 {key === 'is2dot4GHz' && (
                   <>

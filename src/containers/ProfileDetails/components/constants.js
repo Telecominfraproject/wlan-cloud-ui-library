@@ -2,7 +2,7 @@ const defaultRfProfile = {
   is5GHz: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHz',
-    radioMode: 'modeAC',
+    radioMode: 'auto',
     rf: 'SaaS-rf',
     beaconInterval: 102.4,
     forceScanDuringVoice: 'disabled',
@@ -52,7 +52,7 @@ const defaultRfProfile = {
   is2dot4GHz: {
     model_type: 'RfElementConfiguration',
     radioType: 'is2dot4GHz',
-    radioMode: 'modeN',
+    radioMode: 'auto',
     rf: 'TipWlan-rf',
     beaconInterval: 102.4,
     forceScanDuringVoice: 'disabled',
@@ -102,7 +102,7 @@ const defaultRfProfile = {
   is5GHzU: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHzU',
-    radioMode: 'modeAC',
+    radioMode: 'auto',
     rf: 'TipWlan-rf',
     beaconInterval: 102.4,
     forceScanDuringVoice: 'disabled',
@@ -152,7 +152,7 @@ const defaultRfProfile = {
   is5GHzL: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHzL',
-    radioMode: 'modeAC',
+    radioMode: 'auto',
     rf: 'TipWlan-rf',
     beaconInterval: 102.4,
     forceScanDuringVoice: 'disabled',
