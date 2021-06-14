@@ -327,7 +327,7 @@ const SSIDForm = ({
                       <Radio value="usePortal">Use</Radio>
                     </RadioGroup>
                   ) : (
-                    <span className={styles.Disclaimer}>Not Applicable</span>
+                    <span className={styles.Disclaimer}>Requires NAT Mode</span>
                   )}
                 </Item>
               </>
