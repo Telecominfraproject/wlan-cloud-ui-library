@@ -144,7 +144,6 @@ const Firmware = ({
 
     {
       title: '',
-      dataIndex: '',
       key: 'editAssignment',
       width: 60,
       render: (_, record) => (
@@ -162,7 +161,6 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: '',
       key: 'deleteAssignment',
       width: 60,
       render: (_, record) => (
@@ -221,7 +219,6 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: '',
       key: 'editFirmware',
       width: 60,
       render: (_, record) => (
@@ -239,7 +236,6 @@ const Firmware = ({
     },
     {
       title: '',
-      dataIndex: '',
       key: 'deleteFirmware',
       width: 60,
       render: (_, record) => {
@@ -327,6 +323,7 @@ const Firmware = ({
       </Header>
       {trackAssignmentReady && (
         <Table
+          scroll={{ x: 'max-content' }}
           rowKey={i => i.modelId + i.firmwareVersionRecordId}
           columns={assignmentColumns}
           dataSource={trackAssignmentData}
@@ -352,7 +349,13 @@ const Firmware = ({
         )}
       </Header>
       {firmwareReady && (
-        <Table rowKey="id" columns={versionColumn} dataSource={firmwareData} pagination={false} />
+        <Table
+          scroll={{ x: 'max-content' }}
+          rowKey="id"
+          columns={versionColumn}
+          dataSource={firmwareData}
+          pagination={false}
+        />
       )}
       {firmwareLoading && (
         <Spin className={styles.spinner} size="large" data-testid="firmwareSpinner" />

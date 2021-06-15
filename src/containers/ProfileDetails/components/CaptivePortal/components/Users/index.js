@@ -124,7 +124,13 @@ const Users = ({ userList, handleAddUser, handleUpdateUser, handleDeleteUser }) 
         title="User List"
         extra={<RoleProtectedBtn onClick={() => setAddUserModal(true)}> Add User</RoleProtectedBtn>}
       >
-        <Table rowKey="username" columns={columns} dataSource={userList} pagination={false} />
+        <Table
+          scroll={{ x: 'max-content' }}
+          rowKey="username"
+          columns={columns}
+          dataSource={userList}
+          pagination={false}
+        />
       </Card>
     </>
   );

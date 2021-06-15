@@ -36,10 +36,9 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
     {
       title: 'ACCESS POINTS',
       dataIndex: 'equipmentCount',
-      width: 700,
+      width: 600,
     },
     {
-      title: '',
       width: 80,
       render: (_, record) => (
         <DeleteButton
@@ -63,7 +62,7 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
 
   return (
     <Container>
-      <div className={styles.Profile}>
+      <div>
         <Header>
           <h1>Profiles</h1>
           <div className={styles.Buttons}>
@@ -76,9 +75,9 @@ const Profile = ({ data, onReload, onLoadMore, isLastPage, onDeleteProfile }) =>
           </div>
         </Header>
         <Table
+          scroll={{ x: 'max-content' }}
           rowClassName={styles.Row}
           rowKey="id"
-          className={styles.Profile}
           dataSource={data}
           columns={columns}
           pagination={false}

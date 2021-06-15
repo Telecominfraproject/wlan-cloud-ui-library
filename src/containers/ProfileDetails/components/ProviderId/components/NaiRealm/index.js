@@ -139,6 +139,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
         }
       >
         <Table
+          scroll={{ x: 'max-content' }}
           dataSource={formatRealmList}
           columns={columnsNai}
           pagination={false}
