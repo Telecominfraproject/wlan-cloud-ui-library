@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Radio, Select as AntdSelect, Table, Empty, List } from 'antd';
+import { Card, Form, Radio, Select as AntdSelect, Table, Empty, List, Divider } from 'antd';
 import WithRoles, {
   RadioGroup as Group,
   Select,
@@ -8,14 +8,16 @@ import WithRoles, {
   Checkbox,
   RoleProtectedBtn,
   Search,
+  Password,
+  Upload,
 } from 'components/WithRoles';
-import { DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled, UploadOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
-import { PROFILES, IP_REGEX } from 'containers/ProfileDetails/constants';
+import { PROFILES, IP_REGEX, DOMAIN_REGEX } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
-import globalStyles from 'styles/index.scss';
+import { formatFile } from 'utils/profiles';
 import styles from '../index.module.scss';
 import { defaultApProfile } from '../constants';
 
@@ -25,6 +27,7 @@ const { Item } = Form;
 const { Option } = AntdSelect;
 
 const MAX_GRE_TUNNELS = 1;
+const MAX_RADIUS_PROXIES = 5;
 
 const AccessPointForm = ({
   form,
@@ -36,6 +39,7 @@ const AccessPointForm = ({
   onFetchMoreProfiles,
   loadingSSIDProfiles,
   loadingRFProfiles,
+  fileUpload,
   handleOnFormChange,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
@@ -48,12 +52,14 @@ const AccessPointForm = ({
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
-  const currentRfId = useMemo(() => childProfiles.find(i => i.profileType === 'rf')?.id, [
+  const currentRfProfile = useMemo(() => childProfiles.find(i => i.profileType === 'rf'), [
     childProfiles,
   ]);
   const [selectedChildProfiles, setSelectedChildProfiles] = useState(
     childProfiles.filter(i => i.profileType === PROFILES.ssid) || []
   );
+
+  const [certFiles, setCertFiles] = useState({});
 
   const handleOnChangeSsid = selectedItem => {
     setSelectedChildProfiles([
@@ -87,6 +93,22 @@ const AccessPointForm = ({
   };
 
   useEffect(() => {
+    const sortedProxyConfigurations = details?.radiusProxyConfigurations
+      ?.slice()
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    setCertFiles(
+      sortedProxyConfigurations?.reduce(
+        (prev, curr, index) => ({
+          ...prev,
+          [`caCert${index}`]: curr.caCert ? [formatFile(curr.caCert)] : [],
+          [`clientCert${index}`]: curr.clientCert ? [formatFile(curr.clientCert)] : [],
+          [`clientKey${index}`]: curr.clientKey ? [formatFile(curr.clientKey)] : [],
+        }),
+        {}
+      )
+    );
+
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
       vlan: details?.vlan || defaultApProfile.vlan,
@@ -107,13 +129,25 @@ const AccessPointForm = ({
         severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
-      rfProfileId: currentRfId,
+      rfProfileId: {
+        value: currentRfProfile?.id || null,
+        label: currentRfProfile?.name || null,
+      },
+      radiusProxyConfigurations: sortedProxyConfigurations?.map(config => ({
+        ...config,
+        useAccounting: !!config.acctPort,
+        useRadSec: config.useRadSec.toString(),
+        caCert: config.caCert ? { file: formatFile(config.caCert) } : null,
+        clientCert: config.clientCert ? { file: formatFile(config.clientCert) } : null,
+        clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
+      })),
     });
   }, [form, details]);
 
   useEffect(() => {
     form.setFieldsValue({
       childProfileIds: selectedChildProfiles.map(i => i.id),
+      selectedSsidProfiles: selectedChildProfiles,
       greTunnelConfigurations: greList,
     });
   }, [selectedChildProfiles, greList]);
@@ -178,12 +212,32 @@ const AccessPointForm = ({
     },
   ];
 
-  const enabledRadioOptions = () => (
-    <Group>
-      <Radio value="false">Disabled</Radio>
-      <Radio value="true">Enabled</Radio>
-    </Group>
-  );
+  const enabledRadioOptions = options => {
+    return (
+      <Group {...options}>
+        <Radio value="false">Disabled</Radio>
+        <Radio value="true">Enabled</Radio>
+      </Group>
+    );
+  };
+  const handleOnFileChange = fileList => {
+    let list = [...fileList];
+
+    list = list.slice(-1);
+    list = list.map(i => ({ ...i, url: i?.response?.url }));
+
+    return list;
+  };
+
+  const handleFileUpload = file => {
+    fileUpload(file.name, file);
+    return false;
+  };
+
+  const handleOnChangeCertFile = (fileList, key) => {
+    const list = handleOnFileChange(fileList);
+    if (list) setCertFiles({ ...certFiles, [key]: list });
+  };
 
   const filteredOptions = ssidProfiles.filter(
     i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
@@ -214,12 +268,7 @@ const AccessPointForm = ({
       return Promise.reject(new Error('This item already exists in the server list'));
     }
 
-    // from https://www.regextester.com/23
-    if (
-      !value.match(
-        /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$/
-      )
-    ) {
+    if (!value.match(DOMAIN_REGEX)) {
       return Promise.reject(new Error('Unrecognized hostname'));
     }
 
@@ -266,6 +315,21 @@ const AccessPointForm = ({
     });
   }, [ntpServers]);
 
+  const onChangeRadSec = (e, index) => {
+    const fields = form.getFieldValue(['radiusProxyConfigurations']);
+
+    form.setFieldsValue({
+      radiusProxyConfigurations: fields.map((field, i) => {
+        if (i === index) {
+          return e.target.value === 'true'
+            ? { ...fields[index], port: 2083, acctPort: 2083 }
+            : { ...fields[index], port: 1812, acctPort: 1813 };
+        }
+        return field;
+      }),
+    });
+  };
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="LAN and Services ">
@@ -287,7 +351,7 @@ const AccessPointForm = ({
                   rules={[
                     {
                       required: true,
-                      message: 'Vlan expected between 2 and 4095',
+                      message: 'VLAN expected between 2 and 4095',
                     },
                     () => ({
                       validator(_rule, value) {
@@ -297,7 +361,7 @@ const AccessPointForm = ({
                         ) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(new Error('Vlan expected between 2 and 4095'));
+                        return Promise.reject(new Error('VLAN expected between 2 and 4095'));
                       },
                     }),
                   ]}
@@ -305,7 +369,6 @@ const AccessPointForm = ({
                 >
                   <Input
                     data-testid="vlanInput"
-                    className={globalStyles.field}
                     placeholder="2-4095"
                     type="number"
                     min={2}
@@ -388,10 +451,7 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Group disabled>
-            <Radio value="false">Disabled</Radio>
-            <Radio value="true">Enabled</Radio>
-          </Group>
+          {enabledRadioOptions({ disabled: true })}
         </Item>
         <Item
           noStyle
@@ -416,11 +476,7 @@ const AccessPointForm = ({
                     ]}
                     hasFeedback
                   >
-                    <Input
-                      className={globalStyles.field}
-                      placeholder="IP Address"
-                      data-testid="svrIpAdress"
-                    />
+                    <Input placeholder="IP Address" data-testid="svrIpAdress" />
                   </Item>
                   <Item
                     wrapperCol={{ offset: 5, span: 15 }}
@@ -442,7 +498,6 @@ const AccessPointForm = ({
                     hasFeedback
                   >
                     <Input
-                      className={globalStyles.field}
                       placeholder="Port"
                       type="number"
                       min={1}
@@ -465,10 +520,7 @@ const AccessPointForm = ({
             },
           ]}
         >
-          <Group>
-            <Radio value="false">Disabled</Radio>
-            <Radio value="true">Enabled</Radio>
-          </Group>
+          {enabledRadioOptions()}
         </Item>
         <Item
           noStyle
@@ -493,7 +545,7 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input className={globalStyles.field} placeholder="IP Address" />
+                        <Input placeholder="IP Address" />
                       </Item>
                       <Item
                         name={['syslogRelay', 'srvHostPort']}
@@ -513,13 +565,7 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input
-                          className={globalStyles.field}
-                          placeholder="Port"
-                          type="number"
-                          min={1}
-                          max={65535}
-                        />
+                        <Input placeholder="Port" type="number" min={1} max={65535} />
                       </Item>
                     </div>
                   </Item>
@@ -533,11 +579,7 @@ const AccessPointForm = ({
                       },
                     ]}
                   >
-                    <Select
-                      data-testid="select"
-                      className={globalStyles.field}
-                      placeholder="Select Syslog Mode"
-                    >
+                    <Select data-testid="select" placeholder="Select Syslog Mode">
                       <Option value="DEBUG">Debug (DEBUG)</Option>
                       <Option value="INFO">Info. (INFO)</Option>
                       <Option value="NOTICE">Notice (NOTICE)</Option>
@@ -578,6 +620,7 @@ const AccessPointForm = ({
             onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
             loading={loadingRFProfiles}
             notFoundContent={!loadingRFProfiles && <Empty />}
+            labelInValue
           >
             {rfProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -658,6 +701,427 @@ const AccessPointForm = ({
           />
         </Item>
       </Card>
+      <Form.List name="radiusProxyConfigurations">
+        {(fields, { add, remove }) => (
+          <Card
+            title="RADIUS Proxy Configuration"
+            bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
+            extra={
+              <WithRoles>
+                {fields.length >= MAX_RADIUS_PROXIES && (
+                  <Tooltip
+                    className={styles.ToolTip}
+                    title={`Maximum ${MAX_RADIUS_PROXIES} RADIUS Proxies`}
+                  />
+                )}
+                <Button
+                  type="solid"
+                  onClick={() => {
+                    add();
+                  }}
+                  data-testid="addProxy"
+                  disabled={fields.length >= MAX_RADIUS_PROXIES}
+                >
+                  Add
+                </Button>
+              </WithRoles>
+            }
+          >
+            {fields.map(field => (
+              <div key={field.name}>
+                <Divider orientation="left"> Proxy Configuration {field.name + 1}</Divider>
+                <Item
+                  name={[field.name, 'useRadSec']}
+                  label="RADSEC"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please select your RADSEC setting',
+                    },
+                  ]}
+                  initialValue="true"
+                >
+                  {enabledRadioOptions({ onChange: e => onChangeRadSec(e, field.name) })}
+                </Item>
+
+                <Item
+                  name={[field.name, 'server']}
+                  label="Authentication Server"
+                  rules={[
+                    {
+                      required: true,
+                      pattern: IP_REGEX,
+                      message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input placeholder="Enter Server" />
+                </Item>
+                <Item
+                  name={[field.name, 'port']}
+                  label="Authentication Port"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Port expected between 1 - 65535',
+                    },
+                    () => ({
+                      validator(_rule, value) {
+                        if (!value || (value > 0 && value < 65535)) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Port expected between 1 - 65535'));
+                      },
+                    }),
+                  ]}
+                  hasFeedback
+                  initialValue="2083"
+                >
+                  <Input
+                    placeholder="Enter Authentication Port"
+                    type="number"
+                    min={1}
+                    max={65535}
+                  />
+                </Item>
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.useRadSec !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    return (
+                      getFieldValue(['radiusProxyConfigurations', field.name, 'useRadSec']) ===
+                        'false' && (
+                        <Item
+                          name={[field.name, 'sharedSecret']}
+                          label="Authentication Shared Secret"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Authentication Shared Secret is required',
+                            },
+                          ]}
+                        >
+                          <Password placeholder="Enter Authentication Shared Secret" />
+                        </Item>
+                      )
+                    );
+                  }}
+                </Item>
+
+                <Item
+                  label="RADIUS Accounting"
+                  name={[field.name, 'useAccounting']}
+                  valuePropName="checked"
+                  initialValue
+                >
+                  <Checkbox>Use RADIUS Accounting Server</Checkbox>
+                </Item>
+
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.useAccounting !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.useAccounting
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    return (
+                      getFieldValue(['radiusProxyConfigurations', field.name, 'useAccounting']) && (
+                        <>
+                          <Item wrapperCol={{ offset: 5, span: 15 }}>
+                            <div className={styles.InlineDiv}>
+                              <Item
+                                name={[field.name, 'acctServer']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    pattern: IP_REGEX,
+                                    message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
+                                  },
+                                ]}
+                                hasFeedback
+                              >
+                                <Input
+                                  placeholder="Enter Accounting Server"
+                                  addonBefore="Accounting Server"
+                                />
+                              </Item>
+                              <Item
+                                name={[field.name, 'acctPort']}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Accounting Port is required',
+                                  },
+                                  () => ({
+                                    validator(_rule, value) {
+                                      if (!value || (value > 0 && value < 65535)) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        new Error('Port expected between 1 - 65535')
+                                      );
+                                    },
+                                  }),
+                                ]}
+                                hasFeedback
+                                initialValue="2083"
+                              >
+                                <Input
+                                  placeholder="Enter Accounting Port"
+                                  type="number"
+                                  min={1}
+                                  max={65535}
+                                  addonBefore="Accounting Port"
+                                />
+                              </Item>
+                            </div>
+                          </Item>
+                          <Item
+                            noStyle
+                            shouldUpdate={(prevValues, currentValues) =>
+                              prevValues.radiusProxyConfigurations?.[field.name]?.useRadSec !==
+                              currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
+                            }
+                          >
+                            {() => {
+                              return (
+                                getFieldValue([
+                                  'radiusProxyConfigurations',
+                                  field.name,
+                                  'useRadSec',
+                                ]) === 'false' && (
+                                  <Item
+                                    wrapperCol={{ offset: 5, span: 15 }}
+                                    name={[field.name, 'acctSharedSecret']}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: 'Accounting Shared Secret is required',
+                                      },
+                                    ]}
+                                  >
+                                    <Password
+                                      placeholder="Enter Accounting Shared Secret"
+                                      addonBefore="Accounting Shared Secret"
+                                    />
+                                  </Item>
+                                )
+                              );
+                            }}
+                          </Item>
+                        </>
+                      )
+                    );
+                  }}
+                </Item>
+
+                <Item label="Realm">
+                  <Form.List name={[field.name, 'realm']} initialValue={['']}>
+                    {(realmFields, { add: addRealm, remove: removeRealm }) => {
+                      return (
+                        <>
+                          {realmFields.map(realm => (
+                            <div key={realm.name}>
+                              <Item
+                                name={realm.name}
+                                dependencies={fields.map(item => [
+                                  'radiusProxyConfigurations',
+                                  item.name,
+                                  'realm',
+                                ])}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Realm Domain is required',
+                                  },
+                                  {
+                                    pattern: DOMAIN_REGEX,
+                                    message: 'Enter a valid Realm Domain',
+                                  },
+                                  () => ({
+                                    validator(_rule, value) {
+                                      const domains = fields.flatMap(item =>
+                                        form.getFieldValue([
+                                          'radiusProxyConfigurations',
+                                          item.name,
+                                          'realm',
+                                        ])
+                                      );
+
+                                      const occurence = domains.filter(item => item === value)
+                                        .length;
+
+                                      if (!value || occurence <= 1) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        new Error(
+                                          'Realm domains across all RADIUS Proxy Configurations must be unique'
+                                        )
+                                      );
+                                    },
+                                  }),
+                                ]}
+                              >
+                                <Input
+                                  placeholder={`Enter Realm ${realm.name + 1}`}
+                                  addonAfter={
+                                    realmFields.length > 1 && (
+                                      <MinusCircleOutlined
+                                        data-testid={`removeRealm${realm.name}`}
+                                        onClick={() => removeRealm(realm.name)}
+                                      />
+                                    )
+                                  }
+                                />
+                              </Item>
+                            </div>
+                          ))}
+                          <Button type="dashed" onClick={() => addRealm()}>
+                            <PlusOutlined /> Add Realm
+                          </Button>
+                        </>
+                      );
+                    }}
+                  </Form.List>
+                </Item>
+
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.useRadSec !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.useRadSec
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    const radSecUsed =
+                      getFieldValue(['radiusProxyConfigurations', field.name, 'useRadSec']) ===
+                      'true';
+
+                    return (
+                      radSecUsed && (
+                        <>
+                          <Item
+                            name={[field.name, 'caCert']}
+                            label="CA Certification"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'CA Certification file is required',
+                              },
+                            ]}
+                            tooltip="PEM File"
+                          >
+                            <Upload
+                              data-testid={`caCertFile${field.key}`}
+                              accept=".pem"
+                              fileList={certFiles?.[`caCert${field.key}`]}
+                              beforeUpload={handleFileUpload}
+                              onChange={({ fileList }) =>
+                                handleOnChangeCertFile(fileList, `caCert${field.key}`)
+                              }
+                              showUploadList={{
+                                showRemoveIcon: false,
+                              }}
+                            >
+                              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            </Upload>
+                          </Item>
+
+                          <Item
+                            name={[field.name, 'clientCert']}
+                            label="Client Certification"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Client Certification file is required',
+                              },
+                            ]}
+                            tooltip="PEM File"
+                          >
+                            <Upload
+                              data-testid={`clientCertFile${field.key}`}
+                              accept=".pem"
+                              fileList={certFiles?.[`clientCert${field.key}`]}
+                              beforeUpload={handleFileUpload}
+                              onChange={({ fileList }) =>
+                                handleOnChangeCertFile(fileList, `clientCert${field.key}`)
+                              }
+                              showUploadList={{
+                                showRemoveIcon: false,
+                              }}
+                            >
+                              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            </Upload>
+                          </Item>
+
+                          <Item
+                            name={[field.name, 'clientKey']}
+                            label="Client Key"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Client Key file is required',
+                              },
+                            ]}
+                            tooltip="KEY File"
+                          >
+                            <Upload
+                              accept=".key"
+                              data-testid={`clientKeyFile${field.key}`}
+                              fileList={certFiles?.[`clientKey${field.key}`]}
+                              beforeUpload={handleFileUpload}
+                              onChange={({ fileList }) =>
+                                handleOnChangeCertFile(fileList, `clientKey${field.key}`)
+                              }
+                              showUploadList={{
+                                showRemoveIcon: false,
+                              }}
+                            >
+                              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                            </Upload>
+                          </Item>
+                          <Item
+                            name={[field.name, 'passphrase']}
+                            label="Certificate Passphrase"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Certificate Passphrase is required',
+                              },
+                            ]}
+                          >
+                            <Password placeholder="Enter Passphrase" />
+                          </Item>
+                        </>
+                      )
+                    );
+                  }}
+                </Item>
+                <RoleProtectedBtn
+                  className={styles.RadiusDelete}
+                  data-testid={`removeProxy${field.name}`}
+                  type="danger"
+                  onClick={() => {
+                    remove(field.name);
+                  }}
+                >
+                  Remove
+                </RoleProtectedBtn>
+              </div>
+            ))}
+          </Card>
+        )}
+      </Form.List>
+      <Item name="selectedSsidProfiles" hidden>
+        <Input />
+      </Item>
     </div>
   );
 };
@@ -673,6 +1137,7 @@ AccessPointForm.propTypes = {
   loadingSSIDProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
+  fileUpload: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -686,6 +1151,7 @@ AccessPointForm.defaultProps = {
   loadingSSIDProfiles: false,
   loadingRFProfiles: false,
   handleOnFormChange: () => {},
+  fileUpload: () => {},
 };
 
 export default AccessPointForm;

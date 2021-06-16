@@ -434,8 +434,8 @@ export const defaultProps = {
           details: {
             model_type: 'RfConfiguration',
             rfConfigMap: {
-              is2dot4GHz: generateRfConfig('is2dot4GHz', true),
-              is5GHz: generateRfConfig('is5GHz', true),
+              is2dot4GHz: generateRfConfig('is2dot4GHz', true, true),
+              is5GHz: generateRfConfig('is5GHz', true, true),
               is5GHzL: generateRfConfig('is5GHzL', false),
               is5GHzU: generateRfConfig('is5GHzU', false),
             },
@@ -593,15 +593,8 @@ export const defaultProps = {
     {
       label: 'Rx Cell Size',
       obj: radioMap,
-      dataIndex: ['rxCellSizeDb', 'value'],
-      renderInput: 'renderInputItem',
-      options: {
-        min: -100,
-        max: 100,
-        error: '-100 - 100 dBm',
-        addOnText: 'dBm',
-        mapName: 'radioMap',
-      },
+      dataIndex: 'rxCellSizeDb',
+      dependencies: 'autoCellSizeSelection',
     },
   ],
 };

@@ -96,6 +96,8 @@ const SSIDForm = ({
           details?.radiusClientConfiguration?.userDefinedNasIp ??
           defaultSsidProfile.radiusClientConfiguration.userDefinedNasIp,
       },
+      useRadiusProxy:
+        details?.useRadiusProxy?.toString() ?? defaultSsidProfile.useRadiusProxy.toString(),
     });
   }, [form, details]);
 
@@ -325,7 +327,7 @@ const SSIDForm = ({
                       <Radio value="usePortal">Use</Radio>
                     </RadioGroup>
                   ) : (
-                    <span className={styles.Disclaimer}>Not Applicable</span>
+                    <span className={styles.Disclaimer}>Requires NAT Mode</span>
                   )}
                 </Item>
               </>
@@ -403,7 +405,7 @@ const SSIDForm = ({
                   rules={[
                     {
                       required: getFieldValue('vlan'),
-                      message: 'Vlan expected between 1 and 4095',
+                      message: 'VLAN expected between 1 and 4095',
                     },
                     () => ({
                       validator(_rule, value) {
@@ -413,7 +415,7 @@ const SSIDForm = ({
                         ) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(new Error('Vlan expected between 1 and 4095'));
+                        return Promise.reject(new Error('VLAN expected between 1 and 4095'));
                       },
                     }),
                   ]}
@@ -601,33 +603,61 @@ const SSIDForm = ({
         mode === 'wpa3MixedEAP') && (
         <Card title="RADIUS">
           <Item
-            name="radiusServiceId"
-            label="RADIUS Profile"
+            label="RADIUS Proxy"
+            name="useRadiusProxy"
             rules={[
               {
                 required: true,
-                message: 'Please select a RADIUS profile',
+                message: 'Please select your RADIUS proxy setting',
               },
             ]}
           >
-            <Select
-              className={globalStyles.field}
-              placeholder="Select RADIUS Profile"
-              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-              showSearch={onSearchProfile}
-              filterOption={false}
-              onSearch={name => onSearchProfile(PROFILES.radius, name)}
-              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
-              loading={loadingRadiusProfiles}
-              notFoundContent={!loadingRadiusProfiles && <Empty />}
-              labelInValue
-            >
-              {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.id}>
-                  {profile.name}
-                </Option>
-              ))}
-            </Select>
+            <Radio.Group>
+              <Radio value="true">Enabled</Radio>
+              <Radio value="false">Disabled</Radio>
+            </Radio.Group>
+          </Item>
+          <Item
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.useRadiusProxy !== currentValues.useRadiusProxy
+            }
+            noStyle
+          >
+            {({ getFieldValue }) => {
+              return (
+                getFieldValue('useRadiusProxy') === 'false' && (
+                  <Item
+                    name="radiusServiceId"
+                    label="RADIUS Profile"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please select a RADIUS profile',
+                      },
+                    ]}
+                  >
+                    <Select
+                      className={globalStyles.field}
+                      placeholder="Select RADIUS Profile"
+                      onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
+                      showSearch={onSearchProfile}
+                      filterOption={false}
+                      onSearch={name => onSearchProfile(PROFILES.radius, name)}
+                      onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
+                      loading={loadingRadiusProfiles}
+                      notFoundContent={!loadingRadiusProfiles && <Empty />}
+                      labelInValue
+                    >
+                      {radiusProfiles.map(profile => (
+                        <Option key={profile.id} value={profile.id}>
+                          {profile.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Item>
+                )
+              );
+            }}
           </Item>
           <Item
             name="radiusAcountingServiceInterval"

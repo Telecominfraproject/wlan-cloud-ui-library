@@ -222,17 +222,17 @@ describe('<SSIDForm />', () => {
 
     fireEvent.change(getByPlaceholderText('1-4095'), { target: { value: null } });
     await waitFor(() => {
-      expect(getByText('Vlan expected between 1 and 4095')).toBeVisible();
+      expect(getByText('VLAN expected between 1 and 4095')).toBeVisible();
     });
 
     fireEvent.change(getByPlaceholderText('1-4095'), { target: { value: 4096 } });
     await waitFor(() => {
-      expect(getByText('Vlan expected between 1 and 4095')).toBeVisible();
+      expect(getByText('VLAN expected between 1 and 4095')).toBeVisible();
     });
 
     fireEvent.change(getByPlaceholderText('1-4095'), { target: { value: 1 } });
     await waitFor(() => {
-      expect(queryByText('Vlan expected between 1 and 4095')).not.toBeInTheDocument();
+      expect(queryByText('VLAN expected between 1 and 4095')).not.toBeInTheDocument();
     });
   });
 
@@ -246,7 +246,13 @@ describe('<SSIDForm />', () => {
       );
     };
 
-    const { getByText, getByLabelText } = render(<SSIDFormComp />);
+    const { getByText, getByLabelText, container } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WEP'));
+    fireEvent.click(getByText('WEP'));
 
     expect(
       getByText(
@@ -261,7 +267,6 @@ describe('<SSIDForm />', () => {
     fireEvent.change(node, {
       target: { value: fireEvent.keyPress(node, { key: 1, code: 49, charCode: 49 }) },
     });
-    // fireEvent.change(node, { target: { value: 1 } });
     await waitFor(() => {
       expect(
         getByText(
@@ -280,7 +285,13 @@ describe('<SSIDForm />', () => {
         </Form>
       );
     };
-    const { getByLabelText } = render(<SSIDFormComp />);
+    const { getByLabelText, container, getByText } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WEP'));
+    fireEvent.click(getByText('WEP'));
 
     const node = getByLabelText('WEP Key');
 

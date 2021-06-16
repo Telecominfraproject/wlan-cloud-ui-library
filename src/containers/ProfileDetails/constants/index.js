@@ -5,6 +5,8 @@ export const DEFAULT_HESS_ID = '00:00:00:00:00:00';
 
 export const IP_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
 
+export const DOMAIN_REGEX = /@$|^(\*)$|^(\*\.)|^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]{1,253}$/;
+
 export const PROFILES = {
   ssid: 'ssid',
   captivePortal: 'captive_portal',

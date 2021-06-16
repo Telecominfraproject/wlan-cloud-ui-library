@@ -5,6 +5,14 @@ import {
   DEFAULT_HESS_ID,
 } from '../containers/ProfileDetails/constants/index';
 
+export const formatFile = file => {
+  return {
+    uid: file.apExportUrl,
+    name: file.apExportUrl,
+    type: file.fileType,
+  };
+};
+
 const isBool = value => value === 'true';
 
 const getFileType = type => {
@@ -80,8 +88,13 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa3OnlyEAP' ||
     values.secureMode === 'wpa3MixedEAP'
   ) {
-    formattedData.childProfileIds.push(values.radiusServiceId.value);
-    formattedData.radiusServiceId = values.radiusServiceId.value;
+    if (!isBool(values.useRadiusProxy)) {
+      formattedData.childProfileIds.push(values.radiusServiceId.value);
+      formattedData.radiusServiceId = values.radiusServiceId.value;
+    } else {
+      formattedData.radiusServiceId = null;
+    }
+    formattedData.useRadiusProxy = isBool(values.useRadiusProxy);
   }
 
   if (
@@ -110,6 +123,44 @@ export const formatApProfileForm = values => {
   if (formattedData.ntpServer.auto) {
     formattedData.ntpServer.value = DEFAULT_NTP_SERVER;
   }
+
+  if (values.radiusProxyConfigurations?.length) {
+    formattedData.radiusProxyConfigurations = [];
+    values.radiusProxyConfigurations.forEach((config, index) => {
+      const useRadSec = isBool(config.useRadSec);
+
+      const { useAccounting } = config;
+      formattedData.radiusProxyConfigurations.push({
+        ...config,
+        useRadSec,
+        name: `ProxyConfiguration${index + 1}`,
+        caCert: useRadSec
+          ? {
+              apExportUrl: config.caCert.file.name,
+              fileType: 'PEM',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        clientCert: useRadSec
+          ? {
+              apExportUrl: config.clientCert.file.name,
+              fileType: 'PEM',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        clientKey: useRadSec
+          ? {
+              apExportUrl: config.clientKey.file.name,
+              fileType: 'KEY',
+              fileCategory: 'RadSecAuthentication',
+            }
+          : null,
+        passphrase: useRadSec ? config.passphrase : null,
+        ...(!useAccounting && { acctPort: null, acctServer: null, acctSharedSecret: null }),
+      });
+    });
+  }
+
   return formattedData;
 };
 
@@ -275,12 +326,16 @@ export const formatPasspointForm = (values, details) => {
   if (!values.hessid.addressAsString) {
     formattedData.hessid.addressAsString = DEFAULT_HESS_ID;
   }
+
+  formattedData.additionalStepsRequiredForAccess = isBool(values.additionalStepsRequiredForAccess)
+    ? 1
+    : 0;
+
   return formattedData;
 };
 
 export const formatProviderProfileForm = values => {
   const formattedData = { ...values };
-  formattedData.roamingOi = values.roamingOi.replace(/\s/g, '').split(',');
 
   if (!formattedData.osuServerUri) {
     formattedData.osuServerUri = '';
@@ -304,13 +359,6 @@ export const formatProviderProfileForm = values => {
       },
     ];
   }
-
-  return formattedData;
-};
-
-export const formatOperatorForm = values => {
-  const formattedData = { ...values };
-  formattedData.domainNameList = values.domainNameList.replace(/\s/g, '').split(',');
 
   return formattedData;
 };

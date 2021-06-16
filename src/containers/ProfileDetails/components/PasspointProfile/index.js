@@ -6,6 +6,7 @@ import { Input, Select, Upload } from 'components/WithRoles';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES } from 'containers/ProfileDetails/constants';
+import { formatFile } from 'utils/profiles';
 
 import globalStyles from 'styles/index.scss';
 
@@ -14,14 +15,6 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
-
-const formatFile = file => {
-  return {
-    uid: file.apExportUrl,
-    name: file.apExportUrl,
-    type: file.fileType,
-  };
-};
 
 const PasspointProfileForm = ({
   form,
@@ -117,6 +110,7 @@ const PasspointProfileForm = ({
       disableDownstreamGroupAddressedForwarding: details?.disableDownstreamGroupAddressedForwarding
         ? 'true'
         : 'false',
+      additionalStepsRequiredForAccess: details.additionalStepsRequiredForAccess ? 'true' : 'false',
       childProfileIds: [],
     });
   }, [form, details]);
@@ -386,6 +380,13 @@ const PasspointProfileForm = ({
         >
           <Input placeholder="00:00:00:00:00:00" className={globalStyles.field} />
         </Item>
+        <Item
+          label="ASRA"
+          name="additionalStepsRequiredForAccess"
+          tooltip="Additional Steps Required For Access"
+        >
+          {defaultOptions}
+        </Item>
       </Card>
 
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
@@ -501,6 +502,7 @@ const PasspointProfileForm = ({
           </Button>
         </Item>
         <Table
+          scroll={{ x: 'max-content' }}
           dataSource={connectionCapabilitySetList}
           columns={columns}
           pagination={false}

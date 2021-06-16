@@ -23,7 +23,6 @@ import {
   formatRfProfileForm,
   formatPasspointForm,
   formatProviderProfileForm,
-  formatOperatorForm,
   profileTypes,
 } from 'utils/profiles';
 
@@ -109,7 +108,8 @@ const ProfileDetails = ({
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
               values.secureMode === 'wpa3MixedEAP') &&
-            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
+            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
+            values?.useRadiusProxy === 'false'
           ) {
             notification.error({
               message: 'Error',
@@ -135,7 +135,30 @@ const ProfileDetails = ({
             });
             return;
           }
-          formattedData.childProfileIds.push(values.rfProfileId);
+
+          const proxyEnabledProfiles = values.selectedSsidProfiles?.filter(
+            profile => profile?.details?.useRadiusProxy
+          );
+
+          if (proxyEnabledProfiles.length && !values.radiusProxyConfigurations?.length) {
+            notification.error({
+              message: 'Error',
+              description: (
+                <div>
+                  The following wireless networks have RADIUS Proxy enabled:
+                  <ul>
+                    {proxyEnabledProfiles.map(profile => (
+                      <li key={profile?.id}>{profile?.name}</li>
+                    ))}
+                  </ul>
+                  Please remove these wireless networks from this profile or configure a RADIUS
+                  Proxy.
+                </div>
+              ),
+            });
+            return;
+          }
+          formattedData.childProfileIds.push(values.rfProfileId?.value);
           formattedData = Object.assign(formattedData, formatApProfileForm(values));
         }
         if (profileType === PROFILES.radius) {
@@ -189,7 +212,7 @@ const ProfileDetails = ({
           if (!values.osuSsidProfileId?.value || !values.osuSsidProfileId?.label) {
             notification.error({
               message: 'Error',
-              description: 'An SSID Profile is required.',
+              description: 'An OSU SSID Profile is required.',
             });
             return;
           }
@@ -198,7 +221,6 @@ const ProfileDetails = ({
         }
         if (profileType === PROFILES.operator) {
           formattedData.model_type = 'PasspointOperatorProfile';
-          formattedData = Object.assign(formattedData, formatOperatorForm(values));
         }
         if (profileType === PROFILES.providerID) {
           formattedData.model_type = 'PasspointOsuProviderProfile';
@@ -287,6 +309,7 @@ const ProfileDetails = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingSSIDProfiles={loadingSSIDProfiles}
             loadingRFProfiles={loadingRFProfiles}
+            fileUpload={fileUpload}
             handleOnFormChange={handleOnFormChange}
           />
         )}

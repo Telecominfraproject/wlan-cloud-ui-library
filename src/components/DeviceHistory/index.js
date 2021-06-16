@@ -13,7 +13,7 @@ const DeviceHistoryChart = ({ data, width }) => {
     const result = [];
     let curr = 0;
     data.forEach(datum => {
-      const timestamp = parseInt(datum.createdTimestamp, 10);
+      const timestamp = parseInt(datum?.detailsJSON?.sourceTimestampMs, 10);
       if (timestamp - curr < 120000) {
         result.push({
           timestamp,
@@ -44,7 +44,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
           baseValue={-100}
         >
@@ -76,7 +76,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -107,7 +107,7 @@ const DeviceHistoryChart = ({ data, width }) => {
             top: 10,
             right: 0,
             left: 0,
-            bottom: 0,
+            bottom: 10,
           }}
         >
           <defs>
@@ -118,7 +118,7 @@ const DeviceHistoryChart = ({ data, width }) => {
           </defs>
           <XAxis
             dataKey="timestamp"
-            tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+            tickFormatter={timestamp => (lineData.length ? moment(timestamp).format('h:mm a') : '')}
             domain={['dataMin', 'dataMax']}
             stroke="white"
           />

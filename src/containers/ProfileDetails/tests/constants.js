@@ -1,14 +1,16 @@
 import {
   generateCompanyNames,
   generateRadiusProfile,
-  generateRfConfig,
   generateRfProfile,
   generateSsidProfile,
 } from './utils';
 
 const fakeSsid = generateSsidProfile();
+const fakeRf = generateRfProfile();
 
 export const mockAccessPoint = {
+  profileType: 'equipment_ap',
+  name: 'equipment_ap',
   details: {
     equipmentType: 'AP',
     ledControlEnabled: true,
@@ -40,8 +42,8 @@ export const mockAccessPoint = {
     vlanNative: true,
     greTunnelConfigurations: [],
   },
-  childProfileIds: [fakeSsid.id],
-  childProfiles: [fakeSsid],
+  childProfileIds: [fakeSsid.id, fakeRf.id],
+  childProfiles: [fakeSsid, fakeRf],
   ssidProfiles: [fakeSsid, generateSsidProfile(), generateSsidProfile()],
   onSearchProfile: () => {},
 };
@@ -84,6 +86,8 @@ export const mockBonjourGateway = {
 };
 
 export const mockCaptivePortal = {
+  profileType: 'captive_portal',
+  name: 'captive_portal',
   details: {
     authenticationType: 'guest',
     backgroundFile: null,
@@ -162,8 +166,10 @@ export const mockOperator = {
 };
 
 export const mockSsid = {
+  profileType: 'ssid',
+  name: 'ssid',
   radiusProfiles: [generateRadiusProfile(), generateRadiusProfile()],
-  details: generateSsidProfile('wep').details,
+  details: generateSsidProfile('wpa2OnlyPSK').details,
 };
 
 export const mockVenue = {
@@ -468,6 +474,8 @@ export const mockProviderId = {
 };
 
 export const mockRadius = {
+  profileType: 'radius',
+  name: 'radius',
   details: generateRadiusProfile().details,
 };
 
@@ -483,81 +491,8 @@ export const mockRf = {
         max: 100,
         error: '-100 - 100 dBm',
         addOnText: 'dBm',
+        dependencies: { autoCellSizeSelection: 'false' },
       },
-    },
-  ],
-};
-
-export const mockProps = {
-  onUpdateProfile: () => {},
-  fileUpload: () => {},
-  name: 'Radius-Profile1',
-  profileType: '',
-  details: {
-    appliedRadios: ['is5GHzL', 'is2dot4GHz', 'is5GHzU'],
-    bandwidthLimitDown: 0,
-    bandwidthLimitUp: 0,
-    bonjourGatewayProfileId: null,
-    broadcastSsid: 'enabled',
-    captivePortalId: null,
-    enable80211w: null,
-    forwardMode: 'BRIDGE',
-    keyRefresh: 0,
-    keyStr: 'testing123',
-    model_type: 'SsidConfiguration',
-    noLocalSubnets: false,
-    profileType: 'ssid',
-    radioBasedConfigs: {
-      is2dot4GHz: {
-        enable80211k: null,
-        enable80211r: null,
-        enable80211v: null,
-        model_type: 'RadioBasedSsidConfiguration',
-      },
-      is5GHz: {
-        enable80211k: null,
-        enable80211r: null,
-        enable80211v: null,
-        model_type: 'RadioBasedSsidConfiguration',
-      },
-      is5GHzU: {
-        enable80211k: null,
-        enable80211r: null,
-        enable80211v: null,
-        model_type: 'RadioBasedSsidConfiguration',
-      },
-      is5GHzL: {
-        enable80211k: null,
-        enable80211r: null,
-        enable80211v: null,
-        model_type: 'RadioBasedSsidConfiguration',
-      },
-    },
-    radiusServiceName: 'Radius-Profile',
-    secureMode: 'wpaEAP',
-    ssid: '123',
-    ssidAdminState: 'enabled',
-    videoTrafficOnly: false,
-    vlanId: 1,
-    wepConfig: null,
-  },
-  ssidProfiles: [generateSsidProfile(), generateSsidProfile(), generateSsidProfile()],
-  rfProfiles: [generateRfConfig()],
-  childProfileIds: [1, 5],
-  childProfiles: [
-    {
-      details: {},
-      id: '1',
-      name: 'TipWlan-cloud-1-radios',
-      profileType: 'ssid',
-      __typename: 'Profile',
-    },
-    {
-      details: {},
-      id: '5',
-      name: 'TipWlan-rf',
-      profileType: 'rf',
-      __typename: 'Profile',
     },
   ],
 };

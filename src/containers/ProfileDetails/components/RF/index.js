@@ -1,7 +1,10 @@
 import React, { useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { startCase } from 'lodash';
 import { Card, Form, Select as AntdSelect } from 'antd';
 import { Input, Select } from 'components/WithRoles';
+import DisabledText from 'components/DisabledText';
+
 import ThemeContext from 'contexts/ThemeContext';
 
 import { defaultRfProfile } from '../constants';
@@ -22,69 +25,79 @@ const RFForm = ({ form, details, extraFields }) => {
 
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
-        radioType: details.rfConfigMap[radio]?.radioType || radio,
-        radioMode: details.rfConfigMap[radio]?.radioMode || defaultRfProfile[radio].radioMode,
+        radioType: details.rfConfigMap[radio]?.radioType ?? radio,
+        radioMode: details.rfConfigMap[radio]?.radioMode ?? defaultRfProfile[radio].radioMode,
         beaconInterval:
-          details.rfConfigMap[radio]?.beaconInterval || defaultRfProfile[radio].beaconInterval,
+          details.rfConfigMap[radio]?.beaconInterval ?? defaultRfProfile[radio].beaconInterval,
         forceScanDuringVoice:
-          details.rfConfigMap[radio]?.forceScanDuringVoice ||
+          details.rfConfigMap[radio]?.forceScanDuringVoice ??
           defaultRfProfile[radio].forceScanDuringVoice,
         rtsCtsThreshold:
-          details.rfConfigMap[radio]?.rtsCtsThreshold || defaultRfProfile[radio].rtsCtsThreshold,
+          details.rfConfigMap[radio]?.rtsCtsThreshold ?? defaultRfProfile[radio].rtsCtsThreshold,
         channelBandwidth:
-          details.rfConfigMap[radio]?.channelBandwidth || defaultRfProfile[radio].channelBandwidth,
-        mimoMode: details.rfConfigMap[radio]?.mimoMode || defaultRfProfile[radio].mimoMode,
+          details.rfConfigMap[radio]?.channelBandwidth ?? defaultRfProfile[radio].channelBandwidth,
+        mimoMode: details.rfConfigMap[radio]?.mimoMode ?? defaultRfProfile[radio].mimoMode,
         maxNumClients:
-          details.rfConfigMap[radio]?.maxNumClients || defaultRfProfile[radio].maxNumClients,
+          details.rfConfigMap[radio]?.maxNumClients ?? defaultRfProfile[radio].maxNumClients,
         multicastRate:
-          details.rfConfigMap[radio]?.multicastRate || defaultRfProfile[radio].multicastRate,
+          details.rfConfigMap[radio]?.multicastRate ?? defaultRfProfile[radio].multicastRate,
         managementRate:
-          details.rfConfigMap[radio]?.managementRate || defaultRfProfile[radio].managementRate,
+          details.rfConfigMap[radio]?.managementRate ?? defaultRfProfile[radio].managementRate,
         rxCellSizeDb:
-          details.rfConfigMap[radio]?.rxCellSizeDb || defaultRfProfile[radio].rxCellSizeDb,
+          details.rfConfigMap[radio]?.rxCellSizeDb ?? defaultRfProfile[radio].rxCellSizeDb,
         probeResponseThresholdDb:
-          details.rfConfigMap[radio]?.probeResponseThresholdDb ||
+          details.rfConfigMap[radio]?.probeResponseThresholdDb ??
           defaultRfProfile[radio].probeResponseThresholdDb,
         clientDisconnectThresholdDb:
-          details.rfConfigMap[radio]?.clientDisconnectThresholdDb ||
+          details.rfConfigMap[radio]?.clientDisconnectThresholdDb ??
           defaultRfProfile[radio].clientDisconnectThresholdDb,
-        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower || defaultRfProfile[radio].eirpTxPower,
+        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower ?? defaultRfProfile[radio].eirpTxPower,
         autoChannelSelection:
           details.rfConfigMap[radio]?.autoChannelSelection?.toString() ??
           defaultRfProfile[radio].autoChannelSelection.toString(),
+        autoCellSizeSelection:
+          details.rfConfigMap[radio]?.autoCellSizeSelection?.toString() ??
+          defaultRfProfile[radio].autoCellSizeSelection.toString(),
+        maxAutoCellSize:
+          details.rfConfigMap[radio]?.maxAutoCellSize ?? defaultRfProfile[radio].maxAutoCellSize,
+        minAutoCellSize:
+          details.rfConfigMap[radio]?.minAutoCellSize ?? defaultRfProfile[radio].minAutoCellSize,
+        useMaxTxPower:
+          details.rfConfigMap[radio]?.useMaxTxPower?.toString() ??
+          defaultRfProfile[radio].useMaxTxPower.toString(),
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ||
+            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ??
             defaultRfProfile[radio].activeScanSettings.scanFrequencySeconds,
           scanDurationMillis:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ||
+            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ??
             defaultRfProfile[radio].activeScanSettings.scanDurationMillis,
         },
         channelHopSettings: {
           noiseFloorThresholdInDB:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ||
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ??
             defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdInDB,
           noiseFloorThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ||
+            details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ??
             defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdTimeInSeconds,
           nonWifiThresholdInPercentage:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ||
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ??
             defaultRfProfile[radio].channelHopSettings.nonWifiThresholdInPercentage,
           nonWifiThresholdTimeInSeconds:
-            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ||
+            details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ??
             defaultRfProfile[radio].channelHopSettings.nonWifiThresholdTimeInSeconds,
           obssHopMode:
-            details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ||
+            details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ??
             defaultRfProfile[radio].channelHopSettings.obssHopMode,
         },
         bestApSettings: {
-          mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed || 'true',
+          mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed ?? 'true',
           dropInSnrPercentage:
-            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ||
+            details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ??
             defaultRfProfile[radio].bestApSettings.dropInSnrPercentage,
           minLoadFactor:
-            details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ||
+            details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ??
             defaultRfProfile[radio].bestApSettings.minLoadFactor,
         },
       };
@@ -100,59 +113,133 @@ const RFForm = ({ form, details, extraFields }) => {
     </Select>
   );
 
-  const renderItem = (label, dataIndex, renderInput, options = {}) => (
-    <Item label={label} colon={false} key={label}>
-      <div className={styles.InlineDiv}>
-        {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
-      </div>
+  const itemWithDependency = (dependencies, key, inputField) => (
+    <Item
+      noStyle
+      shouldUpdate={(prevValues, currentValues) =>
+        Object.keys(dependencies).some(
+          i => prevValues.rfConfigMap?.[key]?.[i] !== currentValues.rfConfigMap?.[key]?.[i]
+        )
+      }
+      key={key}
+    >
+      {({ getFieldValue }) => {
+        const field = Object.keys(dependencies).find(
+          i => getFieldValue(['rfConfigMap', key, i]) !== dependencies[i]
+        );
+        const value = getFieldValue(['rfConfigMap', key, field]);
+        return !field ? (
+          inputField
+        ) : (
+          <DisabledText
+            title={`The ${radioTypes[key]} radio has "${startCase(field)}" ${
+              value === 'true' ? 'enabled' : 'disabled'
+            }.`}
+          />
+        );
+      }}
     </Item>
   );
 
-  const renderInputItem = (dataIndex, key, label, options = {}) => (
-    <Item
-      name={['rfConfigMap', key, ...dataIndex]}
-      key={key}
-      rules={[
-        { required: true, message: options.error },
-        ({ getFieldValue }) => ({
-          validator(_rule, value) {
-            if (
-              !value ||
-              (getFieldValue(['rfConfigMap', key, ...dataIndex]) <= options.max &&
-                getFieldValue(['rfConfigMap', key, ...dataIndex]) >= options.min)
-            ) {
-              return Promise.resolve();
-            }
-            return Promise.reject(new Error(options.error));
+  const renderItem = (label, dataIndex, renderInput, options = {}) => {
+    const Wrapper = (
+      <Item label={label} key={label}>
+        <div className={styles.InlineDiv}>
+          {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
+        </div>
+      </Item>
+    );
+
+    if (options.dependencies) {
+      return (
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            Object.keys(options.dependencies).some(key =>
+              currentRadios.some(
+                radio =>
+                  prevValues.rfConfigMap?.[radio]?.[key] !==
+                  currentValues.rfConfigMap?.[radio]?.[key]
+              )
+            )
+          }
+          key={label}
+        >
+          {({ getFieldValue }) => {
+            return Object.keys(options.dependencies).every(key =>
+              currentRadios.some(
+                radio => getFieldValue(['rfConfigMap', radio, key]) === options.dependencies[key]
+              )
+            )
+              ? Wrapper
+              : null;
+          }}
+        </Item>
+      );
+    }
+
+    return Wrapper;
+  };
+
+  const renderInputItem = (dataIndex, key, label, options = {}) => {
+    const inputField = (
+      <Item
+        name={['rfConfigMap', key, ...dataIndex]}
+        key={key}
+        rules={[
+          { required: true, message: options.error },
+          ({ getFieldValue }) => ({
+            validator(_rule, value) {
+              if (
+                !value ||
+                (getFieldValue(['rfConfigMap', key, ...dataIndex]) <= options.max &&
+                  getFieldValue(['rfConfigMap', key, ...dataIndex]) >= options.min)
+              ) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error(options.error));
+            },
+          }),
+        ]}
+      >
+        <Input
+          className={styles.Field}
+          placeholder={`Enter ${label} for ${key}`}
+          type="number"
+          min={options.min}
+          max={options.max}
+          addonAfter={options?.addOnText ? options?.addOnText : ''}
+        />
+      </Item>
+    );
+
+    if (options.dependencies) {
+      return itemWithDependency(options.dependencies, key, inputField);
+    }
+    return inputField;
+  };
+
+  const renderOptionItem = (dataIndex, key, label, options = {}) => {
+    const inputField = (
+      <Item
+        key={key}
+        name={['rfConfigMap', key, ...dataIndex]}
+        rules={[
+          {
+            required: true,
+            message: `Enter ${label} for ${key}`,
           },
-        }),
-      ]}
-    >
-      <Input
-        className={styles.Field}
-        placeholder={`Enter ${label} for ${key}`}
-        type="number"
-        min={options.min}
-        max={options.max}
-        addonAfter={options?.addOnText ? options?.addOnText : ''}
-      />
-    </Item>
-  );
+        ]}
+      >
+        {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
+      </Item>
+    );
 
-  const renderOptionItem = (dataIndex, key, label, options = {}) => (
-    <Item
-      key={key}
-      name={['rfConfigMap', key, ...dataIndex]}
-      rules={[
-        {
-          required: true,
-          message: `Enter ${label} for ${key}`,
-        },
-      ]}
-    >
-      {typeof options.dropdown === 'function' ? options.dropdown(key) : options.dropdown}
-    </Item>
-  );
+    if (options.dependencies) {
+      return itemWithDependency(options.dependencies, key, inputField);
+    }
+    return inputField;
+  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -191,6 +278,7 @@ const RFForm = ({ form, details, extraFields }) => {
           dropdown: key => {
             return (
               <Select className={styles.Field}>
+                <Option value="auto">Auto</Option>
                 <Option value="modeN">N</Option>
                 {key === 'is2dot4GHz' && (
                   <>
@@ -229,9 +317,18 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="twoByTwo">2x2</Option>
               <Option value="threeByThree">3x3</Option>
               <Option value="fourByFour">4x4</Option>
+              <Option value="eightByEight">8x8</Option>
             </Select>
           ),
         })}
+        {extraFields.map(field =>
+          renderItem(
+            field.label,
+            field.dataIndex,
+            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
+            field.options
+          )
+        )}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: (
             <Select className={styles.Field}>
@@ -247,6 +344,7 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate24mbps">24</Option>
             </Select>
           ),
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
@@ -262,20 +360,14 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate54mbps">54</Option>
             </Select>
           ),
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
-        {extraFields.map(field =>
-          renderItem(
-            field.label,
-            field.dataIndex,
-            field.renderInput === 'renderInputItem' ? renderInputItem : renderOptionItem,
-            field.options
-          )
-        )}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
           max: 100,
           error: '-100 - 100 dBm',
           addOnText: 'dBm',
+          dependencies: { autoCellSizeSelection: 'false' },
         })}
         {renderItem(
           'Client Disconnect Threshold',
@@ -286,13 +378,19 @@ const RFForm = ({ form, details, extraFields }) => {
             max: 0,
             error: '-100 - 0 dBm',
             addOnText: 'dBm',
+            dependencies: { autoCellSizeSelection: 'false' },
           }
         )}
+        {renderItem('Max EIRP Tx Power', ['useMaxTxPower'], renderOptionItem, {
+          dropdown: defaultOptions,
+          dependencies: { autoCellSizeSelection: 'false' },
+        })}
         {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
           min: 1,
           max: 32,
           error: '1 - 32 dBm',
           addOnText: 'dBm',
+          dependencies: { autoCellSizeSelection: 'false', useMaxTxPower: 'false' },
         })}
         <p>Active Scan Setting:</p>
         {renderItem('Enable', ['activeScanSettings', 'enabled'], renderOptionItem, {

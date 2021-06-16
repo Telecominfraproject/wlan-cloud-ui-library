@@ -28,15 +28,15 @@ export function generateSsidProfile(secureMode) {
     profileType: 'ssid',
     details: {
       appliedRadios: radios,
-      bandwidthLimitDown: faker.random.number(200),
-      bandwidthLimitUp: faker.random.number(200),
+      bandwidthLimitDown: faker.random.number(100),
+      bandwidthLimitUp: faker.random.number(100),
       bonjourGatewayProfileId: null,
       broadcastSsid: 'enabled',
       captivePortalId: null,
       enable80211w: null,
-      forwardMode: null,
+      forwardMode: 'BRIDGE',
       keyRefresh: 0,
-      keyStr: faker.random.word(),
+      keyStr: faker.commerce.productName(),
       model_type: 'SsidConfiguration',
       noLocalSubnets: false,
       profileType: 'ssid',
@@ -148,7 +148,7 @@ export function generateApProfile(radioMap) {
   };
 }
 
-export function generateRfConfig(radioType, autoChannelSelection) {
+export function generateRfConfig(radioType, autoChannelSelection, autoCellSizeSelection) {
   return {
     model_type: 'RfElementConfiguration',
     radioType,
@@ -161,6 +161,7 @@ export function generateRfConfig(radioType, autoChannelSelection) {
     mimoMode: 'twoByTwo',
     maxNumClients: 100,
     autoChannelSelection: autoChannelSelection || false,
+    autoCellSizeSelection: autoCellSizeSelection || false,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,

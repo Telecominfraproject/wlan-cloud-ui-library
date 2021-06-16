@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Table } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import { Input, RoleProtectedBtn } from 'components/WithRoles';
 import { modalLayout } from 'utils/form';
@@ -29,7 +29,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      roamingOi: details?.roamingOi?.join(', ') || '',
+      roamingOi: details?.roamingOi,
       osuServerUri: details?.osuServerUri || '',
       naiRealms: details?.naiRealmList?.[0].naiRealms?.join(', ') || '',
     });
@@ -156,24 +156,60 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card title="Network Identifier">
-        <Item
-          label="Roaming OI:"
-          name="roamingOi"
-          rules={[
-            ({ getFieldValue }) => ({
-              validator(_rule, value) {
-                if (
-                  !value ||
-                  getFieldValue('roamingOi').match(/^([a-z0-9\s]+,)*([a-z0-9\s]+){1}$/i)
-                ) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Please enter a comma separated list of strings'));
-              },
-            }),
-          ]}
-        >
-          <Input placeholder="Enter Roaming Oi" />
+        <Item label="Roaming OI">
+          <Form.List name="roamingOi">
+            {(fields, { add: addRoamingOI, remove: removeRoamingOI }) => {
+              return (
+                <>
+                  {fields.map(field => (
+                    <div key={field.name}>
+                      <Item
+                        name={field.name}
+                        rules={[
+                          {
+                            required: true,
+                            message: 'OI is required',
+                          },
+                          {
+                            pattern: /^(([A-F]|[a-f]|[0-9]){2}){3,15}$/,
+                            message:
+                              'Each OI must be between 3 and 15 octets and configured as a hexstring',
+                          },
+                          () => ({
+                            validator(_rule, value) {
+                              const OIs = fields.map(item =>
+                                form.getFieldValue(['roamingOi', item.name])
+                              );
+
+                              const occurence = OIs.filter(item => item === value).length;
+
+                              if (!value || occurence <= 1) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(new Error('Enter a unique OI'));
+                            },
+                          }),
+                        ]}
+                      >
+                        <Input
+                          placeholder={`Enter OI ${field.name + 1}`}
+                          addonAfter={
+                            <MinusCircleOutlined
+                              data-testid={`removeRoamingOI${field.name}`}
+                              onClick={() => removeRoamingOI(field.name)}
+                            />
+                          }
+                        />
+                      </Item>
+                    </div>
+                  ))}
+                  <RoleProtectedBtn type="dashed" onClick={() => addRoamingOI()}>
+                    <PlusOutlined /> Add Roaming OI
+                  </RoleProtectedBtn>
+                </>
+              );
+            }}
+          </Form.List>
         </Item>
       </Card>
 
