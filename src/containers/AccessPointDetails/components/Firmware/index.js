@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tag, Select, Alert } from 'antd';
+import { Card, Form, Input, Tag, Select, Alert, Progress } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 
@@ -20,6 +20,18 @@ const MODAL_REBOOT = 'reboot';
 const MODAL_INACTIVE = 'inactive';
 const MODAL_DOWNLOAD = 'download';
 
+const updateInProgressStates = new Set([
+  'download_initiated',
+  'downloading',
+  'download_complete',
+  'apply_initiated',
+  'applying',
+  'apply_failed',
+  'apply_complete',
+  'reboot_initiated',
+  'rebooting',
+]);
+
 const Firmware = ({
   firmware,
   data,
@@ -38,7 +50,7 @@ const Firmware = ({
   const handleOnChangeVersion = value => {
     setVersion(
       Object.values(firmware).find(o => {
-        return o.id === value;
+        return o.versionName === value;
       })
     );
   };
@@ -79,6 +91,7 @@ const Firmware = ({
     if (value === 'apply_initiated') return 'Initiated Firmware Flash';
     if (value === 'apply_complete') return 'Flashed to Inactive Bank';
     if (value === 'applying') return 'Flashing Firmware';
+    if (value === 'undefined') return 'Stable';
     return value.toUpperCase().replace(/_/g, ' ');
   };
 
@@ -92,18 +105,15 @@ const Firmware = ({
   const status = data?.status?.firmware?.detailsJSON || {};
 
   const getRebootStatus = () => {
-    switch (status?.upgradeState) {
-      case 'download_initiated':
-      case 'downloading':
-      case 'apply_initiated':
-      case 'applying':
-      case 'reboot_initiated':
-      case 'rebooting':
-        return true;
+    if (updateInProgressStates.has(status?.upgradeState)) return true;
+    return false;
+  };
 
-      default:
-        return false;
-    }
+  const getUpgradePercentage = value => {
+    if (value.includes('download')) return 30;
+    if (value.includes('apply')) return 60;
+    if (value.includes('reboot')) return 90;
+    return 100;
   };
 
   if (loadingFirmware) {
@@ -159,7 +169,7 @@ const Firmware = ({
               className={styles.UpgradeState}
               icon={<LoginOutlined />}
               onClick={handleOnSwitchInactiveBank}
-              disabled={status.alternateSwVersion === status.activeSwVersion}
+              disabled={status.alternateSwVersion === status.activeSwVersion || getRebootStatus()}
             >
               Switch to Inactive Bank and Reboot
             </RoleProtectedBtn>
@@ -167,49 +177,61 @@ const Firmware = ({
         </Card>
         <WithRoles>
           <Card title="Upgrade">
-            <Item label="Target Version">
-              <div className={styles.InlineDiv}>
-                <Item name="targetVersion">
-                  <Select
-                    className={styles.Field}
-                    onChange={handleOnChangeVersion}
-                    placeholder="Select a version to apply..."
-                  >
-                    {Object.keys(firmware).map(i => (
-                      <Option key={firmware[i].id} value={firmware[i].id}>
-                        {firmware[i].versionName}
-                      </Option>
-                    ))}
-                  </Select>
+            {getRebootStatus() ? (
+              <>
+                <div>
+                  Upgrade {status?.targetSwVersion && `to ${status?.targetSwVersion}`} already in
+                  progress
+                </div>
+                <Progress percent={getUpgradePercentage(status?.upgradeState)} />
+              </>
+            ) : (
+              <>
+                <Item label="Target Version">
+                  <div className={styles.InlineDiv}>
+                    <Item name="targetVersion">
+                      <Select
+                        className={styles.Field}
+                        onChange={handleOnChangeVersion}
+                        placeholder="Select a version to apply..."
+                      >
+                        {Object.keys(firmware).map(i => (
+                          <Option key={firmware[i].id} value={firmware[i].versionName}>
+                            {firmware[i].versionName}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Item>
+                    <Item noStyle>
+                      <Button
+                        icon={<DownloadOutlined />}
+                        disabled={!version || version?.versionName === status?.activeSwVersion}
+                        onClick={handleOnDownload}
+                      >
+                        Download, Flash, and Reboot
+                      </Button>
+                    </Item>
+                  </div>
                 </Item>
-                <Item noStyle>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    disabled={!version || version.id === data?.status?.firmware?.id}
-                    onClick={handleOnDownload}
-                  >
-                    Download, Flash, and Reboot
-                  </Button>
-                </Item>
-              </div>
-            </Item>
 
-            {version && (
-              <Item wrapperCol={{ offset: 5, span: 15 }}>
-                <TextArea
-                  readOnly
-                  rows={6}
-                  value={
-                    `Version:  ${`${version.versionName.replace(/-([^-]*)$/, '($1')})`}  \n` +
-                    `Release Date:  ${moment(version.releaseDate, 'x').format(
-                      'DD MMM YYYY, hh:mm a'
-                    )} \n` +
-                    `Device:  ${version.modelId} \n` +
-                    `\n` +
-                    `Release Notes:  ${version.description}`
-                  }
-                />
-              </Item>
+                {version && (
+                  <Item wrapperCol={{ offset: 5, span: 15 }}>
+                    <TextArea
+                      readOnly
+                      rows={6}
+                      value={
+                        `Version:  ${`${version.versionName.replace(/-([^-]*)$/, '($1')})`}  \n` +
+                        `Release Date:  ${moment(version.releaseDate, 'x').format(
+                          'DD MMM YYYY, hh:mm a'
+                        )} \n` +
+                        `Device:  ${version.modelId} \n` +
+                        `\n` +
+                        `Release Notes:  ${version.description}`
+                      }
+                    />
+                  </Item>
+                )}
+              </>
             )}
           </Card>
         </WithRoles>
