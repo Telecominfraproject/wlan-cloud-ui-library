@@ -50,7 +50,7 @@ const Firmware = ({
   const handleOnChangeVersion = value => {
     setVersion(
       Object.values(firmware).find(o => {
-        return o.versionName === value;
+        return o.id === value;
       })
     );
   };
@@ -196,7 +196,7 @@ const Firmware = ({
                         placeholder="Select a version to apply..."
                       >
                         {Object.keys(firmware).map(i => (
-                          <Option key={firmware[i].id} value={firmware[i].versionName}>
+                          <Option key={firmware[i].id} value={firmware[i].id}>
                             {firmware[i].versionName}
                           </Option>
                         ))}
