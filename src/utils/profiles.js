@@ -3,7 +3,6 @@ import {
   ROAMING,
   DEFAULT_NTP_SERVER,
   DEFAULT_HESS_ID,
-  EAP_METHODS,
 } from '../containers/ProfileDetails/constants/index';
 
 export const formatFile = file => {
@@ -357,7 +356,7 @@ export const formatProviderProfileForm = values => {
         naiRealms: formattedData.naiRealms.replace(/\s/g, '').split(',') || [],
         eapMap: formattedData.eapMap || {},
         encoding: formattedData.encoding || 0,
-        eapMethods: Object.keys(formattedData.eapMap).map(i => EAP_METHODS[i]),
+        eapMethods: Object.keys(formattedData.eapMap),
       },
     ];
   }

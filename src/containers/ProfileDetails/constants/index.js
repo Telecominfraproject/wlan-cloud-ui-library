@@ -2,13 +2,6 @@ export const RADIOS = ['is2dot4GHz', 'is5GHz', 'is5GHzU', 'is5GHzL'];
 export const ROAMING = ['enable80211r', 'enable80211k', 'enable80211v'];
 export const DEFAULT_NTP_SERVER = 'pool.ntp.org';
 export const DEFAULT_HESS_ID = '00:00:00:00:00:00';
-export const EAP_METHODS = {
-  'EAP-TLS with certificate': ' eap_tls',
-  'EAP-TTLS with username/password': 'eap_ttls',
-  'EAP-AKA Authentication': 'eap_aka_authentication',
-  'EAP-MSCHAP-V2 with username/password': 'eap_mschap_v2',
-  'EAP-AKA': 'eap_aka',
-};
 
 export const IP_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
 
