@@ -356,6 +356,7 @@ export const formatProviderProfileForm = values => {
         naiRealms: formattedData.naiRealms.replace(/\s/g, '').split(',') || [],
         eapMap: formattedData.eapMap || {},
         encoding: formattedData.encoding || 0,
+        eapMethods: Object.keys(formattedData.eapMap),
       },
     ];
   }
