@@ -190,6 +190,7 @@ export function generateRfConfig(radioType, autoChannelSelection, autoCellSizeSe
     probeResponseThresholdDb: -90,
     clientDisconnectThresholdDb: -90,
     eirpTxPower: 18,
+    useMaxTxPower: false,
     bestApSettings: {
       model_type: 'RadioBestApSettings',
       mlComputed: false,

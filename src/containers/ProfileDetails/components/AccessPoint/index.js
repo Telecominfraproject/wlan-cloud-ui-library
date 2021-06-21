@@ -135,8 +135,10 @@ const AccessPointForm = ({
       },
       radiusProxyConfigurations: sortedProxyConfigurations?.map(config => ({
         ...config,
-        useAccounting: !!config.acctPort,
+        acctPort: config?.acctPort > 0 ? config.acctPort : null,
+        useAccounting: !!config.acctServer,
         useRadSec: config.useRadSec.toString(),
+        dynamicDiscovery: config.dynamicDiscovery.toString(),
         caCert: config.caCert ? { file: formatFile(config.caCert) } : null,
         clientCert: config.clientCert ? { file: formatFile(config.clientCert) } : null,
         clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
@@ -990,6 +992,39 @@ const AccessPointForm = ({
                       );
                     }}
                   </Form.List>
+                </Item>
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.realm !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.realm
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    const wildCardUsed = getFieldValue([
+                      'radiusProxyConfigurations',
+                      field.name,
+                      'realm',
+                    ])?.some(i => i === '*');
+
+                    return (
+                      wildCardUsed && (
+                        <Item
+                          name={[field.name, 'dynamicDiscovery']}
+                          label="Auto Discovery"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select your Auto Discovery setting',
+                            },
+                          ]}
+                          initialValue="true"
+                        >
+                          {enabledRadioOptions()}
+                        </Item>
+                      )
+                    );
+                  }}
                 </Item>
 
                 <Item
