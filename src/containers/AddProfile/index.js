@@ -107,7 +107,8 @@ const AddProfile = ({
               values.secureMode === 'wpa2Radius' ||
               values.secureMode === 'wpa2OnlyRadius' ||
               values.secureMode === 'wpa3OnlyEAP' ||
-              values.secureMode === 'wpa3MixedEAP') &&
+              values.secureMode === 'wpa3MixedEAP' ||
+              values.secureMode === 'wpa3OnlyEAP192') &&
             (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
             values?.useRadiusProxy === 'false'
           ) {

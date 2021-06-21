@@ -86,7 +86,8 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa2Radius' ||
     values.secureMode === 'wpa2OnlyRadius' ||
     values.secureMode === 'wpa3OnlyEAP' ||
-    values.secureMode === 'wpa3MixedEAP'
+    values.secureMode === 'wpa3MixedEAP' ||
+    values.secureMode === 'wpa3OnlyEAP192'
   ) {
     if (!isBool(values.useRadiusProxy)) {
       formattedData.childProfileIds.push(values.radiusServiceId.value);
@@ -103,7 +104,8 @@ export const formatSsidProfileForm = values => {
       values.secureMode === 'wpa2Radius' ||
       values.secureMode === 'wpa2OnlyRadius' ||
       values.secureMode === 'wpa3OnlyEAP' ||
-      values.secureMode === 'wpa3MixedEAP'
+      values.secureMode === 'wpa3MixedEAP' ||
+      values.secureMode === 'wpa3OnlyEAP192'
     ) ||
     values.forwardMode === 'NAT'
   ) {
