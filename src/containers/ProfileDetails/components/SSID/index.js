@@ -493,6 +493,7 @@ const SSIDForm = ({
             placeholder="Select Security and Encryption Mode"
           >
             <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
+            <Option value="wpa3OnlyEAP192">WPA3-Enterprise 192-Bit (SHA384-SuiteB)</Option>
             <Option value="wpa3MixedEAP">WPA3 Enterprise (mixed mode)</Option>
             <Option value="wpa3OnlySAE">WPA3 Personal</Option>
             <Option value="wpa3MixedSAE">WPA3 Personal (mixed mode)</Option>
