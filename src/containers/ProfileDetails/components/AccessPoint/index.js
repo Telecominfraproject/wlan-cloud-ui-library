@@ -1127,16 +1127,7 @@ const AccessPointForm = ({
                               <Button icon={<UploadOutlined />}>Click to Upload</Button>
                             </Upload>
                           </Item>
-                          <Item
-                            name={[field.name, 'passphrase']}
-                            label="Certificate Passphrase"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Certificate Passphrase is required',
-                              },
-                            ]}
-                          >
+                          <Item name={[field.name, 'passphrase']} label="Certificate Passphrase">
                             <Password placeholder="Enter Passphrase" />
                           </Item>
                         </>

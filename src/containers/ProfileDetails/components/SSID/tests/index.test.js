@@ -303,28 +303,6 @@ describe('<SSIDForm />', () => {
     });
   });
 
-  it('changing Mode select option should update Roaming card', async () => {
-    const SSIDFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <SSIDForm {...mockSsid} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, container } = render(<SSIDFormComp />);
-
-    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
-    fireEvent.mouseDown(selectMode);
-    fireEvent.keyDown(selectMode, DOWN_ARROW);
-    await waitForElement(() => getByText('Open (No Encryption)'));
-    fireEvent.click(getByText('Open (No Encryption)'));
-    await waitFor(() => {
-      expect(getByText('802.11k')).toBeVisible();
-    });
-  });
-
   it('changing Mode select option to WPA & WPA2 Personal (mixed mode) should update Roaming card', async () => {
     const mockDetails = {
       ...mockSsid.details,
