@@ -44,11 +44,16 @@ const AccessPointForm = ({
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
+  const setInitialNtpServer = () => {
+    if (details?.ntpServer) {
+      return !details.ntpServer?.auto ? details.ntpServer?.value?.split(':') : [];
+    }
+    return [];
+  };
+
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
-  const [ntpServers, setNtpServers] = useState(
-    !details?.ntpServer?.auto ? details?.ntpServer?.value?.split(':') : []
-  );
+  const [ntpServers, setNtpServers] = useState(setInitialNtpServer());
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
