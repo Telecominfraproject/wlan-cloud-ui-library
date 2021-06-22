@@ -158,6 +158,8 @@ export const formatApProfileForm = values => {
             }
           : null,
         passphrase: useRadSec ? config.passphrase : null,
+        sharedSecret: !useRadSec ? config.sharedSecret : null,
+        acctSharedSecret: !useRadSec ? config.acctSharedSecret : null,
         dynamicDiscovery: config.realm.some(i => i === '*') ? config.dynamicDiscovery : false,
         ...(!useAccounting && { acctPort: null, acctServer: null, acctSharedSecret: null }),
       });
