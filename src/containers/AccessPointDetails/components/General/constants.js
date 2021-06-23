@@ -19,3 +19,7 @@ export const ALLOWED_CHANNELS_STEP = {
   is80MHz: 4,
   is160MHz: 8,
 };
+
+export const MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ = 157;
+
+export const MAX_CHANNEL_WIDTH_160MHZ = 100;
