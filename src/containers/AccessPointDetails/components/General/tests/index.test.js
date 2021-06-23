@@ -344,7 +344,7 @@ describe('<General />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText(/allowed channels:/i)).toBeVisible();
     });
   });
 
@@ -358,7 +358,7 @@ describe('<General />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText(/allowed channels:/i)).toBeVisible();
     });
   });
 

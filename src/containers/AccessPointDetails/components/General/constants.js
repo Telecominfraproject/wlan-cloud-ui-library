@@ -12,3 +12,10 @@ export const USER_FRIENDLY_RATES = {
   rate48mbps: '48',
   rate54mbps: '54',
 };
+
+export const ALLOWED_CHANNELS_STEP = {
+  is20MHz: 1,
+  is40MHz: 2,
+  is80MHz: 4,
+  is160MHz: 8,
+};

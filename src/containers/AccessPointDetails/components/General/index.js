@@ -18,7 +18,7 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
-import { USER_FRIENDLY_RATES } from './constants';
+import { USER_FRIENDLY_RATES, ALLOWED_CHANNELS_STEP } from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -338,6 +338,7 @@ const General = ({
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(radioMap)).map(key => {
             const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key].autoChannelSelection;
+            const bandwidth = childProfiles.rf?.[0]?.details?.rfConfigMap[key].channelBandwidth;
             let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
@@ -374,13 +375,34 @@ const General = ({
                   };
             }
 
+            const powerLevels = data?.details?.radioMap?.[key]?.allowedChannelsPowerLevels ?? [];
+
+            let allowedChannels = powerLevels
+              .filter(item => {
+                if (channel.dataIndex === 'manualBackupChannelNumber') {
+                  return !item.dfs;
+                }
+                return item;
+              })
+              .map(item => item?.channelNumber)
+              .sort((a, b) => a - b)
+              .filter((__, index) => index % ALLOWED_CHANNELS_STEP[bandwidth] === 0);
+
+            if (allowedChannels.length % 2 !== 0 && key !== 'is2dot4GHz') {
+              allowedChannels = allowedChannels.slice(0, -1);
+            }
+
+            if (bandwidth === 'is160MHz') {
+              allowedChannels = allowedChannels.filter(item => item <= 100);
+            }
+
             return (
               <Item
                 key={`radioMap${key}${channel.dataIndex}`}
                 name={['radioMap', key, channel.dataIndex]}
                 dependencies={[channel.dependencies]}
                 rules={[
-                  { required: true, message: '1 - 165' },
+                  { required: true, message: `Allowed Channels: ${allowedChannels.join(', ')}` },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
                       if (
@@ -391,14 +413,28 @@ const General = ({
                           new Error('Active and backup channels must be different')
                         );
                       }
+                      const channelNumber = parseInt(
+                        getFieldValue(['radioMap', key, channel.dataIndex]),
+                        10
+                      );
+                      let dfs = false;
                       if (
                         !value ||
-                        (getFieldValue(['radioMap', key, channel.dataIndex]) <= 165 &&
-                          getFieldValue(['radioMap', key, channel.dataIndex]) >= 1)
+                        powerLevels.some(item => {
+                          dfs = item.dfs;
+                          return item.channelNumber === channelNumber;
+                        })
                       ) {
+                        if (dfs) {
+                          return Promise.reject(
+                            new Error(`A DFS channel is not allowed as a backup channel`)
+                          );
+                        }
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('1 - 165'));
+                      return Promise.reject(
+                        new Error(`Allowed Channels: ${allowedChannels.join(', ')}`)
+                      );
                     },
                   }),
                 ]}
