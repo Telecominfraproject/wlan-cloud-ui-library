@@ -53,7 +53,7 @@ const AccessPointForm = ({
 
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
-  const [ntpServers, setNtpServers] = useState(setInitialNtpServer());
+  const [ntpServers, setNtpServers] = useState();
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
@@ -149,6 +149,8 @@ const AccessPointForm = ({
         clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
       })),
     });
+
+    setNtpServers(setInitialNtpServer());
   }, [form, details]);
 
   useEffect(() => {
@@ -1077,12 +1079,6 @@ const AccessPointForm = ({
                           <Item
                             name={[field.name, 'clientCert']}
                             label="Client Certification"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Client Certification file is required',
-                              },
-                            ]}
                             tooltip="PEM File"
                           >
                             <Upload
@@ -1104,12 +1100,6 @@ const AccessPointForm = ({
                           <Item
                             name={[field.name, 'clientKey']}
                             label="Client Key"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Client Key file is required',
-                              },
-                            ]}
                             tooltip="KEY File"
                           >
                             <Upload

@@ -130,7 +130,6 @@ export const formatApProfileForm = values => {
     formattedData.radiusProxyConfigurations = [];
     values.radiusProxyConfigurations.forEach((config, index) => {
       const useRadSec = isBool(config.useRadSec);
-
       const { useAccounting } = config;
       formattedData.radiusProxyConfigurations.push({
         ...config,
@@ -143,20 +142,22 @@ export const formatApProfileForm = values => {
               fileCategory: 'RadSecAuthentication',
             }
           : null,
-        clientCert: useRadSec
-          ? {
-              apExportUrl: config.clientCert.file.name,
-              fileType: 'PEM',
-              fileCategory: 'RadSecAuthentication',
-            }
-          : null,
-        clientKey: useRadSec
-          ? {
-              apExportUrl: config.clientKey.file.name,
-              fileType: 'KEY',
-              fileCategory: 'RadSecAuthentication',
-            }
-          : null,
+        clientCert:
+          useRadSec && config.clientCert
+            ? {
+                apExportUrl: config.clientCert.file.name,
+                fileType: 'PEM',
+                fileCategory: 'RadSecAuthentication',
+              }
+            : null,
+        clientKey:
+          useRadSec && config.clientKey
+            ? {
+                apExportUrl: config.clientKey.file.name,
+                fileType: 'KEY',
+                fileCategory: 'RadSecAuthentication',
+              }
+            : null,
         passphrase: useRadSec ? config.passphrase : null,
         sharedSecret: !useRadSec ? config.sharedSecret : null,
         acctSharedSecret: !useRadSec ? config.acctSharedSecret : null,
