@@ -113,6 +113,7 @@ const SSIDForm = ({
       RADIOS.forEach(i => {
         radioBasedValues[`enable80211r${i}`] =
           mode === 'wpa3OnlyEAP' ||
+          mode === 'wpa3OnlyEAP192' ||
           mode === 'wpa3MixedEAP' ||
           mode === 'wpa2OnlyRadius' ||
           mode === 'wpa2Radius' ||
@@ -449,6 +450,7 @@ const SSIDForm = ({
                 {getFieldValue('forwardMode') === 'BRIDGE' &&
                 getFieldValue('vlan') === 'defaultVLAN' &&
                 (mode === 'wpa3OnlyEAP' ||
+                  mode === 'wpa3OnlyEAP192' ||
                   mode === 'wpa3MixedEAP' ||
                   mode === 'wpa2OnlyRadius' ||
                   mode === 'wpa2Radius' ||
@@ -493,6 +495,7 @@ const SSIDForm = ({
             placeholder="Select Security and Encryption Mode"
           >
             <Option value="wpa3OnlyEAP">WPA3 Enterprise</Option>
+            <Option value="wpa3OnlyEAP192">WPA3-Enterprise 192-Bit (SHA384-SuiteB)</Option>
             <Option value="wpa3MixedEAP">WPA3 Enterprise (mixed mode)</Option>
             <Option value="wpa3OnlySAE">WPA3 Personal</Option>
             <Option value="wpa3MixedSAE">WPA3 Personal (mixed mode)</Option>
@@ -600,7 +603,8 @@ const SSIDForm = ({
         mode === 'wpa2Radius' ||
         mode === 'wpa2OnlyRadius' ||
         mode === 'wpa3OnlyEAP' ||
-        mode === 'wpa3MixedEAP') && (
+        mode === 'wpa3MixedEAP' ||
+        mode === 'wpa3OnlyEAP192') && (
         <Card title="RADIUS">
           <Item
             label="RADIUS Proxy"

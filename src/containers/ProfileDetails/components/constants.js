@@ -12,7 +12,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
-    useMaxTxPower: false,
+    useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -62,7 +62,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
-    useMaxTxPower: false,
+    useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -112,7 +112,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
-    useMaxTxPower: false,
+    useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
       enabled: true,
@@ -162,7 +162,7 @@ const defaultRfProfile = {
     maxNumClients: 100,
     autoChannelSelection: true,
     autoCellSizeSelection: false,
-    useMaxTxPower: false,
+    useMaxTxPower: true,
     maxAutoCellSize: -90,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',

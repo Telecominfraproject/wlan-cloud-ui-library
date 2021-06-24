@@ -12,14 +12,22 @@ import { formatTicks } from 'utils/formatFunctions';
 import Card from '../Card';
 import styles from './index.module.scss';
 
+const TEN_MINUTE_UNIX = 600000;
+
 const MyLineChart = ({ title, data, options, refreshAfter }) => {
   const lineData = useMemo(() => {
-    let result = [];
+    const result = [];
+    let prevTimestamp = 0;
     Object.keys(data).forEach(key => {
-      result = [
-        ...result,
-        { ...data[key], value: data[key]?.value?.sort((a, b) => a.timestamp - b.timestamp) },
-      ];
+      const arr = [];
+      (data[key].value ?? []).forEach(({ timestamp, value }, index) => {
+        if (prevTimestamp - timestamp > TEN_MINUTE_UNIX && index !== 0) {
+          arr.push({ timestamp: prevTimestamp - TEN_MINUTE_UNIX, value: null });
+        }
+        arr.push({ timestamp, value });
+        prevTimestamp = timestamp;
+      });
+      result.push({ key: data[key].key, value: arr.sort((a, b) => a.timestamp - b.timestamp) });
     });
     return result;
   }, [data]);

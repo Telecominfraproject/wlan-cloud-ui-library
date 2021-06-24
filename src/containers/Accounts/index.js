@@ -43,7 +43,7 @@ const Accounts = ({
 
   const editUser = ({ email, roles, password, ...extra }) => {
     const { id, lastModifiedTimestamp } = activeUser;
-    onEditUser({ id, email, password, roles, lastModifiedTimestamp, ...extra });
+    onEditUser({ ...activeUser, id, email, password, roles, lastModifiedTimestamp, ...extra });
     setEditModal(false);
   };
 

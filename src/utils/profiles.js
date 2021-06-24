@@ -86,7 +86,8 @@ export const formatSsidProfileForm = values => {
     values.secureMode === 'wpa2Radius' ||
     values.secureMode === 'wpa2OnlyRadius' ||
     values.secureMode === 'wpa3OnlyEAP' ||
-    values.secureMode === 'wpa3MixedEAP'
+    values.secureMode === 'wpa3MixedEAP' ||
+    values.secureMode === 'wpa3OnlyEAP192'
   ) {
     if (!isBool(values.useRadiusProxy)) {
       formattedData.childProfileIds.push(values.radiusServiceId.value);
@@ -103,7 +104,8 @@ export const formatSsidProfileForm = values => {
       values.secureMode === 'wpa2Radius' ||
       values.secureMode === 'wpa2OnlyRadius' ||
       values.secureMode === 'wpa3OnlyEAP' ||
-      values.secureMode === 'wpa3MixedEAP'
+      values.secureMode === 'wpa3MixedEAP' ||
+      values.secureMode === 'wpa3OnlyEAP192'
     ) ||
     values.forwardMode === 'NAT'
   ) {
@@ -128,7 +130,6 @@ export const formatApProfileForm = values => {
     formattedData.radiusProxyConfigurations = [];
     values.radiusProxyConfigurations.forEach((config, index) => {
       const useRadSec = isBool(config.useRadSec);
-
       const { useAccounting } = config;
       formattedData.radiusProxyConfigurations.push({
         ...config,
@@ -141,21 +142,26 @@ export const formatApProfileForm = values => {
               fileCategory: 'RadSecAuthentication',
             }
           : null,
-        clientCert: useRadSec
-          ? {
-              apExportUrl: config.clientCert.file.name,
-              fileType: 'PEM',
-              fileCategory: 'RadSecAuthentication',
-            }
-          : null,
-        clientKey: useRadSec
-          ? {
-              apExportUrl: config.clientKey.file.name,
-              fileType: 'KEY',
-              fileCategory: 'RadSecAuthentication',
-            }
-          : null,
+        clientCert:
+          useRadSec && config.clientCert
+            ? {
+                apExportUrl: config.clientCert.file.name,
+                fileType: 'PEM',
+                fileCategory: 'RadSecAuthentication',
+              }
+            : null,
+        clientKey:
+          useRadSec && config.clientKey
+            ? {
+                apExportUrl: config.clientKey.file.name,
+                fileType: 'KEY',
+                fileCategory: 'RadSecAuthentication',
+              }
+            : null,
         passphrase: useRadSec ? config.passphrase : null,
+        sharedSecret: !useRadSec ? config.sharedSecret : null,
+        acctSharedSecret: !useRadSec ? config.acctSharedSecret : null,
+        dynamicDiscovery: config.realm.some(i => i === '*') ? config.dynamicDiscovery : false,
         ...(!useAccounting && { acctPort: null, acctServer: null, acctSharedSecret: null }),
       });
     });
@@ -356,6 +362,7 @@ export const formatProviderProfileForm = values => {
         naiRealms: formattedData.naiRealms.replace(/\s/g, '').split(',') || [],
         eapMap: formattedData.eapMap || {},
         encoding: formattedData.encoding || 0,
+        eapMethods: Object.keys(formattedData.eapMap),
       },
     ];
   }

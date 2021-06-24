@@ -44,11 +44,16 @@ const AccessPointForm = ({
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
+  const setInitialNtpServer = () => {
+    if (details?.ntpServer) {
+      return !details.ntpServer?.auto ? details.ntpServer?.value?.split(':') : [];
+    }
+    return [];
+  };
+
   const [greModalVisible, setGreModalVisible] = useState(false);
   const [greList, setGreList] = useState(details?.greTunnelConfigurations || []);
-  const [ntpServers, setNtpServers] = useState(
-    !details?.ntpServer?.auto ? details?.ntpServer?.value?.split(':') : []
-  );
+  const [ntpServers, setNtpServers] = useState();
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
 
@@ -135,13 +140,17 @@ const AccessPointForm = ({
       },
       radiusProxyConfigurations: sortedProxyConfigurations?.map(config => ({
         ...config,
-        useAccounting: !!config.acctPort,
+        acctPort: config?.acctPort > 0 ? config.acctPort : null,
+        useAccounting: !!config.acctServer,
         useRadSec: config.useRadSec.toString(),
+        dynamicDiscovery: config.dynamicDiscovery.toString(),
         caCert: config.caCert ? { file: formatFile(config.caCert) } : null,
         clientCert: config.clientCert ? { file: formatFile(config.clientCert) } : null,
         clientKey: config.clientKey ? { file: formatFile(config.clientKey) } : null,
       })),
     });
+
+    setNtpServers(setInitialNtpServer());
   }, [form, details]);
 
   useEffect(() => {
@@ -991,6 +1000,39 @@ const AccessPointForm = ({
                     }}
                   </Form.List>
                 </Item>
+                <Item
+                  noStyle
+                  shouldUpdate={(prevValues, currentValues) =>
+                    prevValues.radiusProxyConfigurations?.[field.name]?.realm !==
+                    currentValues.radiusProxyConfigurations?.[field.name]?.realm
+                  }
+                >
+                  {({ getFieldValue }) => {
+                    const wildCardUsed = getFieldValue([
+                      'radiusProxyConfigurations',
+                      field.name,
+                      'realm',
+                    ])?.some(i => i === '*');
+
+                    return (
+                      wildCardUsed && (
+                        <Item
+                          name={[field.name, 'dynamicDiscovery']}
+                          label="Auto Discovery"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select your Auto Discovery setting',
+                            },
+                          ]}
+                          initialValue="true"
+                        >
+                          {enabledRadioOptions()}
+                        </Item>
+                      )
+                    );
+                  }}
+                </Item>
 
                 <Item
                   noStyle
@@ -1037,12 +1079,6 @@ const AccessPointForm = ({
                           <Item
                             name={[field.name, 'clientCert']}
                             label="Client Certification"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Client Certification file is required',
-                              },
-                            ]}
                             tooltip="PEM File"
                           >
                             <Upload
@@ -1064,12 +1100,6 @@ const AccessPointForm = ({
                           <Item
                             name={[field.name, 'clientKey']}
                             label="Client Key"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Client Key file is required',
-                              },
-                            ]}
                             tooltip="KEY File"
                           >
                             <Upload
@@ -1087,16 +1117,7 @@ const AccessPointForm = ({
                               <Button icon={<UploadOutlined />}>Click to Upload</Button>
                             </Upload>
                           </Item>
-                          <Item
-                            name={[field.name, 'passphrase']}
-                            label="Certificate Passphrase"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Certificate Passphrase is required',
-                              },
-                            ]}
-                          >
+                          <Item name={[field.name, 'passphrase']} label="Certificate Passphrase">
                             <Password placeholder="Enter Passphrase" />
                           </Item>
                         </>
