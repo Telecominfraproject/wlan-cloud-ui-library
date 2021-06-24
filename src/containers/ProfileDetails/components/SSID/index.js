@@ -98,6 +98,9 @@ const SSIDForm = ({
       },
       useRadiusProxy:
         details?.useRadiusProxy?.toString() ?? defaultSsidProfile.useRadiusProxy.toString(),
+      enableProxyArpForHotspot:
+        details?.enableProxyArpForHotspot?.toString() ??
+        defaultSsidProfile.enableProxyArpForHotspot.toString(),
     });
   }, [form, details]);
 
@@ -471,6 +474,9 @@ const SSIDForm = ({
               </Item>
             );
           }}
+        </Item>
+        <Item name="enableProxyArpForHotspot" label="Proxy-ARP">
+          {radioOptions}
         </Item>
       </Card>
 
