@@ -6,6 +6,7 @@ import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
+import { sortRadioTypes } from 'utils/sortRadioTypes';
 import styles from '../index.module.scss';
 import { defaultSsidProfile } from '../constants';
 import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
@@ -35,6 +36,8 @@ const SSIDForm = ({
       e.preventDefault();
     }
   };
+
+  const sortedRadios = sortRadioTypes(Object.keys(radioTypes || []));
 
   const radioOptions = (
     <Radio.Group>
@@ -242,7 +245,7 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <CheckboxGroup>
-            {Object.keys(radioTypes || [])?.map(i => (
+            {sortedRadios.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
@@ -799,7 +802,7 @@ const SSIDForm = ({
       <Card title="Roaming">
         <Item label="Advanced Settings" colon={false}>
           <div className={styles.InlineDiv}>
-            {Object.keys(radioTypes || [])?.map(i => (
+            {sortedRadios.map(i => (
               <span key={i}>{radioTypes?.[i]}</span>
             ))}
           </div>
