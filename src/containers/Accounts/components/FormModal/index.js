@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Input, Select, Typography, List } from 'antd';
+import { Button, Form, Input, Select, Typography } from 'antd';
 
 import ContainedSelect from 'components/ContainedSelect';
 
@@ -8,11 +8,9 @@ import Modal from 'components/Modal';
 import styles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 
-import extraStyles from './index.module.scss';
-
 const { Item } = Form;
 const { Option } = Select;
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const strongRegex = new RegExp(
   /(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])).*/
@@ -27,7 +25,6 @@ const FormModal = ({
   isAuth0Enabled,
   onResetUserPassword,
   allUserRoles,
-  extraFields,
 }) => {
   const [form] = Form.useForm();
 
@@ -37,9 +34,6 @@ const FormModal = ({
       form.setFieldsValue({
         email: data?.email,
         roles: data?.roles,
-        managePortalUsers: data?.details?.managePortalUsers && 'checked',
-        manageCaptivePortal: data?.details?.manageCaptivePortal && 'checked',
-        rebootEquipment: data?.details?.rebootEquipment && 'checked',
       });
     }
   }, [visible]);
@@ -134,30 +128,6 @@ const FormModal = ({
           <Button onClick={() => onResetUserPassword(data?.id)}>Reset Password</Button>
         </Item>
       )}
-
-      {extraFields?.length > 0 && (
-        <>
-          <Title level={4} className={extraStyles.listTitle}>
-            Access
-          </Title>
-          <List
-            dataSource={extraFields}
-            renderItem={field => (
-              <List.Item>
-                <div className={extraStyles.extraFields}>
-                  <div className={extraStyles.title}>
-                    <span>{field.label}</span>
-                    <Item name={field.name} valuePropName="checked">
-                      {field.component}
-                    </Item>
-                  </div>
-                  <Text type="secondary">{field.description}</Text>
-                </div>
-              </List.Item>
-            )}
-          />
-        </>
-      )}
     </Form>
   );
 
@@ -191,7 +161,6 @@ FormModal.propTypes = {
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
   allUserRoles: PropTypes.instanceOf(Array),
-  extraFields: PropTypes.instanceOf(Object),
 };
 
 FormModal.defaultProps = {
@@ -200,7 +169,6 @@ FormModal.defaultProps = {
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
   allUserRoles: ['SuperUser', 'CustomerIT'],
-  extraFields: null,
 };
 
 export default FormModal;
