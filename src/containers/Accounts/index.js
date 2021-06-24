@@ -10,7 +10,7 @@ import DeleteButton from 'components/DeleteButton';
 import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import styles from './index.module.scss';
-import DefaultForm from './components/FormModal';
+import DefaultModal from './components/FormModal';
 
 const Accounts = ({
   data,
@@ -23,13 +23,11 @@ const Accounts = ({
   isLastPage,
   isAuth0Enabled,
   allUserRoles,
-  formModal,
+  FormModal,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [activeUser, setActiveUser] = useState({});
-
-  const FormModal = formModal || DefaultForm;
 
   const deleteUser = () => {
     const { id } = activeUser;
@@ -155,7 +153,7 @@ Accounts.propTypes = {
   currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   allUserRoles: PropTypes.instanceOf(Array),
-  formModal: PropTypes.node,
+  FormModal: PropTypes.node,
 };
 
 Accounts.defaultProps = {
@@ -166,7 +164,7 @@ Accounts.defaultProps = {
   currentUserId: null,
   isAuth0Enabled: false,
   allUserRoles: ['SuperUser', 'CustomerIT'],
-  formModal: null,
+  FormModal: DefaultModal,
 };
 
 export default Accounts;
