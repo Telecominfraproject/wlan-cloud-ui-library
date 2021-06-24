@@ -423,19 +423,7 @@ const General = ({
                         getFieldValue(['radioMap', key, channel.dataIndex]),
                         10
                       );
-                      let dfs = false;
-                      if (
-                        !value ||
-                        powerLevels.some(item => {
-                          dfs = item.dfs;
-                          return item.channelNumber === channelNumber;
-                        })
-                      ) {
-                        if (dfs) {
-                          return Promise.reject(
-                            new Error(`A DFS channel is not allowed as a backup channel`)
-                          );
-                        }
+                      if (!value || allowedChannels.includes(channelNumber)) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -449,8 +437,8 @@ const General = ({
                   className={styles.Field}
                   placeholder={`Enter ${label} for ${radioTypes[key]}`}
                   type="number"
-                  min={1}
-                  max={165}
+                  min={Math.min(...allowedChannels)}
+                  max={Math.max(...allowedChannels)}
                   addonAfter={channel.addOnText}
                   disabled={isEnabled}
                 />
