@@ -25,7 +25,6 @@ const FormModal = ({
   isAuth0Enabled,
   onResetUserPassword,
   allUserRoles,
-  extraFields,
 }) => {
   const [form] = Form.useForm();
 
@@ -72,12 +71,6 @@ const FormModal = ({
           ))}
         </ContainedSelect>
       </Item>
-
-      {extraFields?.map(field => (
-        <Item name={field.name} label={field.label} {...field}>
-          {field.component}
-        </Item>
-      ))}
 
       {!isAuth0Enabled && (
         <>
@@ -168,7 +161,6 @@ FormModal.propTypes = {
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
   allUserRoles: PropTypes.instanceOf(Array),
-  extraFields: PropTypes.instanceOf(Object),
 };
 
 FormModal.defaultProps = {
@@ -177,7 +169,6 @@ FormModal.defaultProps = {
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
   allUserRoles: ['SuperUser', 'CustomerIT'],
-  extraFields: null,
 };
 
 export default FormModal;
