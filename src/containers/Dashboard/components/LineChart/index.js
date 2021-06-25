@@ -53,7 +53,7 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
     });
 
     if (firstTs && lastTs) {
-      return formatTicks(firstTs, lastTs, 5);
+      return formatTicks(firstTs, lastTs, 4);
     }
     return [];
   }, [lineData]);
