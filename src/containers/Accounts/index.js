@@ -10,7 +10,7 @@ import DeleteButton from 'components/DeleteButton';
 import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
 import styles from './index.module.scss';
-import FormModal from './components/FormModal';
+import DefaultModal from './components/FormModal';
 
 const Accounts = ({
   data,
@@ -23,7 +23,7 @@ const Accounts = ({
   isLastPage,
   isAuth0Enabled,
   allUserRoles,
-  extraFields,
+  FormModal,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -123,7 +123,6 @@ const Accounts = ({
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
         allUserRoles={allUserRoles}
-        extraFields={extraFields}
       />
       <FormModal
         onCancel={() => setAddModal(false)}
@@ -132,7 +131,6 @@ const Accounts = ({
         title="Add User"
         isAuth0Enabled={isAuth0Enabled}
         allUserRoles={allUserRoles}
-        extraFields={extraFields}
       />
       <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
@@ -155,7 +153,7 @@ Accounts.propTypes = {
   currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   allUserRoles: PropTypes.instanceOf(Array),
-  extraFields: PropTypes.instanceOf(Object),
+  FormModal: PropTypes.node,
 };
 
 Accounts.defaultProps = {
@@ -166,7 +164,7 @@ Accounts.defaultProps = {
   currentUserId: null,
   isAuth0Enabled: false,
   allUserRoles: ['SuperUser', 'CustomerIT'],
-  extraFields: null,
+  FormModal: DefaultModal,
 };
 
 export default Accounts;

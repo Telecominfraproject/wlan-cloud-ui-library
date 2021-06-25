@@ -262,6 +262,7 @@ const defaultSsidProfile = {
     nasOperatorId: null,
   },
   useRadiusProxy: false,
+  enableProxyArpForHotspot: false,
 };
 const defaultApProfile = {
   model_type: 'ApNetworkConfiguration',
