@@ -132,7 +132,7 @@ const FormModal = ({
       )}
       {isAuth0Enabled && title === 'Edit User' && (
         <Item label="Password">
-          <Button onClick={() => onResetUserPassword(data?.id)}>Reset Password</Button>
+          <Button onClick={() => onResetUserPassword(data?.email)}>Reset Password</Button>
         </Item>
       )}
     </Form>
