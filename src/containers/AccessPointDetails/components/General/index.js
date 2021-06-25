@@ -18,7 +18,12 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
-import { USER_FRIENDLY_RATES } from './constants';
+import {
+  USER_FRIENDLY_RATES,
+  ALLOWED_CHANNELS_STEP,
+  MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ,
+  MAX_CHANNEL_WIDTH_160MHZ,
+} from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -338,6 +343,7 @@ const General = ({
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(radioMap)).map(key => {
             const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key].autoChannelSelection;
+            const bandwidth = childProfiles.rf?.[0]?.details?.rfConfigMap[key].channelBandwidth;
             let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
@@ -374,13 +380,35 @@ const General = ({
                   };
             }
 
+            const powerLevels = data?.details?.radioMap?.[key]?.allowedChannelsPowerLevels ?? [];
+
+            let allowedChannels = powerLevels
+              .filter(item => {
+                if (channel.dataIndex === 'manualBackupChannelNumber') {
+                  return !item.dfs;
+                }
+                return item;
+              })
+              .map(item => item?.channelNumber)
+              .sort((a, b) => a - b)
+              .filter((__, index) => index % ALLOWED_CHANNELS_STEP[bandwidth] === 0);
+
+            if (bandwidth !== 'is20MHz') {
+              allowedChannels = allowedChannels.filter(item => {
+                if (bandwidth === 'is160MHz') {
+                  return item <= MAX_CHANNEL_WIDTH_160MHZ;
+                }
+                return item <= MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ;
+              });
+            }
+
             return (
               <Item
                 key={`radioMap${key}${channel.dataIndex}`}
                 name={['radioMap', key, channel.dataIndex]}
                 dependencies={[channel.dependencies]}
                 rules={[
-                  { required: true, message: '1 - 165' },
+                  { required: true, message: `Allowed Channels: ${allowedChannels.join(', ')}` },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
                       if (
@@ -391,14 +419,16 @@ const General = ({
                           new Error('Active and backup channels must be different')
                         );
                       }
-                      if (
-                        !value ||
-                        (getFieldValue(['radioMap', key, channel.dataIndex]) <= 165 &&
-                          getFieldValue(['radioMap', key, channel.dataIndex]) >= 1)
-                      ) {
+                      const channelNumber = parseInt(
+                        getFieldValue(['radioMap', key, channel.dataIndex]),
+                        10
+                      );
+                      if (!value || allowedChannels.includes(channelNumber)) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('1 - 165'));
+                      return Promise.reject(
+                        new Error(`Allowed Channels: ${allowedChannels.join(', ')}`)
+                      );
                     },
                   }),
                 ]}
@@ -407,8 +437,8 @@ const General = ({
                   className={styles.Field}
                   placeholder={`Enter ${label} for ${radioTypes[key]}`}
                   type="number"
-                  min={1}
-                  max={165}
+                  min={Math.min(...allowedChannels)}
+                  max={Math.max(...allowedChannels)}
                   addonAfter={channel.addOnText}
                   disabled={isEnabled}
                 />
