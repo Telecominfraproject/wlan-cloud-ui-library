@@ -245,7 +245,7 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <CheckboxGroup>
-            {Object.keys(radioTypes || [])?.map(i => (
+            {Object.keys(radioTypes || {})?.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
@@ -805,7 +805,7 @@ const SSIDForm = ({
       <Card title="Roaming">
         <Item label="Advanced Settings" colon={false}>
           <div className={styles.InlineDiv}>
-            {Object.keys(radioTypes || [])?.map(i => (
+            {Object.keys(radioTypes || {})?.map(i => (
               <span key={i}>{radioTypes?.[i]}</span>
             ))}
           </div>
