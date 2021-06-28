@@ -35,7 +35,6 @@ const ClientDeviceDetails = ({
     hostname,
     ssid,
     radioType,
-    signal,
     manufacturer,
     equipment,
     details,
@@ -61,6 +60,7 @@ const ClientDeviceDetails = ({
   } = latestMetrics?.detailsJSON || {};
   const rxThroughput = rxBytes / periodLengthSec;
   const txThroughput = txBytes / periodLengthSec;
+  const signal = `${rssi}`;
 
   const status = useMemo(() => {
     if (details?.associationState === 'Active_Data') {
@@ -78,7 +78,7 @@ const ClientDeviceDetails = ({
     'Access Point': equipment?.name,
     SSID: ssid,
     'Radio Band': radioTypes?.[radioType],
-    'Signal Strength': `${rssi} dBm`,
+    'Signal Strength': `${signal} dBm`,
     'Tx Rate': `${formatBitsPerSecond(averageTxRate * 1000)}`,
     'Rx Rate': `${formatBitsPerSecond(averageRxRate * 1000)}`,
   });
@@ -121,7 +121,7 @@ const ClientDeviceDetails = ({
         macAddress={macAddress}
         ipAddress={ipAddress}
         radioType={radioType}
-        signal={rssi.toString()}
+        signal={signal}
         dataTransferred={txBytes + rxBytes}
         dataThroughput={txThroughput + rxThroughput}
         status={status}
