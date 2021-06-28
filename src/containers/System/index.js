@@ -25,21 +25,19 @@ const System = ({ hasCustomer, children, showsFirmware }) => {
   };
 
   return (
-    <>
-      <Container>
-        <Tabs defaultActiveKey={getActiveKey()} onChange={onTabChange}>
-          <TabPane tab="Device Manufacturer" key="manufacturer" />
-          {hasCustomer && (
-            <>
-              {showsFirmware && <TabPane tab="Firmware" key="firmware" />}
-              <TabPane tab="Auto-Provisioning" key="autoprovision" />
-              <TabPane tab="Client Blocked List" key="blockedlist" />
-            </>
-          )}
-        </Tabs>
-      </Container>
+    <Container>
+      <Tabs defaultActiveKey={getActiveKey()} onChange={onTabChange}>
+        <TabPane tab="Device Manufacturer" key="manufacturer" />
+        {hasCustomer && (
+          <>
+            {showsFirmware && <TabPane tab="Firmware" key="firmware" />}
+            <TabPane tab="Auto-Provisioning" key="autoprovision" />
+            <TabPane tab="Client Blocked List" key="blockedlist" />
+          </>
+        )}
+      </Tabs>
       {children}
-    </>
+    </Container>
   );
 };
 

@@ -5,7 +5,6 @@ import { Search } from 'components/WithRoles';
 import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
-import Container from 'components/Container';
 import Header from 'components/Header';
 import globalStyles from 'styles/index.scss';
 
@@ -83,83 +82,81 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
   };
 
   return (
-    <Container>
-      <div className={styles.Manufacturer}>
-        <Header>
-          <h1>Device Manufacturers</h1>
-        </Header>
-        <Form form={form} {...layout}>
-          <Card title="Upload Manufacturer OUI Data">
-            <Alert
-              message={
-                <div>
-                  Latest sanitized IEEE OUI data file (oui.txt.gz) can be obtained from &nbsp;
-                  <a
-                    style={{ textDecoration: 'underline' }}
-                    target="_blank"
-                    href="https://www.linuxnet.ca/ieee/oui/"
-                    rel="noopener noreferrer"
-                  >
-                    linuxnet.ca.
-                  </a>
-                </div>
-              }
-              type="info"
-            />
-            <Item className={styles.FileButton}>
-              <Upload
-                accept="application/x-gzip"
-                fileList={ouiFileList}
-                beforeUpload={handleFileUpload}
-                onChange={handleOnChangeOUI}
-                showUploadList={false}
-                data-testid="ouiUpload"
-                disabled={loadingFileUpload}
-              >
-                <Button disabled={loadingFileUpload || isReadOnly} icon={<UploadOutlined />}>
-                  Select File to Import...
-                </Button>
-              </Upload>
-              {loadingFileUpload && <Spin style={{ marginLeft: '10px' }} />}
-            </Item>
-          </Card>
-          <Card title="Set a Manufacturer Alias">
-            <Item name="oui" label="OUI">
-              <Search
-                placeholder="OUI String"
-                enterButton="Find"
-                maxLength={8}
-                className={globalStyles.field}
-                onSearch={handleOnSearch}
-              />
-            </Item>
-            {returnedOUI?.oui && !cancel && (
-              <>
-                <Item label="Manufacturer">{returnedOUI.manufacturerName}</Item>
-                <Item
-                  label="Alias"
-                  name="alias"
-                  rules={[{ required: true, message: 'Please enter the Alias name' }]}
-                  initialValue={returnedOUI.manufacturerAlias}
+    <div className={styles.Manufacturer}>
+      <Header>
+        <h1>Device Manufacturers</h1>
+      </Header>
+      <Form form={form} {...layout}>
+        <Card title="Upload Manufacturer OUI Data">
+          <Alert
+            message={
+              <div>
+                Latest sanitized IEEE OUI data file (oui.txt.gz) can be obtained from &nbsp;
+                <a
+                  style={{ textDecoration: 'underline' }}
+                  target="_blank"
+                  href="https://www.linuxnet.ca/ieee/oui/"
+                  rel="noopener noreferrer"
                 >
-                  <Input
-                    className={globalStyles.field}
-                    placeholder="Please enter a concise and widely recognized brand name."
-                    maxLength={20}
-                  />
-                </Item>
-                <div className={styles.FlexDiv}>
-                  <Button onClick={() => setCancel(true)}>Cancel</Button>
-                  <Button type="primary" onClick={onSubmit}>
-                    Save
-                  </Button>
-                </div>
-              </>
-            )}
-          </Card>
-        </Form>
-      </div>
-    </Container>
+                  linuxnet.ca.
+                </a>
+              </div>
+            }
+            type="info"
+          />
+          <Item className={styles.FileButton}>
+            <Upload
+              accept="application/x-gzip"
+              fileList={ouiFileList}
+              beforeUpload={handleFileUpload}
+              onChange={handleOnChangeOUI}
+              showUploadList={false}
+              data-testid="ouiUpload"
+              disabled={loadingFileUpload}
+            >
+              <Button disabled={loadingFileUpload || isReadOnly} icon={<UploadOutlined />}>
+                Select File to Import...
+              </Button>
+            </Upload>
+            {loadingFileUpload && <Spin style={{ marginLeft: '10px' }} />}
+          </Item>
+        </Card>
+        <Card title="Set a Manufacturer Alias">
+          <Item name="oui" label="OUI">
+            <Search
+              placeholder="OUI String"
+              enterButton="Find"
+              maxLength={8}
+              className={globalStyles.field}
+              onSearch={handleOnSearch}
+            />
+          </Item>
+          {returnedOUI?.oui && !cancel && (
+            <>
+              <Item label="Manufacturer">{returnedOUI.manufacturerName}</Item>
+              <Item
+                label="Alias"
+                name="alias"
+                rules={[{ required: true, message: 'Please enter the Alias name' }]}
+                initialValue={returnedOUI.manufacturerAlias}
+              >
+                <Input
+                  className={globalStyles.field}
+                  placeholder="Please enter a concise and widely recognized brand name."
+                  maxLength={20}
+                />
+              </Item>
+              <div className={styles.FlexDiv}>
+                <Button onClick={() => setCancel(true)}>Cancel</Button>
+                <Button type="primary" onClick={onSubmit}>
+                  Save
+                </Button>
+              </div>
+            </>
+          )}
+        </Card>
+      </Form>
+    </div>
   );
 };
 
