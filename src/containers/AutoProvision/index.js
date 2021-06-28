@@ -5,7 +5,6 @@ import WithRoles, { Switch, Select, RoleProtectedBtn } from 'components/WithRole
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
-import Container from 'components/Container';
 import DeleteButton from 'components/DeleteButton';
 import globalStyles from 'styles/index.scss';
 
@@ -176,7 +175,7 @@ const AutoProvision = ({
   }, [data]);
 
   return (
-    <Container>
+    <>
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
@@ -278,7 +277,7 @@ const AutoProvision = ({
           </div>
         )}
       </Form>
-    </Container>
+    </>
   );
 };
 
