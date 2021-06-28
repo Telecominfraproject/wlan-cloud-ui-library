@@ -121,10 +121,18 @@ const ProfileDetails = ({
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
         if (profileType === PROFILES.accessPoint) {
-          if (!values.rfProfileId) {
+          if (!values.rfProfileId?.value) {
             notification.error({
               message: 'Error',
               description: 'A Rf Profile is required.',
+            });
+            return;
+          }
+
+          if (!values.selectedSsidProfiles?.length) {
+            notification.error({
+              message: 'Error',
+              description: 'A SSID Profile is required.',
             });
             return;
           }
