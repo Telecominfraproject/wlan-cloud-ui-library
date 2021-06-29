@@ -18,7 +18,6 @@ import {
   Search,
   Upload,
   RadioGroup as Group,
-  TextArea,
   RoleProtectedBtn,
 } from 'components/WithRoles';
 
@@ -27,7 +26,6 @@ import { PROFILES } from 'containers/ProfileDetails/constants';
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 
-import globalStyles from 'styles/index.scss';
 import Users from './components/Users';
 import styles from '../index.module.scss';
 
@@ -345,11 +343,7 @@ const CaptivePortalForm = ({
             },
           ]}
         >
-          <Select
-            className={globalStyles.field}
-            placeholder="Select authentication mode"
-            onChange={setAuthentication}
-          >
+          <Select placeholder="Select authentication mode" onChange={setAuthentication}>
             <Option value="guest">None</Option>
             <Option value="radius">RADIUS</Option>
             <Option value="username">Captive Portal User List</Option>
@@ -395,7 +389,7 @@ const CaptivePortalForm = ({
             },
           ]}
         >
-          <Input className={globalStyles.field} placeholder="http://... or https://..." />
+          <Input placeholder="http://... or https://..." />
         </Item>
         <Item label="Splash Page" name="externalSplashPage">
           <Group>
@@ -434,7 +428,7 @@ const CaptivePortalForm = ({
               },
             ]}
           >
-            <Select className={globalStyles.field} placeholder="Select RADIUS authentication mode">
+            <Select placeholder="Select RADIUS authentication mode">
               <Option value="CHAP">Challenge-Handshake (CHAP)</Option>
               <Option value="PAP">Password (PAP)</Option>
               <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
@@ -451,7 +445,6 @@ const CaptivePortalForm = ({
             ]}
           >
             <Select
-              className={globalStyles.field}
               placeholder="RADIUS Profiles"
               onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
               showSearch={onSearchProfile}
@@ -486,7 +479,7 @@ const CaptivePortalForm = ({
                   },
                 ]}
               >
-                <Input className={globalStyles.field} placeholder="http://... or https://..." />
+                <Input placeholder="http://... or https://..." />
               </Item>
               <Button onClick={() => setShowTips(!showTips)} icon={<QuestionCircleFilled />}>
                 {!showTips ? 'Show Splash Page Tips' : 'Hide Splash Page Tips'}
@@ -495,7 +488,6 @@ const CaptivePortalForm = ({
           </Item>
           {showTips && (
             <Alert
-              className={globalStyles.field}
               description={
                 <ol>
                   <li>
@@ -548,7 +540,7 @@ const CaptivePortalForm = ({
               },
             ]}
           >
-            <Input className={globalStyles.field} placeholder="Browser title" />
+            <Input placeholder="Browser title" />
           </Item>
           <Item
             name="headerContent"
@@ -559,36 +551,30 @@ const CaptivePortalForm = ({
               },
             ]}
           >
-            <Input className={globalStyles.field} placeholder="Page title" />
+            <Input placeholder="Page title" />
           </Item>
           <Item label="Body Content">
             <div className={styles.InlineDiv}>
               <Button
                 onClick={() => setContentText(false)}
                 type={!isLoginText ? 'primary ' : 'ghost'}
+                className={styles.Header}
               >
                 User Acceptance Policy Text
               </Button>
               <Button
                 onClick={() => setContentText(true)}
                 type={isLoginText ? 'primary ' : 'ghost'}
+                className={styles.Header}
               >
                 Login Success Text
               </Button>
             </div>
             <Item name="userAcceptancePolicy" hidden={isLoginText}>
-              <TextArea
-                data-testid="userAcceptancePolicy"
-                className={globalStyles.field}
-                rows={4}
-              />
+              <Input data-testid="userAcceptancePolicy" />
             </Item>
             <Item name="successPageMarkdownText" hidden={!isLoginText}>
-              <TextArea
-                data-testid="successPageMarkdownText"
-                className={globalStyles.field}
-                rows={4}
-              />
+              <Input data-testid="successPageMarkdownText" />
             </Item>
             &nbsp; Markdown and plain text supported.
           </Item>
@@ -640,14 +626,14 @@ const CaptivePortalForm = ({
             <Item label="Background Styles">
               <div className={styles.InlineDiv}>
                 <Item name="backgroundRepeat">
-                  <Select className={globalStyles.field} placeholder="Select Background Repeat">
+                  <Select placeholder="Select Background Repeat">
                     <Option value="no_repeat">No Repeat</Option>
                     <Option value="repeat">Repeat</Option>
                     <Option value="cover">Cover</Option>
                   </Select>
                 </Item>
                 <Item name="backgroundPosition">
-                  <Select className={globalStyles.field} placeholder="Select Background Position">
+                  <Select placeholder="Select Background Position">
                     <Option value="left_top">Top Left</Option>
                     <Option value="center_top">Top Center</Option>
                     <Option value="right_top">Top Right</Option>
