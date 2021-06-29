@@ -275,21 +275,29 @@ const AddProfile = ({
           title="Leave Form?"
           content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
         />
-        <Header>
-          <div className={styles.HeaderDiv}>
-            <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
-              Back
-            </Button>
-            <h1>Add Profile</h1>
-          </div>
-          <div>
-            <Button icon={<PlusOutlined />} type="primary" onClick={handleOnSave}>
-              Add
-            </Button>
-          </div>
-        </Header>
 
-        <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
+        <Form
+          {...pageLayout}
+          form={form}
+          onValuesChange={handleOnFormChange}
+          scrollToFirstError={{ block: 'center' }}
+          onFinish={handleOnSave}
+        >
+          <Header>
+            <div className={styles.HeaderDiv}>
+              <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
+                Back
+              </Button>
+              <h1>Add Profile</h1>
+            </div>
+            <div>
+              <Item noStyle>
+                <Button icon={<PlusOutlined />} type="primary" htmlType="submit">
+                  Add
+                </Button>
+              </Item>
+            </div>
+          </Header>
           <Card>
             <Item
               label="Type"
@@ -314,6 +322,7 @@ const AddProfile = ({
               </Select>
             </Item>
             <Item
+              id="name"
               name="name"
               label="Name"
               onChange={e => setName(e.target.value)}

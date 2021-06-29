@@ -37,10 +37,10 @@ const SSIDForm = ({
   };
 
   const radioOptions = (
-    <Radio.Group>
+    <RadioGroup>
       <Radio value="true">Enabled</Radio>
       <Radio value="false">Disabled</Radio>
-    </Radio.Group>
+    </RadioGroup>
   );
 
   useEffect(() => {
@@ -381,10 +381,10 @@ const SSIDForm = ({
             return (
               <Item label="VLAN" name="vlan">
                 {getFieldValue('forwardMode') === 'BRIDGE' ? (
-                  <Radio.Group>
+                  <RadioGroup>
                     <Radio value="customVLAN">Use Custom VLAN</Radio>
                     <Radio value="defaultVLAN">Use Default VLAN</Radio>
-                  </Radio.Group>
+                  </RadioGroup>
                 ) : (
                   <span className={styles.Disclaimer}>Not Applicable</span>
                 )}
@@ -622,10 +622,10 @@ const SSIDForm = ({
               },
             ]}
           >
-            <Radio.Group>
+            <RadioGroup>
               <Radio value="true">Enabled</Radio>
               <Radio value="false">Disabled</Radio>
-            </Radio.Group>
+            </RadioGroup>
           </Item>
           <Item
             shouldUpdate={(prevValues, currentValues) =>

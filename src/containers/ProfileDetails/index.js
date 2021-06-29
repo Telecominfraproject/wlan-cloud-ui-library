@@ -257,29 +257,33 @@ const ProfileDetails = ({
         title="Leave Form?"
         content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
-      <Header>
-        <div className={styles.HeaderDiv}>
-          <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-            Back
-          </Button>
-          <h1>{`Edit ${name}`}</h1>
-        </div>
-        <WithRoles>
-          <div className={styles.HeaderDiv}>
-            <div className={styles.HeaderButton}>{extraButtons}</div>
-            <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
-              Save
-            </Button>
-          </div>
-        </WithRoles>
-      </Header>
 
       <Form
         {...pageLayout}
         form={form}
         onValuesChange={handleOnFormChange}
         className={styles.ProfileDetails}
+        scrollToFirstError={{ block: 'center' }}
+        onFinish={handleOnSave}
       >
+        <Header>
+          <div className={styles.HeaderDiv}>
+            <Button icon={<LeftOutlined />} onClick={handleOnBack}>
+              Back
+            </Button>
+            <h1>{`Edit ${name}`}</h1>
+          </div>
+          <WithRoles>
+            <div className={styles.HeaderDiv}>
+              <div className={styles.HeaderButton}>{extraButtons}</div>
+              <Item noStyle>
+                <Button type="primary" htmlType="submit" disabled={!isFormDirty}>
+                  Save
+                </Button>
+              </Item>
+            </div>
+          </WithRoles>
+        </Header>
         <Card>
           <Item label="Type">
             <Select className={globalStyles.field} defaultValue={profileType} disabled>
