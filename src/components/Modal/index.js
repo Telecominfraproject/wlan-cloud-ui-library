@@ -13,6 +13,7 @@ const Modal = ({
   buttonText,
   buttonType,
   content,
+  isSubmitable,
   ...restProps
 }) => {
   const { isReadOnly } = useRoles();
@@ -25,7 +26,7 @@ const Modal = ({
       footer={
         <>
           <div className={styles.Buttons}>
-            {!isReadOnly ? (
+            {!isReadOnly || isSubmitable ? (
               <>
                 <Button className={styles.Button} onClick={onCancel}>
                   Cancel
@@ -58,6 +59,7 @@ Modal.propTypes = {
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   buttonText: PropTypes.string,
   buttonType: PropTypes.string,
+  isSubmitable: PropTypes.bool,
 };
 
 Modal.defaultProps = {
@@ -65,6 +67,7 @@ Modal.defaultProps = {
   content: null,
   buttonType: 'primary',
   buttonText: 'Save',
+  isSubmitable: false,
 };
 
 export default Modal;
