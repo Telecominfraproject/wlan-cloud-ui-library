@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Alert } from 'antd';
+import { Alert } from 'antd';
+import { Card } from 'components/Skeleton';
 import { LineChartOutlined } from '@ant-design/icons';
 
 import Timer from 'components/Timer';
@@ -9,7 +10,7 @@ import CombinedGraph from './components/CombinedGraph';
 
 import styles from '../../index.module.scss';
 
-const OS = ({ data, osData, handleRefresh }) => {
+const OS = ({ data, osData, handleRefresh, loading }) => {
   const osPerformance =
     (data && data.status && data.status.osPerformance && data.status.osPerformance.detailsJSON) ||
     {};
@@ -78,7 +79,11 @@ const OS = ({ data, osData, handleRefresh }) => {
   }, [osData?.data]);
 
   return (
-    <Card title="Operating System Statistics" extra={<Timer handleRefresh={handleRefresh} />}>
+    <Card
+      title="Operating System Statistics"
+      extra={<Timer handleRefresh={handleRefresh} />}
+      loading={loading}
+    >
       <Alert
         icon={<LineChartOutlined />}
         message={`Up-time: ${convertDate(osPerformance.uptimeInSeconds)}`}
@@ -105,11 +110,13 @@ OS.propTypes = {
   osData: PropTypes.instanceOf(Object),
   data: PropTypes.instanceOf(Object),
   handleRefresh: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
 
 OS.defaultProps = {
   osData: {},
   data: {},
+  loading: false,
 };
 
 export default OS;

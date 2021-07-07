@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card, Breadcrumb } from 'antd';
+import { Breadcrumb } from 'antd';
+import { Card } from 'components/Skeleton';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -47,6 +48,7 @@ const AccessPointDetails = ({
   showStatusAlarms,
   showFirmware,
   avatar,
+  loading,
 }) => {
   const TAB_LIST = [
     {
@@ -217,10 +219,16 @@ const AccessPointDetails = ({
           onSearchProfile={onSearchProfile}
           extraFields={extraGeneralFields}
           extraGeneralCards={extraGeneralCards}
+          loading={loading}
         />
       )}
       {tab === 'status' && (
-        <Status data={data} showAlarms={showStatusAlarms} extraFields={extraStatusFields} />
+        <Status
+          data={data}
+          showAlarms={showStatusAlarms}
+          extraFields={extraStatusFields}
+          loading={loading}
+        />
       )}
       {tab === 'location' && (
         <Location
@@ -228,9 +236,12 @@ const AccessPointDetails = ({
           locations={locations}
           handleOnEquipmentSave={handleOnEquipmentSave}
           handleOnFormChange={handleOnFormChange}
+          loading={loading}
         />
       )}
-      {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
+      {tab === 'os' && (
+        <OS data={data} osData={osData} handleRefresh={handleRefresh} loading={loading} />
+      )}
       {tab === 'firmware' && (
         <Firmware
           firmware={firmware}
@@ -241,6 +252,7 @@ const AccessPointDetails = ({
           onRequestEquipmentReboot={onRequestEquipmentReboot}
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
+          loading={loading}
         />
       )}
       {extraTabs.map(
@@ -287,6 +299,7 @@ AccessPointDetails.propTypes = {
   showStatusAlarms: PropTypes.bool,
   showFirmware: PropTypes.bool,
   avatar: PropTypes.node,
+  loading: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -308,6 +321,7 @@ AccessPointDetails.defaultProps = {
   showStatusAlarms: true,
   showFirmware: true,
   avatar: null,
+  loading: false,
 };
 
 export default AccessPointDetails;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, notification, Select, Skeleton } from 'antd';
+import { Form, notification, Select, Skeleton } from 'antd';
+import { Card } from 'components/Skeleton';
 import WithRoles, { Input } from 'components/WithRoles';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
@@ -258,24 +259,6 @@ const ProfileDetails = ({
         title="Leave Form?"
         content={<p>Please confirm exiting without saving this Profile form. </p>}
       />
-      <Header>
-        <div className={styles.HeaderDiv}>
-          <Button icon={<LeftOutlined />} onClick={handleOnBack}>
-            Back
-          </Button>
-          <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
-            <h1>{`Edit ${name}`}</h1>
-          </Skeleton>
-        </div>
-        <WithRoles>
-          <div className={styles.HeaderDiv}>
-            <div className={styles.HeaderButton}>{extraButtons}</div>
-            <Button type="primary" onClick={handleOnSave} disabled={!isFormDirty}>
-              Save
-            </Button>
-          </div>
-        </WithRoles>
-      </Header>
 
       <Form
         {...pageLayout}
@@ -290,7 +273,9 @@ const ProfileDetails = ({
             <Button icon={<LeftOutlined />} onClick={handleOnBack}>
               Back
             </Button>
-            <h1>{`Edit ${name}`}</h1>
+            <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
+              <h1>{`Edit ${name}`}</h1>
+            </Skeleton>
           </div>
           <WithRoles>
             <div className={styles.HeaderDiv}>
@@ -303,7 +288,7 @@ const ProfileDetails = ({
             </div>
           </WithRoles>
         </Header>
-        <Card>
+        <Card loading={loadingProfile}>
           <Item label="Type">
             <Select className={globalStyles.field} defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>

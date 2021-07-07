@@ -60,7 +60,7 @@ Card.defaultProps = {
   loading: false,
 };
 
-export const Table = ({ loading, columns, dataSource, ...props }) => {
+export const Table = ({ loading, columns, dataSource, onRow, ...props }) => {
   return (
     <AntdTable
       {...props}
@@ -78,6 +78,10 @@ export const Table = ({ loading, columns, dataSource, ...props }) => {
             })
           : columns
       }
+      onRow={node => {
+        if (!node) return null;
+        return onRow(node);
+      }}
     />
   );
 };
@@ -86,12 +90,14 @@ Table.propTypes = {
   loading: PropTypes.bool,
   columns: PropTypes.instanceOf(Array),
   dataSource: PropTypes.instanceOf(Array),
+  onRow: PropTypes.func,
 };
 
 Table.defaultProps = {
   loading: false,
   columns: [],
   dataSource: [],
+  onRow: () => {},
 };
 
 export const List = ({ loading, dataSource, renderItem, ...props }) => {

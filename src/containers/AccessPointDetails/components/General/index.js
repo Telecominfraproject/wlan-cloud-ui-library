@@ -1,15 +1,7 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Table,
-  Collapse,
-  Select as AntdSelect,
-  notification,
-  Alert,
-  Empty,
-} from 'antd';
+import { Form, Table, Collapse, Select as AntdSelect, notification, Alert, Empty } from 'antd';
+import { Card } from 'components/Skeleton';
 import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
@@ -43,6 +35,7 @@ const General = ({
   onSearchProfile,
   extraFields,
   extraGeneralCards,
+  loading,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -481,7 +474,7 @@ const General = ({
         </RoleProtectedBtn>
       </div>
 
-      <Card title="Identity">
+      <Card title="Identity" loading={loading}>
         <Item
           label="Access Point Name"
           name="access"
@@ -504,11 +497,11 @@ const General = ({
         <Item label="Asset ID"> {data?.inventoryId}</Item>
       </Card>
 
-      <Card title="Profile">
+      <Card title="Profile" loading={loading}>
         <Item
           label="Access Point Profile"
           name="apProfile"
-          initialValue={data.profile.name}
+          initialValue={data?.profile?.name}
           rules={[
             {
               required: true,
@@ -553,7 +546,7 @@ const General = ({
       {extraGeneralCards}
       <Collapse expandIconPosition="right">
         <Panel header="Advanced Settings" name="settings">
-          {renderItem(' ', data.details.radioMap, 'radioType')}
+          {renderItem(' ', data?.details?.radioMap, 'radioType')}
           <p>Radio Specific Parameters:</p>
           {renderItem('Enable Radio', advancedRadioMap, ['radioAdminState'], renderOptionItem, {
             dropdown: defaultOptions,
@@ -712,6 +705,7 @@ General.propTypes = {
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
   extraGeneralCards: PropTypes.node,
+  loading: PropTypes.bool,
 };
 
 General.defaultProps = {
@@ -725,6 +719,7 @@ General.defaultProps = {
   onSearchProfile: null,
   extraFields: [],
   extraGeneralCards: null,
+  loading: false,
 };
 
 export default General;
