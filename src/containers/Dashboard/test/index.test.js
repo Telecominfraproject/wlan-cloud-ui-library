@@ -50,14 +50,4 @@ describe('<Dashboard />', () => {
     expect(getByText('AP Vendors')).toBeVisible();
     expect(getByText('Client Vendors')).toBeVisible();
   });
-
-  it('should not render line charts when loading is true', async () => {
-    const { queryByText, getByText } = render(<Dashboard {...mockProps} lineChartLoading />);
-    expect(getByText('Access Point')).toBeVisible();
-    expect(getByText('Client Devices')).toBeVisible();
-    expect(queryByText('Inservice APs (24 hours)')).not.toBeInTheDocument();
-    expect(queryByText('Client Devices (24 hours)')).not.toBeInTheDocument();
-    expect(getByText('AP Vendors')).toBeVisible();
-    expect(getByText('Client Vendors')).toBeVisible();
-  });
 });

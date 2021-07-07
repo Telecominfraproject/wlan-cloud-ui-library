@@ -275,27 +275,11 @@ describe('<Firmware />', () => {
     });
   });
 
-  it('trackAssignmentLoading should show loading spinner', async () => {
-    const { getByTestId } = render(<Firmware {...mockProps} trackAssignmentLoading />);
-
-    await waitFor(() => {
-      expect(getByTestId('trackAssignmentSpinner')).toBeInTheDocument();
-    });
-  });
-
   it('trackAssignmentError should show error alert', async () => {
     const { getByTestId } = render(<Firmware {...mockProps} trackAssignmentError />);
 
     await waitFor(() => {
       expect(getByTestId('trackAssignmentError')).toBeInTheDocument();
-    });
-  });
-
-  it('firmwareLoading should show loading spinner', async () => {
-    const { getByTestId } = render(<Firmware {...mockProps} firmwareLoading />);
-
-    await waitFor(() => {
-      expect(getByTestId('firmwareSpinner')).toBeInTheDocument();
     });
   });
 

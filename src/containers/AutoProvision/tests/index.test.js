@@ -270,14 +270,6 @@ describe('<AutoProvision />', () => {
     });
   });
 
-  it('Loading spinner should be visible if loadingLocation is true', async () => {
-    const { getByTestId } = render(<AutoProvision {...mockProps} loadingLocation />);
-
-    await waitFor(() => {
-      expect(getByTestId('loadingLocation')).toBeInTheDocument();
-    });
-  });
-
   it('Alert error should be visible if errorLocation has errors', async () => {
     const { getByTestId } = render(<AutoProvision {...mockProps} errorLocation />);
 
