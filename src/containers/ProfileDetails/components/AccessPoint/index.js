@@ -41,6 +41,7 @@ const AccessPointForm = ({
   loadingRFProfiles,
   fileUpload,
   handleOnFormChange,
+  loading,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
@@ -341,7 +342,7 @@ const AccessPointForm = ({
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title="LAN and Services ">
+      <Card title="LAN and Services " loading={loading}>
         <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
           <Checkbox data-testid="vlanCheckbox">Use Default Management VLAN</Checkbox>
         </Item>
@@ -618,7 +619,7 @@ const AccessPointForm = ({
           {enabledRadioOptions()}
         </Item>
       </Card>
-      <Card title="RF Enabled on This Profile">
+      <Card title="RF Enabled on This Profile" loading={loading}>
         <Item name="rfProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
@@ -639,7 +640,7 @@ const AccessPointForm = ({
           </Select>
         </Item>
       </Card>
-      <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
+      <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
         <Item>
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
@@ -674,6 +675,7 @@ const AccessPointForm = ({
 
       <Card
         title="GRE Tunnel Configuration"
+        loading={loading}
         extra={
           <WithRoles>
             <>
@@ -714,6 +716,7 @@ const AccessPointForm = ({
         {(fields, { add, remove }) => (
           <Card
             title="RADIUS Proxy Configuration"
+            loading={loading}
             bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
             extra={
               <WithRoles>
@@ -1159,6 +1162,7 @@ AccessPointForm.propTypes = {
   loadingRFProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
   fileUpload: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -1173,6 +1177,7 @@ AccessPointForm.defaultProps = {
   loadingRFProfiles: false,
   handleOnFormChange: () => {},
   fileUpload: () => {},
+  loading: false,
 };
 
 export default AccessPointForm;

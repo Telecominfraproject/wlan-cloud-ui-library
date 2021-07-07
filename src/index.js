@@ -41,6 +41,12 @@ export { default as Tooltip } from 'components/Tooltip';
 export { default as ScrollToTop } from 'components/ScrollToTop';
 export { default as LineGraphTooltip } from 'components/GraphTooltips/LineGraphTooltip';
 export { default as PieGraphTooltip } from 'components/GraphTooltips/PieGraphTooltip';
+export { default as Skeleton } from 'components/Skeleton';
+export {
+  Table as SkeletonTable,
+  List as SkeletonList,
+  Card as SkeletonCard,
+} from 'components/Skeleton';
 
 export { default as WithRoles } from 'components/WithRoles';
 export { Input, Select, Switch, RoleProtectedBtn } from 'components/WithRoles';

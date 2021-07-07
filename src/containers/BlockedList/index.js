@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
-import { Table } from 'antd';
+import { Table } from 'components/Skeleton';
 
 import DeleteButton from 'components/DeleteButton';
 import Container from 'components/Container';
@@ -13,7 +13,7 @@ import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
-const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
+const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
   const { routes } = useContext(ThemeContext);
   const [addModal, setAddModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
@@ -87,6 +87,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
         </Header>
 
         <Table
+          loading={loading}
           scroll={{ x: 'max-content' }}
           rowKey="macAddress"
           dataSource={data}
@@ -102,12 +103,14 @@ BlockedList.propTypes = {
   data: Proptypes.instanceOf(Array),
   onUpdateClient: Proptypes.func,
   onAddClient: Proptypes.func,
+  loading: Proptypes.bool,
 };
 
 BlockedList.defaultProps = {
   data: [],
   onUpdateClient: () => {},
   onAddClient: () => {},
+  loading: false,
 };
 
 export default BlockedList;

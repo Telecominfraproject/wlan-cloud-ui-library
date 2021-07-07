@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tree } from 'antd';
-
+import Skeleton from 'components/Skeleton';
 import Modal from 'components/Modal';
 import styles from './index.module.scss';
 import AddFormModal from './components/AddFormModal';
@@ -30,6 +30,7 @@ const LocationsTree = ({
   loadingProfile,
   errorProfile,
   onFetchMoreProfiles,
+  loadingLocations,
 }) => {
   const getLocationPath = () => {
     const locationsPath = [];
@@ -64,18 +65,21 @@ const LocationsTree = ({
 
   return (
     <div className={styles.sideTree}>
-      <Tree
-        data-testid="locationTree"
-        checkable
-        checkedKeys={checkedLocations}
-        showIcon
-        blockNode
-        onSelect={onSelect}
-        onCheck={onCheck}
-        treeData={locations}
-        defaultExpandAll
-        checkStrictly
-      />
+      <Skeleton loading={loadingLocations}>
+        <Tree
+          data-testid="locationTree"
+          checkable
+          checkedKeys={checkedLocations}
+          showIcon
+          blockNode
+          onSelect={onSelect}
+          onCheck={onCheck}
+          treeData={locations}
+          defaultExpandAll
+          checkStrictly
+        />
+      </Skeleton>
+
       <AddFormModal
         locationPath={getLocationPath()}
         visible={addModal}
@@ -148,6 +152,7 @@ LocationsTree.propTypes = {
     parentId: PropTypes.string,
   }),
   onFetchMoreProfiles: PropTypes.func,
+  loadingLocations: PropTypes.bool,
 };
 
 LocationsTree.defaultProps = {
@@ -158,6 +163,7 @@ LocationsTree.defaultProps = {
   selectedLocation: null,
   errorProfile: {},
   onFetchMoreProfiles: () => {},
+  loadingLocations: false,
 };
 
 export default LocationsTree;

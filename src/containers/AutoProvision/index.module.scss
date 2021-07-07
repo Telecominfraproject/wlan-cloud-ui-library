@@ -14,19 +14,17 @@
 .Header {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   margin-top: 25px;
   & > div {
     margin-left: auto;
+  }
+
+  & > h1 {
+    margin: 0;
   }
 }
 
 .Toggle {
   margin-left: 20px;
-  margin-top: 7px;
-}
-
-.spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

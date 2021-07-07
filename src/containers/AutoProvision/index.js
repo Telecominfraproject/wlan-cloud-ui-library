@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select as AntdSelect, Table, Spin, Alert } from 'antd';
+import { Form, Select as AntdSelect, Alert } from 'antd';
+import { Table, Card } from 'components/Skeleton';
 import WithRoles, { Switch, Select, RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
 
@@ -25,16 +26,23 @@ const AutoProvision = ({
   errorProfile,
   onUpdateCustomer,
   onFetchMoreProfiles,
+  loading,
 }) => {
-  const status = data?.details?.autoProvisioning || {};
   const [form] = Form.useForm();
-  const [enabled, setEnabled] = useState(status.enabled || false);
+  const [enabled, setEnabled] = useState(data?.details?.autoProvisioning?.enabled || false);
   const [equipmentProfileIdPerModel, setEquipmentProfileIdPerModel] = useState(
     data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {}
   );
   const [activeModel, setActiveModel] = useState({});
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+
+  useEffect(() => {
+    setEnabled(data?.details?.autoProvisioning?.enabled || false);
+    setEquipmentProfileIdPerModel(
+      data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {}
+    );
+  }, [data]);
 
   const layout = {
     labelCol: { span: 5 },
@@ -62,7 +70,7 @@ const AutoProvision = ({
   }, [equipmentProfileIdPerModel]);
 
   const usedModels = useMemo(() => {
-    return Object.keys(status.equipmentProfileIdPerModel || {});
+    return Object.keys(data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {});
   }, [data]);
 
   const { id, email, name, createdTimestamp, lastModifiedTimestamp } = data;
@@ -171,9 +179,11 @@ const AutoProvision = ({
   useEffect(() => {
     form.setFieldsValue({
       enabled,
-      locationId: status.locationId ? status.locationId.toString() : '',
+      locationId: data?.details?.autoProvisioning?.locationId
+        ? data?.details?.autoProvisioning?.locationId?.toString()
+        : '',
     });
-  }, [data]);
+  }, [data, enabled]);
 
   return (
     <Container>
@@ -224,11 +234,8 @@ const AutoProvision = ({
 
         {enabled && (
           <div className={styles.Content}>
-            <Card title="Target Location">
-              {loadingLocation && (
-                <Spin data-testid="loadingLocation" className={styles.spinner} size="large" />
-              )}
-              {errorLocation && (
+            <Card title="Target Location" loading={loading || loadingLocation}>
+              {errorLocation ? (
                 <Alert
                   data-testid="errorLocation"
                   message="Error"
@@ -236,8 +243,7 @@ const AutoProvision = ({
                   type="error"
                   showIcon
                 />
-              )}
-              {!loadingLocation && !errorLocation && (
+              ) : (
                 <Item
                   label="Auto-Provisioning Location"
                   name="locationId"
@@ -272,6 +278,7 @@ const AutoProvision = ({
                   columns={columns}
                   dataSource={tableData}
                   pagination={false}
+                  loading={loadingProfile || (!errorProfile && !tableData.length)}
                 />
               </div>
             </Card>
@@ -292,6 +299,7 @@ AutoProvision.propTypes = {
   errorProfile: PropTypes.instanceOf(Object),
   onUpdateCustomer: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 AutoProvision.defaultProps = {
@@ -304,6 +312,7 @@ AutoProvision.defaultProps = {
   errorProfile: null,
   onUpdateCustomer: () => {},
   onFetchMoreProfiles: () => {},
+  loading: false,
 };
 
 export default AutoProvision;
