@@ -53,4 +53,6 @@ export { Input, Select, Switch, RoleProtectedBtn } from 'components/WithRoles';
 
 export { useHistory, useChartLegend, useChartHover } from 'hooks';
 
+export { sortRadioTypes } from 'utils/sortRadioTypes';
+
 export { default as GenericNotFound } from 'components/GenericNotFound';

@@ -4,7 +4,6 @@ import { Table } from 'components/Skeleton';
 import moment from 'moment';
 import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-import Container from 'components/Container';
 import Header from 'components/Header';
 import DeleteButton from 'components/DeleteButton';
 
@@ -269,7 +268,7 @@ const Firmware = ({
   const firmwareReady = !firmwareLoading && !firmwareError;
 
   return (
-    <Container>
+    <>
       <AssignmentModal
         onCancel={() => setAddAssignmentModal(false)}
         visible={addAssignmentModal}
@@ -358,7 +357,7 @@ const Firmware = ({
           showIcon
         />
       )}
-    </Container>
+    </>
   );
 };
 

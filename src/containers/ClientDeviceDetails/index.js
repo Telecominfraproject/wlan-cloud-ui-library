@@ -27,13 +27,14 @@ const ClientDeviceDetails = ({
   const { radioTypes } = useContext(ThemeContext);
   const history = useHistory();
 
+  const latestMetrics = metricsData[metricsData.length - 1];
+
   const {
     macAddress,
     ipAddress,
     hostname,
     ssid,
     radioType,
-    signal,
     manufacturer,
     equipment,
     details,
@@ -48,15 +49,18 @@ const ClientDeviceDetails = ({
     leaseStartTimestamp,
   } = details?.dhcpDetails || {};
   const {
-    rxBytes,
-    txBytes,
-    rxMbps,
-    txMbps,
-    rxRateKbps,
-    txRateKbps,
-    totalRxPackets,
-    totalTxPackets,
-  } = details?.metricDetails || {};
+    rssi,
+    rxBytes = 0,
+    numTxBytes: txBytes = 0,
+    periodLengthSec,
+    averageRxRate,
+    averageTxRate,
+    numRxFramesReceived,
+    numTxFramesTransmitted,
+  } = latestMetrics?.detailsJSON || {};
+  const rxThroughput = rxBytes / periodLengthSec;
+  const txThroughput = txBytes / periodLengthSec;
+  const signal = `${rssi}`;
 
   const status = useMemo(() => {
     if (details?.associationState === 'Active_Data') {
@@ -75,16 +79,16 @@ const ClientDeviceDetails = ({
     SSID: ssid,
     'Radio Band': radioTypes?.[radioType],
     'Signal Strength': `${signal} dBm`,
-    'Tx Rate': `${formatBitsPerSecond(txRateKbps * 1000)}`,
-    'Rx Rate': `${formatBitsPerSecond(rxRateKbps * 1000)}`,
+    'Tx Rate': `${formatBitsPerSecond(averageTxRate * 1000)}`,
+    'Rx Rate': `${formatBitsPerSecond(averageRxRate * 1000)}`,
   });
 
   const getTrafficStats = () => ({
     'Data Transferred': formatBytes(txBytes + rxBytes),
-    'Tx Throughput': `${formatBitsPerSecond(txMbps * 1000000)}`,
-    'Rx Throughput': `${formatBitsPerSecond(rxMbps * 1000000)}`,
-    'Total Tx Packets': totalTxPackets,
-    'Total Rx Packets': totalRxPackets,
+    'Tx Throughput': `${formatBitsPerSecond(rxThroughput * 1000000)}`,
+    'Rx Throughput': `${formatBitsPerSecond(txThroughput * 1000000)}`,
+    'Total Tx Packets': numTxFramesTransmitted,
+    'Total Rx Packets': numRxFramesReceived,
   });
 
   const getIpStats = () => ({
@@ -119,7 +123,7 @@ const ClientDeviceDetails = ({
         radioType={radioType}
         signal={signal}
         dataTransferred={txBytes + rxBytes}
-        dataThroughput={txMbps + rxMbps}
+        dataThroughput={txThroughput + rxThroughput}
         status={status}
       />
       <div className={styles.infoWrapper}>

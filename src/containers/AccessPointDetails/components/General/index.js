@@ -411,24 +411,30 @@ const General = ({
                   { required: true, message: `Allowed Channels: ${allowedChannels.join(', ')}` },
                   ({ getFieldValue }) => ({
                     validator(_rule, value) {
-                      if (
-                        parseInt(getFieldValue(['radioMap', key, 'manualChannelNumber']), 10) ===
-                        parseInt(getFieldValue(['radioMap', key, 'manualBackupChannelNumber']), 10)
-                      ) {
+                      if (!isEnabled) {
+                        if (
+                          parseInt(getFieldValue(['radioMap', key, 'manualChannelNumber']), 10) ===
+                          parseInt(
+                            getFieldValue(['radioMap', key, 'manualBackupChannelNumber']),
+                            10
+                          )
+                        ) {
+                          return Promise.reject(
+                            new Error('Active and backup channels must be different')
+                          );
+                        }
+                        const channelNumber = parseInt(
+                          getFieldValue(['radioMap', key, channel.dataIndex]),
+                          10
+                        );
+                        if (!value || allowedChannels.includes(channelNumber)) {
+                          return Promise.resolve();
+                        }
                         return Promise.reject(
-                          new Error('Active and backup channels must be different')
+                          new Error(`Allowed Channels: ${allowedChannels.join(', ')}`)
                         );
                       }
-                      const channelNumber = parseInt(
-                        getFieldValue(['radioMap', key, channel.dataIndex]),
-                        10
-                      );
-                      if (!value || allowedChannels.includes(channelNumber)) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        new Error(`Allowed Channels: ${allowedChannels.join(', ')}`)
-                      );
+                      return Promise.resolve();
                     },
                   }),
                 ]}
