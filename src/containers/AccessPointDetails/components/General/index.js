@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -20,6 +21,7 @@ import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
 import {
   USER_FRIENDLY_RATES,
+  USER_FRIENDLY_BANDWIDTHS,
   ALLOWED_CHANNELS_STEP,
   MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ,
   MAX_CHANNEL_WIDTH_160MHZ,
@@ -44,13 +46,15 @@ const General = ({
   extraFields,
   extraGeneralCards,
 }) => {
-  const { radioTypes } = useContext(ThemeContext);
+  const { radioTypes, routes } = useContext(ThemeContext);
+
   const [form] = Form.useForm();
   const columns = [
     {
       title: 'Wireless Network',
-      dataIndex: 'name',
-      key: 'network',
+      render: (__, record) => (
+        <Link to={`${routes.profiles}/${record.id}`}>{record.name ?? 'N/A'} </Link>
+      ),
     },
     {
       title: 'SSID',
@@ -456,6 +460,24 @@ const General = ({
     );
   };
 
+  const renderBandwidthLabels = () => (
+    <Item label="Channel Bandwidth">
+      <div className={styles.InlineDiv}>
+        {sortRadioTypes(Object.keys(data.details.radioMap)).map(radio => (
+          <DisabledText
+            key={radio}
+            value={
+              USER_FRIENDLY_BANDWIDTHS[
+                childProfiles.rf?.[0]?.details?.rfConfigMap?.[radio].channelBandwidth
+              ] ?? 'N/A'
+            }
+            showTooltip={false}
+          />
+        ))}
+      </div>
+    </Item>
+  );
+
   if (errorProfiles) {
     return (
       <Alert
@@ -536,7 +558,11 @@ const General = ({
           </Select>
         </Item>
 
-        <Item label="RF Profile">{childProfiles.rf?.[0]?.name || 'N/A'}</Item>
+        <Item label="RF Profile">
+          <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
+            {childProfiles.rf?.[0]?.name || 'N/A'}
+          </Link>
+        </Item>
         <Item label="Summary">
           <Item>
             <Table
@@ -555,6 +581,7 @@ const General = ({
         <Panel header="Advanced Settings" name="settings">
           {renderItem(' ', data.details.radioMap, 'radioType')}
           <p>Radio Specific Parameters:</p>
+          {renderBandwidthLabels()}
           {renderItem('Enable Radio', advancedRadioMap, ['radioAdminState'], renderOptionItem, {
             dropdown: defaultOptions,
             mapName: 'advancedRadioMap',

@@ -297,11 +297,11 @@ const RFForm = ({ form, details, extraFields }) => {
             );
           },
         })}
-        {renderItem('Beacon Interval (milliseconds)', ['beaconInterval'], renderInputItem, {
+        {renderItem('Beacon Interval', ['beaconInterval'], renderInputItem, {
           min: 15,
           max: 65535,
-          error: '15 - 65535 (1.024 ms)',
-          addOnText: '1.024 ms',
+          error: '15 - 65535',
+          addOnText: 'ms',
         })}
         {renderItem('RTS/CTS threshold', ['rtsCtsThreshold'], renderInputItem, {
           min: 0,
