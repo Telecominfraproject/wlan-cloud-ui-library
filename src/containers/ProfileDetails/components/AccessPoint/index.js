@@ -485,7 +485,11 @@ const AccessPointForm = ({
                     ]}
                     hasFeedback
                   >
-                    <Input placeholder="IP Address" data-testid="svrIpAdress" />
+                    <Input
+                      placeholder="Enter SRV IP Address"
+                      data-testid="svrIpAdress"
+                      addonBefore="SVR IP Address"
+                    />
                   </Item>
                   <Item
                     wrapperCol={{ offset: 5, span: 15 }}
@@ -507,11 +511,12 @@ const AccessPointForm = ({
                     hasFeedback
                   >
                     <Input
-                      placeholder="Port"
+                      placeholder="Enter SRV Port"
                       type="number"
                       min={1}
                       max={65535}
                       data-testid="svrPort"
+                      addonBefore="SVR Port"
                     />
                   </Item>
                 </>
@@ -554,7 +559,10 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input placeholder="IP Address" />
+                        <Input
+                          placeholder="Enter Syslog IP Address"
+                          addonBefore="Syslog IP Address"
+                        />
                       </Item>
                       <Item
                         name={['syslogRelay', 'srvHostPort']}
@@ -574,7 +582,13 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input placeholder="Port" type="number" min={1} max={65535} />
+                        <Input
+                          placeholder="Enter Syslog Port"
+                          type="number"
+                          min={1}
+                          max={65535}
+                          addonBefore="Syslog Port"
+                        />
                       </Item>
                     </div>
                   </Item>
@@ -592,7 +606,7 @@ const AccessPointForm = ({
                       <Option value="DEBUG">Debug (DEBUG)</Option>
                       <Option value="INFO">Info. (INFO)</Option>
                       <Option value="NOTICE">Notice (NOTICE)</Option>
-                      <Option value="WARNING">Warning (WARNING)</Option>
+                      <Option value="WARING">Warning (WARNING)</Option>
                       <Option value="ERR">Error (ERR)</Option>
                       <Option value="CRIT">Critical (CRIT)</Option>
                       <Option value="ALERT">Alert (ALERT)</Option>
