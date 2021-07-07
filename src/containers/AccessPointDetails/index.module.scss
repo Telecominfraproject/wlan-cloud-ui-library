@@ -38,7 +38,7 @@
   .InlineBlockDiv {
     display: inline-block;
     vertical-align: middle;
-    :global(.ant-avatar ){
+    :global(.ant-avatar) {
       margin-right: 20px;
     }
   }
@@ -110,5 +110,9 @@
 
   .tabContentContainer {
     margin-top: 10px;
+  }
+
+  a {
+    color: white;
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
+import { MemoryRouter } from 'react-router-dom';
 import { fireEvent, waitForElement, waitFor } from '@testing-library/react';
 import { render, DOWN_ARROW } from 'tests/utils';
 import { defaultProps } from '../../../tests/constants';
@@ -19,9 +20,16 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+const renderWithMemory = extraProps =>
+  render(
+    <MemoryRouter>
+      <General {...defaultProps} {...extraProps} />
+    </MemoryRouter>
+  );
+
 describe('<General />', () => {
   it('changing the access point profile should update table', async () => {
-    const { getByText, getByLabelText, getAllByText } = render(<General {...defaultProps} />);
+    const { getByText, getByLabelText, getAllByText } = renderWithMemory();
 
     const apProfile = getByLabelText('Access Point Profile');
 
@@ -37,7 +45,7 @@ describe('<General />', () => {
   });
 
   it('handleSubmit should not be called if access point name is empty on general tab', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
       target: { value: null },
@@ -51,9 +59,9 @@ describe('<General />', () => {
 
   it('handleSubmit should be called if access point name is entered on general tab', async () => {
     const submitSpy = jest.fn();
-    const { getByText, getByRole, getByPlaceholderText } = render(
-      <General {...defaultProps} handleOnEquipmentSave={submitSpy} />
-    );
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory({
+      handleOnEquipmentSave: submitSpy,
+    });
 
     const paragraph = getByText('Identity');
     expect(paragraph).toBeVisible();
@@ -69,7 +77,7 @@ describe('<General />', () => {
   });
 
   it('advanced setting tab should load on clicking the dropdown ', async () => {
-    const { getByText, getByRole } = render(<General {...defaultProps} />);
+    const { getByText, getByRole } = renderWithMemory();
 
     const paragraph = getByText('Identity');
     expect(paragraph).toBeVisible();
@@ -78,7 +86,7 @@ describe('<General />', () => {
 
   it('handleSubmit should be called if advanced settings are filled', async () => {
     const submitSpy = jest.fn();
-    const { getByRole } = render(<General {...defaultProps} handleOnEquipmentSave={submitSpy} />);
+    const { getByRole } = renderWithMemory({ handleOnEquipmentSave: submitSpy });
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -97,7 +105,7 @@ describe('<General />', () => {
 
   // Probe response threshold
   it('error if the probe response threshold exceeds bounds for the 2.4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -111,7 +119,7 @@ describe('<General />', () => {
     });
   });
   it('error if the probe response threshold exceeds bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -125,7 +133,7 @@ describe('<General />', () => {
     });
   });
   it('error if the probe response threshold exceeds bounds for the 5GHz (L) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -141,7 +149,7 @@ describe('<General />', () => {
 
   // Client disconnect threshold
   it('error if the client disconnect threshold exceeds bounds for the 2.4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -155,7 +163,7 @@ describe('<General />', () => {
     });
   });
   it('error if the client disconnect threshold exceeds bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -169,7 +177,7 @@ describe('<General />', () => {
     });
   });
   it('error if the client disconnect threshold exceeds bounds for the 5GHz (L) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -185,7 +193,7 @@ describe('<General />', () => {
 
   // Eirp TX power
   it('error if the eirp tx power exceeds bounds for the 2.4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -199,7 +207,7 @@ describe('<General />', () => {
     });
   });
   it('error if the eirp tx power exceeds bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -213,7 +221,7 @@ describe('<General />', () => {
     });
   });
   it('error if the eirp tx power exceeds bounds for the 5GHz (L) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -229,7 +237,7 @@ describe('<General />', () => {
 
   // Min load
   it('error if the minimum load percentage exceeds bounds for the 2.4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -243,7 +251,7 @@ describe('<General />', () => {
     });
   });
   it('error if the minimum load percentage exceeds bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -257,7 +265,7 @@ describe('<General />', () => {
     });
   });
   it('error if the minimum load percentage exceeds bounds for the 5GHz (L) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -273,7 +281,7 @@ describe('<General />', () => {
 
   // Snr
   it('error if the snr percentage drop exceeds bounds for the 2.4GHz setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -287,7 +295,7 @@ describe('<General />', () => {
     });
   });
   it('error if the snr percentage drop exceeds bounds for the 5GHz (U) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -302,7 +310,7 @@ describe('<General />', () => {
   });
 
   it('error if the snr percentage drop exceeds bounds for the 5GHz (L) setting', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -317,7 +325,7 @@ describe('<General />', () => {
   });
 
   it('Active channel field should be disabled if autoChannelSelection setting is enabled', async () => {
-    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -326,7 +334,7 @@ describe('<General />', () => {
   });
 
   it('Backup channel field should be disabled if autoChannelSelection setting is enabled', async () => {
-    const { getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -335,7 +343,7 @@ describe('<General />', () => {
   });
 
   it('error if active channel input exceends bounds', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -349,7 +357,7 @@ describe('<General />', () => {
   });
 
   it('error if backup channel input exceends bounds', async () => {
-    const { getByText, getByRole, getByPlaceholderText } = render(<General {...defaultProps} />);
+    const { getByText, getByRole, getByPlaceholderText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 
@@ -363,9 +371,7 @@ describe('<General />', () => {
   });
 
   it('error if active and backup channel inputs are the same', async () => {
-    const { getByText, getByRole, getByPlaceholderText, queryByText } = render(
-      <General {...defaultProps} />
-    );
+    const { getByText, getByRole, getByPlaceholderText, queryByText } = renderWithMemory();
 
     fireEvent.click(getByRole('button', { name: /settings/i }));
 

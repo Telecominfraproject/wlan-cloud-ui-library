@@ -4,6 +4,7 @@ import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ThemeContext from 'contexts/ThemeContext';
 import { sortRadioTypes } from 'utils/sortRadioTypes';
+import { USER_FRIENDLY_BANDWIDTHS } from '../General/constants';
 
 import styles from '../../index.module.scss';
 
@@ -78,6 +79,24 @@ const Status = ({ data, showAlarms, extraFields }) => {
     </Item>
   );
 
+  const renderBandwidthLabels = () => {
+    const rfProfile = data?.profile?.childProfiles?.find(
+      profile => profile?.details?.profileType === 'rf'
+    );
+    return (
+      <Item label="Channel Bandwidth">
+        <div className={styles.InlineDiv}>
+          {sortRadioTypes(Object.keys(data.details.radioMap)).map(i => (
+            <span key={i} className={styles.spanStyle}>
+              {USER_FRIENDLY_BANDWIDTHS[rfProfile?.details?.rfConfigMap?.[i].channelBandwidth] ??
+                'N/A'}
+            </span>
+          ))}
+        </div>
+      </Item>
+    );
+  };
+
   return (
     <>
       <Form {...layout}>
@@ -112,6 +131,7 @@ const Status = ({ data, showAlarms, extraFields }) => {
         </Card>
         <Card title="Radio">
           {renderSpanItem({ label: ' ', obj: radioMap, dataIndex: 'radioType' })}
+          {renderBandwidthLabels()}
           {renderSpanItem({
             label: 'Channel',
             obj: status?.channel?.detailsJSON?.channelNumberStatusDataMap,
