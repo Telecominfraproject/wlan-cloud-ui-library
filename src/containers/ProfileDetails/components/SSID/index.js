@@ -691,7 +691,7 @@ const SSIDForm = ({
               className={globalStyles.field}
               placeholder="0 or 60 - 600 "
               type="number"
-              min={60}
+              min={0}
               max={600}
               addonAfter={
                 <Tooltip title="Interval can be 0 or a number between 60 and 600" text="Seconds" />
