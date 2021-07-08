@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -47,14 +47,14 @@ const General = ({
   extraGeneralCards,
 }) => {
   const { radioTypes, routes } = useContext(ThemeContext);
+  const history = useHistory();
 
   const [form] = Form.useForm();
   const columns = [
     {
       title: 'Wireless Network',
-      render: (__, record) => (
-        <Link to={`${routes.profiles}/${record.id}`}>{record.name ?? 'N/A'} </Link>
-      ),
+      dataIndex: 'name',
+      key: 'network',
     },
     {
       title: 'SSID',
@@ -83,9 +83,9 @@ const General = ({
     };
     if (selectedProfile?.childProfiles) {
       selectedProfile.childProfiles.forEach(profile => {
-        if (profile.details.profileType === 'rf') {
+        if (profile?.details?.profileType === 'rf') {
           result.rf.push(profile);
-        } else if (profile.details.profileType === 'ssid') {
+        } else if (profile?.details?.profileType === 'ssid') {
           result.ssid.push(profile);
         }
       });
@@ -261,13 +261,17 @@ const General = ({
     <Item label={label} key={label}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(obj)).map(key => {
-          const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key][dependency];
+          const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dependency];
 
           if (isEnabled) {
             return (
               <DisabledText
                 key={key}
-                value={USER_FRIENDLY_RATES[obj[key][dataIndex].value] ?? obj[key][dataIndex].value}
+                value={
+                  USER_FRIENDLY_RATES[obj[key]?.[dataIndex]?.value] ||
+                  obj[key]?.[dataIndex]?.value ||
+                  'N/A'
+                }
                 title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
                 )}" enabled in the RF Profile.`}
@@ -279,8 +283,9 @@ const General = ({
             <DisabledText
               key={key}
               value={
-                USER_FRIENDLY_RATES[childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]] ??
-                childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]
+                USER_FRIENDLY_RATES[
+                  childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dataIndex]
+                ] || childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dataIndex || 'N/A']
               }
               title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
@@ -571,6 +576,12 @@ const General = ({
               dataSource={childProfiles.ssid}
               columns={columns}
               pagination={false}
+              rowClassName={styles.Row}
+              onRow={record => ({
+                onClick: () => {
+                  history.push(`${routes.profiles}/${record.id}`);
+                },
+              })}
             />
           </Item>
         </Item>
