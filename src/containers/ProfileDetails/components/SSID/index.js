@@ -14,6 +14,18 @@ const { Item } = Form;
 
 const { Option } = AntdSelect;
 
+const appliedRadios = {
+  is2dot4GHz: '2.4GHz',
+  is5GHz: '5GHz',
+};
+
+const radioOptions = (
+  <RadioGroup>
+    <Radio value="true">Enabled</Radio>
+    <Radio value="false">Disabled</Radio>
+  </RadioGroup>
+);
+
 const SSIDForm = ({
   form,
   details,
@@ -35,13 +47,6 @@ const SSIDForm = ({
       e.preventDefault();
     }
   };
-
-  const radioOptions = (
-    <RadioGroup>
-      <Radio value="true">Enabled</Radio>
-      <Radio value="false">Disabled</Radio>
-    </RadioGroup>
-  );
 
   useEffect(() => {
     const radioBasedValues = {};
@@ -245,7 +250,7 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <CheckboxGroup>
-            {Object.keys(radioTypes || {})?.map(i => (
+            {Object.keys(appliedRadios).map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
@@ -536,7 +541,7 @@ const SSIDForm = ({
             rules={[
               {
                 required: true,
-                message: 'Please input your security key',
+                message: 'Security key must be at least 8 characters long',
                 min: 8,
                 max: 63,
               },
