@@ -50,3 +50,9 @@ export { useHistory, useChartLegend, useChartHover } from 'hooks';
 export { sortRadioTypes } from 'utils/sortRadioTypes';
 
 export { default as GenericNotFound } from 'components/GenericNotFound';
+
+export {
+  defaultRfProfile,
+  defaultSsidProfile,
+  defaultApProfile,
+} from 'containers/ProfileDetails/components/constants';
