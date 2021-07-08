@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tag, Select, Alert, Progress } from 'antd';
+import { Form, Input, Tag, Select, Alert, Progress } from 'antd';
+import { Card } from 'components/Skeleton';
 import moment from 'moment';
 import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 
