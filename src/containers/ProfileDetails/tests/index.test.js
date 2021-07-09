@@ -174,7 +174,7 @@ describe('<ProfileDetails />', () => {
     });
   });
 
-  it('URL should changes to /profiles when back button is clicked', async () => {
+  it('URL should change when back button is clicked', async () => {
     const { getByRole } = render(
       <Router>
         <ProfileDetails {...mockSsid} />
@@ -182,7 +182,7 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
     await waitFor(() => {
-      expect(window.location.pathname).toEqual(ROUTES.profiles);
+      expect(window.location.pathname).toEqual('/');
     });
   });
 
