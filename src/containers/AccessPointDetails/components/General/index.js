@@ -469,7 +469,7 @@ const General = ({
   const renderBandwidthLabels = () => (
     <Item label="Channel Bandwidth">
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(data?.details?.radioMap ?? {})).map(radio => (
+        {sortRadioTypes(Object.keys(radioMap)).map(radio => (
           <DisabledText
             key={radio}
             value={
