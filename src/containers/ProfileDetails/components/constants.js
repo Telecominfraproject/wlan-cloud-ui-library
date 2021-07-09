@@ -1,4 +1,4 @@
-const defaultRfProfile = {
+const DEFAULT_RF_PROFILE = {
   is5GHz: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHz',
@@ -201,7 +201,7 @@ const defaultRfProfile = {
   },
 };
 
-const defaultSsidProfile = {
+const DEFAULT_SSID_PROFILE = {
   model_type: 'SsidConfiguration',
   ssid: 'SaaS-cloud-wifi',
   appliedRadios: ['is2dot4GHz', 'is5GHz'],
@@ -264,7 +264,7 @@ const defaultSsidProfile = {
   useRadiusProxy: false,
   enableProxyArpForHotspot: true,
 };
-const defaultApProfile = {
+const DEFAULT_AP_PROFILE = {
   model_type: 'ApNetworkConfiguration',
   networkConfigVersion: 'AP-1',
   equipmentType: 'AP',
@@ -316,4 +316,4 @@ const defaultApProfile = {
   profileType: 'equipment_ap',
 };
 
-export { defaultRfProfile, defaultSsidProfile, defaultApProfile };
+export { DEFAULT_RF_PROFILE, DEFAULT_SSID_PROFILE, DEFAULT_AP_PROFILE };

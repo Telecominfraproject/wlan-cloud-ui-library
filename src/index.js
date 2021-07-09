@@ -52,7 +52,7 @@ export { sortRadioTypes } from 'utils/sortRadioTypes';
 export { default as GenericNotFound } from 'components/GenericNotFound';
 
 export {
-  defaultRfProfile,
-  defaultSsidProfile,
-  defaultApProfile,
+  DEFAULT_RF_PROFILE,
+  DEFAULT_SSID_PROFILE,
+  DEFAULT_AP_PROFILE,
 } from 'containers/ProfileDetails/components/constants';

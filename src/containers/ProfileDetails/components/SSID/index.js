@@ -7,7 +7,7 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
-import { defaultSsidProfile } from '../constants';
+import { DEFAULT_SSID_PROFILE } from '../constants';
 import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
 
 const { Item } = Form;
@@ -38,7 +38,7 @@ const SSIDForm = ({
   loadingRadiusProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
-  const [mode, setMode] = useState(details.secureMode || defaultSsidProfile.secureMode);
+  const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
   const [modeChanged, setModeChanged] = useState(false);
 
   const hexadecimalRegex = e => {
@@ -55,7 +55,7 @@ const SSIDForm = ({
       ROAMING.forEach(j => {
         radioBasedValues[`${j}${i}`] =
           details?.radioBasedConfigs?.[i]?.[j]?.toString() ??
-          defaultSsidProfile.radioBasedConfigs[i][j].toString();
+          DEFAULT_SSID_PROFILE.radioBasedConfigs[i][j].toString();
       });
     });
 
@@ -63,20 +63,20 @@ const SSIDForm = ({
 
     form.setFieldsValue({
       ssid: details?.ssid || '',
-      bandwidthLimitDown: details?.bandwidthLimitDown || defaultSsidProfile.bandwidthLimitDown,
-      bandwidthLimitUp: details?.bandwidthLimitUp || defaultSsidProfile.bandwidthLimitUp,
-      broadcastSsid: details?.broadcastSsid || defaultSsidProfile.broadcastSsid,
-      appliedRadios: details?.appliedRadios || defaultSsidProfile.appliedRadios,
-      forwardMode: details?.forwardMode || defaultSsidProfile.forwardMode,
+      bandwidthLimitDown: details?.bandwidthLimitDown || DEFAULT_SSID_PROFILE.bandwidthLimitDown,
+      bandwidthLimitUp: details?.bandwidthLimitUp || DEFAULT_SSID_PROFILE.bandwidthLimitUp,
+      broadcastSsid: details?.broadcastSsid || DEFAULT_SSID_PROFILE.broadcastSsid,
+      appliedRadios: details?.appliedRadios || DEFAULT_SSID_PROFILE.appliedRadios,
+      forwardMode: details?.forwardMode || DEFAULT_SSID_PROFILE.forwardMode,
       noLocalSubnets: details?.noLocalSubnets ? 'true' : 'false',
       captivePortal: details?.captivePortalId ? 'usePortal' : 'notPortal',
       captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
-      secureMode: details.secureMode || defaultSsidProfile.secureMode,
+      secureMode: details.secureMode || DEFAULT_SSID_PROFILE.secureMode,
       vlan: details?.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
-      keyStr: details.keyStr || defaultSsidProfile.keyStr,
+      keyStr: details.keyStr || DEFAULT_SSID_PROFILE.keyStr,
       wepKey: details?.wepConfig?.wepKeys?.[0]?.txKey || '',
       wepDefaultKeyId: details?.wepConfig?.primaryTxKeyId || 1,
-      vlanId: details.vlanId || defaultSsidProfile.vlanId,
+      vlanId: details.vlanId || DEFAULT_SSID_PROFILE.vlanId,
       radiusServiceId: {
         value: radiusProfile?.id || null,
         label: radiusProfile?.name || null,
@@ -85,27 +85,27 @@ const SSIDForm = ({
       childProfileIds: [],
       radiusAcountingServiceInterval:
         details?.radiusAcountingServiceInterval ||
-        defaultSsidProfile.radiusAcountingServiceInterval,
-      dynamicVlan: details?.dynamicVlan || defaultSsidProfile.dynamicVlan,
+        DEFAULT_SSID_PROFILE.radiusAcountingServiceInterval,
+      dynamicVlan: details?.dynamicVlan || DEFAULT_SSID_PROFILE.dynamicVlan,
       radiusClientConfiguration: {
         nasClientId:
           details?.radiusClientConfiguration?.nasClientId ??
-          defaultSsidProfile.radiusClientConfiguration.nasClientId,
+          DEFAULT_SSID_PROFILE.radiusClientConfiguration.nasClientId,
         nasClientIp:
           details?.radiusClientConfiguration?.nasClientIp ??
-          defaultSsidProfile.radiusClientConfiguration.nasClientIp,
+          DEFAULT_SSID_PROFILE.radiusClientConfiguration.nasClientIp,
         userDefinedNasId:
           details?.radiusClientConfiguration?.userDefinedNasId ??
-          defaultSsidProfile.radiusClientConfiguration.userDefinedNasId,
+          DEFAULT_SSID_PROFILE.radiusClientConfiguration.userDefinedNasId,
         userDefinedNasIp:
           details?.radiusClientConfiguration?.userDefinedNasIp ??
-          defaultSsidProfile.radiusClientConfiguration.userDefinedNasIp,
+          DEFAULT_SSID_PROFILE.radiusClientConfiguration.userDefinedNasIp,
       },
       useRadiusProxy:
-        details?.useRadiusProxy?.toString() ?? defaultSsidProfile.useRadiusProxy.toString(),
+        details?.useRadiusProxy?.toString() ?? DEFAULT_SSID_PROFILE.useRadiusProxy.toString(),
       enableProxyArpForHotspot:
         details?.enableProxyArpForHotspot?.toString() ??
-        defaultSsidProfile.enableProxyArpForHotspot.toString(),
+        DEFAULT_SSID_PROFILE.enableProxyArpForHotspot.toString(),
     });
   }, [form, details]);
 
