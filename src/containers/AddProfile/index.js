@@ -271,11 +271,15 @@ const AddProfile = ({
           onCancel={() => setConfirmModal(false)}
           onSuccess={() => history.push(routes.profiles)}
           visible={confirmModal}
-          buttonText="Back"
-          title="Leave Form?"
-          content={<p>Please confirm exiting without saving this Wireless Profile form. </p>}
+          buttonText="Leave Page"
+          title="Leave Page?"
+          content={
+            <p>
+              You have unsaved changes. Please confirm leaving without saving this wireless profile
+              page:
+            </p>
+          }
         />
-
         <Form
           {...pageLayout}
           form={form}

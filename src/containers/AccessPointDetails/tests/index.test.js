@@ -37,6 +37,46 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
   });
 
+  it('general tab save button should be disabled by default', async () => {
+    const { getByRole, getByText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+
+    const button = getByRole('button', { name: /save/i });
+    expect(button).toBeDisabled();
+  });
+
+  it('general tab save button should no longer be disabled after form is changed', async () => {
+    const { getByRole, getByText, getByPlaceholderText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /general/i }));
+    const paragraph = getByText('Identity');
+    expect(paragraph).toBeVisible();
+
+    const button = getByRole('button', { name: /save/i });
+    expect(button).toBeDisabled();
+
+    fireEvent.change(getByPlaceholderText('Enter Access Point Name'), {
+      target: { value: 'testName' },
+    });
+
+    expect(button).not.toBeDisabled();
+  });
+
   it('status tab should show the status form', async () => {
     const data = { ...defaultProps, data: { ...defaultProps.data, alarmsCount: 1 } };
     const { getByRole, getByText } = render(
@@ -82,6 +122,52 @@ describe('<AccessPointDetails />', () => {
     expect(paragraph).toBeVisible();
   });
 
+  it('location tab save button should be disabled by default', async () => {
+    const { getByRole, getByText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+    const paragraph = getByText('Level 0');
+    expect(paragraph).toBeVisible();
+
+    const button = getByRole('button', { name: /save/i });
+    expect(button).toBeDisabled();
+  });
+
+  it('location tab save button should no longer be disabled if form is changed', async () => {
+    const { getByRole, getByText, getByLabelText } = render(
+      <MemoryRouter initialEntries={['/network/access-points/1/general']}>
+        <Route path="/network/access-points/:id/:tab">
+          <AccessPointDetails {...defaultProps} />
+        </Route>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(getByRole('tab', { name: /location/i }));
+    const paragraph = getByText('Level 0');
+    expect(paragraph).toBeVisible();
+
+    const button = getByRole('button', { name: /save/i });
+    expect(button).toBeDisabled();
+
+    const country = getByLabelText('Level 0');
+    fireEvent.keyDown(country, DOWN_ARROW);
+    await waitForElement(() => getByText('Menlo Park'));
+    fireEvent.click(getByText('Menlo Park'));
+
+    const site1 = getByLabelText('Level 1');
+    fireEvent.keyDown(site1, DOWN_ARROW);
+    await waitForElement(() => getByText('Building 1'));
+    fireEvent.click(getByText('Building 1'));
+
+    expect(button).not.toBeDisabled();
+  });
+
   it('firmware tab should show the firmware form', async () => {
     const { getByRole, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
@@ -114,9 +200,7 @@ describe('<AccessPointDetails />', () => {
       target: { value: 'test' },
     });
     fireEvent.click(getByRole('tab', { name: /status/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
     expect(paragraph).toBeVisible();
@@ -142,16 +226,14 @@ describe('<AccessPointDetails />', () => {
       target: { value: 'test' },
     });
     fireEvent.click(getByRole('tab', { name: /status/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
-    fireEvent.click(getByRole('button', { name: /ok/i }));
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /leave page/i }));
 
     const statusParagraph = getByText('Noise Floor');
     expect(statusParagraph).toBeVisible();
   });
 
-  it('Confirm leave form Modal should appear if General tab form is changed', () => {
+  it('Confirm leave page Modal should appear if General tab form is changed', () => {
     const { getByRole, getByPlaceholderText, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -166,12 +248,10 @@ describe('<AccessPointDetails />', () => {
       target: { value: 'test' },
     });
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
   });
 
-  it('Confirm leave form Modal should appear if Location tab form is changed', async () => {
+  it('Confirm leave page Modal should appear if Location tab form is changed', async () => {
     const { getByRole, getByLabelText, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -188,14 +268,12 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(defaultProps.locations[0].children[0].name));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
   });
 
-  it('Confirm leave form Modal should appear if Firmware tab form is changed', async () => {
+  it('Confirm leave page Modal should appear if Firmware tab form is changed', async () => {
     const { getByRole, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -215,9 +293,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(firmware[2].versionName));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
@@ -226,7 +302,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(firmware[3].versionName));
   });
 
-  it('Confirm leave form Modal should not be visible if form is saved and User clicks back', async () => {
+  it('Confirm leave page Modal should not be visible if form is saved and User clicks back', async () => {
     const { getByRole, getByLabelText, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -243,14 +319,14 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(defaultProps.locations[0].children[0].name));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    const paragraph = getByText('Please confirm exiting without saving this Access Point page.');
+    const paragraph = getByText(/Please confirm leaving without saving this access point page/);
     expect(paragraph).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /save/i }));
     fireEvent.click(getByRole('button', { name: /back/i }));
   });
 
-  it('Confirm leave form Modal should not be visible if firmware is saved and User clicks back', async () => {
+  it('Confirm leave page Modal should not be visible if firmware is saved and User clicks back', async () => {
     const { getByRole, getByText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -270,9 +346,7 @@ describe('<AccessPointDetails />', () => {
     fireEvent.click(getByText(firmware[1].versionName));
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(
-      getByText('Please confirm exiting without saving this Access Point page.')
-    ).toBeVisible();
+    expect(getByText(/Please confirm leaving without saving this access point page/)).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: /cancel/i }));
     fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
@@ -292,7 +366,7 @@ describe('<AccessPointDetails />', () => {
     expect(window.location.pathname).toEqual('/');
   });
 
-  it('URL should change when clicking the ok button when Leave Page modal appears', () => {
+  it('URL should change when clicking the leave page button when Leave Page modal appears', () => {
     const { getByRole, getByPlaceholderText } = render(
       <MemoryRouter initialEntries={['/network/access-points/1/general']}>
         <Route path="/network/access-points/:id/:tab">
@@ -306,7 +380,7 @@ describe('<AccessPointDetails />', () => {
     });
 
     fireEvent.click(getByRole('button', { name: /back/i }));
-    fireEvent.click(getByRole('button', { name: /ok/i }));
+    fireEvent.click(getByRole('button', { name: /leave page/i }));
     expect(window.location.pathname).toEqual('/');
   });
 

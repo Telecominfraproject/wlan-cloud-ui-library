@@ -74,13 +74,13 @@ const Firmware = ({
 
   const renderModalContent = () => {
     if (confirmModal === MODAL_REBOOT) {
-      return 'Confirm Reboot AP?';
+      return 'Confirm reboot access point?';
     }
     if (confirmModal === MODAL_INACTIVE) {
-      return 'Confirm Switch to Inactive Bank and Reboot?';
+      return 'Confirm switch to inactive bank and reboot?';
     }
     if (confirmModal === MODAL_DOWNLOAD) {
-      return 'Confirm downloading, flashing, rebooting?';
+      return 'Confirm downloading, flashing, and rebooting?';
     }
     return null;
   };
@@ -137,7 +137,7 @@ const Firmware = ({
         onCancel={() => setConfirmModal(false)}
         onSuccess={handleOnSuccessModal}
         visible={Boolean(confirmModal)}
-        title="Confirm"
+        title="Confirm?"
         content={renderModalContent()}
         buttonText="Confirm"
       />
@@ -150,7 +150,7 @@ const Firmware = ({
               name="reboot"
               disabled={getRebootStatus()}
             >
-              Reboot AP
+              Reboot Access Point
             </Button>
           </div>
         </WithRoles>

@@ -142,9 +142,13 @@ const AccessPointDetails = ({
           }
         }}
         visible={confirmModal}
-        buttonText="OK"
+        buttonText="Leave Page"
         title="Leave Page?"
-        content={<p>Please confirm exiting without saving this Access Point page.</p>}
+        content={
+          <p>
+            You have unsaved changes. Please confirm leaving without saving this access point page:
+          </p>
+        }
         mask={false}
       />
       <Header>
@@ -217,6 +221,7 @@ const AccessPointDetails = ({
           onSearchProfile={onSearchProfile}
           extraFields={extraGeneralFields}
           extraGeneralCards={extraGeneralCards}
+          isFormDirty={isFormDirty}
         />
       )}
       {tab === 'status' && (
@@ -228,9 +233,12 @@ const AccessPointDetails = ({
           locations={locations}
           handleOnEquipmentSave={handleOnEquipmentSave}
           handleOnFormChange={handleOnFormChange}
+          isFormDirty={isFormDirty}
         />
       )}
-      {tab === 'os' && <OS data={data} osData={osData} handleRefresh={handleRefresh} />}
+      {tab === 'os' && (
+        <OS data={data} osData={osData} handleRefresh={handleRefresh} isFormDirty={isFormDirty} />
+      )}
       {tab === 'firmware' && (
         <Firmware
           firmware={firmware}
@@ -241,6 +249,7 @@ const AccessPointDetails = ({
           onRequestEquipmentReboot={onRequestEquipmentReboot}
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
+          isFormDirty={isFormDirty}
         />
       )}
       {extraTabs.map(

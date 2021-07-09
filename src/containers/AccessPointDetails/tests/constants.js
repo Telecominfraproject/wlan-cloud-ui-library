@@ -597,4 +597,5 @@ export const defaultProps = {
       dependencies: 'autoCellSizeSelection',
     },
   ],
+  isFormDirty: true,
 };
