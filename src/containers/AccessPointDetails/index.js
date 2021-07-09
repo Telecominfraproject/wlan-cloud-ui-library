@@ -41,7 +41,6 @@ const AccessPointDetails = ({
   extraButtons,
   onSearchProfile,
   extraGeneralFields,
-  extraStatusFields,
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
@@ -224,9 +223,7 @@ const AccessPointDetails = ({
           isFormDirty={isFormDirty}
         />
       )}
-      {tab === 'status' && (
-        <Status data={data} showAlarms={showStatusAlarms} extraFields={extraStatusFields} />
-      )}
+      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} />}
       {tab === 'location' && (
         <Location
           data={data}
@@ -284,7 +281,6 @@ AccessPointDetails.propTypes = {
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   extraGeneralFields: PropTypes.instanceOf(Array),
-  extraStatusFields: PropTypes.instanceOf(Array),
   extraTabs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -311,7 +307,6 @@ AccessPointDetails.defaultProps = {
   extraButtons: null,
   onSearchProfile: null,
   extraGeneralFields: [],
-  extraStatusFields: [],
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,

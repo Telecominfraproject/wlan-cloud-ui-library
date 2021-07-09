@@ -10,7 +10,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
-const Status = ({ data, showAlarms, extraFields }) => {
+const Status = ({ data, showAlarms }) => {
   const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
@@ -56,18 +56,10 @@ const Status = ({ data, showAlarms, extraFields }) => {
     return obj?.[i]?.[dataIndex];
   };
 
-  const renderSpanItem = ({ label, obj, dataIndex, unit = '', fn }) => (
+  const renderSpanItem = ({ label, obj, dataIndex, unit = '' }) => (
     <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(radioMap)).map(i => {
-          if (fn) {
-            const value = fn(i);
-            return (
-              <span key={i} className={styles.spanStyle}>
-                {typeof value !== 'undefined' ? `${value} ${unit}` : 'N/A'}
-              </span>
-            );
-          }
           const value = dataIndex ? renderData(obj, dataIndex, i) : obj?.[i];
           return (
             <span key={i} className={styles.spanStyle}>
@@ -88,7 +80,7 @@ const Status = ({ data, showAlarms, extraFields }) => {
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(radioMap)).map(i => (
             <span key={i} className={styles.spanStyle}>
-              {USER_FRIENDLY_BANDWIDTHS[rfProfile?.details?.rfConfigMap?.[i].channelBandwidth] ??
+              {USER_FRIENDLY_BANDWIDTHS[rfProfile?.details?.rfConfigMap?.[i]?.channelBandwidth] ??
                 'N/A'}
             </span>
           ))}
@@ -151,7 +143,11 @@ const Status = ({ data, showAlarms, extraFields }) => {
             dataIndex: 'availableCapacity',
             unit: '%',
           })}
-          {extraFields.map(field => renderSpanItem(field))}
+          {renderSpanItem({
+            label: 'EIRP Tx Power',
+            obj: status?.channel?.detailsJSON?.txPowerDataMap,
+            unit: 'dBm',
+          })}
         </Card>
 
         {showAlarms && (

@@ -87,7 +87,7 @@ const ProfileDetails = ({
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(routes.profiles);
+      history.goBack();
     }
   };
 

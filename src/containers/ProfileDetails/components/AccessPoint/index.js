@@ -19,7 +19,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { formatFile } from 'utils/profiles';
 import styles from '../index.module.scss';
-import { defaultApProfile } from '../constants';
+import { DEFAULT_AP_PROFILE } from '../constants';
 
 import FormModal from './components/FormModal';
 
@@ -116,22 +116,23 @@ const AccessPointForm = ({
 
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan || defaultApProfile.vlan,
+      vlan: details?.vlan || DEFAULT_AP_PROFILE.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto ?? defaultApProfile.ntpServer.auto,
+        auto: details?.ntpServer?.auto ?? DEFAULT_AP_PROFILE.ntpServer.auto,
       },
-      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || DEFAULT_AP_PROFILE.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp: details?.rtlsSettings?.srvHostIp || defaultApProfile.rtlsSettings.srvHostIp,
+        srvHostIp: details?.rtlsSettings?.srvHostIp || DEFAULT_AP_PROFILE.rtlsSettings.srvHostIp,
         srvHostPort:
-          details?.rtlsSettings?.srvHostPort || defaultApProfile.rtlsSettings.srvHostPort,
+          details?.rtlsSettings?.srvHostPort || DEFAULT_AP_PROFILE.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp: details?.syslogRelay?.srvHostIp || defaultApProfile.syslogRelay.srvHostIp,
-        srvHostPort: details?.syslogRelay?.srvHostPort || defaultApProfile.syslogRelay.srvHostPort,
-        severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
+        srvHostIp: details?.syslogRelay?.srvHostIp || DEFAULT_AP_PROFILE.syslogRelay.srvHostIp,
+        srvHostPort:
+          details?.syslogRelay?.srvHostPort || DEFAULT_AP_PROFILE.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || DEFAULT_AP_PROFILE.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       rfProfileId: {
