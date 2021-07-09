@@ -154,7 +154,7 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
     fireEvent.click(getByRole('button', { name: /back/i }));
-    const paragraph = getByText('Please confirm exiting without saving this Profile form.');
+    const paragraph = getByText(/Please confirm leaving without saving this wireless profile page/);
     expect(paragraph).toBeVisible();
   });
 
@@ -166,15 +166,15 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(getByText('Leave Form?')).toBeVisible();
+    expect(getByText('Leave Page?')).toBeVisible();
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
     await waitFor(() => {
-      expect(queryByText('Leave Form?')).not.toBeInTheDocument();
+      expect(queryByText('Leave Page?')).not.toBeInTheDocument();
     });
   });
 
-  it('URL should changes to /profiles when back button is clicked', async () => {
+  it('URL should change when back button is clicked', async () => {
     const { getByRole } = render(
       <Router>
         <ProfileDetails {...mockSsid} />
@@ -182,11 +182,11 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.click(getByRole('button', { name: /back/i }));
     await waitFor(() => {
-      expect(window.location.pathname).toEqual(ROUTES.profiles);
+      expect(window.location.pathname).toEqual('/');
     });
   });
 
-  it('Back button click on Leave Form should chnages URL to /Profiles', async () => {
+  it('Back button click on Leave Page should changes URL to /Profiles', async () => {
     const { getByRole, getByText, getByLabelText } = render(
       <Router>
         <ProfileDetails {...mockSsid} />
@@ -194,8 +194,8 @@ describe('<ProfileDetails />', () => {
     );
     fireEvent.change(getByLabelText('Profile Name'), { target: { value: 'test' } });
     fireEvent.click(getByRole('button', { name: /back/i }));
-    expect(getByText('Leave Form?')).toBeVisible();
-    fireEvent.click(getByRole('button', { name: 'Back' }));
+    expect(getByText('Leave Page?')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: 'Leave Page' }));
 
     await waitFor(() => {
       expect(window.location.pathname).toEqual(ROUTES.profiles);

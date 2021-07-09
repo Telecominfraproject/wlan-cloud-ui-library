@@ -73,11 +73,9 @@
   }
 
   .saveButton {
-    border: 1px solid #434343;
-    border-radius: 5px;
     margin-top: 10px;
-    margin-bottom: 0;
-    width: 139px;
+    min-width: 139px;
+    max-width: 100%;
   }
 
   .InlineEndDiv {

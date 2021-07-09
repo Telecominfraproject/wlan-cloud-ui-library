@@ -78,7 +78,7 @@ const Status = ({ data, showAlarms }) => {
     return (
       <Item label="Channel Bandwidth">
         <div className={styles.InlineDiv}>
-          {sortRadioTypes(Object.keys(data?.details?.radioMap ?? {})).map(i => (
+          {sortRadioTypes(Object.keys(radioMap)).map(i => (
             <span key={i} className={styles.spanStyle}>
               {USER_FRIENDLY_BANDWIDTHS[rfProfile?.details?.rfConfigMap?.[i]?.channelBandwidth] ??
                 'N/A'}

@@ -45,6 +45,7 @@ const General = ({
   onSearchProfile,
   extraFields,
   extraGeneralCards,
+  isFormDirty,
 }) => {
   const { radioTypes, routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -468,12 +469,12 @@ const General = ({
   const renderBandwidthLabels = () => (
     <Item label="Channel Bandwidth">
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(data.details.radioMap)).map(radio => (
+        {sortRadioTypes(Object.keys(radioMap)).map(radio => (
           <DisabledText
             key={radio}
             value={
               USER_FRIENDLY_BANDWIDTHS[
-                childProfiles.rf?.[0]?.details?.rfConfigMap?.[radio].channelBandwidth
+                childProfiles?.rf?.[0]?.details?.rfConfigMap?.[radio].channelBandwidth
               ] ?? 'N/A'
             }
             showTooltip={false}
@@ -503,6 +504,7 @@ const General = ({
           onClick={handleOnSave}
           type="primary"
           name="save"
+          disabled={!isFormDirty}
         >
           Save
         </RoleProtectedBtn>
@@ -750,6 +752,7 @@ General.propTypes = {
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
   extraGeneralCards: PropTypes.node,
+  isFormDirty: PropTypes.bool,
 };
 
 General.defaultProps = {
@@ -763,6 +766,7 @@ General.defaultProps = {
   onSearchProfile: null,
   extraFields: [],
   extraGeneralCards: null,
+  isFormDirty: false,
 };
 
 export default General;
