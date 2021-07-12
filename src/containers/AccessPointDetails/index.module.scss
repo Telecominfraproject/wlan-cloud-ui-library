@@ -38,7 +38,7 @@
   .InlineBlockDiv {
     display: inline-block;
     vertical-align: middle;
-    :global(.ant-avatar ){
+    :global(.ant-avatar) {
       margin-right: 20px;
     }
   }
@@ -73,11 +73,9 @@
   }
 
   .saveButton {
-    border: 1px solid #434343;
-    border-radius: 5px;
     margin-top: 10px;
-    margin-bottom: 0;
-    width: 139px;
+    min-width: 139px;
+    max-width: 100%;
   }
 
   .InlineEndDiv {
@@ -110,5 +108,13 @@
 
   .tabContentContainer {
     margin-top: 10px;
+  }
+
+  .Row {
+    cursor: pointer;
+  }
+
+  a {
+    color: white;
   }
 }

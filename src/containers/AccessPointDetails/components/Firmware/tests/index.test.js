@@ -104,8 +104,9 @@ describe('<Firmware />', () => {
     await waitForElement(() => getByText(firmware[0].versionName));
     fireEvent.click(getByText(firmware[0].versionName));
 
-    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
-    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
+    fireEvent.click(getByRole('button', { name: /download, flash, and reboot?/i }));
+
+    expect(getByText('Confirm downloading, flashing, and rebooting?')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Cancel' }));
 
@@ -136,9 +137,9 @@ describe('<Firmware />', () => {
     await waitForElement(() => getByText(firmware[0].versionName));
     fireEvent.click(getByText(firmware[0].versionName));
 
-    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+    fireEvent.click(getByRole('button', { name: /download, flash, and reboot/i }));
 
-    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
+    expect(getByText('Confirm downloading, flashing, and rebooting?')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Confirm' }));
 
@@ -165,9 +166,9 @@ describe('<Firmware />', () => {
     await waitForElement(() => getByText(firmware[0].versionName));
     fireEvent.click(getByText(firmware[0].versionName));
 
-    fireEvent.click(getByRole('button', { name: /download Download, Flash, and Reboot/i }));
+    fireEvent.click(getByRole('button', { name: /download, flash, and reboot/i }));
 
-    expect(getByText('Confirm downloading, flashing, rebooting?')).toBeVisible();
+    expect(getByText('Confirm downloading, flashing, and rebooting?')).toBeVisible();
 
     fireEvent.click(getByRole('button', { name: 'Confirm' }));
   });

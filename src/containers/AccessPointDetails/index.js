@@ -42,7 +42,6 @@ const AccessPointDetails = ({
   extraButtons,
   onSearchProfile,
   extraGeneralFields,
-  extraStatusFields,
   extraTabs,
   extraGeneralCards,
   showStatusAlarms,
@@ -144,9 +143,13 @@ const AccessPointDetails = ({
           }
         }}
         visible={confirmModal}
-        buttonText="OK"
+        buttonText="Leave Page"
         title="Leave Page?"
-        content={<p>Please confirm exiting without saving this Access Point page.</p>}
+        content={
+          <p>
+            You have unsaved changes. Please confirm leaving without saving this access point page:
+          </p>
+        }
         mask={false}
       />
       <Header>
@@ -220,16 +223,10 @@ const AccessPointDetails = ({
           extraFields={extraGeneralFields}
           extraGeneralCards={extraGeneralCards}
           loading={loading}
+          isFormDirty={isFormDirty}
         />
       )}
-      {tab === 'status' && (
-        <Status
-          data={data}
-          showAlarms={showStatusAlarms}
-          extraFields={extraStatusFields}
-          loading={loading}
-        />
-      )}
+      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} loading={loading} />}
       {tab === 'location' && (
         <Location
           data={data}
@@ -237,6 +234,7 @@ const AccessPointDetails = ({
           handleOnEquipmentSave={handleOnEquipmentSave}
           handleOnFormChange={handleOnFormChange}
           loading={loading}
+          isFormDirty={isFormDirty}
         />
       )}
       {tab === 'os' && (
@@ -253,6 +251,7 @@ const AccessPointDetails = ({
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
           loading={loading}
+          isFormDirty={isFormDirty}
         />
       )}
       {extraTabs.map(
@@ -287,7 +286,6 @@ AccessPointDetails.propTypes = {
   extraButtons: PropTypes.node,
   onSearchProfile: PropTypes.func,
   extraGeneralFields: PropTypes.instanceOf(Array),
-  extraStatusFields: PropTypes.instanceOf(Array),
   extraTabs: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -315,7 +313,6 @@ AccessPointDetails.defaultProps = {
   extraButtons: null,
   onSearchProfile: null,
   extraGeneralFields: [],
-  extraStatusFields: [],
   extraTabs: [],
   extraGeneralCards: null,
   showStatusAlarms: true,

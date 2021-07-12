@@ -19,7 +19,7 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { formatFile } from 'utils/profiles';
 import styles from '../index.module.scss';
-import { defaultApProfile } from '../constants';
+import { DEFAULT_AP_PROFILE } from '../constants';
 
 import FormModal from './components/FormModal';
 
@@ -117,22 +117,23 @@ const AccessPointForm = ({
 
     form.setFieldsValue({
       vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan || defaultApProfile.vlan,
+      vlan: details?.vlan || DEFAULT_AP_PROFILE.vlan,
       ntpServer: {
-        auto: details?.ntpServer?.auto ?? defaultApProfile.ntpServer.auto,
+        auto: details?.ntpServer?.auto ?? DEFAULT_AP_PROFILE.ntpServer.auto,
       },
-      ledControlEnabled: details?.ledControlEnabled || defaultApProfile.ledControlEnabled,
+      ledControlEnabled: details?.ledControlEnabled || DEFAULT_AP_PROFILE.ledControlEnabled,
       rtlsSettings: {
         enabled: details?.rtlsSettings?.enabled ? 'true' : 'false',
-        srvHostIp: details?.rtlsSettings?.srvHostIp || defaultApProfile.rtlsSettings.srvHostIp,
+        srvHostIp: details?.rtlsSettings?.srvHostIp || DEFAULT_AP_PROFILE.rtlsSettings.srvHostIp,
         srvHostPort:
-          details?.rtlsSettings?.srvHostPort || defaultApProfile.rtlsSettings.srvHostPort,
+          details?.rtlsSettings?.srvHostPort || DEFAULT_AP_PROFILE.rtlsSettings.srvHostPort,
       },
       syslogRelay: {
         enabled: details?.syslogRelay?.enabled ? 'true' : 'false',
-        srvHostIp: details?.syslogRelay?.srvHostIp || defaultApProfile.syslogRelay.srvHostIp,
-        srvHostPort: details?.syslogRelay?.srvHostPort || defaultApProfile.syslogRelay.srvHostPort,
-        severity: details?.syslogRelay?.severity || defaultApProfile.syslogRelay.severity,
+        srvHostIp: details?.syslogRelay?.srvHostIp || DEFAULT_AP_PROFILE.syslogRelay.srvHostIp,
+        srvHostPort:
+          details?.syslogRelay?.srvHostPort || DEFAULT_AP_PROFILE.syslogRelay.srvHostPort,
+        severity: details?.syslogRelay?.severity || DEFAULT_AP_PROFILE.syslogRelay.severity,
       },
       syntheticClientEnabled: details?.syntheticClientEnabled ? 'true' : 'false',
       rfProfileId: {
@@ -486,7 +487,11 @@ const AccessPointForm = ({
                     ]}
                     hasFeedback
                   >
-                    <Input placeholder="IP Address" data-testid="svrIpAdress" />
+                    <Input
+                      placeholder="Enter SRV IP Address"
+                      data-testid="svrIpAdress"
+                      addonBefore="SVR IP Address"
+                    />
                   </Item>
                   <Item
                     wrapperCol={{ offset: 5, span: 15 }}
@@ -508,11 +513,12 @@ const AccessPointForm = ({
                     hasFeedback
                   >
                     <Input
-                      placeholder="Port"
+                      placeholder="Enter SRV Port"
                       type="number"
                       min={1}
                       max={65535}
                       data-testid="svrPort"
+                      addonBefore="SVR Port"
                     />
                   </Item>
                 </>
@@ -555,7 +561,10 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input placeholder="IP Address" />
+                        <Input
+                          placeholder="Enter Syslog IP Address"
+                          addonBefore="Syslog IP Address"
+                        />
                       </Item>
                       <Item
                         name={['syslogRelay', 'srvHostPort']}
@@ -575,7 +584,13 @@ const AccessPointForm = ({
                         ]}
                         hasFeedback
                       >
-                        <Input placeholder="Port" type="number" min={1} max={65535} />
+                        <Input
+                          placeholder="Enter Syslog Port"
+                          type="number"
+                          min={1}
+                          max={65535}
+                          addonBefore="Syslog Port"
+                        />
                       </Item>
                     </div>
                   </Item>
@@ -593,7 +608,7 @@ const AccessPointForm = ({
                       <Option value="DEBUG">Debug (DEBUG)</Option>
                       <Option value="INFO">Info. (INFO)</Option>
                       <Option value="NOTICE">Notice (NOTICE)</Option>
-                      <Option value="WARNING">Warning (WARNING)</Option>
+                      <Option value="WARING">Warning (WARNING)</Option>
                       <Option value="ERR">Error (ERR)</Option>
                       <Option value="CRIT">Critical (CRIT)</Option>
                       <Option value="ALERT">Alert (ALERT)</Option>

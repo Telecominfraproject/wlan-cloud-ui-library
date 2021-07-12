@@ -89,7 +89,7 @@ const ProfileDetails = ({
     if (isFormDirty) {
       setConfirmModal(true);
     } else {
-      history.push(routes.profiles);
+      history.goBack();
     }
   };
 
@@ -126,7 +126,7 @@ const ProfileDetails = ({
           if (!values.rfProfileId?.value) {
             notification.error({
               message: 'Error',
-              description: 'A Rf Profile is required.',
+              description: 'An RF Profile is required.',
             });
             return;
           }
@@ -255,9 +255,14 @@ const ProfileDetails = ({
         onCancel={() => setConfirmModal(false)}
         onSuccess={() => history.push(routes.profiles)}
         visible={confirmModal}
-        buttonText="Back"
-        title="Leave Form?"
-        content={<p>Please confirm exiting without saving this Profile form. </p>}
+        buttonText="Leave Page"
+        title="Leave Page?"
+        content={
+          <p>
+            You have unsaved changes. Please confirm leaving without saving this wireless profile
+            page:
+          </p>
+        }
       />
 
       <Form

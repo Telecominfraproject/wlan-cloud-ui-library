@@ -1,7 +1,6 @@
 .Button {
   margin-right: 25px;
-}
-
-.Button:last-child {
-  margin-right: 0px;
+  &:last-child {
+    margin-right: 0px;
+  }
 }

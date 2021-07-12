@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Form, Table, Collapse, Select as AntdSelect, notification, Alert, Empty } from 'antd';
 import { Card } from 'components/Skeleton';
@@ -12,6 +13,7 @@ import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
 import {
   USER_FRIENDLY_RATES,
+  USER_FRIENDLY_BANDWIDTHS,
   ALLOWED_CHANNELS_STEP,
   MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ,
   MAX_CHANNEL_WIDTH_160MHZ,
@@ -36,8 +38,11 @@ const General = ({
   extraFields,
   extraGeneralCards,
   loading,
+  isFormDirty,
 }) => {
-  const { radioTypes } = useContext(ThemeContext);
+  const { radioTypes, routes } = useContext(ThemeContext);
+  const history = useHistory();
+
   const [form] = Form.useForm();
   const columns = [
     {
@@ -72,9 +77,9 @@ const General = ({
     };
     if (selectedProfile?.childProfiles) {
       selectedProfile.childProfiles.forEach(profile => {
-        if (profile.details.profileType === 'rf') {
+        if (profile?.details?.profileType === 'rf') {
           result.rf.push(profile);
-        } else if (profile.details.profileType === 'ssid') {
+        } else if (profile?.details?.profileType === 'ssid') {
           result.ssid.push(profile);
         }
       });
@@ -250,13 +255,17 @@ const General = ({
     <Item label={label} key={label}>
       <div className={styles.InlineDiv}>
         {sortRadioTypes(Object.keys(obj)).map(key => {
-          const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key][dependency];
+          const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dependency];
 
           if (isEnabled) {
             return (
               <DisabledText
                 key={key}
-                value={USER_FRIENDLY_RATES[obj[key][dataIndex].value] ?? obj[key][dataIndex].value}
+                value={
+                  USER_FRIENDLY_RATES[obj[key]?.[dataIndex]?.value] ||
+                  obj[key]?.[dataIndex]?.value ||
+                  'N/A'
+                }
                 title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
                 )}" enabled in the RF Profile.`}
@@ -268,8 +277,9 @@ const General = ({
             <DisabledText
               key={key}
               value={
-                USER_FRIENDLY_RATES[childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]] ??
-                childProfiles.rf?.[0]?.details?.rfConfigMap[key][dataIndex]
+                USER_FRIENDLY_RATES[
+                  childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dataIndex]
+                ] || childProfiles.rf?.[0]?.details?.rfConfigMap?.[key]?.[dataIndex || 'N/A']
               }
               title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
@@ -449,6 +459,24 @@ const General = ({
     );
   };
 
+  const renderBandwidthLabels = () => (
+    <Item label="Channel Bandwidth">
+      <div className={styles.InlineDiv}>
+        {sortRadioTypes(Object.keys(radioMap)).map(radio => (
+          <DisabledText
+            key={radio}
+            value={
+              USER_FRIENDLY_BANDWIDTHS[
+                childProfiles?.rf?.[0]?.details?.rfConfigMap?.[radio].channelBandwidth
+              ] ?? 'N/A'
+            }
+            showTooltip={false}
+          />
+        ))}
+      </div>
+    </Item>
+  );
+
   if (errorProfiles) {
     return (
       <Alert
@@ -469,6 +497,7 @@ const General = ({
           onClick={handleOnSave}
           type="primary"
           name="save"
+          disabled={!isFormDirty}
         >
           Save
         </RoleProtectedBtn>
@@ -529,7 +558,11 @@ const General = ({
           </Select>
         </Item>
 
-        <Item label="RF Profile">{childProfiles.rf?.[0]?.name || 'N/A'}</Item>
+        <Item label="RF Profile">
+          <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
+            {childProfiles.rf?.[0]?.name || 'N/A'}
+          </Link>
+        </Item>
         <Item label="Summary">
           <Item>
             <Table
@@ -538,6 +571,12 @@ const General = ({
               dataSource={childProfiles.ssid}
               columns={columns}
               pagination={false}
+              rowClassName={styles.Row}
+              onRow={record => ({
+                onClick: () => {
+                  history.push(`${routes.profiles}/${record.id}`);
+                },
+              })}
             />
           </Item>
         </Item>
@@ -548,6 +587,7 @@ const General = ({
         <Panel header="Advanced Settings" name="settings">
           {renderItem(' ', data?.details?.radioMap, 'radioType')}
           <p>Radio Specific Parameters:</p>
+          {renderBandwidthLabels()}
           {renderItem('Enable Radio', advancedRadioMap, ['radioAdminState'], renderOptionItem, {
             dropdown: defaultOptions,
             mapName: 'advancedRadioMap',
@@ -706,6 +746,7 @@ General.propTypes = {
   extraFields: PropTypes.instanceOf(Array),
   extraGeneralCards: PropTypes.node,
   loading: PropTypes.bool,
+  isFormDirty: PropTypes.bool,
 };
 
 General.defaultProps = {
@@ -720,6 +761,7 @@ General.defaultProps = {
   extraFields: [],
   extraGeneralCards: null,
   loading: false,
+  isFormDirty: false,
 };
 
 export default General;

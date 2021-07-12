@@ -7,7 +7,7 @@ import DisabledText from 'components/DisabledText';
 
 import ThemeContext from 'contexts/ThemeContext';
 
-import { defaultRfProfile } from '../constants';
+import { DEFAULT_RF_PROFILE } from '../constants';
 import styles from '../index.module.scss';
 import { RADIOS } from '../../constants';
 
@@ -26,79 +26,81 @@ const RFForm = ({ form, details, extraFields }) => {
     currentRadios.forEach(radio => {
       formData.rfConfigMap[radio] = {
         radioType: details.rfConfigMap[radio]?.radioType ?? radio,
-        radioMode: details.rfConfigMap[radio]?.radioMode ?? defaultRfProfile[radio].radioMode,
+        radioMode: details.rfConfigMap[radio]?.radioMode ?? DEFAULT_RF_PROFILE[radio].radioMode,
         beaconInterval:
-          details.rfConfigMap[radio]?.beaconInterval ?? defaultRfProfile[radio].beaconInterval,
+          details.rfConfigMap[radio]?.beaconInterval ?? DEFAULT_RF_PROFILE[radio].beaconInterval,
         forceScanDuringVoice:
           details.rfConfigMap[radio]?.forceScanDuringVoice ??
-          defaultRfProfile[radio].forceScanDuringVoice,
+          DEFAULT_RF_PROFILE[radio].forceScanDuringVoice,
         rtsCtsThreshold:
-          details.rfConfigMap[radio]?.rtsCtsThreshold ?? defaultRfProfile[radio].rtsCtsThreshold,
+          details.rfConfigMap[radio]?.rtsCtsThreshold ?? DEFAULT_RF_PROFILE[radio].rtsCtsThreshold,
         channelBandwidth:
-          details.rfConfigMap[radio]?.channelBandwidth ?? defaultRfProfile[radio].channelBandwidth,
-        mimoMode: details.rfConfigMap[radio]?.mimoMode ?? defaultRfProfile[radio].mimoMode,
+          details.rfConfigMap[radio]?.channelBandwidth ??
+          DEFAULT_RF_PROFILE[radio].channelBandwidth,
+        mimoMode: details.rfConfigMap[radio]?.mimoMode ?? DEFAULT_RF_PROFILE[radio].mimoMode,
         maxNumClients:
-          details.rfConfigMap[radio]?.maxNumClients ?? defaultRfProfile[radio].maxNumClients,
+          details.rfConfigMap[radio]?.maxNumClients ?? DEFAULT_RF_PROFILE[radio].maxNumClients,
         multicastRate:
-          details.rfConfigMap[radio]?.multicastRate ?? defaultRfProfile[radio].multicastRate,
+          details.rfConfigMap[radio]?.multicastRate ?? DEFAULT_RF_PROFILE[radio].multicastRate,
         managementRate:
-          details.rfConfigMap[radio]?.managementRate ?? defaultRfProfile[radio].managementRate,
+          details.rfConfigMap[radio]?.managementRate ?? DEFAULT_RF_PROFILE[radio].managementRate,
         rxCellSizeDb:
-          details.rfConfigMap[radio]?.rxCellSizeDb ?? defaultRfProfile[radio].rxCellSizeDb,
+          details.rfConfigMap[radio]?.rxCellSizeDb ?? DEFAULT_RF_PROFILE[radio].rxCellSizeDb,
         probeResponseThresholdDb:
           details.rfConfigMap[radio]?.probeResponseThresholdDb ??
-          defaultRfProfile[radio].probeResponseThresholdDb,
+          DEFAULT_RF_PROFILE[radio].probeResponseThresholdDb,
         clientDisconnectThresholdDb:
           details.rfConfigMap[radio]?.clientDisconnectThresholdDb ??
-          defaultRfProfile[radio].clientDisconnectThresholdDb,
-        eirpTxPower: details.rfConfigMap[radio]?.eirpTxPower ?? defaultRfProfile[radio].eirpTxPower,
+          DEFAULT_RF_PROFILE[radio].clientDisconnectThresholdDb,
+        eirpTxPower:
+          details.rfConfigMap[radio]?.eirpTxPower ?? DEFAULT_RF_PROFILE[radio].eirpTxPower,
         autoChannelSelection:
           details.rfConfigMap[radio]?.autoChannelSelection?.toString() ??
-          defaultRfProfile[radio].autoChannelSelection.toString(),
+          DEFAULT_RF_PROFILE[radio].autoChannelSelection.toString(),
         autoCellSizeSelection:
           details.rfConfigMap[radio]?.autoCellSizeSelection?.toString() ??
-          defaultRfProfile[radio].autoCellSizeSelection.toString(),
+          DEFAULT_RF_PROFILE[radio].autoCellSizeSelection.toString(),
         maxAutoCellSize:
-          details.rfConfigMap[radio]?.maxAutoCellSize ?? defaultRfProfile[radio].maxAutoCellSize,
+          details.rfConfigMap[radio]?.maxAutoCellSize ?? DEFAULT_RF_PROFILE[radio].maxAutoCellSize,
         minAutoCellSize:
-          details.rfConfigMap[radio]?.minAutoCellSize ?? defaultRfProfile[radio].minAutoCellSize,
+          details.rfConfigMap[radio]?.minAutoCellSize ?? DEFAULT_RF_PROFILE[radio].minAutoCellSize,
         useMaxTxPower:
           details.rfConfigMap[radio]?.useMaxTxPower?.toString() ??
-          defaultRfProfile[radio].useMaxTxPower.toString(),
+          DEFAULT_RF_PROFILE[radio].useMaxTxPower.toString(),
         activeScanSettings: {
           enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
           scanFrequencySeconds:
             details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ??
-            defaultRfProfile[radio].activeScanSettings.scanFrequencySeconds,
+            DEFAULT_RF_PROFILE[radio].activeScanSettings.scanFrequencySeconds,
           scanDurationMillis:
             details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ??
-            defaultRfProfile[radio].activeScanSettings.scanDurationMillis,
+            DEFAULT_RF_PROFILE[radio].activeScanSettings.scanDurationMillis,
         },
         channelHopSettings: {
           noiseFloorThresholdInDB:
             details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ??
-            defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdInDB,
+            DEFAULT_RF_PROFILE[radio].channelHopSettings.noiseFloorThresholdInDB,
           noiseFloorThresholdTimeInSeconds:
             details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdTimeInSeconds ??
-            defaultRfProfile[radio].channelHopSettings.noiseFloorThresholdTimeInSeconds,
+            DEFAULT_RF_PROFILE[radio].channelHopSettings.noiseFloorThresholdTimeInSeconds,
           nonWifiThresholdInPercentage:
             details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdInPercentage ??
-            defaultRfProfile[radio].channelHopSettings.nonWifiThresholdInPercentage,
+            DEFAULT_RF_PROFILE[radio].channelHopSettings.nonWifiThresholdInPercentage,
           nonWifiThresholdTimeInSeconds:
             details.rfConfigMap[radio]?.channelHopSettings?.nonWifiThresholdTimeInSeconds ??
-            defaultRfProfile[radio].channelHopSettings.nonWifiThresholdTimeInSeconds,
+            DEFAULT_RF_PROFILE[radio].channelHopSettings.nonWifiThresholdTimeInSeconds,
           obssHopMode:
             details.rfConfigMap[radio]?.channelHopSettings?.obssHopMode ??
-            defaultRfProfile[radio].channelHopSettings.obssHopMode,
+            DEFAULT_RF_PROFILE[radio].channelHopSettings.obssHopMode,
         },
         bestApSettings: {
           mlComputed: details.rfConfigMap[radio]?.bestApSettings?.mlComputed ?? 'true',
           dropInSnrPercentage:
             details.rfConfigMap[radio]?.bestApSettings?.dropInSnrPercentage ??
-            defaultRfProfile[radio].bestApSettings.dropInSnrPercentage,
+            DEFAULT_RF_PROFILE[radio].bestApSettings.dropInSnrPercentage,
           minLoadFactor:
             details.rfConfigMap[radio]?.bestApSettings?.minLoadFactor ??
-            defaultRfProfile[radio].bestApSettings.minLoadFactor,
+            DEFAULT_RF_PROFILE[radio].bestApSettings.minLoadFactor,
         },
       };
     });
@@ -297,11 +299,11 @@ const RFForm = ({ form, details, extraFields }) => {
             );
           },
         })}
-        {renderItem('Beacon Interval (milliseconds)', ['beaconInterval'], renderInputItem, {
+        {renderItem('Beacon Interval', ['beaconInterval'], renderInputItem, {
           min: 15,
           max: 65535,
-          error: '15 - 65535 (1.024 ms)',
-          addOnText: '1.024 ms',
+          error: '15 - 65535',
+          addOnText: 'ms',
         })}
         {renderItem('RTS/CTS threshold', ['rtsCtsThreshold'], renderInputItem, {
           min: 0,

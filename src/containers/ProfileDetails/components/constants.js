@@ -1,17 +1,17 @@
-const defaultRfProfile = {
+const DEFAULT_RF_PROFILE = {
   is5GHz: {
     model_type: 'RfElementConfiguration',
     radioType: 'is5GHz',
     radioMode: 'auto',
     rf: 'SaaS-rf',
-    beaconInterval: 102.4,
+    beaconInterval: 100,
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
-    autoCellSizeSelection: false,
+    autoCellSizeSelection: true,
     useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
@@ -39,8 +39,8 @@ const defaultRfProfile = {
     multicastRate: 'auto',
     managementRate: 'auto',
     rxCellSizeDb: -90,
-    probeResponseThresholdDb: -90,
-    clientDisconnectThresholdDb: -90,
+    probeResponseThresholdDb: -88,
+    clientDisconnectThresholdDb: -89,
     eirpTxPower: 18,
     bestApSettings: {
       model_type: 'RadioBestApSettings',
@@ -54,14 +54,14 @@ const defaultRfProfile = {
     radioType: 'is2dot4GHz',
     radioMode: 'auto',
     rf: 'TipWlan-rf',
-    beaconInterval: 102.4,
+    beaconInterval: 100,
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is20MHz',
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
-    autoCellSizeSelection: false,
+    autoCellSizeSelection: true,
     useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
@@ -89,8 +89,8 @@ const defaultRfProfile = {
     multicastRate: 'auto',
     managementRate: 'auto',
     rxCellSizeDb: -90,
-    probeResponseThresholdDb: -90,
-    clientDisconnectThresholdDb: -90,
+    probeResponseThresholdDb: -88,
+    clientDisconnectThresholdDb: -89,
     eirpTxPower: 18,
     bestApSettings: {
       model_type: 'RadioBestApSettings',
@@ -104,14 +104,14 @@ const defaultRfProfile = {
     radioType: 'is5GHzU',
     radioMode: 'auto',
     rf: 'TipWlan-rf',
-    beaconInterval: 102.4,
+    beaconInterval: 100,
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
-    autoCellSizeSelection: false,
+    autoCellSizeSelection: true,
     useMaxTxPower: true,
     activeScanSettings: {
       model_type: 'ActiveScanSettings',
@@ -139,8 +139,8 @@ const defaultRfProfile = {
     multicastRate: 'auto',
     managementRate: 'auto',
     rxCellSizeDb: -90,
-    probeResponseThresholdDb: -90,
-    clientDisconnectThresholdDb: -90,
+    probeResponseThresholdDb: -88,
+    clientDisconnectThresholdDb: -89,
     eirpTxPower: 18,
     bestApSettings: {
       model_type: 'RadioBestApSettings',
@@ -154,14 +154,14 @@ const defaultRfProfile = {
     radioType: 'is5GHzL',
     radioMode: 'auto',
     rf: 'TipWlan-rf',
-    beaconInterval: 102.4,
+    beaconInterval: 100,
     forceScanDuringVoice: 'disabled',
     rtsCtsThreshold: 65535,
     channelBandwidth: 'is80MHz',
     mimoMode: 'none',
     maxNumClients: 100,
     autoChannelSelection: true,
-    autoCellSizeSelection: false,
+    autoCellSizeSelection: true,
     useMaxTxPower: true,
     maxAutoCellSize: -90,
     activeScanSettings: {
@@ -189,8 +189,8 @@ const defaultRfProfile = {
     multicastRate: 'auto',
     managementRate: 'auto',
     rxCellSizeDb: -90,
-    probeResponseThresholdDb: -90,
-    clientDisconnectThresholdDb: -90,
+    probeResponseThresholdDb: -88,
+    clientDisconnectThresholdDb: -89,
     eirpTxPower: 18,
     bestApSettings: {
       model_type: 'RadioBestApSettings',
@@ -201,13 +201,13 @@ const defaultRfProfile = {
   },
 };
 
-const defaultSsidProfile = {
+const DEFAULT_SSID_PROFILE = {
   model_type: 'SsidConfiguration',
   ssid: 'SaaS-cloud-wifi',
-  appliedRadios: ['is5GHzU', 'is5GHzL', 'is5GHz', 'is2dot4GHz'],
+  appliedRadios: ['is2dot4GHz', 'is5GHz'],
   ssidAdminState: 'enabled',
   secureMode: 'wpa2OnlyPSK',
-  vlanId: 1,
+  vlanId: 0,
   dynamicVlan: 'disabled',
   keyStr: '',
   broadcastSsid: 'enabled',
@@ -262,9 +262,9 @@ const defaultSsidProfile = {
     nasOperatorId: null,
   },
   useRadiusProxy: false,
-  enableProxyArpForHotspot: false,
+  enableProxyArpForHotspot: true,
 };
-const defaultApProfile = {
+const DEFAULT_AP_PROFILE = {
   model_type: 'ApNetworkConfiguration',
   networkConfigVersion: 'AP-1',
   equipmentType: 'AP',
@@ -312,18 +312,8 @@ const defaultApProfile = {
       bestAPSteerType: 'both',
     },
   },
-  greTunnelConfigurations: [
-    {
-      model_type: 'GreTunnelConfiguration',
-      greTunnelName: null,
-      greParentIfName: null,
-      greLocalInetAddr: null,
-      greRemoteInetAddr: null,
-      greRemoteMacAddr: null,
-      vlanIdsInGreTunnel: [],
-    },
-  ],
+  greTunnelConfigurations: [],
   profileType: 'equipment_ap',
 };
 
-export { defaultRfProfile, defaultSsidProfile, defaultApProfile };
+export { DEFAULT_RF_PROFILE, DEFAULT_SSID_PROFILE, DEFAULT_AP_PROFILE };

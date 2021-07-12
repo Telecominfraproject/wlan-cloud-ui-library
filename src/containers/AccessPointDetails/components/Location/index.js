@@ -10,7 +10,14 @@ import styles from '../../index.module.scss';
 const { Item } = Form;
 const { Option } = AntdSelect;
 
-const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange, loading }) => {
+const Location = ({
+  locations,
+  data,
+  handleOnEquipmentSave,
+  handleOnFormChange,
+  loading,
+  isFormDirty,
+}) => {
   const [form] = Form.useForm();
 
   const getLocationPath = () => {
@@ -117,7 +124,12 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange, 
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
       <WithRoles>
         <div className={styles.InlineEndDiv}>
-          <Button className={styles.saveButton} onClick={handleOnSave} type="primary">
+          <Button
+            className={styles.saveButton}
+            onClick={handleOnSave}
+            type="primary"
+            disabled={!isFormDirty}
+          >
             Save
           </Button>
         </div>
@@ -166,6 +178,7 @@ Location.propTypes = {
   handleOnEquipmentSave: PropTypes.func,
   handleOnFormChange: PropTypes.func,
   loading: PropTypes.bool,
+  isFormDirty: PropTypes.bool,
 };
 
 Location.defaultProps = {
@@ -173,6 +186,7 @@ Location.defaultProps = {
   handleOnFormChange: () => {},
   handleOnEquipmentSave: () => {},
   loading: false,
+  isFormDirty: false,
 };
 
 export default Location;
