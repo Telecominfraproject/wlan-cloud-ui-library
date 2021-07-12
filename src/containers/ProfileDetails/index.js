@@ -124,7 +124,7 @@ const ProfileDetails = ({
           if (!values.rfProfileId?.value) {
             notification.error({
               message: 'Error',
-              description: 'A Rf Profile is required.',
+              description: 'An RF Profile is required.',
             });
             return;
           }
