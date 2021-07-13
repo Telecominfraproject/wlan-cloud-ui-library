@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { Layout, Drawer } from 'antd';
 import { MenuOutlined } from '@ant-design/icons';
 
@@ -25,6 +25,7 @@ const Navbar = ({
   totalAlarms,
   rightMenuItem,
   currentUserId,
+  Link,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
 
@@ -37,13 +38,13 @@ const Navbar = ({
 
   return (
     <Header className={`${styles.Navbar}`}>
-      <Link className={styles.LogoContainer} to={routes.root}>
+      <RouterLink className={styles.LogoContainer} to={routes.root}>
         <img
           src={`${isMobile ? logoMobile : logo}`}
           alt={company}
           width={`${isMobile ? '32' : '200'}`}
         />
-      </Link>
+      </RouterLink>
       {isMobile ? (
         <Drawer
           zIndex={9999}
@@ -64,7 +65,7 @@ const Navbar = ({
           />
         </Drawer>
       ) : (
-        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} />
+        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} Link={Link} />
       )}
       <div className={styles.RightMenu}>
         {totalAlarms !== null && <Alarm routes={routes} totalAlarms={totalAlarms} />}
@@ -85,6 +86,7 @@ Navbar.propTypes = {
   totalAlarms: PropTypes.number,
   rightMenuItem: PropTypes.node,
   currentUserId: PropTypes.number,
+  Link: PropTypes.func,
 };
 
 Navbar.defaultProps = {
@@ -95,6 +97,7 @@ Navbar.defaultProps = {
   totalAlarms: null,
   rightMenuItem: null,
   currentUserId: 0,
+  Link: RouterLink,
 };
 
 export default Navbar;

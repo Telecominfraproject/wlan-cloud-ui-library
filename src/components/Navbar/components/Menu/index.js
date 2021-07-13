@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu as AntdMenu } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import styles from './index.module.scss';
 
 const { Item, SubMenu } = AntdMenu;
 
-const Menu = ({ mode, menuItems, onMenuItemClick, ...restProps }) => {
+const Menu = ({ mode, menuItems, onMenuItemClick, Link, ...restProps }) => {
   const location = useLocation();
 
   const selectedKeys = location.pathname.split('/');
@@ -51,11 +51,13 @@ Menu.propTypes = {
   menuItems: PropTypes.instanceOf(Array).isRequired,
   mode: PropTypes.string,
   onMenuItemClick: PropTypes.func,
+  Link: PropTypes.func,
 };
 
 Menu.defaultProps = {
   mode: 'horizontal',
   onMenuItemClick: () => {},
+  Link: RouterLink,
 };
 
 export default Menu;
