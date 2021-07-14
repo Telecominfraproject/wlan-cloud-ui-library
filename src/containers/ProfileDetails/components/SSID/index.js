@@ -14,11 +14,6 @@ const { Item } = Form;
 
 const { Option } = AntdSelect;
 
-const appliedRadios = {
-  is2dot4GHz: '2.4GHz',
-  is5GHz: '5GHz',
-};
-
 const radioOptions = (
   <RadioGroup>
     <Radio value="true">Enabled</Radio>
@@ -250,7 +245,7 @@ const SSIDForm = ({
 
         <Item name="appliedRadios" label="Use On">
           <CheckboxGroup>
-            {Object.keys(appliedRadios).map(i => (
+            {Object.keys(radioTypes || {})?.map(i => (
               <Checkbox key={i} value={i}>
                 {radioTypes?.[i]}
               </Checkbox>
