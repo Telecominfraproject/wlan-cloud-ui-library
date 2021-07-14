@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'antd';
+import { Link as RouterLink } from 'react-router-dom';
 
 import ThemeContext from 'contexts/ThemeContext';
 import Navbar from 'components/Navbar';
@@ -110,7 +111,7 @@ AppLayout.defaultProps = {
   totalAlarms: null,
   rightMenuItem: null,
   currentUserId: 0,
-  Link: () => {},
+  Link: RouterLink,
 };
 
 export default AppLayout;
