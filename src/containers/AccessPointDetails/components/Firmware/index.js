@@ -108,9 +108,10 @@ const Firmware = ({
   const getRebootStatus = () => updateInProgressStates.has(status?.upgradeState);
 
   const getUpgradePercentage = value => {
-    if (value.includes('download')) return 30;
-    if (value.includes('apply')) return 60;
-    if (value.includes('reboot')) return 90;
+    if (value.includes('download_initiated')) return 20;
+    if (value.includes('download_complete')) return 40;
+    if (value.includes('apply_initiated')) return 60;
+    if (value.includes('apply_complete')) return 80;
     return 100;
   };
 
