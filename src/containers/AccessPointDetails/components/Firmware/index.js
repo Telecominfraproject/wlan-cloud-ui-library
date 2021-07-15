@@ -110,8 +110,11 @@ const Firmware = ({
   const getUpgradePercentage = value => {
     if (value.includes('download_initiated')) return 20;
     if (value.includes('download_complete')) return 40;
+    if (value.includes('download')) return 50;
     if (value.includes('apply_initiated')) return 60;
     if (value.includes('apply_complete')) return 80;
+    if (value.includes('apply')) return 80;
+    if (value.includes('reboot')) return 90;
     return 100;
   };
 
