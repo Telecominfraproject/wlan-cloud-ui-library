@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Select as AntdSelect } from 'antd';
+import { Form, Select as AntdSelect } from 'antd';
+import { Card } from 'components/Skeleton';
 import Button from 'components/Button';
 import { pageLayout } from 'utils/form';
 import WithRoles, { Select } from 'components/WithRoles';
@@ -9,7 +10,14 @@ import styles from '../../index.module.scss';
 const { Item } = Form;
 const { Option } = AntdSelect;
 
-const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange, isFormDirty }) => {
+const Location = ({
+  locations,
+  data,
+  handleOnEquipmentSave,
+  handleOnFormChange,
+  loading,
+  isFormDirty,
+}) => {
   const [form] = Form.useForm();
 
   const getLocationPath = () => {
@@ -110,7 +118,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange, 
         };
       }),
     });
-  }, []);
+  }, [data]);
 
   return (
     <Form {...pageLayout} form={form} onValuesChange={handleOnFormChange}>
@@ -127,7 +135,7 @@ const Location = ({ locations, data, handleOnEquipmentSave, handleOnFormChange, 
         </div>
       </WithRoles>
 
-      <Card title="Location">
+      <Card title="Location" loading={loading}>
         <Form.List name="locations">
           {fields => (
             <>
@@ -169,6 +177,7 @@ Location.propTypes = {
   locations: PropTypes.instanceOf(Array).isRequired,
   handleOnEquipmentSave: PropTypes.func,
   handleOnFormChange: PropTypes.func,
+  loading: PropTypes.bool,
   isFormDirty: PropTypes.bool,
 };
 
@@ -176,6 +185,7 @@ Location.defaultProps = {
   data: {},
   handleOnFormChange: () => {},
   handleOnEquipmentSave: () => {},
+  loading: false,
   isFormDirty: false,
 };
 

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Card, Form, Table, Tag } from 'antd';
+import { Form, Table, Tag } from 'antd';
+import { Card } from 'components/Skeleton';
 import { CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import ThemeContext from 'contexts/ThemeContext';
@@ -10,7 +11,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 
-const Status = ({ data, showAlarms }) => {
+const Status = ({ data, showAlarms, loading }) => {
   const { radioTypes } = useContext(ThemeContext);
   const layout = {
     labelCol: { span: 5 },
@@ -44,10 +45,7 @@ const Status = ({ data, showAlarms }) => {
     },
   ];
 
-  const {
-    details: { radioMap = {} },
-    status = {},
-  } = data;
+  const { status = {} } = data;
 
   const renderData = (obj, dataIndex, i) => {
     if (dataIndex === 'radioType') {
@@ -59,7 +57,7 @@ const Status = ({ data, showAlarms }) => {
   const renderSpanItem = ({ label, obj, dataIndex, unit = '' }) => (
     <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
       <div className={styles.InlineDiv}>
-        {sortRadioTypes(Object.keys(radioMap)).map(i => {
+        {sortRadioTypes(Object.keys(data?.details?.radioMap || {})).map(i => {
           const value = dataIndex ? renderData(obj, dataIndex, i) : obj?.[i];
           return (
             <span key={i} className={styles.spanStyle}>
@@ -78,7 +76,7 @@ const Status = ({ data, showAlarms }) => {
     return (
       <Item label="Channel Bandwidth">
         <div className={styles.InlineDiv}>
-          {sortRadioTypes(Object.keys(radioMap)).map(i => (
+          {sortRadioTypes(Object.keys(data?.details?.radioMap || {})).map(i => (
             <span key={i} className={styles.spanStyle}>
               {USER_FRIENDLY_BANDWIDTHS[rfProfile?.details?.rfConfigMap?.[i]?.channelBandwidth] ??
                 'N/A'}
@@ -92,7 +90,7 @@ const Status = ({ data, showAlarms }) => {
   return (
     <>
       <Form {...layout}>
-        <Card title="System">
+        <Card title="System" loading={loading}>
           <p>RADIUS Proxy:</p>
           <Item label="Status">
             {status?.protocol?.detailsJSON?.isApcConnected ? (
@@ -121,8 +119,8 @@ const Status = ({ data, showAlarms }) => {
             </>
           )}
         </Card>
-        <Card title="Radio">
-          {renderSpanItem({ label: ' ', obj: radioMap, dataIndex: 'radioType' })}
+        <Card title="Radio" loading={loading}>
+          {renderSpanItem({ label: ' ', obj: data?.details?.radioMap, dataIndex: 'radioType' })}
           {renderBandwidthLabels()}
           {renderSpanItem({
             label: 'Channel',
@@ -151,7 +149,7 @@ const Status = ({ data, showAlarms }) => {
         </Card>
 
         {showAlarms && (
-          <Card title="Alarms">
+          <Card title="Alarms" loading={loading}>
             <Table
               rowKey="id"
               scroll={{ x: true }}
@@ -170,12 +168,14 @@ Status.propTypes = {
   data: PropTypes.instanceOf(Object),
   showAlarms: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
+  loading: PropTypes.bool,
 };
 
 Status.defaultProps = {
   data: {},
   showAlarms: true,
   extraFields: [],
+  loading: false,
 };
 
 export default Status;

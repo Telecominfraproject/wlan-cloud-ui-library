@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import Skeleton from 'components/Skeleton';
 
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Sector } from 'recharts';
 import { COLORS } from 'utils/charts';
@@ -7,7 +8,7 @@ import { useChartHover } from 'hooks';
 import PieGraphTooltip from 'components/GraphTooltips/PieGraphTooltip';
 import Card from '../Card';
 
-const MyPieChart = ({ chartData, title }) => {
+const MyPieChart = ({ chartData, title, loading }) => {
   const { activeIndex, onMouseOver, onMouseLeave } = useChartHover();
   const pieData = useMemo(() => {
     return Object.keys(chartData).map(key => ({
@@ -45,34 +46,36 @@ const MyPieChart = ({ chartData, title }) => {
 
   return (
     <Card title={title}>
-      {pieData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
-          <PieChart>
-            <Pie
-              dataKey="value"
-              data={pieData}
-              label={renderLabel}
-              activeIndex={activeIndex}
-              onMouseOver={onMouseOver}
-              onMouseLeave={onMouseLeave}
-              activeShape={renderActiveShape}
-              isAnimationActive={false}
-            >
-              {pieData.map((entry, index) => (
-                <Cell
-                  key={`cell-${entry.name}`}
-                  fill={COLORS[index % COLORS.length]}
-                  stroke={pieData.length > 1 ? '#fff' : COLORS[index % COLORS.length]}
-                  fillOpacity={index === activeIndex || activeIndex === null ? 1 : 0.6}
-                />
-              ))}
-            </Pie>
-            <Tooltip content={<PieGraphTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
-      ) : (
-        <h4>No Data</h4>
-      )}
+      <Skeleton loading={loading} type="card">
+        {pieData.length > 0 ? (
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                dataKey="value"
+                data={pieData}
+                label={renderLabel}
+                activeIndex={activeIndex}
+                onMouseOver={onMouseOver}
+                onMouseLeave={onMouseLeave}
+                activeShape={renderActiveShape}
+                isAnimationActive={false}
+              >
+                {pieData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${entry.name}`}
+                    fill={COLORS[index % COLORS.length]}
+                    stroke={pieData.length > 1 ? '#fff' : COLORS[index % COLORS.length]}
+                    fillOpacity={index === activeIndex || activeIndex === null ? 1 : 0.6}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<PieGraphTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <h4>No Data</h4>
+        )}
+      </Skeleton>
     </Card>
   );
 };
@@ -80,10 +83,12 @@ const MyPieChart = ({ chartData, title }) => {
 MyPieChart.propTypes = {
   chartData: PropTypes.instanceOf(Object),
   title: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 MyPieChart.defaultProps = {
   chartData: {},
   title: '',
+  loading: false,
 };
 export default MyPieChart;

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Table, Alert, Spin } from 'antd';
+import { Alert } from 'antd';
+import { Table } from 'components/Skeleton';
 import moment from 'moment';
 import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -314,24 +315,17 @@ const Firmware = ({
 
       <Header>
         <h1>Model Target Version</h1>
-        {trackAssignmentReady && (
-          <RoleProtectedBtn onClick={() => setAddAssignmentModal(true)}>
-            Add Model Target Version
-          </RoleProtectedBtn>
-        )}
+        <RoleProtectedBtn onClick={() => setAddAssignmentModal(true)}>
+          Add Model Target Version
+        </RoleProtectedBtn>
       </Header>
-      {trackAssignmentReady && (
-        <Table
-          scroll={{ x: 'max-content' }}
-          rowKey={i => i.modelId + i.firmwareVersionRecordId}
-          columns={assignmentColumns}
-          dataSource={trackAssignmentData}
-          pagination={false}
-        />
-      )}
-      {trackAssignmentLoading && (
-        <Spin className={styles.spinner} size="large" data-testid="trackAssignmentSpinner" />
-      )}
+      <Table
+        scroll={{ x: 'max-content' }}
+        columns={assignmentColumns}
+        dataSource={trackAssignmentData}
+        pagination={false}
+        loading={!trackAssignmentReady}
+      />
       {trackAssignmentError && (
         <Alert
           data-testid="trackAssignmentError"
@@ -343,22 +337,17 @@ const Firmware = ({
       )}
       <Header>
         <h1>All Versions</h1>
-        {firmwareReady && (
-          <RoleProtectedBtn onClick={() => setAddVersionModal(true)}>Add Version</RoleProtectedBtn>
-        )}
+        <RoleProtectedBtn onClick={() => setAddVersionModal(true)}>Add Version</RoleProtectedBtn>
       </Header>
-      {firmwareReady && (
-        <Table
-          scroll={{ x: 'max-content' }}
-          rowKey="id"
-          columns={versionColumn}
-          dataSource={firmwareData}
-          pagination={false}
-        />
-      )}
-      {firmwareLoading && (
-        <Spin className={styles.spinner} size="large" data-testid="firmwareSpinner" />
-      )}
+      <Table
+        scroll={{ x: 'max-content' }}
+        rowKey="id"
+        columns={versionColumn}
+        dataSource={firmwareData}
+        pagination={false}
+        loading={!firmwareReady}
+      />
+
       {firmwareError && (
         <Alert
           data-testid="firmwareError"

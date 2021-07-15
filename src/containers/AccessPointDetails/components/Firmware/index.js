@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Input, Tag, Select, Alert, Progress } from 'antd';
+import { Form, Input, Tag, Select, Alert, Progress } from 'antd';
+import { Card } from 'components/Skeleton';
 import moment from 'moment';
 import { DownloadOutlined, LoginOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
-import Loading from 'components/Loading';
 import Modal from 'components/Modal';
 import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 
@@ -41,6 +41,7 @@ const Firmware = ({
   onRequestEquipmentReboot,
   loadingFirmware,
   errorFirmware,
+  loading,
 }) => {
   const [form] = Form.useForm();
 
@@ -116,10 +117,6 @@ const Firmware = ({
     return 100;
   };
 
-  if (loadingFirmware) {
-    return <Loading data-testid="loadingFirmware" />;
-  }
-
   if (errorFirmware) {
     return (
       <Alert
@@ -155,7 +152,7 @@ const Firmware = ({
           </div>
         </WithRoles>
 
-        <Card title="Firmware">
+        <Card title="Firmware" loading={loadingFirmware || loading}>
           <Item label="Active Version">
             {status.activeSwVersion}
             <Tag className={styles.UpgradeState} color={alertColor(status.upgradeState)}>
@@ -176,7 +173,7 @@ const Firmware = ({
           </Item>
         </Card>
         <WithRoles>
-          <Card title="Upgrade">
+          <Card title="Upgrade" loading={loadingFirmware || loading}>
             {getRebootStatus() ? (
               <>
                 <div>
@@ -249,6 +246,7 @@ Firmware.propTypes = {
   onRequestEquipmentReboot: PropTypes.func,
   loadingFirmware: PropTypes.bool,
   errorFirmware: PropTypes.instanceOf(Object),
+  loading: PropTypes.bool,
 };
 
 Firmware.defaultProps = {
@@ -260,5 +258,6 @@ Firmware.defaultProps = {
   onRequestEquipmentReboot: () => {},
   loadingFirmware: true,
   errorFirmware: null,
+  loading: false,
 };
 export default Firmware;
