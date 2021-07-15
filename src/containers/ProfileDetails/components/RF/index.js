@@ -127,16 +127,21 @@ const RFForm = ({ form, details, extraFields }) => {
     >
       {({ getFieldValue }) => {
         const field = Object.keys(dependencies).find(
-          i => getFieldValue(['rfConfigMap', key, i]) !== dependencies[i]
+          i => getFieldValue(['rfConfigMap', key, i]) === dependencies[i]
         );
         const value = getFieldValue(['rfConfigMap', key, field]);
+        let formattedValue = '';
+        if (value === 'true' || value === 'false') {
+          formattedValue = value === 'true' ? 'enabled' : 'disabled';
+        } else {
+          formattedValue = `value: ${startCase(value)}`;
+        }
+
         return !field ? (
           inputField
         ) : (
           <DisabledText
-            title={`The ${radioTypes[key]} radio has "${startCase(field)}" ${
-              value === 'true' ? 'enabled' : 'disabled'
-            }.`}
+            title={`The ${radioTypes[key]} radio has "${startCase(field)}" ${formattedValue}.`}
           />
         );
       }}
@@ -170,7 +175,7 @@ const RFForm = ({ form, details, extraFields }) => {
           {({ getFieldValue }) => {
             return Object.keys(options.dependencies).every(key =>
               currentRadios.some(
-                radio => getFieldValue(['rfConfigMap', radio, key]) === options.dependencies[key]
+                radio => getFieldValue(['rfConfigMap', radio, key]) !== options.dependencies[key]
               )
             )
               ? Wrapper
@@ -284,7 +289,6 @@ const RFForm = ({ form, details, extraFields }) => {
                 <Option value="modeN">N</Option>
                 {key === 'is2dot4GHz' && (
                   <>
-                    <Option value="modeB">B</Option>
                     <Option value="modeG">G</Option>
                   </>
                 )}
@@ -346,7 +350,7 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate24mbps">24</Option>
             </Select>
           ),
-          dependencies: { autoCellSizeSelection: 'false' },
+          dependencies: { autoCellSizeSelection: 'true' },
         })}
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
@@ -362,14 +366,14 @@ const RFForm = ({ form, details, extraFields }) => {
               <Option value="rate54mbps">54</Option>
             </Select>
           ),
-          dependencies: { autoCellSizeSelection: 'false' },
+          dependencies: { autoCellSizeSelection: 'true' },
         })}
         {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
           min: -100,
-          max: 100,
-          error: '-100 - 100 dBm',
+          max: -40,
+          error: '-100 - -40 dBm',
           addOnText: 'dBm',
-          dependencies: { autoCellSizeSelection: 'false' },
+          dependencies: { autoCellSizeSelection: 'true' },
         })}
         {renderItem(
           'Client Disconnect Threshold',
@@ -380,19 +384,19 @@ const RFForm = ({ form, details, extraFields }) => {
             max: 0,
             error: '-100 - 0 dBm',
             addOnText: 'dBm',
-            dependencies: { autoCellSizeSelection: 'false' },
+            dependencies: { autoCellSizeSelection: 'true' },
           }
         )}
         {renderItem('Max EIRP Tx Power', ['useMaxTxPower'], renderOptionItem, {
           dropdown: defaultOptions,
-          dependencies: { autoCellSizeSelection: 'false' },
+          dependencies: { autoCellSizeSelection: 'true' },
         })}
         {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
           min: 1,
           max: 32,
           error: '1 - 32 dBm',
           addOnText: 'dBm',
-          dependencies: { autoCellSizeSelection: 'false', useMaxTxPower: 'false' },
+          dependencies: { autoCellSizeSelection: 'true', useMaxTxPower: 'true' },
         })}
         <p>Active Scan Setting:</p>
         {renderItem('Enable', ['activeScanSettings', 'enabled'], renderOptionItem, {
@@ -403,9 +407,9 @@ const RFForm = ({ form, details, extraFields }) => {
           ['activeScanSettings', 'scanFrequencySeconds'],
           renderInputItem,
           {
-            min: 0,
+            min: 10,
             max: 100,
-            error: '0 - 100 seconds',
+            error: '10 - 100 seconds',
             addOnText: 'sec',
           }
         )}
@@ -414,9 +418,9 @@ const RFForm = ({ form, details, extraFields }) => {
           ['activeScanSettings', 'scanDurationMillis'],
           renderInputItem,
           {
-            min: 0,
+            min: 50,
             max: 100,
-            error: '0 - 100 milliseconds',
+            error: '50 - 100 milliseconds',
             addOnText: 'ms',
           }
         )}

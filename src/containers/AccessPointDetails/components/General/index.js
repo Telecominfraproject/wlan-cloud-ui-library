@@ -672,8 +672,8 @@ const General = ({
             renderInputItem,
             {
               min: -100,
-              max: 100,
-              error: '-100 - 100 dBm',
+              max: -40,
+              error: '-100 - -40 dBm',
               addOnText: 'dBm',
               mapName: 'radioMap',
             }

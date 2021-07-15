@@ -111,7 +111,7 @@ describe('<RFForm />', () => {
 
       expect(queryByText('0 - 100')).not.toBeInTheDocument();
       expect(queryByText('0 - 65535 (Bytes)')).not.toBeInTheDocument();
-      expect(queryByText('-100 - 100 dBm')).not.toBeInTheDocument();
+      expect(queryByText('-100 - -40 dBm')).not.toBeInTheDocument();
       expect(queryByText('0 - 100 dBm')).not.toBeInTheDocument();
       expect(queryByText('0 - 100 sec')).not.toBeInTheDocument();
       expect(queryByText('0 - 100 ms')).not.toBeInTheDocument();
@@ -310,7 +310,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -331,7 +331,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -352,7 +352,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -373,7 +373,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - 0 dBm')).toBeVisible();
     });
   });
 
@@ -395,7 +395,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
 
@@ -416,7 +416,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
 
@@ -437,7 +437,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
 
@@ -458,7 +458,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
   // test Client Disconnect Threshold invalid inputs
@@ -647,7 +647,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 seconds')).toBeVisible();
+      expect(getByText('10 - 100 seconds')).toBeVisible();
     });
   });
 
@@ -668,7 +668,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 seconds')).toBeVisible();
+      expect(getByText('10 - 100 seconds')).toBeVisible();
     });
   });
 
@@ -689,7 +689,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 seconds')).toBeVisible();
+      expect(getByText('10 - 100 seconds')).toBeVisible();
     });
   });
 
@@ -710,7 +710,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 seconds')).toBeVisible();
+      expect(getByText('10 - 100 seconds')).toBeVisible();
     });
   });
   // test Scan Duration invalid inputs
@@ -731,7 +731,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 milliseconds')).toBeVisible();
+      expect(getByText('50 - 100 milliseconds')).toBeVisible();
     });
   });
 
@@ -752,7 +752,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 milliseconds')).toBeVisible();
+      expect(getByText('50 - 100 milliseconds')).toBeVisible();
     });
   });
 
@@ -773,7 +773,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 milliseconds')).toBeVisible();
+      expect(getByText('50 - 100 milliseconds')).toBeVisible();
     });
   });
 
@@ -794,7 +794,7 @@ describe('<RFForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('0 - 100 milliseconds')).toBeVisible();
+      expect(getByText('50 - 100 milliseconds')).toBeVisible();
     });
   });
 
