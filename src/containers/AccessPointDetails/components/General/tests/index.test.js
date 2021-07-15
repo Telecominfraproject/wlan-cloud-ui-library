@@ -115,7 +115,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
   it('error if the probe response threshold exceeds bounds for the 5GHz (U) setting', async () => {
@@ -129,7 +129,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
   it('error if the probe response threshold exceeds bounds for the 5GHz (L) setting', async () => {
@@ -143,7 +143,7 @@ describe('<General />', () => {
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
-      expect(getByText('-100 - 100 dBm')).toBeVisible();
+      expect(getByText('-100 - -40 dBm')).toBeVisible();
     });
   });
 

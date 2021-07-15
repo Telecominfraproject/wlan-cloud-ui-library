@@ -488,10 +488,10 @@ export const mockRf = {
       renderInput: 'renderInputItem',
       options: {
         min: -100,
-        max: 100,
-        error: '-100 - 100 dBm',
+        max: 0,
+        error: '-100 - 0 dBm',
         addOnText: 'dBm',
-        dependencies: { autoCellSizeSelection: 'false' },
+        dependencies: { autoCellSizeSelection: 'true' },
       },
     },
   ],
