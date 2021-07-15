@@ -26,7 +26,6 @@ const updateInProgressStates = new Set([
   'download_complete',
   'apply_initiated',
   'applying',
-  'apply_failed',
   'apply_complete',
   'reboot_initiated',
   'rebooting',
@@ -91,6 +90,7 @@ const Firmware = ({
     if (value === 'download_complete') return 'Download Completed';
     if (value === 'apply_initiated') return 'Initiated Firmware Flash';
     if (value === 'apply_complete') return 'Flashed to Inactive Bank';
+    if (value === 'apply_failed') return 'Upgrade Failed';
     if (value === 'applying') return 'Flashing Firmware';
     if (value === 'undefined') return 'Stable';
     return value.toUpperCase().replace(/_/g, ' ');
@@ -98,21 +98,23 @@ const Firmware = ({
 
   const alertColor = value => {
     if (value === 'out_of_date') return 'warning';
+    if (value === 'apply_failed') return 'error';
     if (value === null || value === 'up_to_date') return 'success';
-    if (value === 'download_complete' || value === 'apply_failed') return 'processing';
+    if (value === 'download_complete') return 'processing';
     return 'default';
   };
 
   const status = data?.status?.firmware?.detailsJSON || {};
 
-  const getRebootStatus = () => {
-    if (updateInProgressStates.has(status?.upgradeState)) return true;
-    return false;
-  };
+  const getRebootStatus = () => updateInProgressStates.has(status?.upgradeState);
 
   const getUpgradePercentage = value => {
-    if (value.includes('download')) return 30;
-    if (value.includes('apply')) return 60;
+    if (value.includes('download_initiated')) return 20;
+    if (value.includes('download_complete')) return 40;
+    if (value.includes('download')) return 50;
+    if (value.includes('apply_initiated')) return 60;
+    if (value.includes('apply_complete')) return 80;
+    if (value.includes('apply')) return 80;
     if (value.includes('reboot')) return 90;
     return 100;
   };
@@ -153,12 +155,7 @@ const Firmware = ({
         </WithRoles>
 
         <Card title="Firmware" loading={loadingFirmware || loading}>
-          <Item label="Active Version">
-            {status.activeSwVersion}
-            <Tag className={styles.UpgradeState} color={alertColor(status.upgradeState)}>
-              {alertText(status.upgradeState)}
-            </Tag>
-          </Item>
+          <Item label="Active Version">{status.activeSwVersion}</Item>
 
           <Item label="Inactive Version">
             {status.alternateSwVersion}
@@ -173,12 +170,21 @@ const Firmware = ({
           </Item>
         </Card>
         <WithRoles>
-          <Card title="Upgrade" loading={loadingFirmware || loading}>
+          <Card
+            loading={loadingFirmware || loading}
+            title={
+              <>
+                Upgrade
+                <Tag className={styles.UpgradeState} color={alertColor(status.upgradeState)}>
+                  {alertText(status.upgradeState)}
+                </Tag>
+              </>
+            }
+          >
             {getRebootStatus() ? (
               <>
                 <div>
-                  Upgrade {status?.targetSwVersion && `to ${status?.targetSwVersion}`} already in
-                  progress
+                  Upgrade {status?.targetSwVersion && `to ${status?.targetSwVersion}`} in progress
                 </div>
                 <Progress percent={getUpgradePercentage(status?.upgradeState)} />
               </>
@@ -193,9 +199,13 @@ const Firmware = ({
                         placeholder="Select a version to apply..."
                       >
                         {Object.keys(firmware).map(i => (
-                          <Option key={firmware[i].id} value={firmware[i].id}>
-                            {firmware[i].versionName}
-                          </Option>
+                          <>
+                            {status?.activeSwVersion !== firmware[i].versionName && (
+                              <Option key={firmware[i].id} value={firmware[i].id}>
+                                {firmware[i].versionName}
+                              </Option>
+                            )}
+                          </>
                         ))}
                       </Select>
                     </Item>
