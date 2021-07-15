@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import Skeleton from 'components/Skeleton';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from 'moment';
 
@@ -14,7 +15,7 @@ import styles from './index.module.scss';
 
 const TEN_MINUTE_UNIX = 600000;
 
-const MyLineChart = ({ title, data, options, refreshAfter }) => {
+const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
   const lineData = useMemo(() => {
     const result = [];
     let prevTimestamp = 0;
@@ -60,56 +61,61 @@ const MyLineChart = ({ title, data, options, refreshAfter }) => {
 
   return (
     <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
-      <div className={styles.Container}>
-        {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
-            <XAxis
-              dataKey="timestamp"
-              type="number"
-              domain={['dataMin', 'dataMax']}
-              tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
-              stroke="white"
-              tick={{ style: { fontSize: 11 } }}
-              scale="time"
-              hide={allLegendItemsHidden}
-              ticks={formattedGraphTicks}
-              interval="preserveStartEnd"
-            />
-            <YAxis
-              dataKey="value"
-              tickFormatter={tick => (options.formatter ? options.formatter(tick, 0) : tick)}
-              stroke="white"
-              allowDecimals={false}
-              domain={[0, 'auto']}
-              tick={{ style: { fontSize: 11 } }}
-              axisLine={false}
-              hide={allLegendItemsHidden}
-              tickLine={false}
-            />
-            <Tooltip content={<LineGraphTooltip formatter={options.formatter} />} cursor={false} />
-            <Legend
-              onClick={selectItem}
-              onMouseOver={handleLegendMouseEnter}
-              onMouseOut={handleLegendMouseLeave}
-            />
-            {lineData.map((s, i) => (
-              <Line
-                dataKey="value"
-                data={s.value}
-                name={s.key}
-                key={s.key}
-                dot={false}
-                stroke={COLORS[i]}
-                strokeWidth={2}
-                formatter={options.formatter}
-                hide={!legendOptions[s.key]}
-                strokeOpacity={hover === s.key || !hover ? 1 : 0.2}
+      <Skeleton loading={loading} type="card">
+        <div className={styles.Container}>
+          {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
+                stroke="white"
+                tick={{ style: { fontSize: 11 } }}
+                scale="time"
+                hide={allLegendItemsHidden}
+                ticks={formattedGraphTicks}
+                interval="preserveStartEnd"
               />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+              <YAxis
+                dataKey="value"
+                tickFormatter={tick => (options.formatter ? options.formatter(tick, 0) : tick)}
+                stroke="white"
+                allowDecimals={false}
+                domain={[0, 'auto']}
+                tick={{ style: { fontSize: 11 } }}
+                axisLine={false}
+                hide={allLegendItemsHidden}
+                tickLine={false}
+              />
+              <Tooltip
+                content={<LineGraphTooltip formatter={options.formatter} />}
+                cursor={false}
+              />
+              <Legend
+                onClick={selectItem}
+                onMouseOver={handleLegendMouseEnter}
+                onMouseOut={handleLegendMouseLeave}
+              />
+              {lineData.map((s, i) => (
+                <Line
+                  dataKey="value"
+                  data={s.value}
+                  name={s.key}
+                  key={s.key}
+                  dot={false}
+                  stroke={COLORS[i]}
+                  strokeWidth={2}
+                  formatter={options.formatter}
+                  hide={!legendOptions[s.key]}
+                  strokeOpacity={hover === s.key || !hover ? 1 : 0.2}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </Skeleton>
     </Card>
   );
 };
@@ -119,6 +125,7 @@ MyLineChart.propTypes = {
   data: PropTypes.instanceOf(Object),
   options: PropTypes.instanceOf(Object),
   refreshAfter: PropTypes.number,
+  loading: PropTypes.bool,
 };
 
 MyLineChart.defaultProps = {
@@ -126,5 +133,6 @@ MyLineChart.defaultProps = {
   data: {},
   options: {},
   refreshAfter: 300,
+  loading: false,
 };
 export default MyLineChart;

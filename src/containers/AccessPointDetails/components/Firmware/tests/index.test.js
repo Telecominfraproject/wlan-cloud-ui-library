@@ -173,14 +173,6 @@ describe('<Firmware />', () => {
     fireEvent.click(getByRole('button', { name: 'Confirm' }));
   });
 
-  it('loadingFirmware should show loading spinner', async () => {
-    const { getByTestId } = render(<Firmware />);
-
-    await waitFor(() => {
-      expect(getByTestId('loadingFirmware')).toBeInTheDocument();
-    });
-  });
-
   it('errorFirmware should show error alert', async () => {
     const { getByTestId } = render(
       <Firmware firmware={firmware} loadingFirmware={false} errorFirmware={{ test: 'test' }} />

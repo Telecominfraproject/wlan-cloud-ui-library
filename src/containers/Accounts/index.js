@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Table } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
@@ -8,6 +7,7 @@ import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
+import { Table } from 'components/Skeleton';
 
 import styles from './index.module.scss';
 import DefaultModal from './components/FormModal';
@@ -24,6 +24,7 @@ const Accounts = ({
   isAuth0Enabled,
   allUserRoles,
   FormModal,
+  loading,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -132,7 +133,7 @@ const Accounts = ({
         isAuth0Enabled={isAuth0Enabled}
         allUserRoles={allUserRoles}
       />
-      <Table dataSource={data} columns={columns} pagination={false} rowKey="id" />
+      <Table loading={loading} dataSource={data} columns={columns} pagination={false} rowKey="id" />
       {!isLastPage && (
         <div className={styles.LoadMore}>
           <Button onClick={onLoadMore}>Load More</Button>
@@ -153,7 +154,8 @@ Accounts.propTypes = {
   currentUserId: PropTypes.string,
   isAuth0Enabled: PropTypes.bool,
   allUserRoles: PropTypes.instanceOf(Array),
-  FormModal: PropTypes.node,
+  FormModal: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 Accounts.defaultProps = {
@@ -165,6 +167,7 @@ Accounts.defaultProps = {
   isAuth0Enabled: false,
   allUserRoles: ['SuperUser', 'CustomerIT'],
   FormModal: DefaultModal,
+  loading: false,
 };
 
 export default Accounts;

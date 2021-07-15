@@ -1,7 +1,7 @@
 import React from 'react';
 import { WifiOutlined, SwapOutlined, SignalFilled } from '@ant-design/icons';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Card } from 'components/Skeleton';
 
 import { formatBytes } from 'utils/formatFunctions';
 import styles from './index.module.scss';
@@ -16,9 +16,10 @@ const DeviceDetailCard = ({
   dataTransferred,
   dataThroughput,
   status,
+  loading,
 }) => {
   return (
-    <Card className={styles.DeviceDetailCard}>
+    <Card className={styles.DeviceDetailCard} loading={loading}>
       <div className={styles.mainHeadWrap}>
         <div className={styles.leftWrapContent}>
           <p>{name}</p>
@@ -58,6 +59,7 @@ DeviceDetailCard.propTypes = {
   status: PropTypes.string,
   dataTransferred: PropTypes.number,
   dataThroughput: PropTypes.number,
+  loading: PropTypes.bool,
 };
 
 DeviceDetailCard.defaultProps = {
@@ -70,6 +72,7 @@ DeviceDetailCard.defaultProps = {
   status: '',
   dataTransferred: 0,
   dataThroughput: 0,
+  loading: false,
 };
 
 export default DeviceDetailCard;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'antd';
+import { Link as RouterLink } from 'react-router-dom';
 
 import ThemeContext from 'contexts/ThemeContext';
 import Navbar from 'components/Navbar';
@@ -17,6 +18,7 @@ const AppLayout = ({
   totalAlarms,
   rightMenuItem,
   currentUserId,
+  Link,
 }) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -82,6 +84,7 @@ const AppLayout = ({
         totalAlarms={totalAlarms}
         rightMenuItem={rightMenuItem}
         currentUserId={currentUserId}
+        Link={Link}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
@@ -99,6 +102,7 @@ AppLayout.propTypes = {
   totalAlarms: PropTypes.number,
   rightMenuItem: PropTypes.node,
   currentUserId: PropTypes.number,
+  Link: PropTypes.func,
 };
 
 AppLayout.defaultProps = {
@@ -107,6 +111,7 @@ AppLayout.defaultProps = {
   totalAlarms: null,
   rightMenuItem: null,
   currentUserId: 0,
+  Link: RouterLink,
 };
 
 export default AppLayout;

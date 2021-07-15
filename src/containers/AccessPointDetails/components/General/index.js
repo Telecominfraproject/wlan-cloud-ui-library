@@ -1,16 +1,8 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  Form,
-  Table,
-  Collapse,
-  Select as AntdSelect,
-  notification,
-  Alert,
-  Empty,
-} from 'antd';
+import { Form, Table, Collapse, Select as AntdSelect, notification, Alert, Empty } from 'antd';
+import { Card } from 'components/Skeleton';
 import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
 import ThemeContext from 'contexts/ThemeContext';
@@ -45,6 +37,7 @@ const General = ({
   onSearchProfile,
   extraFields,
   extraGeneralCards,
+  loading,
   isFormDirty,
 }) => {
   const { radioTypes, routes } = useContext(ThemeContext);
@@ -510,7 +503,7 @@ const General = ({
         </RoleProtectedBtn>
       </div>
 
-      <Card title="Identity">
+      <Card title="Identity" loading={loading}>
         <Item
           label="Access Point Name"
           name="access"
@@ -533,11 +526,11 @@ const General = ({
         <Item label="Asset ID"> {data?.inventoryId}</Item>
       </Card>
 
-      <Card title="Profile">
+      <Card title="Profile" loading={loading}>
         <Item
           label="Access Point Profile"
           name="apProfile"
-          initialValue={data.profile.name}
+          initialValue={data?.profile?.name}
           rules={[
             {
               required: true,
@@ -592,7 +585,7 @@ const General = ({
       {extraGeneralCards}
       <Collapse expandIconPosition="right">
         <Panel header="Advanced Settings" name="settings">
-          {renderItem(' ', data.details.radioMap, 'radioType')}
+          {renderItem(' ', data?.details?.radioMap, 'radioType')}
           <p>Radio Specific Parameters:</p>
           {renderBandwidthLabels()}
           {renderItem('Enable Radio', advancedRadioMap, ['radioAdminState'], renderOptionItem, {
@@ -672,8 +665,8 @@ const General = ({
             renderInputItem,
             {
               min: -100,
-              max: 100,
-              error: '-100 - 100 dBm',
+              max: -40,
+              error: '-100 - -40 dBm',
               addOnText: 'dBm',
               mapName: 'radioMap',
             }
@@ -752,6 +745,7 @@ General.propTypes = {
   onSearchProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
   extraGeneralCards: PropTypes.node,
+  loading: PropTypes.bool,
   isFormDirty: PropTypes.bool,
 };
 
@@ -766,6 +760,7 @@ General.defaultProps = {
   onSearchProfile: null,
   extraFields: [],
   extraGeneralCards: null,
+  loading: false,
   isFormDirty: false,
 };
 

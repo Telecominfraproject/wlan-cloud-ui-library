@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card, Breadcrumb } from 'antd';
+import { Breadcrumb } from 'antd';
+import { Card } from 'components/Skeleton';
 import { WifiOutlined, LeftOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -46,6 +47,7 @@ const AccessPointDetails = ({
   showStatusAlarms,
   showFirmware,
   avatar,
+  loading,
 }) => {
   const TAB_LIST = [
     {
@@ -220,21 +222,23 @@ const AccessPointDetails = ({
           onSearchProfile={onSearchProfile}
           extraFields={extraGeneralFields}
           extraGeneralCards={extraGeneralCards}
+          loading={loading}
           isFormDirty={isFormDirty}
         />
       )}
-      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} />}
+      {tab === 'status' && <Status data={data} showAlarms={showStatusAlarms} loading={loading} />}
       {tab === 'location' && (
         <Location
           data={data}
           locations={locations}
           handleOnEquipmentSave={handleOnEquipmentSave}
           handleOnFormChange={handleOnFormChange}
+          loading={loading}
           isFormDirty={isFormDirty}
         />
       )}
       {tab === 'os' && (
-        <OS data={data} osData={osData} handleRefresh={handleRefresh} isFormDirty={isFormDirty} />
+        <OS data={data} osData={osData} handleRefresh={handleRefresh} loading={loading} />
       )}
       {tab === 'firmware' && (
         <Firmware
@@ -246,6 +250,7 @@ const AccessPointDetails = ({
           onRequestEquipmentReboot={onRequestEquipmentReboot}
           loadingFirmware={loadingFirmware}
           errorFirmware={errorFirmware}
+          loading={loading}
           isFormDirty={isFormDirty}
         />
       )}
@@ -292,6 +297,7 @@ AccessPointDetails.propTypes = {
   showStatusAlarms: PropTypes.bool,
   showFirmware: PropTypes.bool,
   avatar: PropTypes.node,
+  loading: PropTypes.bool,
 };
 
 AccessPointDetails.defaultProps = {
@@ -312,6 +318,7 @@ AccessPointDetails.defaultProps = {
   showStatusAlarms: true,
   showFirmware: true,
   avatar: null,
+  loading: false,
 };
 
 export default AccessPointDetails;

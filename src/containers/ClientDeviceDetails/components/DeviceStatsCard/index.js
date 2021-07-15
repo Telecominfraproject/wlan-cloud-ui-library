@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Card } from 'components/Skeleton';
 
 import styles from './index.module.scss';
 
-const DeviceStatsCard = ({ title, cardData }) => {
+const DeviceStatsCard = ({ title, cardData, loading }) => {
   return (
-    <Card title={title} className={styles.individualCard}>
+    <Card title={title} className={styles.individualCard} loading={loading}>
       {Object.keys(cardData).map(d => (
         <div key={d} className={styles.row}>
           <div>{d}</div>
@@ -20,9 +20,11 @@ const DeviceStatsCard = ({ title, cardData }) => {
 DeviceStatsCard.propTypes = {
   cardData: PropTypes.instanceOf(Object),
   title: PropTypes.string,
+  loading: PropTypes.bool,
 };
 DeviceStatsCard.defaultProps = {
   cardData: {},
   title: '',
+  loading: false,
 };
 export default DeviceStatsCard;

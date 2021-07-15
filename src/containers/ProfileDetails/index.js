@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, notification, Select } from 'antd';
+import { Form, notification, Select, Skeleton } from 'antd';
+import { Card } from 'components/Skeleton';
 import WithRoles, { Input } from 'components/WithRoles';
 import { LeftOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
@@ -43,6 +44,7 @@ import styles from './index.module.scss';
 const ProfileDetails = ({
   profileType,
   name,
+  loadingProfile,
   details,
   childProfiles,
   onUpdateProfile,
@@ -276,7 +278,9 @@ const ProfileDetails = ({
             <Button icon={<LeftOutlined />} onClick={handleOnBack}>
               Back
             </Button>
-            <h1>{`Edit ${name}`}</h1>
+            <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
+              <h1>{`Edit ${name}`}</h1>
+            </Skeleton>
           </div>
           <WithRoles>
             <div className={styles.HeaderDiv}>
@@ -289,7 +293,7 @@ const ProfileDetails = ({
             </div>
           </WithRoles>
         </Header>
-        <Card>
+        <Card loading={loadingProfile}>
           <Item label="Type">
             <Select className={globalStyles.field} defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
@@ -319,6 +323,7 @@ const ProfileDetails = ({
         {profileType === PROFILES.accessPoint && (
           <AccessPointForm
             form={form}
+            loading={loadingProfile}
             details={details}
             childProfiles={childProfiles}
             rfProfiles={rfProfiles}
@@ -414,6 +419,7 @@ ProfileDetails.propTypes = {
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
+  loadingProfile: PropTypes.bool,
 };
 
 ProfileDetails.defaultProps = {
@@ -442,6 +448,7 @@ ProfileDetails.defaultProps = {
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
   extraFields: [],
+  loadingProfile: false,
 };
 
 export default ProfileDetails;
