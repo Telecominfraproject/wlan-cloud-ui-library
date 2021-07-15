@@ -82,11 +82,12 @@ const Firmware = ({
     date,
     validationCode,
   }) => {
+    const firmwareUrl = filename.replace(/\s+/g, '');
     onCreateFirmware(
       modelId,
       versionName,
       description,
-      filename,
+      firmwareUrl,
       commit,
       date?.valueOf()?.toString(),
       validationCode
@@ -104,12 +105,13 @@ const Firmware = ({
     validationCode,
   }) => {
     const { id, createdTimestamp, lastModifiedTimestamp } = firmwareValues;
+    const firmwareUrl = filename.replace(/\s+/g, '');
     onUpdateFirmware(
       id,
       modelId,
       versionName,
       description,
-      filename,
+      firmwareUrl,
       commit,
       date?.valueOf()?.toString(),
       validationCode,
