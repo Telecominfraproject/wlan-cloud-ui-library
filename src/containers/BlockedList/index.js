@@ -26,11 +26,14 @@ const BlockedList = ({ data, onUpdateClient, onAddClient }) => {
   const deleteClient = () => {
     const formattedDetails = { ...activeMac.details };
 
-    if (!formattedDetails?.blocklistDetails) {
-      formattedDetails.blocklistDetails = {};
-    }
-    formattedDetails.blocklistDetails.enabled = false;
-    onUpdateClient(activeMac.macAddress, formattedDetails);
+    onUpdateClient(activeMac.macAddress, {
+      ...formattedDetails,
+      ...(formattedDetails?.blockedListDetails
+        ? {
+            enabled: false,
+          }
+        : {}),
+    });
   };
 
   const columns = [
