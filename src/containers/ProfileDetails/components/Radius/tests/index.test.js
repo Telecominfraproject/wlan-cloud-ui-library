@@ -86,7 +86,7 @@ describe('<RadiusForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
+      expect(getByText('Port can be a number between 1 and 65535')).toBeVisible();
     });
   });
 
@@ -110,7 +110,7 @@ describe('<RadiusForm />', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
+      expect(getByText('Port can be a number between 1 and 65535')).toBeVisible();
     });
 
     fireEvent.change(getByTestId('accountingPort0'), {

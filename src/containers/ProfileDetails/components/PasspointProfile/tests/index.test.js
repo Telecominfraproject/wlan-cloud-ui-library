@@ -171,7 +171,7 @@ describe('<PasspointProfileForm />', () => {
     });
 
     fireEvent.change(getByTestId('termsAndConditionsUpload'), { target: { files: [gifFile] } });
-    expect(getByText('You can only upload a JPG/PNG file!')).toBeVisible();
+    expect(getByText('You can only upload a JPG/PNG/TXT file!')).toBeVisible();
   });
 
   it('uploading a termsAndConditionsFile in png format should add image on screen', async () => {

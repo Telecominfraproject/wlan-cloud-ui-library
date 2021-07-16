@@ -32,7 +32,7 @@ const mockProps = {
 const MISSING_STATUS = 'Status field cannot be empty';
 const MISSING_PROTOCOL = 'Protocol field cannot be empty';
 const MISSING_PORT = 'Port field cannot be empty';
-const INVALID_PORT = 'Port expected between 1 - 6553';
+const INVALID_PORT = 'Port can be a number between 1 and 65535';
 const USED_PORT = 'Port is already used';
 
 describe('<FormModal />', () => {

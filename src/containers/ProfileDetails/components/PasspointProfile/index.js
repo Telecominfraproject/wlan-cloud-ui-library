@@ -124,17 +124,21 @@ const PasspointProfileForm = ({
   }, [selectedChildSsids]);
 
   const validateFile = (file, showMessages = false) => {
-    const isJpgOrPng =
-      file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
-    if (!isJpgOrPng) {
-      if (showMessages) message.error('You can only upload a JPG/PNG file!');
+    const isCorrectFormat =
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg' ||
+      file.type === `text/plain`;
+
+    if (!isCorrectFormat) {
+      if (showMessages) message.error('You can only upload a JPG/PNG/TXT file!');
       return false;
     }
 
     const isValidSize = file.size / 1024 < 400;
 
     if (!isValidSize) {
-      if (showMessages) message.error('Image must be smaller than 400KB!');
+      if (showMessages) message.error('File must be smaller than 400KB!');
       return false;
     }
 
@@ -446,7 +450,7 @@ const PasspointProfileForm = ({
         {authType === 'acceptance_of_terms_and_conditions' && (
           <Item label="Terms & Conditions" name="termsAndConditionsFile">
             <Upload
-              accept="image/*"
+              accept="image/*, text/plain"
               data-testid="termsAndConditionsUpload"
               fileList={termsAndConditionsFileList}
               beforeUpload={handleFileUpload}

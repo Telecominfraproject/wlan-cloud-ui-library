@@ -448,7 +448,7 @@ describe('<AccessPoints />', () => {
     fireEvent.change(getByTestId('svrPort'), { target: { value: 123456 } });
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
-      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
+      expect(getByText('Port can be a number between 1 and 65535')).toBeVisible();
     });
   });
 
@@ -478,7 +478,7 @@ describe('<AccessPoints />', () => {
       expect(
         queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
       ).not.toBeInTheDocument();
-      expect(queryByText('Port expected between 1 - 65535')).not.toBeInTheDocument();
+      expect(queryByText('Port can be a number between 1 and 65535')).not.toBeInTheDocument();
     });
   });
 
@@ -525,7 +525,7 @@ describe('<AccessPoints />', () => {
     fireEvent.change(getByTestId('svrPort'), { target: { value: 123456 } });
     await waitFor(() => {
       expect(getByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')).toBeVisible();
-      expect(getByText('Port expected between 1 - 65535')).toBeVisible();
+      expect(getByText('Port can be a number between 1 and 65535')).toBeVisible();
     });
     const disabledRadio = queryAllByText('Disabled');
     fireEvent.click(disabledRadio[1]);
@@ -557,7 +557,7 @@ describe('<AccessPoints />', () => {
       expect(
         queryByText('Enter in the format [0-255].[0-255].[0-255].[0-255]')
       ).not.toBeInTheDocument();
-      expect(queryByText('Port expected between 1 - 65535')).not.toBeInTheDocument();
+      expect(queryByText('Port can be a number between 1 and 65535')).not.toBeInTheDocument();
     });
     const disabledRadio = queryAllByText('Disabled');
     fireEvent.click(disabledRadio[1]);
@@ -887,7 +887,7 @@ describe('<AccessPoints />', () => {
       target: { value: faker.random.number({ min: -100, max: 0 }) },
     });
 
-    const errorMessage = 'Port expected between 1 - 65535';
+    const errorMessage = 'Port can be a number between 1 and 65535';
 
     await waitFor(() => {
       expect(getByText(errorMessage)).toBeVisible();

@@ -654,4 +654,118 @@ describe('<ProviderIdForm />', () => {
       expect(getByText('Locale field cannot be empty')).toBeVisible();
     });
   });
+
+  it('The first Domain Name input should be shown by default', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm
+            details={{
+              ...mockProviderId.details,
+            }}
+            form={form}
+          />
+        </Form>
+      );
+    };
+
+    const { getByPlaceholderText } = render(<ProviderIdFormComp />);
+
+    await waitFor(() => {
+      expect(getByPlaceholderText('Enter Domain Name 1')).toBeVisible();
+    });
+  });
+
+  it('Clicking the delete Domain Name button should remove the associated Domain Name input from the form', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm
+            details={{
+              ...mockProviderId.details,
+            }}
+            form={form}
+          />
+        </Form>
+      );
+    };
+
+    const { getByPlaceholderText, getByTestId, getByText } = render(<ProviderIdFormComp />);
+
+    fireEvent.click(getByText(/add domain name/i));
+
+    const input = getByPlaceholderText('Enter Domain Name 2');
+
+    fireEvent.click(getByTestId('removeDomain1'));
+
+    await waitFor(() => {
+      expect(input).not.toBeInTheDocument();
+    });
+  });
+
+  it('Error message should show if Domain Name is not a valid domain', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm
+            details={{
+              ...mockProviderId.details,
+            }}
+            form={form}
+          />
+        </Form>
+      );
+    };
+
+    const { getByPlaceholderText, getByText, queryByText } = render(<ProviderIdFormComp />);
+
+    fireEvent.click(getByText(/add domain name/i));
+
+    const input = getByPlaceholderText('Enter Domain Name 1');
+    fireEvent.change(input, { target: { value: faker.lorem.word() } });
+
+    const errorMsg = 'Enter a valid Domain Name';
+    await waitFor(() => {
+      expect(getByText(errorMsg)).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: faker.internet.domainName() } });
+
+    await waitFor(() => {
+      expect(queryByText(errorMsg)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Error message should show if Domain Name is duplicated', async () => {
+    const ProviderIdFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <ProviderIdForm
+            details={{
+              ...mockProviderId.details,
+            }}
+            form={form}
+          />
+        </Form>
+      );
+    };
+    const { getByPlaceholderText, getByText } = render(<ProviderIdFormComp />);
+
+    const errorMsg = 'Enter a unique Domain Name';
+    const domainName = faker.internet.domainName();
+    const input = getByPlaceholderText('Enter Domain Name 1');
+    fireEvent.change(input, { target: { value: domainName } });
+
+    fireEvent.click(getByText(/add domain name/i));
+    const input2 = getByPlaceholderText('Enter Domain Name 2');
+    fireEvent.change(input2, { target: { value: domainName } });
+
+    await waitFor(() => {
+      expect(getByText(errorMsg)).toBeVisible();
+    });
+  });
 });

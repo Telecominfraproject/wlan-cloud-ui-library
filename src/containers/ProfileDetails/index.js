@@ -220,13 +220,7 @@ const ProfileDetails = ({
             });
             return;
           }
-          if (!values.osuSsidProfileId?.value || !values.osuSsidProfileId?.label) {
-            notification.error({
-              message: 'Error',
-              description: 'An OSU SSID Profile is required.',
-            });
-            return;
-          }
+
           formattedData.model_type = 'PasspointProfile';
           formattedData = Object.assign(formattedData, formatPasspointForm(values, details));
         }

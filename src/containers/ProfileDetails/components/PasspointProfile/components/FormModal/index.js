@@ -81,7 +81,7 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
                   ) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('Port expected between 1 - 6553'));
+                  return Promise.reject(new Error('Port can be a number between 1 and 65535'));
                 },
               }),
             ]}
