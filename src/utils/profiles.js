@@ -367,6 +367,9 @@ export const formatProviderProfileForm = values => {
     ];
   }
 
+  formattedData.osuNaiShared = '';
+  formattedData.osuNaiStandalone = '';
+
   return formattedData;
 };
 
