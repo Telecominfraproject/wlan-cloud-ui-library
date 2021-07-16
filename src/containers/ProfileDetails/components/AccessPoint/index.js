@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Radio, Select as AntdSelect, Table, Empty, List, Divider } from 'antd';
+import {
+  Card,
+  Form,
+  Radio,
+  Select as AntdSelect,
+  Table,
+  Empty,
+  List,
+  Divider,
+  Tooltip as AntdTooltip,
+} from 'antd';
 import WithRoles, {
   RadioGroup as Group,
   Select,
@@ -657,25 +667,35 @@ const AccessPointForm = ({
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
         <Item>
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-            data-testid="ssidProfile"
-            showSearch={onSearchProfile}
-            placeholder="Select a SSID Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
-            loading={loadingSSIDProfiles}
-            notFoundContent={!loadingSSIDProfiles && <Empty />}
-            onChange={handleOnChangeSsid}
-            value="Select a SSID Profile"
+          <AntdTooltip
+            placement="topLeft"
+            title={
+              selectedChildProfiles?.length > 7
+                ? 'There can only be a maximum of 8 SSID profiles enabled on a profile'
+                : null
+            }
           >
-            {filteredOptions.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
-          </Select>
+            <Select
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
+              data-testid="ssidProfile"
+              showSearch={onSearchProfile}
+              placeholder="Select a SSID Profile"
+              filterOption={false}
+              onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
+              loading={loadingSSIDProfiles}
+              notFoundContent={!loadingSSIDProfiles && <Empty />}
+              onChange={handleOnChangeSsid}
+              value="Select a SSID Profile"
+              disabled={selectedChildProfiles?.length > 7}
+            >
+              {filteredOptions.map(i => (
+                <Option key={i.id} value={i.id}>
+                  {i.name}
+                </Option>
+              ))}
+            </Select>
+          </AntdTooltip>
         </Item>
         <Table
           dataSource={selectedChildProfiles}
