@@ -671,7 +671,7 @@ const AccessPointForm = ({
             placement="topLeft"
             title={
               selectedChildProfiles?.length > 7
-                ? 'There can only be a maximum of 8 SSID profiles enabled on a profile'
+                ? 'Maximum of 8 SSID profiles can be enabled on a profile'
                 : null
             }
           >
