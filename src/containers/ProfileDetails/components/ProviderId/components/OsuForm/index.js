@@ -56,11 +56,37 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             rules={[
               {
                 required: true,
-                message: 'Server uri field cannot be empty',
+                message: 'Server URI field cannot be empty',
               },
             ]}
           >
-            <Input placeholder="Enter a value for server uri" />
+            <Input placeholder="Enter Server URI" />
+          </Item>
+
+          <Item
+            name="osuNaiStandalone"
+            label="Standalone"
+            rules={[
+              {
+                required: true,
+                message: 'NAI Standalone field cannot be empty',
+              },
+            ]}
+          >
+            <Input placeholder="Enter Standalone" />
+          </Item>
+
+          <Item
+            name="osuNaiShared"
+            label="Shared"
+            rules={[
+              {
+                required: true,
+                message: 'NAI Shared field cannot be empty',
+              },
+            ]}
+          >
+            <Input placeholder="Enter Shared" />
           </Item>
 
           <Card

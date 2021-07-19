@@ -60,6 +60,7 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
               message: 'OSEN field cannot be empty',
             },
           ]}
+          tooltip="OSU Server-Only Authenticated on L2 Encryption Network"
         >
           <Select>
             <Option value="true">Enabled</Option>

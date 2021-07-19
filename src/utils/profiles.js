@@ -19,6 +19,10 @@ const getFileType = type => {
   if (type.startsWith('image/')) {
     return type === 'image/png' ? 'PNG' : 'JPG';
   }
+  if (type.startsWith('text/')) {
+    return 'TEXT';
+  }
+
   return type;
 };
 

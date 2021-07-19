@@ -190,7 +190,7 @@ const RadiusForm = ({ form, details }) => {
           return (
             <Card
               title="RADIUS Accounting Server"
-              bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
+              bodyStyle={{ padding: fields.length <= 0 && '0' }}
               extra={
                 <>
                   {fields.length >= MAX_RADIUS && (

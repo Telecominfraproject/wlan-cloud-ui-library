@@ -736,7 +736,7 @@ const AccessPointForm = ({
           <Card
             title="RADIUS Proxy Configuration"
             loading={loading}
-            bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
+            bodyStyle={{ padding: fields.length <= 0 && '0' }}
             extra={
               <WithRoles>
                 {fields.length >= MAX_RADIUS_PROXIES && (
