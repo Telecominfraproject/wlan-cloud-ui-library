@@ -68,7 +68,7 @@ const General = ({
     },
   ];
 
-  const [selectedProfile, setSelectedProfile] = useState(data.profile);
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
   const childProfiles = useMemo(() => {
     const result = {
@@ -86,6 +86,10 @@ const General = ({
     }
     return result;
   }, [selectedProfile]);
+
+  useEffect(() => {
+    setSelectedProfile(data?.profile);
+  }, [data.profile]);
 
   const handleProfileChange = value => {
     const i = profiles.find(o => {
@@ -116,7 +120,6 @@ const General = ({
       };
 
       currentRadios.forEach(radio => {
-        const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[radio].autoChannelSelection;
         formData.advancedRadioMap[radio] = {
           radioAdminState: advancedRadioMap[radio]?.radioAdminState || 'disabled',
           deauthAttackDetection: advancedRadioMap[radio]?.deauthAttackDetection ? 'true' : 'false',
@@ -140,14 +143,6 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
-          [isEnabled ? 'channelNumber' : 'manualChannelNumber']: isEnabled
-            ? radioMap[radio]?.channelNumber
-            : radioMap[radio]?.manualChannelNumber,
-
-          [isEnabled ? 'backupChannelNumber' : 'manualBackupChannelNumber']: isEnabled
-            ? radioMap[radio]?.backupChannelNumber
-            : radioMap[radio]?.manualBackupChannelNumber,
-
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
           },
@@ -164,6 +159,29 @@ const General = ({
       form.setFieldsValue({ ...formData });
     }
   }, [data]);
+
+  useEffect(() => {
+    if (data?.details) {
+      const currentRadios = Object.keys(advancedRadioMap);
+      const formData = {
+        radioMap: {},
+      };
+      currentRadios.forEach(radio => {
+        const isEnabled =
+          childProfiles.rf?.[0]?.details?.rfConfigMap?.[radio]?.autoChannelSelection;
+        formData.radioMap[radio] = {
+          [isEnabled ? 'channelNumber' : 'manualChannelNumber']: isEnabled
+            ? radioMap[radio]?.channelNumber
+            : radioMap[radio]?.manualChannelNumber,
+          [isEnabled ? 'backupChannelNumber' : 'manualBackupChannelNumber']: isEnabled
+            ? radioMap[radio]?.backupChannelNumber
+            : radioMap[radio]?.manualBackupChannelNumber,
+        };
+      });
+
+      form.setFieldsValue({ ...formData });
+    }
+  }, [selectedProfile]);
 
   const handleOnSave = () => {
     form
@@ -559,9 +577,13 @@ const General = ({
         </Item>
 
         <Item label="RF Profile">
-          <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
-            {childProfiles.rf?.[0]?.name || 'N/A'}
-          </Link>
+          {childProfiles.rf?.[0]?.name ? (
+            <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
+              {childProfiles.rf?.[0]?.name}
+            </Link>
+          ) : (
+            'N/A'
+          )}
         </Item>
         <Item label="Summary">
           <Item>
