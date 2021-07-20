@@ -4,7 +4,6 @@ import { Form, Select, Spin, Alert } from 'antd';
 
 import Modal from 'components/Modal';
 import ContainedSelect from 'components/ContainedSelect';
-import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
@@ -65,7 +64,6 @@ const AssignmentModal = ({
         ]}
       >
         <ContainedSelect
-          className={globalStyles.field}
           placeholder="Select Model ID"
           onChange={onModelChange}
           disabled={modelId || filteredModels.length === 0}
@@ -92,7 +90,6 @@ const AssignmentModal = ({
           <Spin data-testid="firmwareVersionLoading" className={styles.spinner} size="large" />
         ) : (
           <ContainedSelect
-            className={globalStyles.field}
             placeholder="Select Firmware Version"
             disabled={title === 'Add Model Target Version' && !model}
           >

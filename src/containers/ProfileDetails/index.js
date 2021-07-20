@@ -13,8 +13,6 @@ import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
 import { pageLayout } from 'utils/form';
 
-import globalStyles from 'styles/index.scss';
-
 import {
   formatSsidProfileForm,
   formatApProfileForm,
@@ -121,6 +119,14 @@ const ProfileDetails = ({
             return;
           }
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
+
+          const childPasspointProfileIds = childProfiles
+            .filter(profile => profile?.profileType === PROFILES.passpoint)
+            .map(profile => profile?.id);
+
+          if (childPasspointProfileIds.length) {
+            formattedData.childProfileIds.push(...childPasspointProfileIds);
+          }
         }
         if (profileType === PROFILES.accessPoint) {
           if (!values.rfProfileId?.value) {
@@ -289,7 +295,7 @@ const ProfileDetails = ({
         </Header>
         <Card loading={loadingProfile}>
           <Item label="Type">
-            <Select className={globalStyles.field} defaultValue={profileType} disabled>
+            <Select defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
             </Select>
           </Item>
@@ -298,7 +304,7 @@ const ProfileDetails = ({
             label="Profile Name"
             rules={[{ required: true, message: 'Please input your new profile name' }]}
           >
-            <Input className={globalStyles.field} placeholder="Enter profile name" />
+            <Input placeholder="Enter profile name" />
           </Item>
         </Card>
         {profileType === PROFILES.ssid && (

@@ -4,7 +4,6 @@ import moment from 'moment';
 import { Form, Input, DatePicker } from 'antd';
 
 import Modal from 'components/Modal';
-import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
@@ -50,7 +49,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={globalStyles.field} disabled={modelId} />
+        <Input disabled={modelId} />
       </Item>
       <Item
         label="Version Name"
@@ -62,7 +61,7 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={globalStyles.field} />
+        <Input />
       </Item>
       <Item
         label="Firmware URL"
@@ -74,18 +73,18 @@ const VersionModal = ({
           },
         ]}
       >
-        <Input className={globalStyles.field} />
+        <Input />
       </Item>
 
       <Item label="Commit" name="commit">
-        <Input className={globalStyles.field} />
+        <Input />
       </Item>
 
       <Item label="Release Date" name="date">
         <DatePicker data-testid="datePicker" showTime />
       </Item>
       <Item label="Description" name="description">
-        <Input.TextArea rows={3} className={globalStyles.field} />
+        <Input.TextArea rows={3} />
       </Item>
     </Form>
   );

@@ -8,8 +8,6 @@ import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import { formatFile } from 'utils/profiles';
 
-import globalStyles from 'styles/index.scss';
-
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
@@ -93,7 +91,7 @@ const PasspointProfileForm = ({
         } || null,
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
-        addressAsString: details?.hessid?.addressAsString || null,
+        addressAsString: details?.hessid?.addressAsString || '00:00:00:00:00:00',
       },
       accessNetworkType: details?.accessNetworkType || 'private_network',
       networkAuthenticationType: authType,
@@ -365,6 +363,10 @@ const PasspointProfileForm = ({
           label="HESSID"
           name={['hessid', 'addressAsString']}
           rules={[
+            {
+              required: true,
+              message: 'Please input an HESSID',
+            },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (
@@ -382,7 +384,7 @@ const PasspointProfileForm = ({
             }),
           ]}
         >
-          <Input placeholder="00:00:00:00:00:00" className={globalStyles.field} />
+          <Input placeholder="Enter HESSID" />
         </Item>
         <Item
           label="ASRA"

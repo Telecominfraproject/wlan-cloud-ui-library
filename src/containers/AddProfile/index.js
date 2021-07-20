@@ -23,7 +23,6 @@ import {
   profileTypes,
 } from 'utils/profiles';
 
-import globalStyles from 'styles/index.scss';
 import styles from './index.module.scss';
 
 import { PROFILES } from '../ProfileDetails/constants';
@@ -306,11 +305,7 @@ const AddProfile = ({
                 },
               ]}
             >
-              <Select
-                className={globalStyles.field}
-                onChange={value => setType(value)}
-                placeholder="Select Profile Type"
-              >
+              <Select onChange={value => setType(value)} placeholder="Select Profile Type">
                 {Object.keys(profileTypes).map(type => (
                   <Option key={type} value={type} disabled={type === 'bonjour'}>
                     {profileTypes[type]}
@@ -325,11 +320,7 @@ const AddProfile = ({
               onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your new profile name' }]}
             >
-              <Input
-                id="profileName"
-                className={globalStyles.field}
-                placeholder="Enter profile name"
-              />
+              <Input id="profileName" placeholder="Enter profile name" />
             </Item>
           </Card>
           {profileType === PROFILES.ssid && (

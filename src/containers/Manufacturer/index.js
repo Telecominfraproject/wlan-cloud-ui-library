@@ -6,7 +6,6 @@ import { UploadOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import Header from 'components/Header';
-import globalStyles from 'styles/index.scss';
 
 import { useRoles } from 'contexts/RolesContext';
 
@@ -127,7 +126,6 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
               placeholder="OUI String"
               enterButton="Find"
               maxLength={8}
-              className={globalStyles.field}
               onSearch={handleOnSearch}
             />
           </Item>
@@ -141,7 +139,6 @@ const Manufacturer = ({ onSearchOUI, onUpdateOUI, returnedOUI, fileUpload, loadi
                 initialValue={returnedOUI.manufacturerAlias}
               >
                 <Input
-                  className={globalStyles.field}
                   placeholder="Please enter a concise and widely recognized brand name."
                   maxLength={20}
                 />
