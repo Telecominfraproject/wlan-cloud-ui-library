@@ -62,7 +62,7 @@ const General = ({
     },
   ];
 
-  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(data.profile);
 
   const childProfiles = useMemo(() => {
     const result = {
