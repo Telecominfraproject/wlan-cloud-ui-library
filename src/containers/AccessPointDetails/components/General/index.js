@@ -11,13 +11,7 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
-import {
-  USER_FRIENDLY_RATES,
-  USER_FRIENDLY_BANDWIDTHS,
-  ALLOWED_CHANNELS_STEP,
-  MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ,
-  MAX_CHANNEL_WIDTH_160MHZ,
-} from './constants';
+import { USER_FRIENDLY_RATES, USER_FRIENDLY_BANDWIDTHS } from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -364,7 +358,7 @@ const General = ({
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(radioMap)).map(key => {
             const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key].autoChannelSelection;
-            const bandwidth = childProfiles.rf?.[0]?.details?.rfConfigMap[key].channelBandwidth;
+
             let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
@@ -403,7 +397,7 @@ const General = ({
 
             const powerLevels = data?.details?.radioMap?.[key]?.allowedChannelsPowerLevels ?? [];
 
-            let allowedChannels = powerLevels
+            const allowedChannels = powerLevels
               .filter(item => {
                 if (channel.dataIndex === 'manualBackupChannelNumber') {
                   return !item.dfs;
@@ -411,17 +405,7 @@ const General = ({
                 return item;
               })
               .map(item => item?.channelNumber)
-              .sort((a, b) => a - b)
-              .filter((__, index) => index % ALLOWED_CHANNELS_STEP[bandwidth] === 0);
-
-            if (bandwidth !== 'is20MHz') {
-              allowedChannels = allowedChannels.filter(item => {
-                if (bandwidth === 'is160MHz') {
-                  return item <= MAX_CHANNEL_WIDTH_160MHZ;
-                }
-                return item <= MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ;
-              });
-            }
+              .sort((a, b) => a - b);
 
             return (
               <Item
