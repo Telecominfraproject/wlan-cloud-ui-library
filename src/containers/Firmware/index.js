@@ -300,6 +300,7 @@ const Firmware = ({
         firmwareModelError={firmwareModelError}
         firmwareTrackLoading={firmwareTrackLoading}
         firmwareModelLoading={firmwareModelLoading}
+        isEdit
       />
       <VersionModal
         onCancel={() => setAddVersionModal(false)}
@@ -312,6 +313,7 @@ const Firmware = ({
         visible={editVersionModal}
         onSubmit={updateFirmware}
         title="Edit Firmware Version"
+        isEdit
         {...firmwareValues}
       />
 

@@ -20,11 +20,12 @@ const VersionModal = ({
   commit,
   releaseDate,
   filename,
+  isEdit,
 }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (visible) {
+    if (visible && isEdit) {
       form.resetFields();
       form.setFieldsValue({
         modelId,
@@ -32,7 +33,6 @@ const VersionModal = ({
         description,
         commit,
         filename,
-
         date: parseInt(releaseDate, 10) ? moment(parseInt(releaseDate, 10)) : null,
       });
     }
@@ -122,6 +122,7 @@ VersionModal.propTypes = {
   commit: PropTypes.string,
   releaseDate: PropTypes.string,
   filename: PropTypes.string,
+  isEdit: PropTypes.bool,
 };
 
 VersionModal.defaultProps = {
@@ -135,6 +136,7 @@ VersionModal.defaultProps = {
   commit: '',
   releaseDate: null,
   filename: '',
+  isEdit: false,
 };
 
 export default VersionModal;
