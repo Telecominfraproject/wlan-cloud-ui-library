@@ -132,6 +132,7 @@ describe('<AssignmentModal />', () => {
         modelId="ea8300-ca"
         firmwareVersionRecordId="3"
         onSubmit={submitSpy}
+        isEdit
       />
     );
 
