@@ -9,7 +9,8 @@ import {
   Empty,
   List,
   Divider,
-  Tooltip as AntdTooltip,
+  Tag,
+  Typography,
 } from 'antd';
 import WithRoles, {
   RadioGroup as Group,
@@ -35,6 +36,7 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
+const { Text } = Typography;
 
 const MAX_GRE_TUNNELS = 1;
 const MAX_RADIUS_PROXIES = 5;
@@ -260,9 +262,34 @@ const AccessPointForm = ({
     if (list) setCertFiles({ ...certFiles, [key]: list });
   };
 
+  const selectedChildProfilesByRadio = useMemo(() => {
+    const result = {
+      is2dot4GHz: [],
+      is5GHz: [],
+      is5GHzU: [],
+      is5GHzL: [],
+    };
+
+    selectedChildProfiles.forEach(profile => {
+      profile.details.appliedRadios.forEach(appliedRadio => {
+        result[appliedRadio].push(profile);
+      });
+    });
+
+    return result;
+  }, [selectedChildProfiles]);
+
   const filteredOptions = ssidProfiles.filter(
     i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
   );
+
+  const isProfileDisabled = appliedRadios => {
+    let result = false;
+    appliedRadios.forEach(radio => {
+      if (selectedChildProfilesByRadio[radio].length >= 8) result = true;
+    });
+    return result;
+  };
 
   const validateNtpServer = (_rule, value) => {
     const ntpServerParts = value.split('.').reverse();
@@ -667,36 +694,41 @@ const AccessPointForm = ({
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
         <Item>
-          <AntdTooltip
-            placement="topLeft"
-            title={
-              selectedChildProfiles?.length > 7
-                ? 'Maximum of 8 SSID profiles can be enabled on a profile'
-                : null
-            }
+          <Select
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
+            data-testid="ssidProfile"
+            showSearch={onSearchProfile}
+            placeholder="Select a SSID Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
+            loading={loadingSSIDProfiles}
+            notFoundContent={!loadingSSIDProfiles && <Empty />}
+            onChange={handleOnChangeSsid}
+            value="Select a SSID Profile"
           >
-            <Select
-              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-              data-testid="ssidProfile"
-              showSearch={onSearchProfile}
-              placeholder="Select a SSID Profile"
-              filterOption={false}
-              onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
-              loading={loadingSSIDProfiles}
-              notFoundContent={!loadingSSIDProfiles && <Empty />}
-              onChange={handleOnChangeSsid}
-              value="Select a SSID Profile"
-              disabled={selectedChildProfiles?.length > 7}
-            >
-              {filteredOptions.map(i => (
-                <Option key={i.id} value={i.id}>
-                  {i.name}
-                </Option>
-              ))}
-            </Select>
-          </AntdTooltip>
+            {filteredOptions.map(i => (
+              <Option
+                key={i.id}
+                value={i.id}
+                disabled={isProfileDisabled(i?.details?.appliedRadios)}
+              >
+                {i.name}
+              </Option>
+            ))}
+          </Select>
         </Item>
+        <div style={{ marginBottom: 8 }}>
+          <Text>Max 8 per radio: </Text>
+          {Object.keys(radioTypes).map(radio => (
+            <Tag
+              key={radio}
+              color={selectedChildProfilesByRadio[radio].length < 8 ? 'processing' : 'error'}
+            >
+              {radioTypes[radio]}: {selectedChildProfilesByRadio[radio].length}
+            </Tag>
+          ))}
+        </div>
         <Table
           dataSource={selectedChildProfiles}
           columns={columns}
