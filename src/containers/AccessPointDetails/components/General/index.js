@@ -11,13 +11,7 @@ import Tooltip from 'components/Tooltip';
 
 import { sortRadioTypes } from 'utils/sortRadioTypes';
 import { pageLayout } from 'utils/form';
-import {
-  USER_FRIENDLY_RATES,
-  USER_FRIENDLY_BANDWIDTHS,
-  ALLOWED_CHANNELS_STEP,
-  MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ,
-  MAX_CHANNEL_WIDTH_160MHZ,
-} from './constants';
+import { USER_FRIENDLY_RATES, USER_FRIENDLY_BANDWIDTHS } from './constants';
 
 import styles from '../../index.module.scss';
 
@@ -87,6 +81,10 @@ const General = ({
     return result;
   }, [selectedProfile]);
 
+  useEffect(() => {
+    setSelectedProfile(data?.profile);
+  }, [data.profile]);
+
   const handleProfileChange = value => {
     const i = profiles.find(o => {
       return o.id === value;
@@ -116,7 +114,6 @@ const General = ({
       };
 
       currentRadios.forEach(radio => {
-        const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[radio].autoChannelSelection;
         formData.advancedRadioMap[radio] = {
           radioAdminState: advancedRadioMap[radio]?.radioAdminState || 'disabled',
           deauthAttackDetection: advancedRadioMap[radio]?.deauthAttackDetection ? 'true' : 'false',
@@ -140,14 +137,6 @@ const General = ({
           rxCellSizeDb: {
             value: radioMap[radio]?.rxCellSizeDb?.value || 0,
           },
-          [isEnabled ? 'channelNumber' : 'manualChannelNumber']: isEnabled
-            ? radioMap[radio]?.channelNumber
-            : radioMap[radio]?.manualChannelNumber,
-
-          [isEnabled ? 'backupChannelNumber' : 'manualBackupChannelNumber']: isEnabled
-            ? radioMap[radio]?.backupChannelNumber
-            : radioMap[radio]?.manualBackupChannelNumber,
-
           probeResponseThresholdDb: {
             value: radioMap[radio]?.probeResponseThresholdDb?.value || 0,
           },
@@ -164,6 +153,29 @@ const General = ({
       form.setFieldsValue({ ...formData });
     }
   }, [data]);
+
+  useEffect(() => {
+    if (data?.details) {
+      const currentRadios = Object.keys(advancedRadioMap);
+      const formData = {
+        radioMap: {},
+      };
+      currentRadios.forEach(radio => {
+        const isEnabled =
+          childProfiles.rf?.[0]?.details?.rfConfigMap?.[radio]?.autoChannelSelection;
+        formData.radioMap[radio] = {
+          [isEnabled ? 'channelNumber' : 'manualChannelNumber']: isEnabled
+            ? radioMap[radio]?.channelNumber
+            : radioMap[radio]?.manualChannelNumber,
+          [isEnabled ? 'backupChannelNumber' : 'manualBackupChannelNumber']: isEnabled
+            ? radioMap[radio]?.backupChannelNumber
+            : radioMap[radio]?.manualBackupChannelNumber,
+        };
+      });
+
+      form.setFieldsValue({ ...formData });
+    }
+  }, [selectedProfile]);
 
   const handleOnSave = () => {
     form
@@ -346,7 +358,7 @@ const General = ({
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(radioMap)).map(key => {
             const isEnabled = childProfiles.rf?.[0]?.details?.rfConfigMap[key].autoChannelSelection;
-            const bandwidth = childProfiles.rf?.[0]?.details?.rfConfigMap[key].channelBandwidth;
+
             let channel;
             if (label === 'Active Channel') {
               channel = isEnabled
@@ -385,7 +397,7 @@ const General = ({
 
             const powerLevels = data?.details?.radioMap?.[key]?.allowedChannelsPowerLevels ?? [];
 
-            let allowedChannels = powerLevels
+            const allowedChannels = powerLevels
               .filter(item => {
                 if (channel.dataIndex === 'manualBackupChannelNumber') {
                   return !item.dfs;
@@ -393,17 +405,7 @@ const General = ({
                 return item;
               })
               .map(item => item?.channelNumber)
-              .sort((a, b) => a - b)
-              .filter((__, index) => index % ALLOWED_CHANNELS_STEP[bandwidth] === 0);
-
-            if (bandwidth !== 'is20MHz') {
-              allowedChannels = allowedChannels.filter(item => {
-                if (bandwidth === 'is160MHz') {
-                  return item <= MAX_CHANNEL_WIDTH_160MHZ;
-                }
-                return item <= MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ;
-              });
-            }
+              .sort((a, b) => a - b);
 
             return (
               <Item
@@ -559,9 +561,13 @@ const General = ({
         </Item>
 
         <Item label="RF Profile">
-          <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
-            {childProfiles.rf?.[0]?.name || 'N/A'}
-          </Link>
+          {childProfiles.rf?.[0]?.name ? (
+            <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
+              {childProfiles.rf?.[0]?.name}
+            </Link>
+          ) : (
+            'N/A'
+          )}
         </Item>
         <Item label="Summary">
           <Item>
