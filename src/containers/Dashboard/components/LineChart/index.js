@@ -13,27 +13,8 @@ import { formatTicks } from 'utils/formatFunctions';
 import Card from '../Card';
 import styles from './index.module.scss';
 
-const TEN_MINUTE_UNIX = 600000;
-
-const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
-  const lineData = useMemo(() => {
-    const result = [];
-    let prevTimestamp = 0;
-    Object.keys(data).forEach(key => {
-      const arr = [];
-      (data[key].value ?? []).forEach(({ timestamp, value }, index) => {
-        if (prevTimestamp - timestamp > TEN_MINUTE_UNIX && index !== 0) {
-          arr.push({ timestamp: prevTimestamp - TEN_MINUTE_UNIX, value: null });
-        }
-        arr.push({ timestamp, value });
-        prevTimestamp = timestamp;
-      });
-      result.push({ key: data[key].key, value: arr.sort((a, b) => a.timestamp - b.timestamp) });
-    });
-    return result;
-  }, [data]);
-
-  const names = useMemo(() => lineData.map(s => s.key), []);
+const MyLineChart = ({ title, data, options, refreshAfter, loading, lines }) => {
+  const names = useMemo(() => lines.map(l => l.key), []);
 
   const {
     hover,
@@ -45,19 +26,14 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
   } = useChartLegend(names);
 
   const formattedGraphTicks = useMemo(() => {
-    let firstTs = Number.MAX_SAFE_INTEGER;
-    let lastTs = 0;
-
-    lineData.forEach(type => {
-      firstTs = Math.min(type?.value?.[0]?.timestamp, firstTs);
-      lastTs = Math.max(type.value?.[type.value.length - 1]?.timestamp, lastTs);
-    });
+    const firstTs = data[0]?.timestamp || 0;
+    const lastTs = data[data.length - 1]?.timestamp;
 
     if (firstTs && lastTs) {
       return formatTicks(firstTs, lastTs, 4);
     }
     return [];
-  }, [lineData]);
+  }, [data]);
 
   return (
     <Card title={title} extra={<Timer refreshAfter={refreshAfter} />}>
@@ -65,7 +41,7 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
         <div className={styles.Container}>
           {allLegendItemsHidden && <span className={styles.Message}>No Data Available</span>}
           <ResponsiveContainer width="100%" height={400}>
-            <LineChart margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
+            <LineChart margin={{ top: 20, right: 20, bottom: 0, left: 0 }} data={data}>
               <XAxis
                 dataKey="timestamp"
                 type="number"
@@ -79,7 +55,6 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
                 interval="preserveStartEnd"
               />
               <YAxis
-                dataKey="value"
                 tickFormatter={tick => (options.formatter ? options.formatter(tick, 0) : tick)}
                 stroke="white"
                 allowDecimals={false}
@@ -94,22 +69,21 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading }) => {
                 cursor={false}
               />
               <Legend
-                onClick={selectItem}
+                onClick={e => selectItem({ value: e.dataKey })}
                 onMouseOver={handleLegendMouseEnter}
                 onMouseOut={handleLegendMouseLeave}
               />
-              {lineData.map((s, i) => (
+              {lines.map((line, i) => (
                 <Line
-                  dataKey="value"
-                  data={s.value}
-                  name={s.key}
-                  key={s.key}
+                  dataKey={line.key}
+                  key={line.key}
+                  name={line.name}
                   dot={false}
                   stroke={COLORS[i]}
                   strokeWidth={2}
                   formatter={options.formatter}
-                  hide={!legendOptions[s.key]}
-                  strokeOpacity={hover === s.key || !hover ? 1 : 0.2}
+                  hide={!legendOptions[line.key]}
+                  strokeOpacity={hover === line.name || !hover ? 1 : 0.2}
                 />
               ))}
             </LineChart>
@@ -126,6 +100,7 @@ MyLineChart.propTypes = {
   options: PropTypes.instanceOf(Object),
   refreshAfter: PropTypes.number,
   loading: PropTypes.bool,
+  lines: PropTypes.instanceOf(Array),
 };
 
 MyLineChart.defaultProps = {
@@ -134,5 +109,6 @@ MyLineChart.defaultProps = {
   options: {},
   refreshAfter: 300,
   loading: false,
+  lines: [],
 };
 export default MyLineChart;
