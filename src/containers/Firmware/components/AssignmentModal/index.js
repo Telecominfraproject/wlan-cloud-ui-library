@@ -26,11 +26,12 @@ const AssignmentModal = ({
   firmwareModelLoading,
   firmwareTrackError,
   firmwareTrackLoading,
+  isEdit,
 }) => {
   const [form] = Form.useForm();
   const [model, setModel] = useState();
   useEffect(() => {
-    if (visible) {
+    if (visible && isEdit) {
       form.resetFields();
       form.setFieldsValue({ modelId, firmwareVersionRecordId });
     }
@@ -169,6 +170,7 @@ AssignmentModal.propTypes = {
   firmwareModelLoading: PropTypes.bool,
   firmwareTrackError: PropTypes.instanceOf(Object),
   firmwareTrackLoading: PropTypes.bool,
+  isEdit: PropTypes.bool,
 };
 
 AssignmentModal.defaultProps = {
@@ -186,6 +188,7 @@ AssignmentModal.defaultProps = {
   firmwareModelLoading: false,
   firmwareVersionLoading: true,
   firmwareTrackLoading: true,
+  isEdit: false,
 };
 
 export default AssignmentModal;

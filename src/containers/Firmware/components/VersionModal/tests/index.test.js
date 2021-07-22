@@ -78,6 +78,7 @@ describe('<VersionModal />', () => {
         filename="https://tip-read:tip-read@tip.jfrog.io/artifactory/tip-wlan-ap-firmware/ap2220/ap2220-2020-06-25-ce03472.tar.gz"
         validationCode="c69370aa5b6622d91a0fba3a5441f31c"
         onSubmit={submitSpy}
+        isEdit
       />
     );
 
