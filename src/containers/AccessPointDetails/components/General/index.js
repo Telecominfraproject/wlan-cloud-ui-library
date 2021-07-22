@@ -146,7 +146,6 @@ const General = ({
           eirpTxPower: {
             value: radioMap[radio]?.eirpTxPower?.value || 0,
           },
-          perimeterDetectionEnabled: radioMap[radio]?.perimeterDetectionEnabled ? 'true' : 'false',
         };
       });
 
@@ -697,15 +696,6 @@ const General = ({
             addOnText: 'dBm',
             mapName: 'radioMap',
           })}
-
-          <p>Radio Resource Management:</p>
-          {renderItem(
-            'Perimeter Detection',
-            radioMap,
-            ['perimeterDetectionEnabled'],
-            renderOptionItem,
-            { dropdown: defaultOptionsBoolean, mapName: 'radioMap' }
-          )}
 
           <p>Steering Threshold:</p>
           {renderItem(
