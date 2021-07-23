@@ -72,8 +72,8 @@ const mockProps = {
   tableData: [
     {
       cellSize: [-90, -90, -90],
-      manualChannelNumber: [36, 6, 149],
-      manualBackupChannelNumber: [45, 11, 154],
+      manualChannelNumber: [6, 36, 149],
+      manualBackupChannelNumber: [11, 52, 153],
       clientDisconnectThreshold: [-90, -90, -90],
       id: '1',
       key: '1',
@@ -81,7 +81,58 @@ const mockProps = {
       name: 'AP 1',
       probeResponseThreshold: [-90, -90, -90],
       snrDrop: [30, 30, 20],
-      radioMap: ['is5GHz', 'is2dot4GHz', 'is5GHzL'],
+      radioMap: ['2.4GHz', '5GHz (L)', '5GHz (U)'],
+      allowedChannels: [
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 11,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 20,
+          },
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 6,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 20,
+          },
+        ],
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 153,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 149,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+        ],
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 36,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 52,
+            powerLevel: 18,
+            dfs: true,
+            channelWidth: 80,
+          },
+        ],
+      ],
     },
   ],
   onSaveChanges: () => {},
@@ -91,6 +142,7 @@ const mockProps = {
     { id: 2, name: 'Menlo Park' },
     { id: 8, name: 'Ottawa' },
   ],
+  loading: false,
 };
 
 const ENTER = { keyCode: 13 };
@@ -135,6 +187,10 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
     );
@@ -156,21 +212,25 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
     );
-    fireEvent.change(input, { target: { value: '166, 0, -1' } });
+    fireEvent.change(input, { target: { value: '7, 36, 149' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText(/allowed channels for/i)).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText('Enter Active Channels')).toBeVisible();
     });
   });
 
@@ -185,26 +245,30 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualBackupChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`
     );
-    fireEvent.change(input, { target: { value: '166, 0, -1' } });
+    fireEvent.change(input, { target: { value: '7, 36, 149' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText(/allowed channels for/i)).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('1 - 165')).toBeVisible();
+      expect(getByText('Enter Backup Channels')).toBeVisible();
     });
   });
 
   it('error should be shown if Cell Size input is outside range or empty', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -212,24 +276,34 @@ describe('<BulkEditAccessPoints />', () => {
 
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-cellSize`);
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-cellSize`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-cellSize`);
     fireEvent.change(input, { target: { value: '-101, 101, 0' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - 0')).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - 0')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '-90, -90, -90' } });
+
+    await waitFor(() => {
+      expect(queryByText('-100 - 0')).not.toBeInTheDocument();
     });
   });
 
   it('error should be shown if Probe Response Threshold input is outside range or empty', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -239,6 +313,10 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-probeResponseThreshold`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-probeResponseThreshold`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-probeResponseThreshold`
     );
@@ -246,19 +324,25 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - -40')).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - -40')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '-90, -90, -90' } });
+
+    await waitFor(() => {
+      expect(queryByText('-100 - -40')).not.toBeInTheDocument();
     });
   });
 
   it('error should be shown if Client Disconnect Threshold input is outside range or empty', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -268,6 +352,10 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-clientDisconnectThreshold`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-clientDisconnectThreshold`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-clientDisconnectThreshold`
     );
@@ -275,19 +363,25 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - 0')).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 100')).toBeVisible();
+      expect(getByText('-100 - 0')).toBeVisible();
+    });
+
+    fireEvent.change(input, { target: { value: '-90, -90, -90' } });
+
+    await waitFor(() => {
+      expect(queryByText('-100 - 0')).not.toBeInTheDocument();
     });
   });
 
   it('error should be shown if SNR (% Drop) input is outside range or empty', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -295,6 +389,10 @@ describe('<BulkEditAccessPoints />', () => {
 
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-snrDrop`);
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-snrDrop`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-snrDrop`);
     fireEvent.change(input, { target: { value: '-101, 101, 0' } });
     fireEvent.keyDown(input, ENTER);
@@ -309,10 +407,16 @@ describe('<BulkEditAccessPoints />', () => {
     await waitFor(() => {
       expect(getByText('1 - 100')).toBeVisible();
     });
+
+    fireEvent.change(input, { target: { value: '20, 30, 30' } });
+
+    await waitFor(() => {
+      expect(queryByText('1 - 100')).not.toBeInTheDocument();
+    });
   });
 
   it('error should be shown if Min Load input is outside range or empty', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -320,6 +424,10 @@ describe('<BulkEditAccessPoints />', () => {
 
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-minLoad`);
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
     fireEvent.change(input, { target: { value: '-101, 101, 0' } });
     fireEvent.keyDown(input, ENTER);
@@ -333,6 +441,12 @@ describe('<BulkEditAccessPoints />', () => {
     await waitFor(() => {
       expect(getByText('1 - 100')).toBeVisible();
     });
+
+    fireEvent.change(input, { target: { value: '50, 40, 50' } });
+
+    await waitFor(() => {
+      expect(queryByText('1 - 100')).not.toBeInTheDocument();
+    });
   });
 
   it('error should be shown if any input has an invalid configuration', async () => {
@@ -344,6 +458,10 @@ describe('<BulkEditAccessPoints />', () => {
 
     const tableCell = getByTestId(`bulkEditTableCell-${mockProps.tableData[0].name}-minLoad`);
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-minLoad`);
     fireEvent.change(input, { target: { value: '1,1,1,1,1' } });
     fireEvent.keyDown(input, ENTER);
@@ -364,6 +482,10 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
     );
@@ -373,12 +495,12 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Active and backup channels must be different')).toBeVisible();
+      expect(getByText(/Active and Backup channels/i)).toBeVisible();
     });
   });
 
   it('error should be shown if backup manual channels have same channels as active manual channels', async () => {
-    const { getByText, getByTestId } = render(
+    const { getByText, getByTestId, queryByText } = render(
       <Router>
         <BulkEditAccessPoints {...mockProps} />
       </Router>
@@ -388,6 +510,10 @@ describe('<BulkEditAccessPoints />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualBackupChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`);
+    });
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualBackupChannelNumber`
     );
@@ -397,7 +523,16 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('Active and backup channels must be different')).toBeVisible();
+      expect(getByText(/Active and Backup channels/i)).toBeVisible();
+    });
+
+    fireEvent.change(input, {
+      target: { value: [...mockProps.tableData[0].manualBackupChannelNumber] },
+    });
+    fireEvent.keyDown(input, ENTER);
+
+    await waitFor(() => {
+      expect(queryByText(/Active and Backup channels/i)).not.toBeInTheDocument();
     });
   });
 

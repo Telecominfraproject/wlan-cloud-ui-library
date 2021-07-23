@@ -9,6 +9,7 @@ import { RoleProtectedBtn } from 'components/WithRoles';
 import { useHistory } from 'hooks';
 
 import BulkEditAPTable from './components/BulkEditAPTable';
+
 import styles from './index.module.scss';
 
 const BulkEditAccessPoints = ({
@@ -18,6 +19,7 @@ const BulkEditAccessPoints = ({
   onLoadMore,
   isLastPage,
   breadcrumbPath,
+  loading,
 }) => {
   const { routes } = useContext(ThemeContext);
   const { pushWithSearch } = useHistory();
@@ -32,7 +34,7 @@ const BulkEditAccessPoints = ({
   ));
 
   return (
-    <div>
+    <>
       <Button
         title="back"
         onClick={handleBackClick}
@@ -43,8 +45,8 @@ const BulkEditAccessPoints = ({
       </Button>
 
       <div className={styles.innerContainer}>
-        <div className={styles.innerText}>
-          Bulk Edit Access Points:
+        <div>
+          <h1>Bulk Edit Access Points</h1>
           <Breadcrumb separator=">">{breadCrumbs}</Breadcrumb>
         </div>
         <RoleProtectedBtn
@@ -65,8 +67,10 @@ const BulkEditAccessPoints = ({
         setEditedRows={setEditedRows}
         onLoadMore={onLoadMore}
         isLastPage={isLastPage}
+        loading={loading}
+        onSaveChanges={onSaveChanges}
       />
-    </div>
+    </>
   );
 };
 
@@ -77,12 +81,14 @@ BulkEditAccessPoints.propTypes = {
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool,
   breadcrumbPath: PropTypes.instanceOf(Array),
+  loading: PropTypes.bool,
 };
 
 BulkEditAccessPoints.defaultProps = {
   tableData: [],
   isLastPage: true,
   breadcrumbPath: [],
+  loading: true,
 };
 
 export default BulkEditAccessPoints;

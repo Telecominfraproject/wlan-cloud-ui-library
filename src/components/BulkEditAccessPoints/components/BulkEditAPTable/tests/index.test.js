@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 import React from 'react';
 import { render } from 'tests/utils';
@@ -73,8 +73,8 @@ const mockProps = {
   tableData: [
     {
       cellSize: [-90, -90, -90],
-      manualChannelNumber: [36, 6, 149],
-      manualBackupChannelNumber: [45, 11, 154],
+      manualChannelNumber: [6, 36, 149],
+      manualBackupChannelNumber: [11, 52, 153],
       clientDisconnectThreshold: [-90, -90, -90],
       id: '1',
       key: '1',
@@ -82,11 +82,63 @@ const mockProps = {
       name: 'AP 1',
       probeResponseThreshold: [-90, -90, -90],
       snrDrop: [30, 30, 20],
-      radioMap: ['is5GHz', 'is2dot4GHz', 'is5GHzL'],
+      radioMap: ['2.4GHz', '5GHz (L)', '5GHz (U)'],
+      allowedChannels: [
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 11,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 20,
+          },
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 6,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 20,
+          },
+        ],
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 153,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 149,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+        ],
+        [
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 36,
+            powerLevel: 18,
+            dfs: false,
+            channelWidth: 80,
+          },
+          {
+            model_type: 'ChannelPowerLevel',
+            channelNumber: 52,
+            powerLevel: 18,
+            dfs: true,
+            channelWidth: 80,
+          },
+        ],
+      ],
     },
   ],
   onLoadMore: jest.fn(),
   isLastPage: false,
+  loading: false,
 };
 
 describe('<BulkEditAPTableComp />', () => {
@@ -108,6 +160,10 @@ describe('<BulkEditAPTableComp />', () => {
       `bulkEditTableCell-${mockProps.tableData[0].name}-manualChannelNumber`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() =>
+      getByTestId(`bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`)
+    );
     const input = getByTestId(
       `bulkEditFormInput-${mockProps.tableData[0].name}-manualChannelNumber`
     );
