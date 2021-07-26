@@ -42,7 +42,7 @@ const mockProps = {
 const ENTER = { keyCode: 13 };
 
 describe('<EditableCell />', () => {
-  it('Ap data should be displayed in editable form in ant form element, when table cell is clicked.', () => {
+  it('Ap data should be displayed in editable form in ant form element, when table cell is clicked.', async () => {
     const EditableCellComp = () => {
       const [form] = Form.useForm();
       return (
@@ -58,11 +58,12 @@ describe('<EditableCell />', () => {
       `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
     );
     fireEvent.click(tableCell);
-    const formElement = getByTestId(
-      `bulkEditFormElement-${mockProps.record.name}-${mockProps.dataIndex}`
-    );
 
-    expect(formElement).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByTestId(`bulkEditFormElement-${mockProps.record.name}-${mockProps.dataIndex}`)
+      ).toBeInTheDocument();
+    });
   });
 
   it('handleSave should not be called when input filed is empty and Enter key is pressed', async () => {
@@ -82,6 +83,10 @@ describe('<EditableCell />', () => {
       `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     fireEvent.change(input, { target: { value: '' } });
     expect(input.value).toBe('');
@@ -109,6 +114,11 @@ describe('<EditableCell />', () => {
       `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
+    });
+
     const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     expect(input).toBeInTheDocument();
 
@@ -140,6 +150,10 @@ describe('<EditableCell />', () => {
       `bulkEditTableCell-${mockProps.record.name}-${mockProps.dataIndex}`
     );
     fireEvent.click(tableCell);
+
+    await waitFor(() => {
+      getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
+    });
     const input = getByTestId(`bulkEditFormInput-${mockProps.record.name}-${mockProps.dataIndex}`);
     expect(input).toBeInTheDocument();
 

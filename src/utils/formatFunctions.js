@@ -18,6 +18,10 @@ export function bytesLabelFormatter() {
 }
 
 export function formatBitsPerSecond(bps) {
+  if (!bps) {
+    return `0 bps`;
+  }
+
   if (bps >= 1000000000) {
     return `${_.round(bps / 1000000000, 0)} Gbps`;
   }
@@ -55,3 +59,10 @@ export const formatTicks = (firstTs, lastTs, interval) => {
   }
   return [];
 };
+
+export const durationToString = duration =>
+  `${_.floor(duration.asDays())}d ${_.floor(duration.hours())}h ${_.padStart(
+    duration.minutes(),
+    2,
+    0
+  )}m ${_.padStart(duration.seconds(), 2, 0)}s`;

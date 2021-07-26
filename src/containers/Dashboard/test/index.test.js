@@ -17,24 +17,33 @@ const mockProps = {
     { title: 'AP Vendors', 'KodaCloud Canada Inc.': 50, 'Edgecore Networks Corporation': 2 },
     { title: 'Client Vendors', 'Xerox Corporation': 38, '0F0F0F': 42 },
   ],
-  lineChartData: {
-    clientDevices: {
-      is2dot4GHz: { key: '2.4GHz', value: Array(0) },
-      is5GHz: { key: '5GHz', value: Array(0) },
+  lineChartData: [
+    {
+      timestamp: 0,
     },
-    inservicesAPs: { key: 'Inservice APs', value: Array(0) },
-    traffic: {
-      trafficBytesDownstream: { key: 'Down Stream', value: Array(0) },
-      trafficBytesUpstream: { key: 'Up Stream', value: Array(0) },
-    },
-  },
+  ],
   lineChartConfig: [
-    { key: 'inservicesAPs', title: 'Inservice APs (24 hours)' },
-    { key: 'clientDevices', title: 'Client Devices (24 hours)' },
+    {
+      key: 'service',
+      title: 'Inservice APs (24 hours)',
+      lines: [{ key: 'inServiceAps', name: 'Inservice APs' }],
+    },
+    {
+      key: 'clientDevices',
+      title: 'Client Devices (24 hours)',
+      lines: [
+        { key: 'clientDevices2dot4GHz', name: '2.4GHz' },
+        { key: 'clientDevices5GHz', name: '5GHz' },
+      ],
+    },
     {
       key: 'traffic',
-      title: 'Traffic (24 hours)',
-      options: { formatter: jest.fn(), tooltipFormatter: jest.fn() },
+      title: 'Traffic - 5 min intervals (24 hours)',
+      lines: [
+        { key: 'trafficBytesDownstreamData', name: 'Downstream' },
+        { key: 'trafficBytesUpstreamData', name: 'Upstream' },
+      ],
+      options: { formatter: jest.fn(), trafficTooltipFormatter: jest.fn() },
     },
   ],
   lineChartLoading: false,

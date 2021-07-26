@@ -1,6 +1,17 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form, Radio, Select as AntdSelect, Table, Empty, List, Divider } from 'antd';
+import {
+  Card,
+  Form,
+  Radio,
+  Select as AntdSelect,
+  Table,
+  Empty,
+  List,
+  Divider,
+  Tag,
+  Typography,
+} from 'antd';
 import WithRoles, {
   RadioGroup as Group,
   Select,
@@ -25,6 +36,7 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
+const { Text } = Typography;
 
 const MAX_GRE_TUNNELS = 1;
 const MAX_RADIUS_PROXIES = 5;
@@ -250,9 +262,34 @@ const AccessPointForm = ({
     if (list) setCertFiles({ ...certFiles, [key]: list });
   };
 
+  const selectedChildProfilesByRadio = useMemo(() => {
+    const result = {
+      is2dot4GHz: [],
+      is5GHz: [],
+      is5GHzU: [],
+      is5GHzL: [],
+    };
+
+    selectedChildProfiles.forEach(profile => {
+      profile.details.appliedRadios.forEach(appliedRadio => {
+        result[appliedRadio].push(profile);
+      });
+    });
+
+    return result;
+  }, [selectedChildProfiles]);
+
   const filteredOptions = ssidProfiles.filter(
     i => !selectedChildProfiles.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
   );
+
+  const isProfileDisabled = appliedRadios => {
+    let result = false;
+    appliedRadios.forEach(radio => {
+      if (selectedChildProfilesByRadio[radio].length >= 8) result = true;
+    });
+    return result;
+  };
 
   const validateNtpServer = (_rule, value) => {
     const ntpServerParts = value.split('.').reverse();
@@ -675,12 +712,27 @@ const AccessPointForm = ({
             value="Select a SSID Profile"
           >
             {filteredOptions.map(i => (
-              <Option key={i.id} value={i.id}>
+              <Option
+                key={i.id}
+                value={i.id}
+                disabled={isProfileDisabled(i?.details?.appliedRadios)}
+              >
                 {i.name}
               </Option>
             ))}
           </Select>
         </Item>
+        <div style={{ marginBottom: 8 }}>
+          <Text>Max 8 per radio: </Text>
+          {Object.keys(radioTypes).map(radio => (
+            <Tag
+              key={radio}
+              color={selectedChildProfilesByRadio[radio].length < 8 ? 'processing' : 'error'}
+            >
+              {radioTypes[radio]}: {selectedChildProfilesByRadio[radio].length}
+            </Tag>
+          ))}
+        </div>
         <Table
           dataSource={selectedChildProfiles}
           columns={columns}

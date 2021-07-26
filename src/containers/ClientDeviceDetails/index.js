@@ -5,7 +5,7 @@ import { Card, Alert } from 'antd';
 import { LeftOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-import { formatBytes, formatBitsPerSecond } from 'utils/formatFunctions';
+import { formatBytes, formatBitsPerSecond, durationToString } from 'utils/formatFunctions';
 import Button from 'components/Button';
 import DeviceHistory from 'components/DeviceHistory';
 import ThemeContext from 'contexts/ThemeContext';
@@ -39,27 +39,20 @@ const ClientDeviceDetails = ({
     equipment,
     details,
   } = data;
+  const { dhcpServerIp, primaryDns, secondaryDns, gatewayIp, subnetMask, leaseTimeInSeconds } =
+    details?.dhcpDetails || {};
   const {
-    dhcpServerIp,
-    primaryDns,
-    secondaryDns,
-    gatewayIp,
-    subnetMask,
-    leaseTimeInSeconds,
-    leaseStartTimestamp,
-  } = details?.dhcpDetails || {};
-  const {
-    rssi,
+    rssi = 0,
     rxBytes = 0,
     numTxBytes: txBytes = 0,
     periodLengthSec,
     averageRxRate,
     averageTxRate,
-    numRxFramesReceived,
-    numTxFramesTransmitted,
+    numRxFramesReceived = 0,
+    numTxFramesTransmitted = 0,
   } = latestMetrics?.detailsJSON || {};
-  const rxThroughput = rxBytes / periodLengthSec;
-  const txThroughput = txBytes / periodLengthSec;
+  const rxThroughput = rxBytes / periodLengthSec || 0;
+  const txThroughput = txBytes / periodLengthSec || 0;
   const signal = `${rssi}`;
 
   const status = useMemo(() => {
@@ -76,8 +69,8 @@ const ClientDeviceDetails = ({
     Status: status,
     'Associated On': moment(details?.assocTimestamp).format('llll'),
     'Access Point': equipment?.name,
-    SSID: ssid,
-    'Radio Band': radioTypes?.[radioType],
+    SSID: ssid ?? 'N/A',
+    'Radio Band': radioTypes?.[radioType] ?? 'N/A',
     'Signal Strength': `${signal} dBm`,
     'Tx Rate': `${formatBitsPerSecond(averageTxRate * 1000)}`,
     'Rx Rate': `${formatBitsPerSecond(averageRxRate * 1000)}`,
@@ -92,14 +85,13 @@ const ClientDeviceDetails = ({
   });
 
   const getIpStats = () => ({
-    'IPv4 Address': ipAddress,
-    'DHCP Server': dhcpServerIp,
-    'Primary DNS': primaryDns,
-    'Secondary DNS': secondaryDns,
-    'Gateway ': gatewayIp,
-    'Subnet Mask': subnetMask,
-    'IP Lease Time': leaseTimeInSeconds && `${leaseTimeInSeconds} seconds`,
-    'IP Lease Start': moment(leaseStartTimestamp).format('llll'),
+    'IPv4 Address': ipAddress ?? 'N/A',
+    'DHCP Server': dhcpServerIp ?? 'N/A',
+    'Primary DNS': primaryDns ?? 'N/A',
+    'Secondary DNS': secondaryDns ?? 'N/A',
+    'Gateway ': gatewayIp ?? 'N/A',
+    'Subnet Mask': subnetMask ?? 'N/A',
+    'IP Lease Time': durationToString(moment.duration(leaseTimeInSeconds, 'seconds')),
   });
 
   return (

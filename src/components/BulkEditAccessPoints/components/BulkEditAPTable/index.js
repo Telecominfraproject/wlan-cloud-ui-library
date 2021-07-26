@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table } from 'components/Skeleton';
 import Button from 'components/Button';
 import { EditableRow } from './components/EditableRow';
 import { EditableCell } from './components/EditableCell';
 import styles from './index.module.scss';
 
-const BulkEditAPTable = ({ tableColumns, tableData, onLoadMore, isLastPage, setEditedRows }) => {
+const BulkEditAPTable = ({
+  tableColumns,
+  tableData,
+  onLoadMore,
+  isLastPage,
+  setEditedRows,
+  loading,
+}) => {
   const [bulkEditTableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -54,8 +61,10 @@ const BulkEditAPTable = ({ tableColumns, tableData, onLoadMore, isLastPage, setE
         rowClassName={styles.editableRow}
         columns={columns}
         dataSource={bulkEditTableData}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 'max-content' }}
         pagination={false}
+        loading={loading}
+        rowKey="key"
       />
       {isLastPage === false && (
         <div className={styles.LoadMore}>
@@ -72,12 +81,14 @@ BulkEditAPTable.propTypes = {
   onLoadMore: PropTypes.func.isRequired,
   isLastPage: PropTypes.bool,
   setEditedRows: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 BulkEditAPTable.defaultProps = {
   tableData: [],
   isLastPage: true,
   setEditedRows: () => {},
+  loading: true,
 };
 
 export default BulkEditAPTable;

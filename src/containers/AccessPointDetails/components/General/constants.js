@@ -13,20 +13,9 @@ export const USER_FRIENDLY_RATES = {
   rate54mbps: '54',
 };
 
-export const ALLOWED_CHANNELS_STEP = {
-  is20MHz: 1,
-  is40MHz: 2,
-  is80MHz: 4,
-  is160MHz: 8,
-};
-
 export const USER_FRIENDLY_BANDWIDTHS = {
   is20MHz: '20MHz',
   is40MHz: '40MHz',
   is80MHz: '80MHz',
   is160MHz: '160MHz',
 };
-
-export const MAX_CHANNEL_WIDTH_40MHZ_OR_80MHZ = 157;
-
-export const MAX_CHANNEL_WIDTH_160MHZ = 100;

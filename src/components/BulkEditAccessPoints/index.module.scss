@@ -1,23 +1,16 @@
 .backButton {
   margin: 15px;
 }
+
 .innerContainer {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 15px;
   margin-bottom: 15px;
   @media screen and (max-width: 575px) {
     flex-direction: column;
   }
-}
-.innerText {
-  font-weight: 400;
-  font-size: 18px;
-  height: auto;
-  margin: 0px;
-  @media screen and (max-width: 575px) {
-    line-height: 1.3;
-    margin-bottom: 12px;
+  :global(.ant-breadcrumb) {
+    font-size: 18px;
   }
 }

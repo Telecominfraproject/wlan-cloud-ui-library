@@ -464,7 +464,7 @@ const SSIDForm = ({
             );
           }}
         </Item>
-        <Item name="enableProxyArpForHotspot" label="Proxy-ARP">
+        <Item name="enableProxyArpForHotspot" label="Proxy-ARP" hidden>
           {radioOptions}
         </Item>
       </Card>
