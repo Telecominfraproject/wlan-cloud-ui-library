@@ -9,10 +9,17 @@ import ThemeContext from 'contexts/ThemeContext';
 
 import { DEFAULT_RF_PROFILE } from '../constants';
 import styles from '../index.module.scss';
-import { RADIOS } from '../../constants';
+import { RADIOS, ALLOWED_CHANNEL_BANDWIDTH } from '../../constants';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
+
+const defaultOptions = (
+  <Select>
+    <Option value="true">Enabled</Option>
+    <Option value="false">Disabled</Option>
+  </Select>
+);
 
 const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);
@@ -59,7 +66,9 @@ const RFForm = ({ form, details, extraFields }) => {
           DEFAULT_RF_PROFILE[radio].autoChannelSelection.toString(),
         autoCellSizeSelection:
           details.rfConfigMap[radio]?.autoCellSizeSelection?.toString() ??
-          DEFAULT_RF_PROFILE[radio].autoCellSizeSelection.toString(),
+          (extraFields.length
+            ? DEFAULT_RF_PROFILE[radio].autoCellSizeSelection.toString()
+            : 'false'),
         maxAutoCellSize:
           details.rfConfigMap[radio]?.maxAutoCellSize ?? DEFAULT_RF_PROFILE[radio].maxAutoCellSize,
         minAutoCellSize:
@@ -108,14 +117,7 @@ const RFForm = ({ form, details, extraFields }) => {
     form.setFieldsValue({ ...formData });
   }, [form, details]);
 
-  const defaultOptions = (
-    <Select className={styles.Field}>
-      <Option value="true">Enabled</Option>
-      <Option value="false">Disabled</Option>
-    </Select>
-  );
-
-  const itemWithDependency = (dependencies, key, inputField) => (
+  const itemWithDependency = (dependencies, key, inputField, disabledText = '') => (
     <Item
       noStyle
       shouldUpdate={(prevValues, currentValues) =>
@@ -126,10 +128,10 @@ const RFForm = ({ form, details, extraFields }) => {
       key={key}
     >
       {({ getFieldValue }) => {
-        const field = Object.keys(dependencies).find(
+        const dependentField = Object.keys(dependencies).find(
           i => getFieldValue(['rfConfigMap', key, i]) === dependencies[i]
         );
-        const value = getFieldValue(['rfConfigMap', key, field]);
+        const value = getFieldValue(['rfConfigMap', key, dependentField]);
         let formattedValue = '';
         if (value === 'true' || value === 'false') {
           formattedValue = value === 'true' ? 'enabled' : 'disabled';
@@ -137,12 +139,15 @@ const RFForm = ({ form, details, extraFields }) => {
           formattedValue = `value: ${startCase(value)}`;
         }
 
-        return !field ? (
-          inputField
-        ) : (
+        return dependentField ? (
           <DisabledText
-            title={`The ${radioTypes[key]} radio has "${startCase(field)}" ${formattedValue}.`}
+            title={`The ${radioTypes[key]} radio has "${startCase(
+              dependentField
+            )}" ${formattedValue}`}
+            value={disabledText || 'N/A'}
           />
+        ) : (
+          inputField
         );
       }}
     </Item>
@@ -210,8 +215,7 @@ const RFForm = ({ form, details, extraFields }) => {
         ]}
       >
         <Input
-          className={styles.Field}
-          placeholder={`Enter ${label} for ${key}`}
+          placeholder={`Enter ${label} for ${radioTypes?.[key]}`}
           type="number"
           min={options.min}
           max={options.max}
@@ -221,7 +225,7 @@ const RFForm = ({ form, details, extraFields }) => {
     );
 
     if (options.dependencies) {
-      return itemWithDependency(options.dependencies, key, inputField);
+      return itemWithDependency(options.dependencies, key, inputField, options.disabledText);
     }
     return inputField;
   };
@@ -234,7 +238,7 @@ const RFForm = ({ form, details, extraFields }) => {
         rules={[
           {
             required: true,
-            message: `Enter ${label} for ${key}`,
+            message: `Select ${label} for ${radioTypes?.[key]}`,
           },
         ]}
       >
@@ -243,9 +247,80 @@ const RFForm = ({ form, details, extraFields }) => {
     );
 
     if (options.dependencies) {
-      return itemWithDependency(options.dependencies, key, inputField);
+      return itemWithDependency(options.dependencies, key, inputField, options.disabledText);
     }
     return inputField;
+  };
+
+  const channelBandwidthSelect = () => {
+    const optionItem = key => {
+      return (
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.rfConfigMap?.[key]?.radioMode !== currentValues.rfConfigMap?.[key]?.radioMode
+          }
+          key={key}
+        >
+          {({ getFieldValue }) => {
+            const value = getFieldValue(['rfConfigMap', key, 'radioMode']);
+            return (
+              <>
+                <Item
+                  key={key}
+                  name={['rfConfigMap', key, 'channelBandwidth']}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Select Channel Bandwidth for ${radioTypes?.[key]}`,
+                    },
+                  ]}
+                >
+                  <Select placeholder="Select Bandwidth">
+                    <Option value="is20MHz">20MHz</Option>
+                    {key !== 'is2dot4GHz' && value !== 'modeA' && (
+                      <>
+                        <Option value="is40MHz">40MHz</Option>
+                        {value !== 'modeN' && (
+                          <>
+                            <Option value="is80MHz">80MHz</Option>
+                            <Option value="is160MHz">160MHz</Option>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Select>
+                </Item>
+              </>
+            );
+          }}
+        </Item>
+      );
+    };
+
+    return (
+      <Item label="Channel Bandwidth" key="Channel Bandwidth">
+        <div className={styles.InlineDiv}>{currentRadios.map(i => optionItem(i))}</div>
+      </Item>
+    );
+  };
+
+  const onRadioModeChange = (value, radio) => {
+    const rfConfigMap = form.getFieldValue('rfConfigMap');
+    const channelBandwidth = form.getFieldValue(['rfConfigMap', radio, 'channelBandwidth']);
+    form.setFieldsValue({
+      rfConfigMap: {
+        ...rfConfigMap,
+        [radio]: {
+          ...rfConfigMap[radio],
+          ...(radio !== 'is2dot4GHz' &&
+            !ALLOWED_CHANNEL_BANDWIDTH[value].includes(channelBandwidth) && {
+              channelBandwidth: null,
+            }),
+          ...(value === 'modeA' && { autoCellSizeSelection: 'false' }),
+        },
+      },
+    });
   };
 
   return (
@@ -265,28 +340,11 @@ const RFForm = ({ form, details, extraFields }) => {
           max: 100,
           error: '0 - 100',
         })}
-        {renderItem('Channel Bandwidth (MHz)', ['channelBandwidth'], renderOptionItem, {
-          dropdown: key => {
-            return (
-              <Select className={styles.Field}>
-                <Option value="is20MHz">20MHz</Option>
-                {key !== 'is2dot4GHz' && (
-                  <>
-                    <Option value="is40MHz">40MHz</Option>
-                    <Option value="is80MHz">80MHz</Option>
-                    <Option value="is160MHz">160MHz</Option>
-                  </>
-                )}
-              </Select>
-            );
-          },
-        })}
         {renderItem('Radio Mode', ['radioMode'], renderOptionItem, {
           dropdown: key => {
             return (
-              <Select className={styles.Field}>
+              <Select onChange={value => onRadioModeChange(value, key)}>
                 <Option value="auto">Auto</Option>
-                <Option value="modeN">N</Option>
                 {key === 'is2dot4GHz' && (
                   <>
                     <Option value="modeG">G</Option>
@@ -294,19 +352,21 @@ const RFForm = ({ form, details, extraFields }) => {
                 )}
                 {key !== 'is2dot4GHz' && (
                   <>
-                    <Option value="modeAC">AC</Option>
                     <Option value="modeA">A</Option>
+                    <Option value="modeAC">AC</Option>
                   </>
                 )}
+                <Option value="modeN">N</Option>
                 <Option value="modeAX">AX</Option>
               </Select>
             );
           },
         })}
+        {channelBandwidthSelect()}
         {renderItem('Beacon Interval', ['beaconInterval'], renderInputItem, {
-          min: 15,
+          min: 50,
           max: 65535,
-          error: '15 - 65535',
+          error: '50 - 65535',
           addOnText: 'ms',
         })}
         {renderItem('RTS/CTS threshold', ['rtsCtsThreshold'], renderInputItem, {
@@ -317,7 +377,7 @@ const RFForm = ({ form, details, extraFields }) => {
         })}
         {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
-            <Select className={styles.Field}>
+            <Select>
               <Option value="none">Auto</Option>
               <Option value="oneByOne">1x1</Option>
               <Option value="twoByTwo">2x2</Option>
@@ -337,7 +397,7 @@ const RFForm = ({ form, details, extraFields }) => {
         )}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: (
-            <Select className={styles.Field}>
+            <Select>
               <Option value="auto">Auto</Option>
               <Option value="rate1mbps">1</Option>
               <Option value="rate2mbps">2</Option>
@@ -354,7 +414,7 @@ const RFForm = ({ form, details, extraFields }) => {
         })}
         {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
-            <Select className={styles.Field}>
+            <Select>
               <Option value="auto">Auto</Option>
               <Option value="rate6mbps">6</Option>
               <Option value="rate9mbps">9</Option>
@@ -485,7 +545,7 @@ const RFForm = ({ form, details, extraFields }) => {
         )}
         {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
           dropdown: (
-            <Select className={styles.Field}>
+            <Select>
               <Option value="NON_WIFI">Non-IBSS</Option>
               <Option value="NON_WIFI_AND_OBSS">Non-IBSS Time</Option>
             </Select>

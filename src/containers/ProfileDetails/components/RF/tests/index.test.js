@@ -37,77 +37,75 @@ describe('<RFForm />', () => {
     const { queryByText } = render(<RFFormComp />);
 
     await waitFor(() => {
-      expect(queryByText('Enter Maximum Devices for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Maximum Devices for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Maximum Devices for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Maximum Devices for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Maximum Devices for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Maximum Devices for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Maximum Devices for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Maximum Devices for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter RTS/CTS threshold for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter RTS/CTS threshold for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter RTS/CTS threshold for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter RTS/CTS threshold for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter RTS/CTS threshold for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter RTS/CTS threshold for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter RTS/CTS threshold for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter RTS/CTS threshold for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Rx Cell Size for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Rx Cell Size for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Rx Cell Size for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Rx Cell Size for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Rx Cell Size for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Rx Cell Size for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Probe Response Threshold for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Probe Response Threshold for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Probe Response Threshold for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Probe Response Threshold for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Probe Response Threshold for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Probe Response Threshold for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Probe Response Threshold for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Probe Response Threshold for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(
-        queryByText('Enter Client Disconnect Threshold for is2dot4GHz')
-      ).not.toBeInTheDocument();
-      expect(queryByText('Enter Client Disconnect Threshold for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Client Disconnect Threshold for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Client Disconnect Threshold for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Client Disconnect Threshold for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Client Disconnect Threshold for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Client Disconnect Threshold for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Client Disconnect Threshold for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter EIRP Tx Power for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter EIRP Tx Power for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter EIRP Tx Power for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter EIRP Tx Power for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter EIRP Tx Power for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter EIRP Tx Power for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter EIRP Tx Power for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter EIRP Tx Power for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Scan Frequency for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Frequency for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Frequency for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Frequency for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Frequency for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Frequency for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Frequency for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Frequency for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Scan Duration for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Duration for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Duration for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Scan Duration for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Duration for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Duration for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Duration for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Scan Duration for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Min Load for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Min Load for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Min Load for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Min Load for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Min Load for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Min Load for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Min Load for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Min Load for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter SNR for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter SNR for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter SNR for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter SNR for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter SNR for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter SNR for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter SNR for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter SNR for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Noise Floor for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Noise Floor Time for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor Time for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor Time for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Noise Floor Time for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor Time for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor Time for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor Time for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Noise Floor Time for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Non WIFI for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI for 5GHz (L)')).not.toBeInTheDocument();
 
-      expect(queryByText('Enter Non WIFI Time for is2dot4GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI Time for is5GHz')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI Time for is5GHzU')).not.toBeInTheDocument();
-      expect(queryByText('Enter Non WIFI Time for is5GHzL')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI Time for 2.4GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI Time for 5GHz')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI Time for 5GHz (U)')).not.toBeInTheDocument();
+      expect(queryByText('Enter Non WIFI Time for 5GHz (L)')).not.toBeInTheDocument();
 
       expect(queryByText('0 - 100')).not.toBeInTheDocument();
       expect(queryByText('0 - 65535 (Bytes)')).not.toBeInTheDocument();
@@ -125,7 +123,7 @@ describe('<RFForm />', () => {
   });
 
   // test Maximum Devices invalid inputs
-  it('error if the Maximum Devices exceeds 100 for the is2dot4GHz setting', async () => {
+  it('error if the Maximum Devices exceeds 100 for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -137,7 +135,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -146,7 +144,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Maximum Devices exceeds 100 for the is5GHz setting', async () => {
+  it('error if the Maximum Devices exceeds 100 for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -158,7 +156,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -167,7 +165,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Maximum Devices exceeds 100 for the is5GHzU setting', async () => {
+  it('error if the Maximum Devices exceeds 100 for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -179,7 +177,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -188,7 +186,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Maximum Devices exceeds 100 for the is5GHzL setting', async () => {
+  it('error if the Maximum Devices exceeds 100 for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -200,7 +198,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Maximum Devices for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -209,7 +207,7 @@ describe('<RFForm />', () => {
     });
   });
   // test RTS/CTS threshold invalid inputs
-  it('RTS/CTS threshold value must be positive for the is2dot4GHz setting', async () => {
+  it('RTS/CTS threshold value must be positive for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -221,7 +219,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -230,7 +228,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('RTS/CTS threshold value must be positive for the is5GHz setting', async () => {
+  it('RTS/CTS threshold value must be positive for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -242,7 +240,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -251,7 +249,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('RTS/CTS threshold value must be positive for the is5GHzU setting', async () => {
+  it('RTS/CTS threshold value must be positive for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -263,7 +261,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -272,7 +270,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('RTS/CTS threshold value must be positive for the is5GHzL setting', async () => {
+  it('RTS/CTS threshold value must be positive for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -284,7 +282,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter RTS/CTS threshold for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -293,7 +291,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Rx Cell Size invalid inputs
-  it('error if the Rx Cell Size exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Rx Cell Size exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -305,7 +303,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for 2.4GHz'), {
       target: { value: -101 },
     });
 
@@ -314,7 +312,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Rx Cell Size exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Rx Cell Size exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -326,7 +324,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for 5GHz'), {
       target: { value: -101 },
     });
 
@@ -335,7 +333,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Rx Cell Size exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Rx Cell Size exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -347,7 +345,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for 5GHz (U)'), {
       target: { value: -101 },
     });
 
@@ -356,7 +354,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Rx Cell Size exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Rx Cell Size exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -368,7 +366,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Rx Cell Size for 5GHz (L)'), {
       target: { value: -101 },
     });
 
@@ -378,7 +376,7 @@ describe('<RFForm />', () => {
   });
 
   // test Probe Response Threshold invalid inputs
-  it('error if the Probe Response Threshold exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Probe Response Threshold exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -390,7 +388,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for 2.4GHz'), {
       target: { value: -101 },
     });
 
@@ -399,7 +397,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Probe Response Threshold exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Probe Response Threshold exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -411,7 +409,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for 5GHz'), {
       target: { value: -101 },
     });
 
@@ -420,7 +418,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Probe Response Threshold exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Probe Response Threshold exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -432,7 +430,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for 5GHz (U)'), {
       target: { value: -101 },
     });
 
@@ -441,7 +439,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Probe Response Threshold exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Probe Response Threshold exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -453,7 +451,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp {...mockRf} />);
 
-    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Probe Response Threshold for 5GHz (L)'), {
       target: { value: -101 },
     });
 
@@ -462,7 +460,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Client Disconnect Threshold invalid inputs
-  it('error if the Client Disconnect Threshold exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Client Disconnect Threshold exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -474,7 +472,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for 2.4GHz'), {
       target: { value: -101 },
     });
 
@@ -483,7 +481,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Client Disconnect Threshold exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Client Disconnect Threshold exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -495,7 +493,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for 5GHz'), {
       target: { value: -101 },
     });
 
@@ -504,7 +502,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Client Disconnect Threshold exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Client Disconnect Threshold exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -516,7 +514,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for 5GHz (U)'), {
       target: { value: -101 },
     });
 
@@ -525,7 +523,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Client Disconnect Threshold exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Client Disconnect Threshold exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -537,7 +535,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Client Disconnect Threshold for 5GHz (L)'), {
       target: { value: -101 },
     });
 
@@ -546,7 +544,7 @@ describe('<RFForm />', () => {
     });
   });
   // test EIRP Tx Power invalid inputs
-  it('error if the EIRP Tx Power exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the EIRP Tx Power exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -558,7 +556,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -567,7 +565,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the EIRP Tx Power exceeds bounds for the is5GHz setting', async () => {
+  it('error if the EIRP Tx Power exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -579,7 +577,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -588,7 +586,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the EIRP Tx Power exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the EIRP Tx Power exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -600,7 +598,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -609,7 +607,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the EIRP Tx Power exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the EIRP Tx Power exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -621,7 +619,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter EIRP Tx Power for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -630,7 +628,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Scan Frequency invalid inputs
-  it('error if the Scan Frequency exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Scan Frequency exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -642,7 +640,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -651,7 +649,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Frequency exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Scan Frequency exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -663,7 +661,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -672,7 +670,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Frequency exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Scan Frequency exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -684,7 +682,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -693,7 +691,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Frequency exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Scan Frequency exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -705,7 +703,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Frequency for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -714,7 +712,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Scan Duration invalid inputs
-  it('error if the Scan Duration exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Scan Duration exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -726,7 +724,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Duration for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Duration for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -735,7 +733,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Duration exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Scan Duration exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -747,7 +745,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Duration for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Duration for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -756,7 +754,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Duration exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Scan Duration exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -768,7 +766,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Duration for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Duration for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -777,7 +775,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Scan Duration exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Scan Duration exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -789,7 +787,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Scan Duration for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Scan Duration for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -799,7 +797,7 @@ describe('<RFForm />', () => {
   });
 
   // test Min Load invalid inputs
-  it('error if the Min Load exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Min Load exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -811,7 +809,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Min Load for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -820,7 +818,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Min Load exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Min Load exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -832,7 +830,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Min Load for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -841,7 +839,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Min Load exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Min Load exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -853,7 +851,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Min Load for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -862,7 +860,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Min Load exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Min Load exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -874,7 +872,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Min Load for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Min Load for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -883,7 +881,7 @@ describe('<RFForm />', () => {
     });
   });
   // test SNR invalid inputs
-  it('error if the SNR exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the SNR exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -895,7 +893,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter SNR for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -904,7 +902,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the SNR exceeds bounds for the is5GHz setting', async () => {
+  it('error if the SNR exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -916,7 +914,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter SNR for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -925,7 +923,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the SNR exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the SNR exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -937,7 +935,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter SNR for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -946,7 +944,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the SNR exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the SNR exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -958,7 +956,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter SNR for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter SNR for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -968,7 +966,7 @@ describe('<RFForm />', () => {
   });
 
   // test Noise Floor invalid inputs
-  it('error if the Noise Floor exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Noise Floor exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -980,7 +978,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor for 2.4GHz'), {
       target: { value: -91 },
     });
 
@@ -989,7 +987,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Noise Floor exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1001,7 +999,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor for 5GHz'), {
       target: { value: -91 },
     });
 
@@ -1010,7 +1008,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Noise Floor exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1022,7 +1020,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor for 5GHz (U)'), {
       target: { value: -91 },
     });
 
@@ -1031,7 +1029,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Noise Floor exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1043,7 +1041,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor for 5GHz (L)'), {
       target: { value: -91 },
     });
 
@@ -1052,7 +1050,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Noise Floor Time invalid inputs
-  it('error if the Noise Floor Time exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Noise Floor Time exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1064,7 +1062,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for 2.4GHz'), {
       target: { value: -121 },
     });
 
@@ -1073,7 +1071,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor Time exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Noise Floor Time exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1085,7 +1083,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for 5GHz'), {
       target: { value: -121 },
     });
 
@@ -1094,7 +1092,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor Time exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Noise Floor Time exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1106,7 +1104,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for 5GHz (U)'), {
       target: { value: -121 },
     });
 
@@ -1115,7 +1113,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Noise Floor Time exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Noise Floor Time exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1127,7 +1125,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Noise Floor Time for 5GHz (L)'), {
       target: { value: -121 },
     });
 
@@ -1136,7 +1134,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Non WIFI invalid inputs
-  it('error if the Non WIFI exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Non WIFI exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1148,7 +1146,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -1157,7 +1155,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Non WIFI exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1169,7 +1167,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -1178,7 +1176,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Non WIFI exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1190,7 +1188,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -1199,7 +1197,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Non WIFI exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1211,7 +1209,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI for 5GHz (L)'), {
       target: { value: -1 },
     });
 
@@ -1220,7 +1218,7 @@ describe('<RFForm />', () => {
     });
   });
   // test Non WIFI Time invalid inputs
-  it('error if the Non WIFI Time exceeds bounds for the is2dot4GHz setting', async () => {
+  it('error if the Non WIFI Time exceeds bounds for the 2.4GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1232,7 +1230,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for is2dot4GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for 2.4GHz'), {
       target: { value: -1 },
     });
 
@@ -1241,7 +1239,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI Time exceeds bounds for the is5GHz setting', async () => {
+  it('error if the Non WIFI Time exceeds bounds for the 5GHz setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1253,7 +1251,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for is5GHz'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for 5GHz'), {
       target: { value: -1 },
     });
 
@@ -1262,7 +1260,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI Time exceeds bounds for the is5GHzU setting', async () => {
+  it('error if the Non WIFI Time exceeds bounds for the 5GHz (U) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1274,7 +1272,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for is5GHzU'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for 5GHz (U)'), {
       target: { value: -1 },
     });
 
@@ -1283,7 +1281,7 @@ describe('<RFForm />', () => {
     });
   });
 
-  it('error if the Non WIFI Time exceeds bounds for the is5GHzL setting', async () => {
+  it('error if the Non WIFI Time exceeds bounds for the 5GHz (L) setting', async () => {
     const RFFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -1295,7 +1293,7 @@ describe('<RFForm />', () => {
 
     const { getByText, getByPlaceholderText } = render(<RFFormComp />);
 
-    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for is5GHzL'), {
+    fireEvent.change(getByPlaceholderText('Enter Non WIFI Time for 5GHz (L)'), {
       target: { value: -1 },
     });
 
