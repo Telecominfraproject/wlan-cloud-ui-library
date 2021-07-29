@@ -280,7 +280,7 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'timeout']}
                     label="Session Timeout"
-                    initialValue={1812}
+                    initialValue={5}
                     rules={[
                       {
                         required: true,
