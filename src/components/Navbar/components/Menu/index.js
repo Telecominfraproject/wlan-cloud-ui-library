@@ -13,10 +13,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, ...restProps }) => {
 
   const getMenuItem = item => (
     <Item key={item.key}>
-      <Link
-        onClick={onMenuItemClick}
-        to={{ pathname: item.path, search: item.preserveQueryParams ? location.search : null }}
-      >
+      <Link to={{ pathname: item.path, search: item.preserveQueryParams ? location.search : null }}>
         {item.icon || null}
         <span>{item.text}</span>
       </Link>
@@ -40,6 +37,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, ...restProps }) => {
       theme="dark"
       selectedKeys={selectedKeys}
       className={styles.Menu}
+      onClick={onMenuItemClick}
       {...restProps}
     >
       {items}

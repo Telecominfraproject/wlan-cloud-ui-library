@@ -49,14 +49,16 @@ const AppLayout = ({
     setIsCollapsed(!isCollapsed);
   };
 
-  const handleMenuItemClick = () => {
+  const handleLogout = () => onLogout();
+
+  const handleMenuItemClick = e => {
     if (isMobile === true) {
       setIsCollapsed(true);
-    }
-  };
 
-  const handleLogout = () => {
-    onLogout();
+      if (e.key === 'logout') {
+        handleLogout();
+      }
+    }
   };
 
   useEffect(() => {
