@@ -94,6 +94,7 @@ const SSIDForm = ({
         userDefinedNasIp:
           details?.radiusClientConfiguration?.userDefinedNasIp ??
           DEFAULT_SSID_PROFILE.radiusClientConfiguration.userDefinedNasIp,
+        operatorId: details?.radiusClientConfiguration?.operatorId,
       },
       useRadiusProxy:
         details?.useRadiusProxy?.toString() ?? DEFAULT_SSID_PROFILE.useRadiusProxy.toString(),
@@ -470,16 +471,7 @@ const SSIDForm = ({
       </Card>
 
       <Card title="Security and Encryption">
-        <Item
-          label="Mode"
-          name="secureMode"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your security and encryption mode',
-            },
-          ]}
-        >
+        <Item label="Mode" name="secureMode">
           <Select
             data-testid="securityMode"
             onChange={value => {
@@ -618,16 +610,7 @@ const SSIDForm = ({
             {({ getFieldValue }) => {
               return (
                 getFieldValue('useRadiusProxy') === 'false' && (
-                  <Item
-                    name="radiusServiceId"
-                    label="RADIUS Profile"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please select a RADIUS profile',
-                      },
-                    ]}
-                  >
+                  <Item name="radiusServiceId" label="RADIUS Profile">
                     <Select
                       placeholder="Select RADIUS Profile"
                       onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
@@ -678,16 +661,7 @@ const SSIDForm = ({
               }
             />
           </Item>
-          <Item
-            label="NAS ID"
-            name={['radiusClientConfiguration', 'nasClientId']}
-            rules={[
-              {
-                required: true,
-                message: 'Please select NAS ID',
-              },
-            ]}
-          >
+          <Item label="NAS ID" name={['radiusClientConfiguration', 'nasClientId']}>
             <Select data-testid="securityMode" placeholder="Select NAS ID">
               <Option value="BSSID">BSSID</Option>
               <Option value="AP_BASE_MAC">AP Base MAC Address</Option>
@@ -724,16 +698,7 @@ const SSIDForm = ({
               );
             }}
           </Item>
-          <Item
-            label="NAS IP"
-            name={['radiusClientConfiguration', 'nasClientIp']}
-            rules={[
-              {
-                required: true,
-                message: 'Please select NAS IP',
-              },
-            ]}
-          >
+          <Item label="NAS IP" name={['radiusClientConfiguration', 'nasClientIp']}>
             <Select data-testid="securityMode" placeholder="Select NAS IP">
               <Option value="WAN_IP">WAN</Option>
               <Option value="PROXY_IP">Proxy</Option>
@@ -770,6 +735,19 @@ const SSIDForm = ({
                 )
               );
             }}
+          </Item>
+
+          <Item
+            name={['radiusClientConfiguration', 'operatorId']}
+            label="Operator ID"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter Operator Identifcation',
+              },
+            ]}
+          >
+            <Input placeholder="Enter Operator Identifcation" />
           </Item>
         </Card>
       )}

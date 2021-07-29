@@ -2,6 +2,28 @@ export const RADIOS = ['is2dot4GHz', 'is5GHz', 'is5GHzL', 'is5GHzU'];
 export const ROAMING = ['enable80211r', 'enable80211k', 'enable80211v'];
 export const DEFAULT_NTP_SERVER = 'pool.ntp.org';
 export const DEFAULT_HESS_ID = '00:00:00:00:00:00';
+export const QOS_CONFIGURATION = [
+  '53',
+  '2',
+  '22',
+  '6',
+  '8',
+  '15',
+  '0',
+  '7',
+  '255',
+  '255',
+  '16',
+  '31',
+  '32',
+  '39',
+  '255',
+  '255',
+  '40',
+  '47',
+  '255',
+  '255',
+];
 
 export const IP_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
 

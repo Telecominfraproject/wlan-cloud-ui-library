@@ -48,8 +48,12 @@ export const EditableCell = ({
   };
 
   const validateInput = (input, key) => {
-    if (key === 'clientDisconnectThreshold' || key === 'cellSize') {
+    if (key === 'clientDisconnectThreshold') {
       return input >= -100 && input <= 0;
+    }
+
+    if (key === 'cellSize') {
+      return input >= -100 && input <= -20;
     }
 
     if (key === 'probeResponseThreshold') {
@@ -109,8 +113,12 @@ export const EditableCell = ({
   };
 
   const errorText = key => {
-    if (key === 'clientDisconnectThreshold' || key === 'cellSize') {
+    if (key === 'clientDisconnectThreshold') {
       return '-100 - 0';
+    }
+
+    if (key === 'cellSize') {
+      return '-100 - -20';
     }
 
     if (key === 'probeResponseThreshold') {

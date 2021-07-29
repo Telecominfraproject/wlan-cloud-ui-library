@@ -32,6 +32,9 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       roamingOi: details?.roamingOi,
       osuServerUri: details?.osuServerUri || '',
       naiRealms: details?.naiRealmList?.[0].naiRealms || [''],
+      osuNaiStandalone: details?.osuNaiStandalone ?? '',
+      osuNaiShared: details?.osuNaiShared ?? '',
+      osuMethodList: details?.osuMethodList ?? [1, 0],
     });
   }, [details]);
 

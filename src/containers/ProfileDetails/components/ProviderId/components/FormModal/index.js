@@ -30,7 +30,7 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
     <>
       <Item
         name="imageUrl"
-        label="Url:"
+        label="URL:"
         rules={[
           {
             required: true,
@@ -38,7 +38,7 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
           },
           {
             type: 'url',
-            message: 'The input is not a valid URL',
+            message: 'Please enter URL in the format http://... or https://...',
           },
         ]}
       >

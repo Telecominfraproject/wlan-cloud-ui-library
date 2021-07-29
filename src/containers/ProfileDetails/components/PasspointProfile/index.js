@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, Form, Table, message, Empty, Select as AntdSelect } from 'antd';
-import { Input, Select, Upload } from 'components/WithRoles';
+import { Card, Button, Form, Table, message, Empty, Select as AntdSelect, Radio } from 'antd';
+import { Input, Select, Upload, RadioGroup as Group } from 'components/WithRoles';
 
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
@@ -13,6 +13,13 @@ import FormModal from './components/FormModal';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
+
+const defaultRadios = (
+  <Group>
+    <Radio value="false">Disabled</Radio>
+    <Radio value="true">Enabled</Radio>
+  </Group>
+);
 
 const PasspointProfileForm = ({
   form,
@@ -109,6 +116,10 @@ const PasspointProfileForm = ({
         ? 'true'
         : 'false',
       additionalStepsRequiredForAccess: details.additionalStepsRequiredForAccess ? 'true' : 'false',
+      deauthRequestTimeout: details?.deauthRequestTimeout ?? 60,
+      qosMapSetConfiguration: details?.qosMapSetConfiguration ? 'true' : 'false',
+      useOperatingClass: details?.operatingClass > 0 ? 'true' : 'false',
+      operatingClass: details?.operatingClass || null,
       childProfileIds: [],
     });
   }, [form, details]);
@@ -217,13 +228,6 @@ const PasspointProfileForm = ({
       ),
     },
   ];
-
-  const defaultOptions = (
-    <Select className={styles.Field}>
-      <Option value="true">Enabled</Option>
-      <Option value="false">Disabled</Option>
-    </Select>
-  );
 
   const handleOnChangeSsid = selectedItem => {
     setSelectedChildSsids([...selectedChildSsids, ssidProfiles.find(i => i.id === selectedItem)]);
@@ -348,6 +352,7 @@ const PasspointProfileForm = ({
             loading={loadingSSIDProfiles}
             notFoundContent={!loadingSSIDProfiles && <Empty />}
             labelInValue
+            allowClear
           >
             {ssidProfiles.map(i => (
               <Option key={i.id} value={i.id}>
@@ -356,8 +361,31 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
+
+        <Item
+          label="Deauthentication Request Timeout"
+          name="deauthRequestTimeout"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter a Deauthentication Request Timeout',
+            },
+            () => ({
+              validator(_rule, value) {
+                if (!value || (value >= 0 && value <= 255)) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error('Deauthentication Request Timeout can be a number between 0 and 255')
+                );
+              },
+            }),
+          ]}
+        >
+          <Input min={0} max={255} type="number" placeholder="0-255" addonAfter="Minutes" />
+        </Item>
         <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
-          {defaultOptions}
+          {defaultRadios}
         </Item>
         <Item
           label="HESSID"
@@ -365,7 +393,7 @@ const PasspointProfileForm = ({
           rules={[
             {
               required: true,
-              message: 'Please input an HESSID',
+              message: 'Please enter an HESSID',
             },
             ({ getFieldValue }) => ({
               validator(_rule, value) {
@@ -391,7 +419,50 @@ const PasspointProfileForm = ({
           name="additionalStepsRequiredForAccess"
           tooltip="Additional Steps Required For Access"
         >
-          {defaultOptions}
+          {defaultRadios}
+        </Item>
+
+        <Item label="Quality of Service Configuration" name="qosMapSetConfiguration">
+          {defaultRadios}
+        </Item>
+
+        <Item label="Operating Class" name="useOperatingClass">
+          {defaultRadios}
+        </Item>
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.useOperatingClass !== currentValues.useOperatingClass
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              getFieldValue('useOperatingClass') === 'true' && (
+                <Item
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name="operatingClass"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter an Operating Class',
+                    },
+                    () => ({
+                      validator(_rule, value) {
+                        if (!value || (value > 0 && value <= 255)) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error('Operating Class can be a number between 1 and 255')
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input placeholder="1 - 255" type="number" min={1} max={255} />
+                </Item>
+              )
+            );
+          }}
         </Item>
       </Card>
 
@@ -464,18 +535,18 @@ const PasspointProfileForm = ({
         )}
 
         <Item label="Emergency Services Reachable" name="emergencyServicesReachable">
-          {defaultOptions}
+          {defaultRadios}
         </Item>
         <Item
           label="Unauthenticated Emergency Service Accessible"
           name="unauthenticatedEmergencyServiceAccessible"
         >
-          {defaultOptions}
+          {defaultRadios}
         </Item>
       </Card>
       <Card title="IP Connectivity">
         <Item label="Internet Connectivity" name="internetConnectivity">
-          {defaultOptions}
+          {defaultRadios}
         </Item>
         <Item label="IP Address Type" name="ipAddressTypeAvailability">
           <Select>
@@ -520,7 +591,6 @@ const PasspointProfileForm = ({
           label="ANQP Domain ID"
           name="anqpDomainId"
           rules={[
-            {},
             ({ getFieldValue }) => ({
               validator(_rule, value) {
                 if (

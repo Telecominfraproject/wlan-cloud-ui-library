@@ -136,7 +136,7 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'timeout']}
                     label="Session Timeout"
-                    initialValue={1812}
+                    initialValue={5}
                     rules={[
                       {
                         required: true,
@@ -158,7 +158,7 @@ const RadiusForm = ({ form, details }) => {
                       placeholder="Enter Session Timeout"
                       type="number"
                       min={1}
-                      max={1440}
+                      max={5}
                       data-testid={`authenticationTimeout${field.name}`}
                       addonAfter={
                         <Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />

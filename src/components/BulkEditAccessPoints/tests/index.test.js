@@ -285,20 +285,20 @@ describe('<BulkEditAccessPoints />', () => {
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 0')).toBeVisible();
+      expect(getByText('-100 - -20')).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '' } });
     fireEvent.keyDown(input, ENTER);
 
     await waitFor(() => {
-      expect(getByText('-100 - 0')).toBeVisible();
+      expect(getByText('-100 - -20')).toBeVisible();
     });
 
     fireEvent.change(input, { target: { value: '-90, -90, -90' } });
 
     await waitFor(() => {
-      expect(queryByText('-100 - 0')).not.toBeInTheDocument();
+      expect(queryByText('-100 - -20')).not.toBeInTheDocument();
     });
   });
 
