@@ -3,6 +3,7 @@ import {
   ROAMING,
   DEFAULT_NTP_SERVER,
   DEFAULT_HESS_ID,
+  QOS_CONFIGURATION,
 } from '../containers/ProfileDetails/constants/index';
 
 export const formatFile = file => {
@@ -19,6 +20,10 @@ const getFileType = type => {
   if (type.startsWith('image/')) {
     return type === 'image/png' ? 'PNG' : 'JPG';
   }
+  if (type.startsWith('text/')) {
+    return 'TEXT';
+  }
+
   return type;
 };
 
@@ -337,6 +342,14 @@ export const formatPasspointForm = (values, details) => {
     ? 1
     : 0;
 
+  formattedData.qosMapSetConfiguration = isBool(formattedData.qosMapSetConfiguration)
+    ? QOS_CONFIGURATION
+    : null;
+
+  if (!isBool(values.useOperatingClass)) {
+    formattedData.operatingClass = 0;
+  }
+
   return formattedData;
 };
 
@@ -359,7 +372,7 @@ export const formatProviderProfileForm = values => {
     });
     formattedData.naiRealmList = [
       {
-        naiRealms: formattedData.naiRealms.replace(/\s/g, '').split(',') || [],
+        naiRealms: formattedData.naiRealms,
         eapMap: formattedData.eapMap || {},
         encoding: formattedData.encoding || 0,
         eapMethods: Object.keys(formattedData.eapMap),
@@ -367,8 +380,8 @@ export const formatProviderProfileForm = values => {
     ];
   }
 
-  formattedData.osuNaiShared = '';
-  formattedData.osuNaiStandalone = '';
+  formattedData.osuNaiShared = values.osuNaiShared ?? '';
+  formattedData.osuNaiStandalone = values.osuNaiStandalone ?? '';
 
   return formattedData;
 };

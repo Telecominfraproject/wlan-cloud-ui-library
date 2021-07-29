@@ -31,7 +31,10 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
     form.setFieldsValue({
       roamingOi: details?.roamingOi,
       osuServerUri: details?.osuServerUri || '',
-      naiRealms: details?.naiRealmList?.[0].naiRealms?.join(', ') || '',
+      naiRealms: details?.naiRealmList?.[0].naiRealms || [''],
+      osuNaiStandalone: details?.osuNaiStandalone ?? '',
+      osuNaiShared: details?.osuNaiShared ?? '',
+      osuMethodList: details?.osuMethodList ?? [1, 0],
     });
   }, [details]);
 
@@ -153,6 +156,15 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
     handleOnFormChange();
   };
 
+  const handleAddNaiRealm = value => {
+    const occurence = form.getFieldValue('naiRealms')?.filter(item => item === value).length;
+
+    if (!value || occurence <= 1) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error('Enter a unique Domain Name'));
+  };
+
   return (
     <div className={styles.ProfilePage}>
       <Card title="Network Identifier">
@@ -265,6 +277,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
         form={modalForm}
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
+        addRealm={handleAddNaiRealm}
       />
 
       <OsuForm

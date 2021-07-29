@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Table, Select as AntdSelect } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
 import ContainedSelect from 'components/ContainedSelect';
 import _ from 'lodash';
+import { DOMAIN_REGEX } from 'containers/ProfileDetails/constants';
 import { authOptions } from './constants';
 
 import styles from '../../../index.module.scss';
@@ -13,7 +14,12 @@ import styles from '../../../index.module.scss';
 const { Item } = Form;
 const { Option } = AntdSelect;
 
-const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
+const naiLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 20 },
+};
+
+const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
   const [eapModal, setEapModal] = useState(false);
 
   const columnsNai = [
@@ -44,11 +50,6 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
       ),
     },
   ];
-
-  const naiLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 20 },
-  };
 
   const formatRealmList = useMemo(() => {
     if (!eapMap || eapMap === undefined) {
@@ -91,27 +92,52 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap }) => {
 
   return (
     <Card title="Network Access Identifier (NAI) Realm">
-      <Item
-        label="Domains:"
-        name="naiRealms"
-        rules={[
-          { required: true, message: 'Domain names cannot be empty' },
-          ({ getFieldValue }) => ({
-            validator(_rule, value) {
-              if (
-                !value ||
-                getFieldValue('naiRealms').match(
-                  /^\s*([\w-]+(\.[\w-]+)+\s*,\s*)*[\w-]+(\.[\w-]+)+\s*$/g
-                )
-              ) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('Please enter a comma separated list of domains'));
-            },
-          }),
-        ]}
-      >
-        <Input placeholder="Enter Domain Names" />
+      <Item label="Domain Name List">
+        <Form.List name="naiRealms">
+          {(fields, { add, remove }) => {
+            return (
+              <>
+                {fields.map(field => (
+                  <div key={field.name}>
+                    <Item
+                      name={field.name}
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Domain Name is required',
+                        },
+                        {
+                          pattern: DOMAIN_REGEX,
+                          message: 'Enter a valid Domain Name',
+                        },
+                        () => ({
+                          validator(_rule, value) {
+                            return addRealm(value);
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input
+                        placeholder={`Enter Domain Name ${field.name + 1}`}
+                        addonAfter={
+                          fields.length > 1 && (
+                            <MinusCircleOutlined
+                              data-testid={`removeDomain${field.name}`}
+                              onClick={() => remove(field.name)}
+                            />
+                          )
+                        }
+                      />
+                    </Item>
+                  </div>
+                ))}
+                <RoleProtectedBtn type="dashed" onClick={() => add()}>
+                  <PlusOutlined /> Add Domain Name
+                </RoleProtectedBtn>
+              </>
+            );
+          }}
+        </Form.List>
       </Item>
 
       <Item
@@ -204,6 +230,7 @@ NaiRealm.propTypes = {
   form: PropTypes.instanceOf(Object),
   addEap: PropTypes.func.isRequired,
   removeEap: PropTypes.func.isRequired,
+  addRealm: PropTypes.func.isRequired,
 };
 
 NaiRealm.defaultProps = { eapMap: {}, form: null };

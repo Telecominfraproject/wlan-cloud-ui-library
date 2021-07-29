@@ -5,8 +5,6 @@ import { Form, Input } from 'antd';
 import Modal from 'components/Modal';
 import { IP_REGEX } from 'containers/ProfileDetails/constants';
 
-import globalStyles from 'styles/index.scss';
-
 import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
@@ -26,7 +24,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
           },
         ]}
       >
-        <Input className={globalStyles.field} placeholder="Enter Name" />
+        <Input placeholder="Enter Name" />
       </Item>
       <Item
         name="greRemoteInetAddr"
@@ -43,7 +41,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter Remote IP Address" />
+        <Input placeholder="Enter Remote IP Address" />
       </Item>
       <Item
         label="VLAN IDs"
@@ -56,7 +54,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter list of VLAN IDs" />
+        <Input placeholder="Enter list of VLAN IDs" />
       </Item>
     </Form>
   );

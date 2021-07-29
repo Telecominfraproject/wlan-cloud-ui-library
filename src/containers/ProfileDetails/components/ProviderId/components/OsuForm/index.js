@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Form } from 'antd';
+import { Card, Form, Checkbox } from 'antd';
 import PasspointLocaleTable from 'components/PasspointLocaleTable';
-import { Switch, Input, RoleProtectedBtn } from 'components/WithRoles';
+import { Switch, Input, RoleProtectedBtn, CheckboxGroup } from 'components/WithRoles';
+
 import FormModal from '../FormModal';
 
 const { Item } = Form;
@@ -56,11 +57,58 @@ const OsuForm = ({ osuDetails, onSubmit, removeItem, handleOnFormChange }) => {
             rules={[
               {
                 required: true,
-                message: 'Server uri field cannot be empty',
+                message: 'Please enter a Server URI',
+              },
+              {
+                type: 'url',
+                message: 'Please enter Server URI in the format http://... or https://...',
               },
             ]}
           >
-            <Input placeholder="Enter a value for server uri" />
+            <Input placeholder="Enter Server URI" />
+          </Item>
+
+          <Item
+            name="osuNaiStandalone"
+            label="NAI Standalone"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter a NAI Standalone',
+              },
+            ]}
+            tooltip="NAI Standalone specifies the OSU NAI value for OSEN authentication when using a standalone OSU BSS"
+          >
+            <Input placeholder="Enter NAI Standalone" />
+          </Item>
+
+          <Item
+            name="osuNaiShared"
+            label="NAI Shared"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter a NAI Shared',
+              },
+              {
+                max: 256,
+                message: 'NAI Shared cannot be more than 256 characters',
+              },
+            ]}
+            tooltip="NAI Shared specifies the OSU NAI value for OSEN authentication when using a shared BSS (Single SSID) for OSU"
+          >
+            <Input placeholder="Enter NAI Shared" />
+          </Item>
+
+          <Item name="osuMethodList" label="Method List">
+            <CheckboxGroup>
+              <Checkbox key="soap_xml_spp" value={1}>
+                SOAP XML SPP
+              </Checkbox>
+              <Checkbox key="oma_dm" value={0}>
+                OMA DM
+              </Checkbox>
+            </CheckboxGroup>
           </Item>
 
           <Card

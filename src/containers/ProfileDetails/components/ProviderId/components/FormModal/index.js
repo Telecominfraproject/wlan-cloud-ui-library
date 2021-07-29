@@ -30,15 +30,19 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
     <>
       <Item
         name="imageUrl"
-        label="Url:"
+        label="URL:"
         rules={[
           {
             required: true,
-            message: 'Url field cannot be empty',
+            message: 'URL field cannot be empty',
+          },
+          {
+            type: 'url',
+            message: 'Please enter URL in the format http://... or https://...',
           },
         ]}
       >
-        <Input placeholder="Enter the image url" />
+        <Input placeholder="Enter the Image URL" />
       </Item>
       <LocaleItem name="iconLocale" />
     </>

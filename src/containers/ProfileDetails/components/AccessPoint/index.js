@@ -536,14 +536,16 @@ const AccessPointForm = ({
                     rules={[
                       {
                         required: true,
-                        message: 'Port expected between 1 - 65535',
+                        message: 'Port can be a number between 1 and 65535',
                       },
                       () => ({
                         validator(_rule, value) {
                           if (!value || getFieldValue(['rtlsSettings', 'srvHostPort']) < 65535) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error('Port expected between 1 - 65535'));
+                          return Promise.reject(
+                            new Error('Port can be a number between 1 and 65535')
+                          );
                         },
                       }),
                     ]}
@@ -608,14 +610,16 @@ const AccessPointForm = ({
                         rules={[
                           {
                             required: true,
-                            message: 'Port expected between 1 - 65535',
+                            message: 'Port can be a number between 1 and 65535',
                           },
                           () => ({
                             validator(_rule, value) {
                               if (!value || getFieldValue(['syslogRelay', 'srvHostPort']) < 65535) {
                                 return Promise.resolve();
                               }
-                              return Promise.reject(new Error('Port expected between 1 - 65535'));
+                              return Promise.reject(
+                                new Error('Port can be a number between 1 and 65535')
+                              );
                             },
                           }),
                         ]}
@@ -784,7 +788,7 @@ const AccessPointForm = ({
           <Card
             title="RADIUS Proxy Configuration"
             loading={loading}
-            bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
+            bodyStyle={{ padding: fields.length <= 0 && '0' }}
             extra={
               <WithRoles>
                 {fields.length >= MAX_RADIUS_PROXIES && (
@@ -843,14 +847,16 @@ const AccessPointForm = ({
                   rules={[
                     {
                       required: true,
-                      message: 'Port expected between 1 - 65535',
+                      message: 'Port can be a number between 1 and 65535',
                     },
                     () => ({
                       validator(_rule, value) {
                         if (!value || (value > 0 && value < 65535)) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(new Error('Port expected between 1 - 65535'));
+                        return Promise.reject(
+                          new Error('Port can be a number between 1 and 65535')
+                        );
                       },
                     }),
                   ]}
@@ -943,7 +949,7 @@ const AccessPointForm = ({
                                         return Promise.resolve();
                                       }
                                       return Promise.reject(
-                                        new Error('Port expected between 1 - 65535')
+                                        new Error('Port can be a number between 1 and 65535')
                                       );
                                     },
                                   }),

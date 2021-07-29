@@ -5,7 +5,6 @@ import { Input, Password, Select, RadioGroup, CheckboxGroup } from 'components/W
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
 
-import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 import { DEFAULT_SSID_PROFILE } from '../constants';
 import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
@@ -95,6 +94,7 @@ const SSIDForm = ({
         userDefinedNasIp:
           details?.radiusClientConfiguration?.userDefinedNasIp ??
           DEFAULT_SSID_PROFILE.radiusClientConfiguration.userDefinedNasIp,
+        operatorId: details?.radiusClientConfiguration?.operatorId,
       },
       useRadiusProxy:
         details?.useRadiusProxy?.toString() ?? DEFAULT_SSID_PROFILE.useRadiusProxy.toString(),
@@ -155,7 +155,7 @@ const SSIDForm = ({
             },
           ]}
         >
-          <Input className={globalStyles.field} placeholder="Enter SSID name" />
+          <Input placeholder="Enter SSID name" />
         </Item>
 
         <Item
@@ -196,7 +196,6 @@ const SSIDForm = ({
               ]}
             >
               <Input
-                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
@@ -230,7 +229,6 @@ const SSIDForm = ({
               ]}
             >
               <Input
-                className={globalStyles.field}
                 placeholder="0-100"
                 type="number"
                 min={0}
@@ -351,7 +349,6 @@ const SSIDForm = ({
               getFieldValue('captivePortal') === 'usePortal' ? (
               <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
                 <Select
-                  className={globalStyles.field}
                   placeholder="Select Captive Portal"
                   onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
                   showSearch={onSearchProfile}
@@ -426,14 +423,7 @@ const SSIDForm = ({
                   style={{ marginTop: '10px' }}
                   hasFeedback
                 >
-                  <Input
-                    className={globalStyles.field}
-                    placeholder="1-4095"
-                    type="number"
-                    min={1}
-                    max={4095}
-                    maxLength={4}
-                  />
+                  <Input placeholder="1-4095" type="number" min={1} max={4095} maxLength={4} />
                 </Item>
               )
             );
@@ -458,7 +448,7 @@ const SSIDForm = ({
                   mode === 'wpa2OnlyRadius' ||
                   mode === 'wpa2Radius' ||
                   mode === 'wpaRadius') ? (
-                  <Select className={globalStyles.field} placeholder="Select Dynamic VLAN">
+                  <Select placeholder="Select Dynamic VLAN">
                     <Option value="disabled">Disabled</Option>
                     <Option value="enabled">Enabled</Option>
                     <Option value="enabled_reject_if_no_radius_dynamic_vlan">
@@ -481,19 +471,9 @@ const SSIDForm = ({
       </Card>
 
       <Card title="Security and Encryption">
-        <Item
-          label="Mode"
-          name="secureMode"
-          rules={[
-            {
-              required: true,
-              message: 'Please select your security and encryption mode',
-            },
-          ]}
-        >
+        <Item label="Mode" name="secureMode">
           <Select
             data-testid="securityMode"
-            className={globalStyles.field}
             onChange={value => {
               setMode(value);
               handleOnModeChanged();
@@ -543,12 +523,7 @@ const SSIDForm = ({
             ]}
             hasFeedback
           >
-            <Password
-              visibilityToggle
-              className={globalStyles.field}
-              placeholder="8-63 characters"
-              maxLength={63}
-            />
+            <Password visibilityToggle placeholder="8-63 characters" maxLength={63} />
           </Item>
         )}
 
@@ -579,7 +554,6 @@ const SSIDForm = ({
               hasFeedback
             >
               <Input
-                className={globalStyles.field}
                 placeholder="Enter WEP key"
                 onKeyPress={e => hexadecimalRegex(e)}
                 maxLength={26}
@@ -595,7 +569,7 @@ const SSIDForm = ({
                 },
               ]}
             >
-              <Select className={globalStyles.field} placeholder="Select vlan key ID">
+              <Select placeholder="Select vlan key ID">
                 <Option value={1}>1</Option>
                 <Option value={2}>2</Option>
                 <Option value={3}>3</Option>
@@ -636,18 +610,8 @@ const SSIDForm = ({
             {({ getFieldValue }) => {
               return (
                 getFieldValue('useRadiusProxy') === 'false' && (
-                  <Item
-                    name="radiusServiceId"
-                    label="RADIUS Profile"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please select a RADIUS profile',
-                      },
-                    ]}
-                  >
+                  <Item name="radiusServiceId" label="RADIUS Profile">
                     <Select
-                      className={globalStyles.field}
                       placeholder="Select RADIUS Profile"
                       onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
                       showSearch={onSearchProfile}
@@ -688,7 +652,6 @@ const SSIDForm = ({
             ]}
           >
             <Input
-              className={globalStyles.field}
               placeholder="0 or 60 - 600 "
               type="number"
               min={0}
@@ -698,21 +661,8 @@ const SSIDForm = ({
               }
             />
           </Item>
-          <Item
-            label="NAS ID"
-            name={['radiusClientConfiguration', 'nasClientId']}
-            rules={[
-              {
-                required: true,
-                message: 'Please select NAS ID',
-              },
-            ]}
-          >
-            <Select
-              data-testid="securityMode"
-              className={globalStyles.field}
-              placeholder="Select NAS ID"
-            >
+          <Item label="NAS ID" name={['radiusClientConfiguration', 'nasClientId']}>
+            <Select data-testid="securityMode" placeholder="Select NAS ID">
               <Option value="BSSID">BSSID</Option>
               <Option value="AP_BASE_MAC">AP Base MAC Address</Option>
               <Option value="USER_DEFINED">Manual</Option>
@@ -742,27 +692,14 @@ const SSIDForm = ({
                       },
                     ]}
                   >
-                    <Input className={globalStyles.field} placeholder="Enter NAS ID" />
+                    <Input placeholder="Enter NAS ID" />
                   </Item>
                 )
               );
             }}
           </Item>
-          <Item
-            label="NAS IP"
-            name={['radiusClientConfiguration', 'nasClientIp']}
-            rules={[
-              {
-                required: true,
-                message: 'Please select NAS IP',
-              },
-            ]}
-          >
-            <Select
-              data-testid="securityMode"
-              className={globalStyles.field}
-              placeholder="Select NAS IP"
-            >
+          <Item label="NAS IP" name={['radiusClientConfiguration', 'nasClientIp']}>
+            <Select data-testid="securityMode" placeholder="Select NAS IP">
               <Option value="WAN_IP">WAN</Option>
               <Option value="PROXY_IP">Proxy</Option>
               <Option value="USER_DEFINED">Manual</Option>
@@ -793,11 +730,24 @@ const SSIDForm = ({
                       },
                     ]}
                   >
-                    <Input className={globalStyles.field} placeholder="Enter NAS IP" />
+                    <Input placeholder="Enter NAS IP" />
                   </Item>
                 )
               );
             }}
+          </Item>
+
+          <Item
+            name={['radiusClientConfiguration', 'operatorId']}
+            label="Operator ID"
+            rules={[
+              {
+                required: true,
+                message: 'Please enter Operator Identifcation',
+              },
+            ]}
+          >
+            <Input placeholder="Enter Operator Identifcation" />
           </Item>
         </Card>
       )}

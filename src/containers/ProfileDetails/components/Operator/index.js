@@ -54,12 +54,7 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
         <Item
           label="OSEN:"
           name="serverOnlyAuthenticatedL2EncryptionNetwork"
-          rules={[
-            {
-              required: true,
-              message: 'OSEN field cannot be empty',
-            },
-          ]}
+          tooltip="OSU Server-Only Authenticated on L2 Encryption Network"
         >
           <Select>
             <Option value="true">Enabled</Option>

@@ -4,7 +4,6 @@ import { Form, Input, Select, Alert, Spin } from 'antd';
 
 import Modal from 'components/Modal';
 import ContainedSelect from 'components/ContainedSelect';
-import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
@@ -59,11 +58,7 @@ const FormModal = ({
           }),
         ]}
       >
-        <Input
-          className={globalStyles.field}
-          placeholder="Enter Model"
-          disabled={model === 'default'}
-        />
+        <Input placeholder="Enter Model" disabled={model === 'default'} />
       </Item>
 
       <Item
@@ -77,7 +72,6 @@ const FormModal = ({
         ]}
       >
         <ContainedSelect
-          className={globalStyles.field}
           placeholder="Select Access Point Profile"
           onPopupScroll={e => onFetchMoreProfiles(e)}
         >

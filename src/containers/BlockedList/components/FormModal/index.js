@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
 import Modal from 'components/Modal';
-import globalStyles from 'styles/index.scss';
 import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
@@ -28,7 +27,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
         ]}
         hasFeedback
       >
-        <Input className={globalStyles.field} placeholder="Enter MAC Address" />
+        <Input placeholder="Enter MAC Address" />
       </Item>
     </Form>
   );

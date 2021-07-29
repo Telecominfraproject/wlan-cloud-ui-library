@@ -207,7 +207,7 @@ const AccessPointDetails = ({
         tabList={TAB_LIST}
         onTabChange={key => handlePageChange(`${routes.accessPoints}/${id}/${key}`)}
         activeTabKey={tab}
-        bodyStyle={{ marginBottom: '-48px' }}
+        bodyStyle={{ padding: '0' }}
       />
 
       {tab === 'general' && (

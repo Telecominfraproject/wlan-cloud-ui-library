@@ -7,7 +7,6 @@ import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
-import globalStyles from 'styles/index.scss';
 
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
@@ -253,7 +252,7 @@ const AutoProvision = ({
                     },
                   ]}
                 >
-                  <Select className={globalStyles.field} placeholder="Select Location">
+                  <Select placeholder="Select Location">
                     {dataLocation.map(i => (
                       <Option key={i.id} value={i.id}>
                         {i.name}

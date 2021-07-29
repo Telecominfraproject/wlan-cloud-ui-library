@@ -4,7 +4,6 @@ import { Form, Card, Col, Tooltip, Select as AntdSelect, Radio, Row } from 'antd
 import { Input, Select, TextArea } from 'components/WithRoles';
 import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Button from 'components/Button';
-import globalStyles from 'styles/index.scss';
 import styles from '../index.module.scss';
 
 const { Item, List } = Form;
@@ -47,7 +46,7 @@ const BonjourGateway = ({ form, details }) => {
     <div className={styles.ProfilePage}>
       <Card title="Bonjour Gateway">
         <Item name="profileDescription" label="Description">
-          <TextArea className={globalStyles.field} rows={2} allowClear />
+          <TextArea rows={2} allowClear />
         </Item>
       </Card>
       <List name="bonjourServices">
@@ -152,15 +151,11 @@ const BonjourGateway = ({ form, details }) => {
                             hasFeedback
                             wrapperCol={{ span: 35 }}
                           >
-                            <Input
-                              placeholder="2-4095"
-                              className={globalStyles.field}
-                              data-testid={`vlanInput${field.name}`}
-                            />
+                            <Input placeholder="2-4095" data-testid={`vlanInput${field.name}`} />
                           </Item>
                         ) : (
                           <Item wrapperCol={{ span: 35 }}>
-                            <Input className={globalStyles.field} disabled placeholder="Default" />
+                            <Input disabled placeholder="Default" />
                           </Item>
                         );
                       }}
@@ -192,7 +187,6 @@ const BonjourGateway = ({ form, details }) => {
                             preserve={false}
                           >
                             <Select
-                              className={globalStyles.field}
                               placeholder="Select predefined services (check to select all)"
                               mode="multiple"
                               allowClear
@@ -264,11 +258,7 @@ const BonjourGateway = ({ form, details }) => {
                           </Item>
                         ) : (
                           <Item wrapperCol={{ span: 35 }}>
-                            <Select
-                              className={globalStyles.field}
-                              disabled
-                              placeholder="All Services"
-                            />
+                            <Select disabled placeholder="All Services" />
                           </Item>
                         );
                       }}

@@ -8,7 +8,7 @@ const PasspointLocaleTable = ({ tableData, dataIndex, removeRow, rowKey }) => {
   const formatCols = useMemo(() => {
     return [
       {
-        title: dataIndex === 'osuIconList' ? 'Url' : 'Name',
+        title: dataIndex === 'osuIconList' ? 'URL' : 'Name',
         dataIndex: dataIndex === 'osuIconList' ? 'imageUrl' : 'dupleName',
         width: 500,
       },

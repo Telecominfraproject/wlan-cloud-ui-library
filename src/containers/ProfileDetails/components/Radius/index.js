@@ -80,10 +80,8 @@ const RadiusForm = ({ form, details }) => {
                         message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                       },
                     ]}
-                    hasFeedback
                   >
                     <Input
-                      className={styles.Field}
                       placeholder="Enter IP address"
                       data-testid={`authenticationIpAddress${field.name}`}
                     />
@@ -100,7 +98,6 @@ const RadiusForm = ({ form, details }) => {
                     ]}
                   >
                     <Password
-                      className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`authenticationSecret${field.name}`}
                     />
@@ -113,26 +110,59 @@ const RadiusForm = ({ form, details }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Port expected between 1 - 65535',
+                        message: 'Port can be a number between 1 and 65535',
                       },
                       () => ({
                         validator(_rule, value) {
                           if (!value || (value > 0 && value < 65535)) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error('Port expected between 1 - 65535'));
+                          return Promise.reject(
+                            new Error('Port can be a number between 1 and 65535')
+                          );
                         },
                       }),
                     ]}
-                    hasFeedback
                   >
                     <Input
-                      className={styles.Field}
                       placeholder="Enter Port"
                       type="number"
                       min={1}
                       max={65535}
                       data-testid={`authenticationPort${field.name}`}
+                    />
+                  </Item>
+
+                  <Item
+                    name={[field.name, 'timeout']}
+                    label="Session Timeout"
+                    initialValue={5}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Session timeout can be a number between 1 and 1440',
+                      },
+                      () => ({
+                        validator(_rule, value) {
+                          if (!value || (value > 0 && value < 1440)) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(
+                            new Error('Session timeout can be a number between 1 and 1440')
+                          );
+                        },
+                      }),
+                    ]}
+                  >
+                    <Input
+                      placeholder="Enter Session Timeout"
+                      type="number"
+                      min={1}
+                      max={5}
+                      data-testid={`authenticationTimeout${field.name}`}
+                      addonAfter={
+                        <Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />
+                      }
                     />
                   </Item>
 
@@ -160,7 +190,7 @@ const RadiusForm = ({ form, details }) => {
           return (
             <Card
               title="RADIUS Accounting Server"
-              bodyStyle={{ marginBottom: fields.length <= 0 && '-48px' }}
+              bodyStyle={{ padding: fields.length <= 0 && '0' }}
               extra={
                 <>
                   {fields.length >= MAX_RADIUS && (
@@ -194,10 +224,8 @@ const RadiusForm = ({ form, details }) => {
                         message: 'Enter in the format [0-255].[0-255].[0-255].[0-255]',
                       },
                     ]}
-                    hasFeedback
                   >
                     <Input
-                      className={styles.Field}
                       placeholder="Enter IP address"
                       data-testid={`accountingIpAddress${field.name}`}
                     />
@@ -214,7 +242,6 @@ const RadiusForm = ({ form, details }) => {
                     ]}
                   >
                     <Password
-                      className={styles.Field}
                       placeholder="Enter Shared Secret"
                       data-testid={`accountingSecret${field.name}`}
                     />
@@ -227,26 +254,59 @@ const RadiusForm = ({ form, details }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Port expected between 1 - 65535',
+                        message: 'Port can be a number between 1 and 65535',
                       },
                       () => ({
                         validator(_rule, value) {
                           if (!value || (value > 0 && value < 65535)) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error('Port expected between 1 - 65535'));
+                          return Promise.reject(
+                            new Error('Port can be a number between 1 and 65535')
+                          );
                         },
                       }),
                     ]}
-                    hasFeedback
                   >
                     <Input
-                      className={styles.Field}
                       placeholder="Enter Port"
                       type="number"
                       min={1}
                       max={65535}
                       data-testid={`accountingPort${field.name}`}
+                    />
+                  </Item>
+
+                  <Item
+                    name={[field.name, 'timeout']}
+                    label="Session Timeout"
+                    initialValue={5}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Session timeout can be a number between 1 and 1440',
+                      },
+                      () => ({
+                        validator(_rule, value) {
+                          if (!value || (value > 0 && value < 1440)) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(
+                            new Error('Session timeout can be a number between 1 and 1440')
+                          );
+                        },
+                      }),
+                    ]}
+                  >
+                    <Input
+                      placeholder="Enter Session Timeout"
+                      type="number"
+                      min={1}
+                      max={1440}
+                      data-testid={`accountingTimeout${field.name}`}
+                      addonAfter={
+                        <Tooltip title="Timeout range is 1-1440 (one day max)" text="Minutes" />
+                      }
                     />
                   </Item>
 
