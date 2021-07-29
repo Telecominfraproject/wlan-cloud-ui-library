@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { FormOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-import Container from 'components/Container';
 import Header from 'components/Header';
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 import { Table } from 'components/Skeleton';
+
+import useWindowSize from 'hooks/useWindowSize';
 
 import styles from './index.module.scss';
 import DefaultModal from './components/FormModal';
@@ -30,6 +31,8 @@ const Accounts = ({
   const [addModal, setAddModal] = useState(false);
   const [activeUser, setActiveUser] = useState({});
 
+  const [width] = useWindowSize();
+
   const deleteUser = () => {
     const { id } = activeUser;
     onDeleteUser(id);
@@ -51,7 +54,7 @@ const Accounts = ({
       title: 'E-MAIL',
       dataIndex: 'email',
       key: 'email',
-      width: 620,
+      width: width > 992 && 620,
     },
     {
       title: 'ROLES',
@@ -107,7 +110,7 @@ const Accounts = ({
   ];
 
   return (
-    <Container>
+    <div className={styles.Container}>
       <Header>
         <h1>Users</h1>
         <RoleProtectedBtn title="addaccount" type="primary" onClick={() => setAddModal(true)}>
@@ -133,13 +136,20 @@ const Accounts = ({
         isAuth0Enabled={isAuth0Enabled}
         allUserRoles={allUserRoles}
       />
-      <Table loading={loading} dataSource={data} columns={columns} pagination={false} rowKey="id" />
+      <Table
+        loading={loading}
+        dataSource={data}
+        columns={columns}
+        pagination={false}
+        rowKey="id"
+        scroll={{ x: 'max-content' }}
+      />
       {!isLastPage && (
         <div className={styles.LoadMore}>
           <Button onClick={onLoadMore}>Load More</Button>
         </div>
       )}
-    </Container>
+    </div>
   );
 };
 
