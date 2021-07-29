@@ -25,6 +25,14 @@ export const QOS_CONFIGURATION = [
   '255',
 ];
 
+export const ALLOWED_CHANNEL_BANDWIDTH = {
+  auto: ['is20MHz', 'is40MHz', 'is80MHz', 'is160MHz'],
+  modeN: ['is20MHz', 'is40MHz'],
+  modeA: ['is20MHz'],
+  modeAC: ['is20MHz', 'is40MHz', 'is80MHz', 'is160MHz'],
+  modeAX: ['is20MHz', 'is40MHz', 'is80MHz', 'is160MHz'],
+};
+
 export const IP_REGEX = /^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\.(?!$)|$)){4}$/;
 
 export const DOMAIN_REGEX = /@$|^(\*)$|^(\*\.)|^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]{1,253}$/;

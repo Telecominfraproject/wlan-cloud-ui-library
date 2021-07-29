@@ -318,7 +318,7 @@ const AddProfile = ({
               name="name"
               label="Name"
               onChange={e => setName(e.target.value)}
-              rules={[{ required: true, message: 'Please input your new profile name' }]}
+              rules={[{ required: true, message: 'Please input your profile name' }]}
             >
               <Input id="profileName" placeholder="Enter profile name" />
             </Item>

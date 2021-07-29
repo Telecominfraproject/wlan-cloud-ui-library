@@ -279,7 +279,7 @@ const General = ({
                 }
                 title={`The ${radioTypes[key]} radio has "${_.startCase(
                   dependency
-                )}" enabled in the RF Profile.`}
+                )}" enabled in the RF Profile`}
                 text="Auto"
               />
             );
@@ -294,7 +294,7 @@ const General = ({
               }
               title={`The ${radioTypes[key]} radio has "${_.startCase(
                 dependency
-              )}" disabled in the RF Profile.`}
+              )}" disabled in the RF Profile`}
               text="Profile"
             />
           );
@@ -366,7 +366,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile`}
                       />
                     ),
                   }
@@ -383,7 +383,7 @@ const General = ({
                     addOnText: (
                       <Tooltip
                         text="Auto"
-                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile.`}
+                        title={`The ${radioTypes[key]} radio has "Auto Channel Selection" enabled in the RF Profile`}
                       />
                     ),
                   }
