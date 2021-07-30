@@ -1,3 +1,12 @@
+.BlockedList {
+  max-width: 1200px;
+  margin: auto;
+
+  @media screen and (max-width: 992px) {
+    padding: 0px 16px;
+  }
+}
+
 .InfoButton {
   background-color: transparent;
   border: none;
