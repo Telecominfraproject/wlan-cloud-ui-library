@@ -109,13 +109,14 @@ const Firmware = ({
   const getRebootStatus = () => updateInProgressStates.has(status?.upgradeState);
 
   const getUpgradePercentage = value => {
+    // In testing, only download_initiated, download_complete, and apply_initiated actually return, the rest are just in case
     if (value.includes('download_initiated')) return 20;
     if (value.includes('download_complete')) return 40;
-    if (value.includes('download')) return 50;
-    if (value.includes('apply_initiated')) return 60;
-    if (value.includes('apply_complete')) return 80;
-    if (value.includes('apply')) return 80;
-    if (value.includes('reboot')) return 90;
+    if (value.includes('download')) return 70;
+    if (value.includes('apply_initiated')) return 80;
+    if (value.includes('apply_complete')) return 90;
+    if (value.includes('apply')) return 90;
+    if (value.includes('reboot')) return 95;
     return 100;
   };
 
