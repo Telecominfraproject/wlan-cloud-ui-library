@@ -4,7 +4,6 @@ import Proptypes from 'prop-types';
 import { Table } from 'components/Skeleton';
 
 import DeleteButton from 'components/DeleteButton';
-import Container from 'components/Container';
 import Header from 'components/Header';
 import ThemeContext from 'contexts/ThemeContext';
 
@@ -73,7 +72,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
   ];
 
   return (
-    <Container>
+    <>
       <FormModal
         onCancel={() => setAddModal(false)}
         visible={addModal}
@@ -98,7 +97,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
           pagination={false}
         />
       </div>
-    </Container>
+    </>
   );
 };
 
