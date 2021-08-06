@@ -77,8 +77,8 @@ describe('<AutoProvision />', () => {
 
     const location = getByLabelText('Auto-Provisioning Location');
     fireEvent.keyDown(location, DOWN_ARROW);
-    await waitForElement(() => getByText(mockProps.dataLocation[1].name));
-    fireEvent.click(getByText(mockProps.dataLocation[1].name));
+    await waitForElement(() => getByText(mockProps.locationsTree[0].children[0].title));
+    await fireEvent.click(getByText(mockProps.locationsTree[0].children[0].title));
 
     fireEvent.click(getByRole('button', { name: 'Save' }));
 

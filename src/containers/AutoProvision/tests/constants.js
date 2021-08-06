@@ -28,7 +28,16 @@ export const mockProps = {
     },
     __typename: 'Customer',
   },
-  dataLocation: [generateLocation(), generateLocation(), generateLocation()],
+  locationsTree: [
+    {
+      value: '0',
+      key: '0',
+      id: '0',
+      title: 'Network',
+      disabled: true,
+      children: [generateLocation(), generateLocation()],
+    },
+  ],
   dataProfile: [
     generateApProfile({
       is2dot4GHz: {

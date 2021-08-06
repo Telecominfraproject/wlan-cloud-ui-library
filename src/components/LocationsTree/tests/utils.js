@@ -6,7 +6,7 @@ export function generateLocation() {
   return {
     key: id,
     id,
-    name: faker.address.city(),
+    title: faker.address.city(),
     parentId: id - 1,
     value: id.toString(),
     locationType: faker.lorem.word(),
