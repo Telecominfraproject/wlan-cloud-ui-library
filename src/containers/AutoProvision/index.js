@@ -1,22 +1,23 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Select as AntdSelect, Alert } from 'antd';
-import { Table, Card } from 'components/Skeleton';
-import WithRoles, { Switch, Select, RoleProtectedBtn } from 'components/WithRoles';
+import { Form, TreeSelect, Alert, Skeleton, Card } from 'antd';
+import { Table } from 'components/Skeleton';
+import WithRoles, { Switch, RoleProtectedBtn } from 'components/WithRoles';
 import { FormOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
 import DeleteButton from 'components/DeleteButton';
 
+import { pageLayout } from 'utils/form';
+
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
-const { Option } = AntdSelect;
 
 const AutoProvision = ({
   data,
-  dataLocation,
+  locationsTree,
   dataProfile,
   loadingLocation,
   loadingProfile,
@@ -31,6 +32,7 @@ const AutoProvision = ({
   const [equipmentProfileIdPerModel, setEquipmentProfileIdPerModel] = useState(
     data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {}
   );
+
   const [activeModel, setActiveModel] = useState({});
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -41,11 +43,6 @@ const AutoProvision = ({
       data?.details?.autoProvisioning?.equipmentProfileIdPerModel || {}
     );
   }, [data]);
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 12 },
-  };
 
   const profilesById = useMemo(() => {
     const map = {};
@@ -120,18 +117,16 @@ const AutoProvision = ({
     {
       title: 'MODEL',
       dataIndex: 'model',
-      key: 'model',
+      key: 'model-1',
       width: 150,
     },
     {
       title: 'PROFILE',
       dataIndex: 'profileId',
       key: 'profileId',
-      width: 800,
       render: i => profilesById[i]?.name || i,
     },
     {
-      title: '',
       key: 'editModel',
       width: 60,
       render: (_, record) => (
@@ -149,7 +144,6 @@ const AutoProvision = ({
     },
 
     {
-      title: '',
       key: 'deleteModel',
       width: 60,
       render: (_, record) => {
@@ -209,7 +203,7 @@ const AutoProvision = ({
         usedModels={usedModels}
         onFetchMoreProfiles={onFetchMoreProfiles}
       />
-      <Form {...layout} form={form}>
+      <Form {...pageLayout} form={form}>
         <div className={styles.Header}>
           <h1>Auto-Provisioning</h1>
           <Item name="enabled" valuePropName="checked" noStyle>
@@ -219,6 +213,7 @@ const AutoProvision = ({
               onChange={() => setEnabled(!enabled)}
               checkedChildren="Enabled"
               unCheckedChildren="Disabled"
+              loading={loading}
             />
           </Item>
           <WithRoles>
@@ -230,58 +225,61 @@ const AutoProvision = ({
           </WithRoles>
         </div>
 
-        {enabled && (
-          <div className={styles.Content}>
-            <Card title="Target Location" loading={loading || loadingLocation}>
-              {errorLocation ? (
-                <Alert
-                  data-testid="errorLocation"
-                  message="Error"
-                  description="Failed to load location."
-                  type="error"
-                  showIcon
-                />
-              ) : (
-                <Item
-                  label="Auto-Provisioning Location"
-                  name="locationId"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your Auto Provision Location',
-                    },
-                  ]}
-                >
-                  <Select placeholder="Select Location">
-                    {dataLocation.map(i => (
-                      <Option key={i.id} value={i.id}>
-                        {i.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Item>
-              )}
-            </Card>
+        <Skeleton loading={loading}>
+          {enabled && (
+            <div className={styles.Content}>
+              <Card title="Target Location">
+                {errorLocation ? (
+                  <Alert
+                    data-testid="errorLocation"
+                    message="Error"
+                    description="Failed to load location."
+                    type="error"
+                    showIcon
+                  />
+                ) : (
+                  <Item
+                    label="Auto-Provisioning Location"
+                    name="locationId"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please select your Auto Provision Location',
+                      },
+                    ]}
+                  >
+                    <TreeSelect
+                      treeData={locationsTree}
+                      placeholder="Select location..."
+                      loading={loadingLocation}
+                      showSearch
+                      treeDefaultExpandAll
+                      filterTreeNode={(input, treeNode) =>
+                        treeNode.title.toLowerCase().includes(input.toLowerCase())
+                      }
+                    />
+                  </Item>
+                )}
+              </Card>
 
-            <Card
-              title="Target Equipment Profiles"
-              extra={
-                <RoleProtectedBtn onClick={() => setAddModal(true)}>Add Model</RoleProtectedBtn>
-              }
-            >
-              <div className={styles.Content}>
+              <Card
+                title="Target Equipment Profiles"
+                extra={
+                  <RoleProtectedBtn onClick={() => setAddModal(true)}>Add Model</RoleProtectedBtn>
+                }
+              >
                 <Table
                   scroll={{ x: 'max-content' }}
                   rowKey="model"
                   columns={columns}
                   dataSource={tableData}
                   pagination={false}
-                  loading={loadingProfile || (!errorProfile && !tableData.length)}
+                  loading={loadingProfile}
                 />
-              </div>
-            </Card>
-          </div>
-        )}
+              </Card>
+            </div>
+          )}
+        </Skeleton>
       </Form>
     </>
   );
@@ -289,7 +287,7 @@ const AutoProvision = ({
 
 AutoProvision.propTypes = {
   data: PropTypes.instanceOf(Object),
-  dataLocation: PropTypes.instanceOf(Array),
+  locationsTree: PropTypes.instanceOf(Array),
   dataProfile: PropTypes.instanceOf(Array),
   loadingLocation: PropTypes.bool,
   loadingProfile: PropTypes.bool,
@@ -302,7 +300,7 @@ AutoProvision.propTypes = {
 
 AutoProvision.defaultProps = {
   data: {},
-  dataLocation: [],
+  locationsTree: [],
   dataProfile: [],
   loadingLocation: true,
   loadingProfile: true,
