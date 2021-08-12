@@ -76,15 +76,6 @@ const RFForm = ({ form, details, extraFields }) => {
         useMaxTxPower:
           details.rfConfigMap[radio]?.useMaxTxPower?.toString() ??
           DEFAULT_RF_PROFILE[radio].useMaxTxPower.toString(),
-        activeScanSettings: {
-          enabled: details.rfConfigMap[radio]?.activeScanSettings?.enabled ? 'true' : 'false',
-          scanFrequencySeconds:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanFrequencySeconds ??
-            DEFAULT_RF_PROFILE[radio].activeScanSettings.scanFrequencySeconds,
-          scanDurationMillis:
-            details.rfConfigMap[radio]?.activeScanSettings?.scanDurationMillis ??
-            DEFAULT_RF_PROFILE[radio].activeScanSettings.scanDurationMillis,
-        },
         channelHopSettings: {
           noiseFloorThresholdInDB:
             details.rfConfigMap[radio]?.channelHopSettings?.noiseFloorThresholdInDB ??
@@ -155,7 +146,7 @@ const RFForm = ({ form, details, extraFields }) => {
 
   const renderItem = (label, dataIndex, renderInput, options = {}) => {
     const Wrapper = (
-      <Item label={label} key={label}>
+      <Item label={label} key={label} hidden={options.hidden ?? false}>
         <div className={styles.InlineDiv}>
           {currentRadios.map(i => renderInput(dataIndex, i, label, options))}
         </div>
@@ -396,15 +387,19 @@ const RFForm = ({ form, details, extraFields }) => {
           )
         )}
         {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
-          dropdown: (
+          dropdown: key => (
             <Select>
               <Option value="auto">Auto</Option>
-              <Option value="rate1mbps">1</Option>
-              <Option value="rate2mbps">2</Option>
-              <Option value="rate5dot5mbps">5.5</Option>
+              {key === 'is2dot4GHz' && (
+                <>
+                  <Option value="rate1mbps">1</Option>
+                  <Option value="rate2mbps">2</Option>
+                  <Option value="rate5dot5mbps">5.5</Option>
+                </>
+              )}
               <Option value="rate6mbps">6</Option>
               <Option value="rate9mbps">9</Option>
-              <Option value="rate11mbps">11</Option>
+              {key === 'is2dot4GHz' && <Option value="rate11mbps">11</Option>}
               <Option value="rate12mbps">12</Option>
               <Option value="rate18mbps">18</Option>
               <Option value="rate24mbps">24</Option>
@@ -458,45 +453,20 @@ const RFForm = ({ form, details, extraFields }) => {
           addOnText: 'dBm',
           dependencies: { autoCellSizeSelection: 'true', useMaxTxPower: 'true' },
         })}
-        <p>Active Scan Setting:</p>
-        {renderItem('Enable', ['activeScanSettings', 'enabled'], renderOptionItem, {
-          dropdown: defaultOptions,
-        })}
-        {renderItem(
-          'Scan Frequency',
-          ['activeScanSettings', 'scanFrequencySeconds'],
-          renderInputItem,
-          {
-            min: 10,
-            max: 100,
-            error: '10 - 100 seconds',
-            addOnText: 'sec',
-          }
-        )}
-        {renderItem(
-          'Scan Duration',
-          ['activeScanSettings', 'scanDurationMillis'],
-          renderInputItem,
-          {
-            min: 50,
-            max: 100,
-            error: '50 - 100 milliseconds',
-            addOnText: 'ms',
-          }
-        )}
 
-        <p>Client Steering Thresholds:</p>
         {renderItem('Min Load', ['bestApSettings', 'minLoadFactor'], renderInputItem, {
           min: 0,
           max: 100,
           error: '0 - 100%',
           addOnText: '%',
+          hidden: true,
         })}
         {renderItem('SNR', ['bestApSettings', 'dropInSnrPercentage'], renderInputItem, {
           min: 0,
           max: 100,
           error: '0 - 100%',
           addOnText: '% Drop',
+          hidden: true,
         })}
         <p>Channel Hop Configuration:</p>
         {renderItem(

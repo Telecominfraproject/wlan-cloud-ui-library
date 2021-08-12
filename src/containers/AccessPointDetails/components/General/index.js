@@ -244,7 +244,12 @@ const General = ({
       return null;
     }
     return (
-      <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
+      <Item
+        label={label}
+        colon={dataIndex !== 'radioType'}
+        key={label}
+        hidden={options.hidden ?? false}
+      >
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(obj)).map(i =>
             renderInput ? (
@@ -697,7 +702,6 @@ const General = ({
             mapName: 'radioMap',
           })}
 
-          <p>Steering Threshold:</p>
           {renderItem(
             'SNR',
             advancedRadioMap,
@@ -709,6 +713,7 @@ const General = ({
               error: '0 - 100%',
               addOnText: '% Drop',
               mapName: 'advancedRadioMap',
+              hidden: true,
             }
           )}
           {renderItem(
@@ -722,6 +727,7 @@ const General = ({
               error: '0 - 100%',
               addOnText: '%',
               mapName: 'advancedRadioMap',
+              hidden: true,
             }
           )}
         </Panel>

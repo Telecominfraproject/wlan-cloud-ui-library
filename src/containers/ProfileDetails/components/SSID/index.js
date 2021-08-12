@@ -737,16 +737,7 @@ const SSIDForm = ({
             }}
           </Item>
 
-          <Item
-            name={['radiusClientConfiguration', 'operatorId']}
-            label="Operator ID"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter Operator Identifcation',
-              },
-            ]}
-          >
+          <Item name={['radiusClientConfiguration', 'operatorId']} label="Operator ID">
             <Input placeholder="Enter Operator Identifcation" />
           </Item>
         </Card>
