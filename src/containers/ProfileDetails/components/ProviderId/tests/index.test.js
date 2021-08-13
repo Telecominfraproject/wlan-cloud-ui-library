@@ -655,28 +655,6 @@ describe('<ProviderIdForm />', () => {
     });
   });
 
-  it('The first Domain Name input should be shown by default', async () => {
-    const ProviderIdFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <ProviderIdForm
-            details={{
-              ...mockProviderId.details,
-            }}
-            form={form}
-          />
-        </Form>
-      );
-    };
-
-    const { getByPlaceholderText } = render(<ProviderIdFormComp />);
-
-    await waitFor(() => {
-      expect(getByPlaceholderText('Enter Domain Name 1')).toBeVisible();
-    });
-  });
-
   it('Clicking the delete Domain Name button should remove the associated Domain Name input from the form', async () => {
     const ProviderIdFormComp = () => {
       const [form] = Form.useForm();
@@ -696,9 +674,9 @@ describe('<ProviderIdForm />', () => {
 
     fireEvent.click(getByText(/add domain name/i));
 
-    const input = getByPlaceholderText('Enter Domain Name 2');
+    const input = getByPlaceholderText('Enter Domain Name 1');
 
-    fireEvent.click(getByTestId('removeDomain1'));
+    fireEvent.click(getByTestId('removeDomain0'));
 
     await waitFor(() => {
       expect(input).not.toBeInTheDocument();
@@ -757,6 +735,7 @@ describe('<ProviderIdForm />', () => {
 
     const errorMsg = 'Enter a unique Domain Name';
     const domainName = faker.internet.domainName();
+    fireEvent.click(getByText(/add domain name/i));
     const input = getByPlaceholderText('Enter Domain Name 1');
     fireEvent.change(input, { target: { value: domainName } });
 
