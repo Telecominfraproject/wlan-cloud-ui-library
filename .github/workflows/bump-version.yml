@@ -20,7 +20,7 @@ jobs:
           node-version: '12'
       - name: Bump Version
         run: |
-          git config -- global user.name "GH Action"
+          git config --global user.name "GH Action"
           npm version patch -m "bump version"
       - name: Push to protected branch
         uses: CasperWA/push-protected@v2
