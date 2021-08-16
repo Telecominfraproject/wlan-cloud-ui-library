@@ -120,12 +120,10 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
                       <Input
                         placeholder={`Enter Domain Name ${field.name + 1}`}
                         addonAfter={
-                          fields.length > 1 && (
-                            <MinusCircleOutlined
-                              data-testid={`removeDomain${field.name}`}
-                              onClick={() => remove(field.name)}
-                            />
-                          )
+                          <MinusCircleOutlined
+                            data-testid={`removeDomain${field.name}`}
+                            onClick={() => remove(field.name)}
+                          />
                         }
                       />
                     </Item>
