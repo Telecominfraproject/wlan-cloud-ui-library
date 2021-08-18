@@ -69,7 +69,6 @@ const AddProfile = ({
   const history = useHistory();
 
   const [profileType, setType] = useState('');
-  const [name, setName] = useState('');
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
 
@@ -79,7 +78,6 @@ const AddProfile = ({
       name: initialValues?.name ? initialValues?.name : '',
     });
     setType(initialValues?.profileType);
-    setName(initialValues?.name ? initialValues?.name : '');
   }, [initialValues]);
 
   const handleOnFormChange = () => {
@@ -261,7 +259,7 @@ const AddProfile = ({
           formattedData.model_type = 'PasspointVenueProfile';
         }
 
-        onCreateProfile(profileType, name, formattedData, formattedData.childProfileIds);
+        onCreateProfile(profileType, values.name, formattedData, formattedData.childProfileIds);
         setIsFormDirty(false);
       })
       .catch(() => {});
@@ -328,7 +326,6 @@ const AddProfile = ({
               id="name"
               name="name"
               label="Name"
-              onChange={e => setName(e.target.value)}
               rules={[{ required: true, message: 'Please input your profile name' }]}
             >
               <Input id="profileName" placeholder="Enter profile name" />

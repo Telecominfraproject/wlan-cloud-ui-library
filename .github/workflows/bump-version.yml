@@ -1,0 +1,30 @@
+name: 'Bump Version'
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore: 
+      - "**/package.json"
+      - "**/package-lock.json"
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Bump Version
+        run: |
+          git config --global user.name "GH Action"
+          npm version patch -m "bump version"
+      - name: Push to protected branch
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.PUSH_TO_PROTECTED_BRANCH }}
+          branch: master
+          unprotect_reviews: true

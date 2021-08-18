@@ -1,7 +1,16 @@
 import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Form, Table, Collapse, Select as AntdSelect, notification, Alert, Empty } from 'antd';
+import {
+  Form,
+  Table,
+  Collapse,
+  Select as AntdSelect,
+  notification,
+  Alert,
+  Empty,
+  Typography,
+} from 'antd';
 import { Card } from 'components/Skeleton';
 import { Input, Select, RoleProtectedBtn } from 'components/WithRoles';
 import _ from 'lodash';
@@ -17,6 +26,7 @@ import styles from '../../index.module.scss';
 
 const { Item } = Form;
 const { Panel } = Collapse;
+const { Text } = Typography;
 
 const { Option } = AntdSelect;
 
@@ -244,7 +254,12 @@ const General = ({
       return null;
     }
     return (
-      <Item label={label} colon={dataIndex !== 'radioType'} key={label}>
+      <Item
+        label={label}
+        colon={dataIndex !== 'radioType'}
+        key={label}
+        hidden={options.hidden ?? false}
+      >
         <div className={styles.InlineDiv}>
           {sortRadioTypes(Object.keys(obj)).map(i =>
             renderInput ? (
@@ -562,7 +577,7 @@ const General = ({
         <Item label="RF Profile">
           {childProfiles.rf?.[0]?.name ? (
             <Link to={`${routes.profiles}/${childProfiles.rf?.[0]?.id}`}>
-              {childProfiles.rf?.[0]?.name}
+              <Text type="secondary">{childProfiles.rf?.[0]?.name}</Text>
             </Link>
           ) : (
             'N/A'
@@ -697,7 +712,6 @@ const General = ({
             mapName: 'radioMap',
           })}
 
-          <p>Steering Threshold:</p>
           {renderItem(
             'SNR',
             advancedRadioMap,
@@ -709,6 +723,7 @@ const General = ({
               error: '0 - 100%',
               addOnText: '% Drop',
               mapName: 'advancedRadioMap',
+              hidden: true,
             }
           )}
           {renderItem(
@@ -722,6 +737,7 @@ const General = ({
               error: '0 - 100%',
               addOnText: '%',
               mapName: 'advancedRadioMap',
+              hidden: true,
             }
           )}
         </Panel>

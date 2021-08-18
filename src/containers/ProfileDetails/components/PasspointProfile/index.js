@@ -347,7 +347,7 @@ const PasspointProfileForm = ({
             }),
           ]}
         >
-          <Input min={0} max={255} type="number" placeholder="0-255" addonAfter="Minutes" />
+          <Input min={0} max={255} type="number" placeholder="0-255" addonAfter="Seconds" />
         </Item>
         <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
           {defaultRadios}
