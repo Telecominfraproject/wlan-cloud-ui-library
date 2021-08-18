@@ -1,12 +1,24 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Card, Button, Form, Table, message, Empty, Select as AntdSelect, Radio } from 'antd';
+import {
+  Card,
+  Button,
+  Form,
+  Table,
+  message,
+  Empty,
+  Select as AntdSelect,
+  Radio,
+  Tooltip,
+} from 'antd';
 import { Input, Select, Upload, RadioGroup as Group } from 'components/WithRoles';
 
-import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, UploadOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 import { PROFILES } from 'containers/ProfileDetails/constants';
 import { formatFile } from 'utils/profiles';
+import { sortRadioTypes } from 'utils/sortRadioTypes';
 
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
@@ -26,7 +38,6 @@ const PasspointProfileForm = ({
   details,
   venueProfiles,
   operatorProfiles,
-  ssidProfiles,
   childProfiles,
   idProviderProfiles,
   associatedSsidProfiles,
@@ -34,25 +45,19 @@ const PasspointProfileForm = ({
   fileUpload,
   onSearchProfile,
   onFetchMoreProfiles,
-  loadingSSIDProfiles,
   loadingVenueProfiles,
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   handleOnFormChange,
 }) => {
-  const { radioTypes } = useContext(ThemeContext);
+  const history = useHistory();
+  const { radioTypes, routes } = useContext(ThemeContext);
   const [termsAndConditionsFileList, setTermsAndConditionsFileList] = useState(
     (details?.termsAndConditionsFile && [formatFile(details?.termsAndConditionsFile)]) || []
   );
   const [modalVisible, setModalVisible] = useState(false);
   const [connectionCapabilitySetList, setConnectionCapabilitySetList] = useState(
     details?.connectionCapabilitySet || []
-  );
-
-  const [selectedChildSsids, setSelectedChildSsids] = useState(
-    associatedSsidProfiles.filter(
-      i => i.profileType === 'ssid' && i.id !== details?.osuSsidProfileId?.toString()
-    ) || []
   );
 
   const [authType, setAuthType] = useState(
@@ -90,12 +95,7 @@ const PasspointProfileForm = ({
           key: i?.id || [],
           label: i?.name || [],
         })) || [],
-      osuSsidProfileId:
-        {
-          value: osuSsidProfile?.id || null,
-          key: osuSsidProfile?.id || null,
-          label: osuSsidProfile?.name || null,
-        } || null,
+
       enableInterworkingAndHs20: details?.enableInterworkingAndHs20 ? 'true' : 'false',
       hessid: {
         addressAsString: details?.hessid?.addressAsString || '00:00:00:00:00:00',
@@ -128,10 +128,6 @@ const PasspointProfileForm = ({
     form.setFieldsValue({ connectionCapabilitySet: connectionCapabilitySetList });
   }, [connectionCapabilitySetList]);
 
-  useEffect(() => {
-    form.setFieldsValue({ associatedAccessSsidProfileIds: selectedChildSsids.map(i => i.id) });
-  }, [selectedChildSsids]);
-
   const validateFile = (file, showMessages = false) => {
     const isCorrectFormat =
       file.type === 'image/jpeg' ||
@@ -153,6 +149,13 @@ const PasspointProfileForm = ({
 
     return true;
   };
+
+  const linkedSSIDs = useMemo(() => {
+    return [
+      ...(osuSsidProfile ? [osuSsidProfile] : []),
+      ...(associatedSsidProfiles.length ? associatedSsidProfiles : []),
+    ];
+  }, [osuSsidProfile, associatedSsidProfiles]);
 
   const handleOnFileChange = (file, fileList) => {
     if (validateFile(file)) {
@@ -229,20 +232,15 @@ const PasspointProfileForm = ({
     },
   ];
 
-  const handleOnChangeSsid = selectedItem => {
-    setSelectedChildSsids([...selectedChildSsids, ssidProfiles.find(i => i.id === selectedItem)]);
-    handleOnFormChange();
-  };
-
-  const handleRemoveSsid = id => {
-    setSelectedChildSsids(selectedChildSsids.filter(i => parseInt(i.id, 10) !== parseInt(id, 10)));
-    handleOnFormChange();
-  };
-
   const columnsSsid = [
     {
       title: 'Profile Name',
       dataIndex: 'name',
+    },
+    {
+      title: 'Type',
+      dataIndex: 'id',
+      render: id => (parseInt(id, 10) === details?.osuSsidProfileId ? 'OSU' : 'Access'),
     },
     {
       title: 'SSID',
@@ -255,24 +253,12 @@ const PasspointProfileForm = ({
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
-    },
-    {
-      title: '',
-      width: 80,
-      render: (_, record) => (
-        <Button
-          title="removeSsid"
-          icon={<DeleteOutlined />}
-          onClick={() => handleRemoveSsid(record.id)}
-        />
-      ),
+      render: appliedRadios =>
+        sortRadioTypes([...appliedRadios])
+          ?.map(i => radioTypes?.[i])
+          ?.join(',  '),
     },
   ];
-
-  const filteredOptions = ssidProfiles.filter(
-    i => !selectedChildSsids.map(ssid => parseInt(ssid.id, 10)).includes(parseInt(i.id, 10))
-  );
 
   return (
     <div className={styles.ProfilePage}>
@@ -334,27 +320,6 @@ const PasspointProfileForm = ({
             labelInValue
           >
             {idProviderProfiles.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
-          </Select>
-        </Item>
-        <Item label="OSU SSID" name="osuSsidProfileId">
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-            data-testid="ssidProfileSelect"
-            showSearch={onSearchProfile}
-            placeholder="Select an SSID Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
-            loading={loadingSSIDProfiles}
-            notFoundContent={!loadingSSIDProfiles && <Empty />}
-            labelInValue
-            allowClear
-          >
-            {ssidProfiles.map(i => (
               <Option key={i.id} value={i.id}>
                 {i.name}
               </Option>
@@ -465,37 +430,29 @@ const PasspointProfileForm = ({
           }}
         </Item>
       </Card>
-
-      <Card title="Wireless Networks (SSIDs) Enabled on This Profile">
-        <Item>
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-            data-testid="ssidProfile"
-            showSearch={onSearchProfile}
-            placeholder="Select a SSID Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
-            loading={loadingSSIDProfiles}
-            notFoundContent={!loadingSSIDProfiles && <Empty />}
-            onChange={handleOnChangeSsid}
-            value="Select a SSID Profile"
-          >
-            {filteredOptions.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
-          </Select>
-        </Item>
+      <Card
+        title={
+          <>
+            Wireless Networks (SSIDs) Enabled on This Profile
+            <Tooltip title="Please configure the OSU and Access SSIDs for this Passpoint profile in the SSID profile">
+              <InfoCircleOutlined className={styles.ToolTip} />
+            </Tooltip>
+          </>
+        }
+      >
         <Table
-          dataSource={selectedChildSsids}
+          dataSource={linkedSSIDs}
           columns={columnsSsid}
           pagination={false}
           rowKey="id"
+          rowClassName={styles.Row}
+          onRow={record => ({
+            onClick: () => {
+              history.push(`${routes.profiles}/${record.id}`);
+            },
+          })}
         />
       </Card>
-
       <Card title="Access Network">
         <Item label="Access Network Type" name="accessNetworkType">
           <Select>
@@ -627,9 +584,6 @@ const PasspointProfileForm = ({
         <Item name="childProfileIds" hidden>
           <Input />
         </Item>
-        <Item name="associatedAccessSsidProfileIds" hidden>
-          <Input />
-        </Item>
       </Card>
 
       <Item name="connectionCapabilitySet">
@@ -650,7 +604,6 @@ PasspointProfileForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
-  ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
   associatedSsidProfiles: PropTypes.instanceOf(Array),
@@ -658,7 +611,6 @@ PasspointProfileForm.propTypes = {
   fileUpload: PropTypes.func,
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
-  loadingSSIDProfiles: PropTypes.bool,
   loadingVenueProfiles: PropTypes.bool,
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
@@ -670,15 +622,13 @@ PasspointProfileForm.defaultProps = {
   details: {},
   venueProfiles: [],
   operatorProfiles: [],
-  ssidProfiles: [],
   childProfiles: [],
   idProviderProfiles: [],
   associatedSsidProfiles: [],
-  osuSsidProfile: {},
+  osuSsidProfile: null,
   fileUpload: () => {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
-  loadingSSIDProfiles: false,
   loadingVenueProfiles: false,
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,

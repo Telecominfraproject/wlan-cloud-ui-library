@@ -49,6 +49,7 @@ const AddProfile = ({
   venueProfiles,
   operatorProfiles,
   idProviderProfiles,
+  passpointProfiles,
   initialValues,
   onSearchProfile,
   onFetchMoreProfiles,
@@ -59,6 +60,7 @@ const AddProfile = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
+  loadingPasspointProfiles,
   fileUpload,
   extraFields,
 }) => {
@@ -117,6 +119,15 @@ const AddProfile = ({
             });
             return;
           }
+
+          if (values.passpointConfig !== 'disabled' && !values.passpointProfileId?.value) {
+            notification.error({
+              message: 'Error',
+              description: 'A Passpoint profile is required.',
+            });
+            return;
+          }
+
           formattedData.model_type = 'SsidConfiguration';
           formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
@@ -329,10 +340,12 @@ const AddProfile = ({
               details={initialValues?.details}
               radiusProfiles={radiusProfiles}
               captiveProfiles={captiveProfiles}
+              passpointProfiles={passpointProfiles}
               onSearchProfile={onSearchProfile}
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingCaptiveProfiles={loadingCaptiveProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
+              loadingPasspointProfiles={loadingPasspointProfiles}
             />
           )}
           {profileType === PROFILES.accessPoint && (
@@ -375,13 +388,11 @@ const AddProfile = ({
               form={form}
               details={initialValues?.details}
               childProfiles={initialValues?.childProfiles}
-              ssidProfiles={ssidProfiles}
               venueProfiles={venueProfiles}
               operatorProfiles={operatorProfiles}
               idProviderProfiles={idProviderProfiles}
               onSearchProfile={onSearchProfile}
               onFetchMoreProfiles={onFetchMoreProfiles}
-              loadingSSIDProfiles={loadingSSIDProfiles}
               loadingVenueProfiles={loadingVenueProfiles}
               loadingOperatorProfiles={loadingOperatorProfiles}
               loadingIdProviderProfiles={loadingIdProviderProfiles}
@@ -412,6 +423,7 @@ AddProfile.propTypes = {
   rfProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
+  passpointProfiles: PropTypes.instanceOf(Array),
   initialValues: PropTypes.instanceOf(Object),
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
@@ -422,6 +434,8 @@ AddProfile.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  loadingPasspointProfiles: PropTypes.bool,
+
   fileUpload: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
 };
@@ -434,6 +448,7 @@ AddProfile.defaultProps = {
   rfProfiles: [],
   radiusProfiles: [],
   captiveProfiles: [],
+  passpointProfiles: [],
   initialValues: {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
@@ -444,6 +459,7 @@ AddProfile.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
+  loadingPasspointProfiles: false,
   fileUpload: () => {},
   extraFields: [],
 };

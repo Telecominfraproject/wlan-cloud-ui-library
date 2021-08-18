@@ -41,6 +41,7 @@ import styles from './index.module.scss';
 
 const ProfileDetails = ({
   profileType,
+  profileId,
   name,
   loadingProfile,
   details,
@@ -55,6 +56,7 @@ const ProfileDetails = ({
   idProviderProfiles,
   associatedSsidProfiles,
   osuSsidProfile,
+  passpointProfiles,
   fileUpload,
   onDownloadFile,
   extraButtons,
@@ -67,6 +69,7 @@ const ProfileDetails = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   loadingRFProfiles,
+  loadingPasspointProfiles,
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
@@ -118,16 +121,18 @@ const ProfileDetails = ({
             });
             return;
           }
-          formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
 
-          const childPasspointProfileIds = childProfiles
-            .filter(profile => profile?.profileType === PROFILES.passpoint)
-            .map(profile => profile?.id);
-
-          if (childPasspointProfileIds.length) {
-            formattedData.childProfileIds.push(...childPasspointProfileIds);
+          if (values.passpointConfig !== 'disabled' && !values.passpointProfileId?.value) {
+            notification.error({
+              message: 'Error',
+              description: 'A Passpoint profile is required.',
+            });
+            return;
           }
+
+          formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
         }
+
         if (profileType === PROFILES.accessPoint) {
           if (!values.rfProfileId?.value) {
             notification.error({
@@ -310,14 +315,17 @@ const ProfileDetails = ({
         {profileType === PROFILES.ssid && (
           <SSIDForm
             form={form}
+            profileId={profileId}
             details={details}
             childProfiles={childProfiles}
             radiusProfiles={radiusProfiles}
             captiveProfiles={captiveProfiles}
+            passpointProfiles={passpointProfiles}
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingCaptiveProfiles={loadingCaptiveProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
+            loadingPasspointProfiles={loadingPasspointProfiles}
           />
         )}
         {profileType === PROFILES.accessPoint && (
@@ -360,7 +368,6 @@ const ProfileDetails = ({
             form={form}
             details={details}
             childProfiles={childProfiles}
-            ssidProfiles={ssidProfiles}
             venueProfiles={venueProfiles}
             operatorProfiles={operatorProfiles}
             idProviderProfiles={idProviderProfiles}
@@ -369,7 +376,6 @@ const ProfileDetails = ({
             fileUpload={fileUpload}
             onSearchProfile={onSearchProfile}
             onFetchMoreProfiles={onFetchMoreProfiles}
-            loadingSSIDProfiles={loadingSSIDProfiles}
             loadingVenueProfiles={loadingVenueProfiles}
             loadingOperatorProfiles={loadingOperatorProfiles}
             loadingIdProviderProfiles={loadingIdProviderProfiles}
@@ -394,6 +400,7 @@ ProfileDetails.propTypes = {
   onUpdateProfile: PropTypes.func.isRequired,
   fileUpload: PropTypes.func.isRequired,
   onDownloadFile: PropTypes.func.isRequired,
+  profileId: PropTypes.string,
   name: PropTypes.string,
   profileType: PropTypes.string,
   details: PropTypes.instanceOf(Object),
@@ -404,6 +411,7 @@ ProfileDetails.propTypes = {
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
   idProviderProfiles: PropTypes.instanceOf(Array),
+  passpointProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
   childProfileIds: PropTypes.instanceOf(Array),
   associatedSsidProfiles: PropTypes.instanceOf(Array),
@@ -418,11 +426,13 @@ ProfileDetails.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  loadingPasspointProfiles: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
   loadingProfile: PropTypes.bool,
 };
 
 ProfileDetails.defaultProps = {
+  profileId: '',
   name: null,
   profileType: null,
   details: {},
@@ -433,10 +443,11 @@ ProfileDetails.defaultProps = {
   venueProfiles: [],
   operatorProfiles: [],
   idProviderProfiles: [],
+  passpointProfiles: [],
   childProfileIds: [],
   childProfiles: [],
   associatedSsidProfiles: [],
-  osuSsidProfile: {},
+  osuSsidProfile: null,
   extraButtons: null,
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
@@ -447,6 +458,7 @@ ProfileDetails.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   loadingRFProfiles: false,
+  loadingPasspointProfiles: false,
   extraFields: [],
   loadingProfile: false,
 };

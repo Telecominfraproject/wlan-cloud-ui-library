@@ -29,6 +29,7 @@ import { PROFILES, IP_REGEX, DOMAIN_REGEX } from 'containers/ProfileDetails/cons
 import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 import { formatFile } from 'utils/profiles';
+import { sortRadioTypes } from 'utils/sortRadioTypes';
 import styles from '../index.module.scss';
 import { DEFAULT_AP_PROFILE } from '../constants';
 
@@ -191,7 +192,10 @@ const AccessPointForm = ({
     {
       title: 'Radio',
       dataIndex: ['details', 'appliedRadios'],
-      render: appliedRadios => appliedRadios?.map(i => radioTypes?.[i])?.join(',  '),
+      render: appliedRadios =>
+        sortRadioTypes([...appliedRadios])
+          ?.map(i => radioTypes?.[i])
+          ?.join(',  '),
     },
     {
       title: '',

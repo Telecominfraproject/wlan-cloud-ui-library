@@ -22,14 +22,17 @@ const radioOptions = (
 
 const SSIDForm = ({
   form,
+  profileId,
   details,
   captiveProfiles,
   childProfiles,
   radiusProfiles,
+  passpointProfiles,
   onSearchProfile,
   onFetchMoreProfiles,
   loadingCaptiveProfiles,
   loadingRadiusProfiles,
+  loadingPasspointProfiles,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
@@ -40,6 +43,32 @@ const SSIDForm = ({
     if (!re.test(e.key)) {
       e.preventDefault();
     }
+  };
+
+  const getPasspointConfigValue = () => {
+    const passpointProfile = childProfiles.find(
+      profile => profile.profileType === PROFILES.passpoint
+    );
+
+    const isOsuSSID = passpointProfile?.details?.osuSsidProfileId === parseInt(profileId, 10);
+
+    if (passpointProfile) {
+      return {
+        label: isOsuSSID ? 'osuSSID' : 'accessSSID',
+        profileValue: {
+          value: passpointProfile?.id || null,
+          label: passpointProfile?.name || null,
+        },
+      };
+    }
+
+    return {
+      label: 'disabled',
+      profileValue: {
+        value: null,
+        label: null,
+      },
+    };
   };
 
   useEffect(() => {
@@ -101,6 +130,8 @@ const SSIDForm = ({
       enableProxyArpForHotspot:
         details?.enableProxyArpForHotspot?.toString() ??
         DEFAULT_SSID_PROFILE.enableProxyArpForHotspot.toString(),
+      passpointConfig: getPasspointConfigValue().label,
+      passpointProfileId: getPasspointConfigValue().profileValue,
     });
   }, [form, details]);
 
@@ -468,6 +499,74 @@ const SSIDForm = ({
         <Item name="enableProxyArpForHotspot" label="Proxy-ARP" hidden>
           {radioOptions}
         </Item>
+
+        <Item name="passpointConfig" label="Passpoint">
+          <Select
+            placeholder="Select Passpoint Configuration"
+            onChange={() => {
+              form.setFieldsValue({
+                passpointProfileId: {
+                  value: null,
+                  label: null,
+                },
+              });
+            }}
+          >
+            <Option value="disabled">Disabled</Option>
+            <Option value="accessSSID">Access SSID</Option>
+            <Option value="osuSSID">OSU SSID</Option>
+          </Select>
+        </Item>
+
+        <Item
+          noStyle
+          shouldUpdate={(prevValues, currentValues) =>
+            prevValues.passpointConfig !== currentValues.passpointConfig
+          }
+        >
+          {({ getFieldValue }) => {
+            return (
+              getFieldValue('passpointConfig') !== 'disabled' && (
+                <Item wrapperCol={{ offset: 5, span: 15 }} name="passpointProfileId">
+                  <Select
+                    placeholder="Select Passpoint Profile"
+                    onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.passpoint)}
+                    showSearch={onSearchProfile}
+                    filterOption={false}
+                    onSearch={name => onSearchProfile(PROFILES.passpoint, name)}
+                    onSelect={() => onSearchProfile && onSearchProfile(PROFILES.passpoint)}
+                    loading={loadingPasspointProfiles}
+                    labelInValue
+                    notFoundContent={
+                      getFieldValue('passpointConfig') === 'osuSSID' && passpointProfiles.length ? (
+                        <span>
+                          All created Passpoint profiles are already configured as an OSU SSID.
+                          Please create another Passpoint profile.
+                        </span>
+                      ) : (
+                        <Empty />
+                      )
+                    }
+                  >
+                    {getFieldValue('passpointConfig') === 'accessSSID'
+                      ? passpointProfiles.map(profile => (
+                          <Option key={profile.id} value={profile.id}>
+                            {profile.name}
+                          </Option>
+                        ))
+                      : passpointProfiles
+                          .filter(i => !i?.details?.osuSsidProfileId)
+                          .map(profile => (
+                            <Option key={profile.id} value={profile.id}>
+                              {profile.name}
+                            </Option>
+                          ))}
+                  </Select>
+                </Item>
+              )
+            );
+          }}
+        </Item>
       </Card>
 
       <Card title="Security and Encryption">
@@ -699,7 +798,7 @@ const SSIDForm = ({
             }}
           </Item>
           <Item label="NAS IP" name={['radiusClientConfiguration', 'nasClientIp']}>
-            <Select data-testid="securityMode" placeholder="Select NAS IP">
+            <Select placeholder="Select NAS IP">
               <Option value="WAN_IP">WAN</Option>
               <Option value="PROXY_IP">Proxy</Option>
               <Option value="USER_DEFINED">Manual</Option>
@@ -816,26 +915,32 @@ const SSIDForm = ({
 
 SSIDForm.propTypes = {
   form: PropTypes.instanceOf(Object),
+  profileId: PropTypes.string,
   details: PropTypes.instanceOf(Object),
   childProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
+  passpointProfiles: PropTypes.instanceOf(Array),
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingCaptiveProfiles: PropTypes.bool,
   loadingRadiusProfiles: PropTypes.bool,
+  loadingPasspointProfiles: PropTypes.bool,
 };
 
 SSIDForm.defaultProps = {
   form: null,
+  profileId: '',
   details: {},
   childProfiles: [],
   captiveProfiles: [],
   radiusProfiles: [],
+  passpointProfiles: [],
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingCaptiveProfiles: false,
   loadingRadiusProfiles: false,
+  loadingPasspointProfiles: false,
 };
 
 export default SSIDForm;

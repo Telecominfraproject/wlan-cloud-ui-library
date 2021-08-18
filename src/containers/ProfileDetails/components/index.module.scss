@@ -133,7 +133,7 @@
 }
 
 .ToolTip {
-  margin: 10px 20px 0 0;
+  margin: 10px 20px 0 5px;
 }
 
 .BonjourServices {
@@ -158,4 +158,10 @@
 .Image {
   max-height: 100%;
   max-width: 100%;
+}
+
+.Row {
+  &:hover {
+    cursor: pointer;
+  }
 }

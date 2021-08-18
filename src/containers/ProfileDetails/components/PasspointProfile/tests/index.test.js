@@ -93,29 +93,6 @@ describe('<PasspointProfileForm />', () => {
     });
   });
 
-  it('Should still work when osuSsidProfileId is null', async () => {
-    const mockDetails = {
-      ...mockPasspoint.details,
-      details: {
-        osuSsidProfileId: null,
-      },
-    };
-
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockDetails} form={form} />
-        </Form>
-      );
-    };
-    const { getByText } = render(<PasspointProfileFormComp />);
-
-    await waitFor(() => {
-      expect(getByText('Select an SSID Profile')).toBeInTheDocument();
-    });
-  });
-
   it('HESSID Mac Address Pattern error message should appear when field input is incorret', async () => {
     const PasspointProfileFormComp = () => {
       const [form] = Form.useForm();
@@ -370,91 +347,6 @@ describe('<PasspointProfileForm />', () => {
 
     await waitFor(() => {
       expect(queryByText('Enter an ANQP Domain ID between 0 and 65535')).not.toBeInTheDocument();
-    });
-  });
-
-  it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { container } = render(<PasspointProfileFormComp />);
-    const selectInputFiled = container.querySelector(
-      '[data-testid=ssidProfile] > .ant-select-selector span input'
-    );
-    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
-    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
-  });
-
-  it('on entering invalid value of SSID Profile profile in Wireless Networks (SSIDs) Enabled on This Profile should filter the options', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { container } = render(<PasspointProfileFormComp />);
-    const selectInputFiled = container.querySelector(
-      '[data-testid=ssidProfile] > .ant-select-selector span input'
-    );
-    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
-    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
-  });
-
-  it('changing SSID Profile profile on Wireless Networks (SSIDs) Enabled on This Profile should update the table', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByRole, getByText, container } = render(<PasspointProfileFormComp />);
-    const selectInputFiled = container.querySelector(
-      '[data-testid=ssidProfile] > .ant-select-selector span input'
-    );
-    fireEvent.change(selectInputFiled, { target: { value: 'test' } });
-    fireEvent.keyDown(selectInputFiled, { keyCode: 13 });
-
-    const selectInput = container.querySelector('[data-testid=ssidProfile] > .ant-select-selector');
-    fireEvent.mouseDown(selectInput);
-    fireEvent.keyDown(selectInput, DOWN_ARROW);
-
-    const profileName = mockPasspoint.ssidProfiles[1].name;
-
-    await waitForElement(() => getByText(profileName));
-    fireEvent.click(getByText(profileName));
-
-    await waitFor(() => {
-      expect(getByRole('cell', { name: profileName })).toBeVisible();
-    });
-  });
-
-  it('click delete button sould remove item from Wireless Networks (SSIDs) Enabled on This Profile table', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByRole, getByText } = render(<PasspointProfileFormComp />);
-
-    fireEvent.click(getByRole('button', { name: /removeSsid/i }));
-    await waitFor(() => {
-      expect(getByText('No Data')).toBeVisible();
     });
   });
 });

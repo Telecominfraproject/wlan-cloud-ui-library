@@ -117,6 +117,10 @@ export const formatSsidProfileForm = values => {
     formattedData.dynamicVlan = 'disabled';
   }
 
+  if (values.passpointConfig !== 'disabled') {
+    formattedData.childProfileIds.push(values.passpointProfileId.value);
+  }
+
   return formattedData;
 };
 
@@ -275,8 +279,6 @@ export const formatRfProfileForm = values => {
 
 export const formatPasspointForm = (values, details) => {
   const formattedData = { ...values };
-
-  formattedData.osuSsidProfileId = values?.osuSsidProfileId?.value;
 
   if (typeof values?.passpointVenueProfileId === 'object') {
     formattedData.passpointVenueProfileId = values?.passpointVenueProfileId?.value;
