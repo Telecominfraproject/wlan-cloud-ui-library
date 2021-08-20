@@ -1,16 +1,11 @@
 name: NPM Publish
 
-on:
-  push:
-    branches:
-      - master
-    paths-ignore: 
-      - "**/package.json"
-      - "**/package-lock.json"
-
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+# Only triggers when npm version action succeeded
+on: 
+  workflow_run: 
+    workflows: ["Bump Version"]
+    types:
+      - completed
 
   # Run tests for any PRs.
   pull_request:
