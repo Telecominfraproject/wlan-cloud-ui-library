@@ -96,48 +96,6 @@ describe('<AccessPoints />', () => {
     render(<AccessPointComp />);
   });
 
-  it('uncheck Use Default Management VLAN should show the input field for vlan value', () => {
-    const AccessPointComp = () => {
-      const [form] = Form.useForm();
-      return <AccessPoints {...mockAccessPoint} form={form} />;
-    };
-    const { getByTestId } = render(<AccessPointComp />);
-
-    const checkbox = getByTestId('vlanCheckbox');
-    fireEvent.click(checkbox);
-    expect(checkbox.checked).toEqual(false);
-    expect(getByTestId('vlanInput')).toBeInTheDOM();
-  });
-
-  it('error message should be displayed if input value for vlan is invalid', async () => {
-    const AccessPointComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <AccessPoints {...mockAccessPoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByTestId, getByPlaceholderText, getByText } = render(<AccessPointComp />);
-
-    const checkbox = getByTestId('vlanCheckbox');
-    fireEvent.click(checkbox);
-    expect(checkbox.checked).toEqual(false);
-    const vlanInput = getByTestId('vlanInput');
-    expect(vlanInput).toBeInTheDOM();
-    fireEvent.change(getByPlaceholderText('2-4095'), {
-      target: { value: 2 },
-    });
-    fireEvent.change(getByPlaceholderText('2-4095'), {
-      target: { value: '123456' },
-    });
-    expect(vlanInput.value).toBe('123456');
-    await waitFor(() => {
-      expect(getByText('VLAN expected between 2 and 4095')).toBeVisible();
-    });
-  });
-
   it('uncheck Use Default Servers should show the input field for NTP value', async () => {
     const AccessPointComp = () => {
       const [form] = Form.useForm();
