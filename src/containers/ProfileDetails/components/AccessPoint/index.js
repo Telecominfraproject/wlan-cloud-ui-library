@@ -128,8 +128,6 @@ const AccessPointForm = ({
     );
 
     form.setFieldsValue({
-      vlanNative: details?.vlanNative === undefined ? true : details?.vlanNative,
-      vlan: details?.vlan || DEFAULT_AP_PROFILE.vlan,
       ntpServer: {
         auto: details?.ntpServer?.auto ?? DEFAULT_AP_PROFILE.ntpServer.auto,
       },
@@ -380,54 +378,7 @@ const AccessPointForm = ({
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title="LAN and Services " loading={loading}>
-        <Item label="Management VLAN" valuePropName="checked" name="vlanNative">
-          <Checkbox data-testid="vlanCheckbox">Use Default Management VLAN</Checkbox>
-        </Item>
-        <Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.vlanNative !== currentValues.vlanNative
-          }
-        >
-          {({ getFieldValue }) => {
-            return (
-              !getFieldValue('vlanNative') && (
-                <Item
-                  wrapperCol={{ offset: 5, span: 15 }}
-                  name="vlan"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'VLAN expected between 2 and 4095',
-                    },
-                    () => ({
-                      validator(_rule, value) {
-                        if (
-                          !value ||
-                          (getFieldValue('vlan') <= 4095 && getFieldValue('vlan') > 1)
-                        ) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(new Error('VLAN expected between 2 and 4095'));
-                      },
-                    }),
-                  ]}
-                  hasFeedback
-                >
-                  <Input
-                    data-testid="vlanInput"
-                    placeholder="2-4095"
-                    type="number"
-                    min={2}
-                    max={4095}
-                    maxLength={4}
-                  />
-                </Item>
-              )
-            );
-          }}
-        </Item>
+      <Card title="LAN and Services" loading={loading}>
         <Item label="NTP" name={['ntpServer', 'auto']} valuePropName="checked">
           <Checkbox data-testid="ntpCheckbox">Use Default Servers</Checkbox>
         </Item>
