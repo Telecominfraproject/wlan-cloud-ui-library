@@ -164,7 +164,7 @@ const Firmware = ({
               className={styles.UpgradeState}
               icon={<LoginOutlined />}
               onClick={handleOnSwitchInactiveBank}
-              disabled={status.alternateSwVersion === status.activeSwVersion || getRebootStatus()}
+              disabled
             >
               Switch to Inactive Bank and Reboot
             </RoleProtectedBtn>
