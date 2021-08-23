@@ -246,14 +246,7 @@ export const mockPasspoint = {
       details: {},
     },
   ],
-  associatedSsidProfiles: [
-    {
-      id: '40',
-      name: 'ssid-profile-1',
-      profileType: 'ssid',
-      details: {},
-    },
-  ],
+  associatedSsidProfiles: [],
   venueProfiles: [
     {
       id: '30',
