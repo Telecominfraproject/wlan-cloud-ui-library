@@ -37,6 +37,7 @@ const SSIDForm = ({
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
   const [modeChanged, setModeChanged] = useState(false);
+  const [isOsuProfile, setIsOsuProfile] = useState(false);
 
   const hexadecimalRegex = e => {
     const re = /[0-9A-F:]+/g;
@@ -72,8 +73,9 @@ const SSIDForm = ({
   };
 
   useEffect(() => {
-    const radioBasedValues = {};
+    setIsOsuProfile(false);
 
+    const radioBasedValues = {};
     RADIOS.forEach(i => {
       ROAMING.forEach(j => {
         radioBasedValues[`${j}${i}`] =
@@ -133,7 +135,7 @@ const SSIDForm = ({
       passpointConfig: getPasspointConfigValue().label,
       passpointProfileId: getPasspointConfigValue().profileValue,
     });
-  }, [form, details]);
+  }, [form, details, childProfiles]);
 
   const handleOnModeChanged = () => {
     if (!modeChanged) {
@@ -158,6 +160,15 @@ const SSIDForm = ({
       form.setFieldsValue({ ...radioBasedValues });
     }
   }, [mode, modeChanged]);
+
+  const verifyPasspointChange = profile => {
+    const { osuSsidProfileId } = passpointProfiles.find(i => i.id === profile.value)?.details;
+    if (osuSsidProfileId && osuSsidProfileId !== parseInt(profileId, 10)) {
+      setIsOsuProfile(true);
+    } else {
+      setIsOsuProfile(false);
+    }
+  };
 
   return (
     <div className={styles.ProfilePage}>
@@ -510,6 +521,7 @@ const SSIDForm = ({
                   label: null,
                 },
               });
+              setIsOsuProfile(false);
             }}
           >
             <Option value="disabled">Disabled</Option>
@@ -521,48 +533,46 @@ const SSIDForm = ({
         <Item
           noStyle
           shouldUpdate={(prevValues, currentValues) =>
-            prevValues.passpointConfig !== currentValues.passpointConfig
+            prevValues.passpointConfig !== currentValues.passpointConfig || isOsuProfile
           }
         >
           {({ getFieldValue }) => {
             return (
               getFieldValue('passpointConfig') !== 'disabled' && (
-                <Item wrapperCol={{ offset: 5, span: 15 }} name="passpointProfileId">
-                  <Select
-                    placeholder="Select Passpoint Profile"
-                    onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.passpoint)}
-                    showSearch={onSearchProfile}
-                    filterOption={false}
-                    onSearch={name => onSearchProfile(PROFILES.passpoint, name)}
-                    onSelect={() => onSearchProfile && onSearchProfile(PROFILES.passpoint)}
-                    loading={loadingPasspointProfiles}
-                    labelInValue
-                    notFoundContent={
-                      getFieldValue('passpointConfig') === 'osuSSID' && passpointProfiles.length ? (
-                        <span>
-                          All created Passpoint profiles are already configured as an OSU SSID.
-                          Please create another Passpoint profile.
+                <>
+                  <Item
+                    wrapperCol={{ offset: 5, span: 15 }}
+                    name="passpointProfileId"
+                    help={
+                      getFieldValue('passpointConfig') === 'osuSSID' && isOsuProfile ? (
+                        <span className={styles.Disclaimer}>
+                          {`The existing OSU SSID configured on
+                          ${getFieldValue('passpointProfileId').label}
+                          will be replaced by this profile`}
                         </span>
-                      ) : (
-                        <Empty />
-                      )
+                      ) : null
                     }
                   >
-                    {getFieldValue('passpointConfig') === 'accessSSID'
-                      ? passpointProfiles.map(profile => (
-                          <Option key={profile.id} value={profile.id}>
-                            {profile.name}
-                          </Option>
-                        ))
-                      : passpointProfiles
-                          .filter(i => !i?.details?.osuSsidProfileId)
-                          .map(profile => (
-                            <Option key={profile.id} value={profile.id}>
-                              {profile.name}
-                            </Option>
-                          ))}
-                  </Select>
-                </Item>
+                    <Select
+                      placeholder="Select Passpoint Profile"
+                      onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.passpoint)}
+                      showSearch={onSearchProfile}
+                      filterOption={false}
+                      onSearch={name => onSearchProfile(PROFILES.passpoint, name)}
+                      onSelect={() => onSearchProfile && onSearchProfile(PROFILES.passpoint)}
+                      loading={loadingPasspointProfiles}
+                      labelInValue
+                      notFoundContent={!loadingPasspointProfiles && <Empty />}
+                      onChange={verifyPasspointChange}
+                    >
+                      {passpointProfiles.map(profile => (
+                        <Option key={profile.id} value={profile.id}>
+                          {profile.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Item>
+                </>
               )
             );
           }}

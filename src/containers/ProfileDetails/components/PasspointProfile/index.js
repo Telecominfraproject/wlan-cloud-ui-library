@@ -153,7 +153,7 @@ const PasspointProfileForm = ({
   const linkedSSIDs = useMemo(() => {
     return [
       ...(osuSsidProfile ? [osuSsidProfile] : []),
-      ...(associatedSsidProfiles.length ? associatedSsidProfiles : []),
+      ...(associatedSsidProfiles?.length ? associatedSsidProfiles : []),
     ];
   }, [osuSsidProfile, associatedSsidProfiles]);
 
