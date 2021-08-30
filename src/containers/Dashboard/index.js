@@ -16,6 +16,7 @@ const Dashboard = ({
   lineChartLoading,
   refreshAfter,
   loading,
+  chartTextColor,
 }) => {
   const lineData = useMemo(() => {
     const result = [];
@@ -53,13 +54,22 @@ const Dashboard = ({
               options={options}
               refreshAfter={refreshAfter}
               loading={lineChartLoading}
+              chartTextColor={chartTextColor}
             />
           );
         })}
       </div>
       <div className={styles.cardWrapper}>
         {pieChartDetails?.map(({ title, ...data }) => {
-          return <PieChart key={title} chartData={data} title={title} loading={loading} />;
+          return (
+            <PieChart
+              key={title}
+              chartData={data}
+              title={title}
+              loading={loading}
+              chartTextColor={chartTextColor}
+            />
+          );
         })}
       </div>
     </div>
@@ -74,6 +84,7 @@ Dashboard.propTypes = {
   lineChartLoading: PropTypes.bool,
   refreshAfter: PropTypes.number,
   loading: PropTypes.bool,
+  chartTextColor: PropTypes.string,
 };
 
 Dashboard.defaultProps = {
@@ -84,5 +95,6 @@ Dashboard.defaultProps = {
   lineChartLoading: true,
   refreshAfter: 300,
   loading: false,
+  chartTextColor: 'white',
 };
 export default Dashboard;

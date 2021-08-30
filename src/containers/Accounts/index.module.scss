@@ -5,6 +5,14 @@ $container-max-width: 1200px;
   border: none;
 }
 
+.dark {
+  color: white;
+}
+
+.light {
+  color: black;
+}
+
 .LoadMore {
   display: flex;
   justify-content: center;

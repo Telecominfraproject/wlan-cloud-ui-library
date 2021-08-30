@@ -34,6 +34,7 @@ const Firmware = ({
   firmwareVersionLoading,
   firmwareModelError,
   firmwareModelLoading,
+  isLightIcon,
 }) => {
   const [addAssignmentModal, setAddAssignmentModal] = useState(false);
   const [editAssignmentModal, setEditAssignmentModal] = useState(false);
@@ -151,7 +152,7 @@ const Firmware = ({
       render: (_, record) => (
         <RoleProtectedBtn
           title={`edit-track-${record.modelId}`}
-          className={styles.InfoButton}
+          className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
@@ -169,7 +170,7 @@ const Firmware = ({
         <WithRoles>
           <DeleteButton
             title={`delete-track-${record.modelId}`}
-            className={styles.InfoButton}
+            className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
             extraOnClick={() => {
               setTaskAssignmentValues({ ...record });
             }}
@@ -226,7 +227,7 @@ const Firmware = ({
       render: (_, record) => (
         <RoleProtectedBtn
           title={`edit-firmware-${record.modelId}`}
-          className={styles.InfoButton}
+          className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
@@ -248,7 +249,7 @@ const Firmware = ({
           <WithRoles>
             <DeleteButton
               title={`delete-firmware-${record.modelId}`}
-              className={styles.InfoButton}
+              className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
               extraOnClick={() => {
                 setFirmwareValues({ ...record });
               }}
@@ -386,6 +387,7 @@ Firmware.propTypes = {
   firmwareTrackLoading: PropTypes.bool,
   firmwareVersionLoading: PropTypes.bool,
   firmwareModelLoading: PropTypes.bool,
+  isLightIcon: PropTypes.bool,
 };
 
 Firmware.defaultProps = {
@@ -402,6 +404,7 @@ Firmware.defaultProps = {
   firmwareTrackLoading: true,
   firmwareVersionLoading: true,
   firmwareModelLoading: false,
+  isLightIcon: true,
 };
 
 export default Firmware;
