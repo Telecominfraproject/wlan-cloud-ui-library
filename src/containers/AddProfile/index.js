@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Form, Input, Card, Select, notification } from 'antd';
+import { Form, Input, Card, Select } from 'antd';
 import { LeftOutlined, PlusOutlined } from '@ant-design/icons';
 
 import Button from 'components/Button';
@@ -11,17 +11,7 @@ import Modal from 'components/Modal';
 import ThemeContext from 'contexts/ThemeContext';
 import { pageLayout } from 'utils/form';
 
-import {
-  formatSsidProfileForm,
-  formatApProfileForm,
-  formatBonjourGatewayForm,
-  formatCaptiveForm,
-  formatRadiusForm,
-  formatRfProfileForm,
-  formatPasspointForm,
-  formatProviderProfileForm,
-  profileTypes,
-} from 'utils/profiles';
+import { handleOnCreateProfile, PROFILE_TYPES } from 'utils/profiles';
 
 import styles from './index.module.scss';
 
@@ -50,7 +40,6 @@ const AddProfile = ({
   operatorProfiles,
   idProviderProfiles,
   passpointProfiles,
-  initialValues,
   onSearchProfile,
   onFetchMoreProfiles,
   loadingSSIDProfiles,
@@ -62,6 +51,8 @@ const AddProfile = ({
   loadingRFProfiles,
   loadingPasspointProfiles,
   fileUpload,
+  onCreateChildProfile,
+  onUpdateChildProfile,
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
@@ -71,14 +62,6 @@ const AddProfile = ({
   const [profileType, setType] = useState('');
   const [confirmModal, setConfirmModal] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
-
-  useEffect(() => {
-    form.setFieldsValue({
-      profileType: initialValues?.profileType,
-      name: initialValues?.name ? initialValues?.name : '',
-    });
-    setType(initialValues?.profileType);
-  }, [initialValues]);
 
   const handleOnFormChange = () => {
     if (!isFormDirty) {
@@ -98,168 +81,7 @@ const AddProfile = ({
     form
       .validateFields()
       .then(values => {
-        let formattedData = { ...values };
-
-        if (profileType === PROFILES.ssid) {
-          if (
-            (values.secureMode === 'wpaRadius' ||
-              values.secureMode === 'wpa2Radius' ||
-              values.secureMode === 'wpa2OnlyRadius' ||
-              values.secureMode === 'wpa3OnlyEAP' ||
-              values.secureMode === 'wpa3MixedEAP' ||
-              values.secureMode === 'wpa3OnlyEAP192') &&
-            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
-            values?.useRadiusProxy === 'false'
-          ) {
-            notification.error({
-              message: 'Error',
-              description: 'A RADIUS Profile is required.',
-            });
-            return;
-          }
-
-          if (values.passpointConfig !== 'disabled' && !values.passpointProfileId?.value) {
-            notification.error({
-              message: 'Error',
-              description: 'A Passpoint profile is required.',
-            });
-            return;
-          }
-
-          formattedData.model_type = 'SsidConfiguration';
-          formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
-        }
-
-        if (profileType === PROFILES.accessPoint) {
-          if (!values.rfProfileId?.value) {
-            notification.error({
-              message: 'Error',
-              description: 'An RF Profile is required.',
-            });
-            return;
-          }
-
-          if (!values.selectedSsidProfiles?.length) {
-            notification.error({
-              message: 'Error',
-              description: 'A SSID Profile is required.',
-            });
-            return;
-          }
-
-          if (!values.ntpServer.auto && !values.ntpServer.value) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 NTP Server is required.',
-            });
-            return;
-          }
-
-          const proxyEnabledProfiles = values.selectedSsidProfiles?.filter(
-            profile => profile?.details?.useRadiusProxy
-          );
-
-          if (proxyEnabledProfiles.length && !values.radiusProxyConfigurations?.length) {
-            notification.error({
-              message: 'Error',
-              description: (
-                <div>
-                  The following wireless networks have RADIUS Proxy enabled:
-                  <ul>
-                    {proxyEnabledProfiles.map(profile => (
-                      <li key={profile?.id}>{profile?.name}</li>
-                    ))}
-                  </ul>
-                  Please remove these wireless networks from this profile or configure a RADIUS
-                  Proxy.
-                </div>
-              ),
-            });
-            return;
-          }
-
-          formattedData.childProfileIds.push(values.rfProfileId?.value);
-          formattedData.model_type = 'ApNetworkConfiguration';
-          formattedData = Object.assign(formattedData, formatApProfileForm(values));
-        }
-
-        if (profileType === PROFILES.bonjour) {
-          formattedData.model_type = 'BonjourGatewayProfile';
-          formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
-        }
-
-        if (profileType === PROFILES.captivePortal) {
-          if (
-            values.authenticationType === 'radius' &&
-            (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
-          ) {
-            notification.error({
-              message: 'Error',
-              description: 'RADIUS Profile is required for authentication.',
-            });
-            return;
-          }
-          formattedData.model_type = 'CaptivePortalConfiguration';
-          formattedData = Object.assign(
-            formattedData,
-            formatCaptiveForm(values, initialValues?.details)
-          );
-        }
-
-        if (profileType === PROFILES.radius) {
-          formattedData.model_type = 'RadiusProfile';
-          formattedData = Object.assign(formattedData, formatRadiusForm(values));
-        }
-
-        if (profileType === PROFILES.rf) {
-          formattedData.model_type = 'RfConfiguration';
-          formattedData = Object.assign(formattedData, formatRfProfileForm(values));
-        }
-
-        if (profileType === PROFILES.passpoint) {
-          if (!values.passpointVenueProfileId?.value) {
-            notification.error({
-              message: 'Error',
-              description: 'A Venue Profile is required.',
-            });
-            return;
-          }
-          if (!values.passpointOperatorProfileId?.value) {
-            notification.error({
-              message: 'Error',
-              description: 'A Operator Profile is required.',
-            });
-            return;
-          }
-          if (values.passpointOsuProviderProfileIds.length === 0) {
-            notification.error({
-              message: 'Error',
-              description: 'At least 1 ID Provider Profile is required.',
-            });
-            return;
-          }
-
-          formattedData.model_type = 'PasspointProfile';
-          formattedData = Object.assign(
-            formattedData,
-            formatPasspointForm(values, initialValues?.details)
-          );
-        }
-
-        if (profileType === PROFILES.operator) {
-          formattedData.model_type = 'PasspointOperatorProfile';
-        }
-
-        if (profileType === PROFILES.providerID) {
-          formattedData.model_type = 'PasspointOsuProviderProfile';
-          formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
-        }
-
-        if (profileType === PROFILES.venue) {
-          formattedData.model_type = 'PasspointVenueProfile';
-        }
-
-        onCreateProfile(profileType, values.name, formattedData, formattedData.childProfileIds);
+        handleOnCreateProfile(profileType, values, onCreateProfile);
         setIsFormDirty(false);
       })
       .catch(() => {});
@@ -315,9 +137,9 @@ const AddProfile = ({
               ]}
             >
               <Select onChange={value => setType(value)} placeholder="Select Profile Type">
-                {Object.keys(profileTypes).map(type => (
+                {Object.keys(PROFILE_TYPES).map(type => (
                   <Option key={type} value={type} disabled={type === 'bonjour'}>
-                    {profileTypes[type]}
+                    {PROFILE_TYPES[type]}
                   </Option>
                 ))}
               </Select>
@@ -334,7 +156,6 @@ const AddProfile = ({
           {profileType === PROFILES.ssid && (
             <SSIDForm
               form={form}
-              details={initialValues?.details}
               radiusProfiles={radiusProfiles}
               captiveProfiles={captiveProfiles}
               passpointProfiles={passpointProfiles}
@@ -343,48 +164,49 @@ const AddProfile = ({
               loadingCaptiveProfiles={loadingCaptiveProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
               loadingPasspointProfiles={loadingPasspointProfiles}
+              onUpdateChildProfile={onUpdateChildProfile}
+              onCreateChildProfile={onCreateChildProfile}
             />
           )}
           {profileType === PROFILES.accessPoint && (
             <AccessPointForm
               form={form}
-              details={initialValues?.details}
-              childProfiles={initialValues?.childProfiles}
               rfProfiles={rfProfiles}
               ssidProfiles={ssidProfiles}
+              radiusProfiles={radiusProfiles}
+              captiveProfiles={captiveProfiles}
+              passpointProfiles={passpointProfiles}
               onSearchProfile={onSearchProfile}
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingSSIDProfiles={loadingSSIDProfiles}
               loadingRFProfiles={loadingRFProfiles}
+              loadingCaptiveProfiles={loadingCaptiveProfiles}
+              loadingRadiusProfiles={loadingRadiusProfiles}
+              loadingPasspointProfiles={loadingPasspointProfiles}
               fileUpload={fileUpload}
+              onUpdateChildProfile={onUpdateChildProfile}
+              onCreateChildProfile={onCreateChildProfile}
             />
           )}
-          {profileType === PROFILES.bonjour && (
-            <BonjourGatewayForm form={form} details={initialValues?.details} />
-          )}
+          {profileType === PROFILES.bonjour && <BonjourGatewayForm form={form} />}
           {profileType === PROFILES.captivePortal && (
             <CaptivePortalForm
               form={form}
-              details={initialValues?.details}
               radiusProfiles={radiusProfiles}
               onSearchProfile={onSearchProfile}
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
               fileUpload={fileUpload}
+              onUpdateChildProfile={onUpdateChildProfile}
+              onCreateChildProfile={onCreateChildProfile}
             />
           )}
 
-          {profileType === PROFILES.radius && (
-            <RadiusForm form={form} details={initialValues?.details} />
-          )}
-          {profileType === PROFILES.rf && (
-            <RFForm form={form} details={initialValues?.details} extraFields={extraFields} />
-          )}
+          {profileType === PROFILES.radius && <RadiusForm form={form} />}
+          {profileType === PROFILES.rf && <RFForm form={form} extraFields={extraFields} />}
           {profileType === PROFILES.passpoint && (
             <PasspointProfileForm
               form={form}
-              details={initialValues?.details}
-              childProfiles={initialValues?.childProfiles}
               venueProfiles={venueProfiles}
               operatorProfiles={operatorProfiles}
               idProviderProfiles={idProviderProfiles}
@@ -394,17 +216,13 @@ const AddProfile = ({
               loadingOperatorProfiles={loadingOperatorProfiles}
               loadingIdProviderProfiles={loadingIdProviderProfiles}
               fileUpload={fileUpload}
+              onUpdateChildProfile={onUpdateChildProfile}
+              onCreateChildProfile={onCreateChildProfile}
             />
           )}
-          {profileType === PROFILES.providerID && (
-            <ProviderIdForm form={form} details={initialValues?.details} />
-          )}
-          {profileType === PROFILES.operator && (
-            <OperatorForm form={form} details={initialValues?.details} />
-          )}
-          {profileType === PROFILES.venue && (
-            <VenueForm form={form} details={initialValues?.details} />
-          )}
+          {profileType === PROFILES.providerID && <ProviderIdForm form={form} />}
+          {profileType === PROFILES.operator && <OperatorForm form={form} />}
+          {profileType === PROFILES.venue && <VenueForm form={form} />}
         </Form>
       </div>
     </Container>
@@ -413,6 +231,8 @@ const AddProfile = ({
 
 AddProfile.propTypes = {
   onCreateProfile: PropTypes.func.isRequired,
+  onCreateChildProfile: PropTypes.func.isRequired,
+  onUpdateChildProfile: PropTypes.func.isRequired,
   ssidProfiles: PropTypes.instanceOf(Array),
   venueProfiles: PropTypes.instanceOf(Array),
   operatorProfiles: PropTypes.instanceOf(Array),
@@ -421,7 +241,6 @@ AddProfile.propTypes = {
   radiusProfiles: PropTypes.instanceOf(Array),
   captiveProfiles: PropTypes.instanceOf(Array),
   passpointProfiles: PropTypes.instanceOf(Array),
-  initialValues: PropTypes.instanceOf(Object),
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
@@ -432,7 +251,6 @@ AddProfile.propTypes = {
   loadingIdProviderProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
   loadingPasspointProfiles: PropTypes.bool,
-
   fileUpload: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
 };
@@ -446,7 +264,6 @@ AddProfile.defaultProps = {
   radiusProfiles: [],
   captiveProfiles: [],
   passpointProfiles: [],
-  initialValues: {},
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,

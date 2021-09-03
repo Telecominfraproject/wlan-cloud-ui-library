@@ -1240,4 +1240,50 @@ describe('<AccessPoints />', () => {
     expect(authPort.value).toBe('2083');
     expect(acctPort.value).toBe('2083');
   });
+
+  it('Should show RF form on Add RF profile button click', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, getByRole } = render(<AccessPointComp />);
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-rf/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('Radio Mode')).toBeVisible();
+    });
+  });
+
+  it('Should show SSID form on Add SSID profile button click', async () => {
+    const AccessPointComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <AccessPoints {...mockAccessPoint} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, getByRole } = render(<AccessPointComp />);
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-ssid/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('Network Connectivity')).toBeVisible();
+    });
+  });
 });

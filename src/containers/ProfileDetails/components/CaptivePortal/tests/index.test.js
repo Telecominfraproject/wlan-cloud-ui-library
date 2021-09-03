@@ -842,4 +842,34 @@ describe('<CaptivePortalForm />', () => {
       expect(button).not.toBeInTheDocument();
     });
   });
+
+  it('Should show RADIUS form on Add RADIUS profile button click', async () => {
+    const mockDetails = {
+      ...mockCaptivePortal.details,
+      details: {
+        externalCaptivePortalURL: true,
+      },
+    };
+
+    const { getByText, getAllByText, getByLabelText, getByRole } = render(
+      <CaptivePortalFormComp mockDetails={mockDetails} />
+    );
+    fireEvent.keyDown(getByLabelText('Authentication'), DOWN_ARROW);
+    await waitForElement(() => getByText('RADIUS'));
+    fireEvent.click(getByText('RADIUS'));
+
+    await waitFor(() => {
+      expect(getAllByText('RADIUS')[1]).toBeVisible();
+    });
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-radius/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('RADIUS Authentication Server')).toBeVisible();
+    });
+  });
 });

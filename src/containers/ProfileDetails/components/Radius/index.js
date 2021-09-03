@@ -15,17 +15,29 @@ const { Item, List } = Form;
 
 const RadiusForm = ({ form, details }) => {
   const formatInitialAuthenticationValues = () => {
-    const values = [details?.primaryRadiusAuthServer];
+    const values = [
+      {
+        ipAddress: details?.primaryRadiusAuthServer?.ipAddress,
+        secret: details?.primaryRadiusAuthServer?.secret,
+        port: details?.primaryRadiusAuthServer?.port ?? 1812,
+        timeout: details?.primaryRadiusAuthServer?.timeout ?? 5,
+      },
+    ];
     if (details?.secondaryRadiusAuthServer) {
       values.push(details?.secondaryRadiusAuthServer);
     }
     return values;
   };
 
-  const formatInitialAccountingnValues = () => {
+  const formatInitialAccountingValues = () => {
     const values = [];
     if (details?.primaryRadiusAccountingServer) {
-      values.push(details?.primaryRadiusAccountingServer);
+      values.push({
+        ipAddress: details?.primaryRadiusAccountingServer?.ipAddress,
+        secret: details?.primaryRadiusAccountingServer?.secret,
+        port: details?.primaryRadiusAccountingServer?.port ?? 1813,
+        timeout: details?.primaryRadiusAccountingServer?.timeout ?? 5,
+      });
     }
     if (details?.secondaryRadiusAccountingServer) {
       values.push(details?.secondaryRadiusAccountingServer);
@@ -36,7 +48,7 @@ const RadiusForm = ({ form, details }) => {
   useEffect(() => {
     form.setFieldsValue({
       authenticationServer: formatInitialAuthenticationValues(),
-      accountingServer: formatInitialAccountingnValues(),
+      accountingServer: formatInitialAccountingValues(),
     });
   }, [details]);
 
@@ -106,7 +118,6 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'port']}
                     label="Port"
-                    initialValue={1812}
                     rules={[
                       {
                         required: true,
@@ -136,7 +147,6 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'timeout']}
                     label="Session Timeout"
-                    initialValue={5}
                     rules={[
                       {
                         required: true,
@@ -250,7 +260,6 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'port']}
                     label="Port"
-                    initialValue={1813}
                     rules={[
                       {
                         required: true,
@@ -280,7 +289,6 @@ const RadiusForm = ({ form, details }) => {
                   <Item
                     name={[field.name, 'timeout']}
                     label="Session Timeout"
-                    initialValue={5}
                     rules={[
                       {
                         required: true,

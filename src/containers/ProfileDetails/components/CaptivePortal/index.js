@@ -9,12 +9,11 @@ import {
   Collapse,
   message,
   List,
-  Empty,
   Modal,
 } from 'antd';
 import {
-  Select,
   Input,
+  Select,
   Search,
   Upload,
   RadioGroup as Group,
@@ -27,6 +26,9 @@ import Button from 'components/Button';
 import Tooltip from 'components/Tooltip';
 
 import Users from './components/Users';
+import ProfileSelect from '../ProfileSelect';
+import RadiusProfileForm from '../Radius';
+
 import styles from '../index.module.scss';
 
 const { Item } = Form;
@@ -44,6 +46,9 @@ const CaptivePortalForm = ({
   onFetchMoreProfiles,
   loadingRadiusProfiles,
   handleOnFormChange,
+  onCreateChildProfile,
+  onUpdateChildProfile,
+  isModalProfile,
 }) => {
   const formatFile = async file => {
     const src = await onDownloadFile(file?.apExportUrl);
@@ -307,7 +312,7 @@ const CaptivePortalForm = ({
       childProfileIds: [],
       userList: details.userList,
     });
-  }, [form, details]);
+  }, [form, details, childProfiles]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -434,34 +439,23 @@ const CaptivePortalForm = ({
               <Option value="MSCHAPv2">EAP/MSCHAP v2</Option>
             </Select>
           </Item>
-          <Item
+
+          <ProfileSelect
             name="radiusServiceId"
             label="Service"
-            rules={[
-              {
-                required: true,
-                message: 'Please select a RADIUS profile',
-              },
-            ]}
-          >
-            <Select
-              placeholder="RADIUS Profiles"
-              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-              showSearch={onSearchProfile}
-              filterOption={false}
-              onSearch={name => onSearchProfile(PROFILES.radius, name)}
-              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
-              loading={loadingRadiusProfiles}
-              notFoundContent={!loadingRadiusProfiles && <Empty />}
-              labelInValue
-            >
-              {radiusProfiles.map(profile => (
-                <Option key={profile.id} value={profile.id}>
-                  {profile.name}
-                </Option>
-              ))}
-            </Select>
-          </Item>
+            profileType={PROFILES.radius}
+            profiles={radiusProfiles}
+            onSearchProfile={onSearchProfile}
+            onFetchMoreProfiles={onFetchMoreProfiles}
+            loadingProfiles={loadingRadiusProfiles}
+            content={RadiusProfileForm}
+            currentProfile={childProfiles?.[0]}
+            onUpdateChildProfile={onUpdateChildProfile}
+            onCreateChildProfile={onCreateChildProfile}
+            isModalProfile={isModalProfile}
+            form={form}
+            handleOnFormChange={handleOnFormChange}
+          />
         </Card>
       )}
       {externalSplash && (
@@ -710,6 +704,9 @@ CaptivePortalForm.propTypes = {
   onFetchMoreProfiles: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
+  isModalProfile: PropTypes.bool,
+  onCreateChildProfile: PropTypes.func,
+  onUpdateChildProfile: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -723,6 +720,9 @@ CaptivePortalForm.defaultProps = {
   onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: false,
   handleOnFormChange: () => {},
+  isModalProfile: false,
+  onCreateChildProfile: () => {},
+  onUpdateChildProfile: () => {},
 };
 
 export default CaptivePortalForm;

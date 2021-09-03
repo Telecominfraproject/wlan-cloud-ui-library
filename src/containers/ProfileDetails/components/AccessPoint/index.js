@@ -22,7 +22,13 @@ import WithRoles, {
   Password,
   Upload,
 } from 'components/WithRoles';
-import { DeleteFilled, UploadOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeleteFilled,
+  UploadOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+  FormOutlined,
+} from '@ant-design/icons';
 import ThemeContext from 'contexts/ThemeContext';
 
 import { PROFILES, IP_REGEX, DOMAIN_REGEX } from 'containers/ProfileDetails/constants';
@@ -33,7 +39,11 @@ import { sortRadioTypes } from 'utils/sortRadioTypes';
 import styles from '../index.module.scss';
 import { DEFAULT_AP_PROFILE } from '../constants';
 
+import RfProfileForm from '../RF';
+import ProfileSelect from '../ProfileSelect';
+import ModalButton from '../ModalButton';
 import FormModal from './components/FormModal';
+import SSIDForm from '../SSID';
 
 const { Item } = Form;
 const { Option } = AntdSelect;
@@ -55,6 +65,15 @@ const AccessPointForm = ({
   fileUpload,
   handleOnFormChange,
   loading,
+  isModalProfile,
+  captiveProfiles,
+  radiusProfiles,
+  passpointProfiles,
+  loadingCaptiveProfiles,
+  loadingRadiusProfiles,
+  loadingPasspointProfiles,
+  onCreateChildProfile,
+  onUpdateChildProfile,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
@@ -70,6 +89,7 @@ const AccessPointForm = ({
   const [ntpServers, setNtpServers] = useState();
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
+  const [activeSsidProfile, setActiveSsidProfile] = useState({});
 
   const currentRfProfile = useMemo(() => childProfiles.find(i => i.profileType === 'rf'), [
     childProfiles,
@@ -174,6 +194,16 @@ const AccessPointForm = ({
     });
   }, [selectedChildProfiles, greList]);
 
+  useEffect(() => {
+    setSelectedChildProfiles(
+      selectedChildProfiles.map(childProfile =>
+        parseInt(childProfile.id, 10) === parseInt(activeSsidProfile.id, 10)
+          ? activeSsidProfile
+          : childProfile
+      )
+    );
+  }, [activeSsidProfile]);
+
   const columns = [
     {
       title: 'Profile Name',
@@ -194,6 +224,34 @@ const AccessPointForm = ({
         sortRadioTypes([...appliedRadios])
           ?.map(i => radioTypes?.[i])
           ?.join(',  '),
+    },
+    {
+      title: '',
+      width: 80,
+      render: (_, record) => (
+        <ModalButton
+          activeProfile={record}
+          profileType={PROFILES.ssid}
+          title={`Edit ${record?.name}`}
+          content={SSIDForm}
+          contentProps={{
+            captiveProfiles,
+            radiusProfiles,
+            passpointProfiles,
+            loadingCaptiveProfiles,
+            loadingRadiusProfiles,
+            loadingPasspointProfiles,
+            onSearchProfile,
+            onFetchMoreProfiles,
+          }}
+          icon={<FormOutlined />}
+          tooltipTitle="Edit Profile"
+          onSubmit={onUpdateChildProfile}
+          form={form}
+          setActiveProfile={setActiveSsidProfile}
+          handleOnFormChange={handleOnFormChange}
+        />
+      ),
     },
     {
       title: '',
@@ -631,51 +689,66 @@ const AccessPointForm = ({
         </Item>
       </Card>
       <Card title="RF Enabled on This Profile" loading={loading}>
-        <Item name="rfProfileId">
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
-            showSearch={onSearchProfile}
-            placeholder="Select a RF Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(PROFILES.rf, name)}
-            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
-            loading={loadingRFProfiles}
-            notFoundContent={!loadingRFProfiles && <Empty />}
-            labelInValue
-          >
-            {rfProfiles.map(i => (
-              <Option key={i.id} value={i.id}>
-                {i.name}
-              </Option>
-            ))}
-          </Select>
-        </Item>
+        <ProfileSelect
+          name="rfProfileId"
+          profileType={PROFILES.rf}
+          profiles={rfProfiles}
+          onSearchProfile={onSearchProfile}
+          onFetchMoreProfiles={onFetchMoreProfiles}
+          loadingProfiles={loadingRFProfiles}
+          content={RfProfileForm}
+          currentProfile={currentRfProfile}
+          onUpdateChildProfile={onUpdateChildProfile}
+          onCreateChildProfile={onCreateChildProfile}
+          isModalProfile={isModalProfile}
+          form={form}
+          handleOnFormChange={handleOnFormChange}
+        />
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
         <Item>
-          <Select
-            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
-            data-testid="ssidProfile"
-            showSearch={onSearchProfile}
-            placeholder="Select a SSID Profile"
-            filterOption={false}
-            onSearch={name => onSearchProfile(PROFILES.ssid, name)}
-            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
-            loading={loadingSSIDProfiles}
-            notFoundContent={!loadingSSIDProfiles && <Empty />}
-            onChange={handleOnChangeSsid}
-            value="Select a SSID Profile"
-          >
-            {filteredOptions.map(i => (
-              <Option
-                key={i.id}
-                value={i.id}
-                disabled={isProfileDisabled(i?.details?.appliedRadios)}
-              >
-                {i.name}
-              </Option>
-            ))}
-          </Select>
+          <div className={styles.SelectContainer}>
+            <Select
+              onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
+              data-testid="ssidProfile"
+              showSearch={onSearchProfile}
+              placeholder="Select a SSID profile"
+              filterOption={false}
+              onSearch={name => onSearchProfile(PROFILES.ssid, name)}
+              onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
+              loading={loadingSSIDProfiles}
+              notFoundContent={!loadingSSIDProfiles && <Empty />}
+              onChange={handleOnChangeSsid}
+              value="Select a SSID profile"
+            >
+              {filteredOptions.map(i => (
+                <Option
+                  key={i.id}
+                  value={i.id}
+                  disabled={isProfileDisabled(i?.details?.appliedRadios)}
+                >
+                  {i.name}
+                </Option>
+              ))}
+            </Select>
+            <ModalButton
+              profileType={PROFILES.ssid}
+              content={SSIDForm}
+              contentProps={{
+                captiveProfiles,
+                radiusProfiles,
+                passpointProfiles,
+                loadingCaptiveProfiles,
+                loadingRadiusProfiles,
+                loadingPasspointProfiles,
+                onSearchProfile,
+                onFetchMoreProfiles,
+              }}
+              onSubmit={onCreateChildProfile}
+              form={form}
+              handleOnFormChange={handleOnFormChange}
+            />
+          </div>
         </Item>
         <div style={{ marginBottom: 8 }}>
           <Text>Max 8 per radio: </Text>
@@ -1181,16 +1254,25 @@ const AccessPointForm = ({
 AccessPointForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
-  ssidProfiles: PropTypes.instanceOf(Array),
   childProfiles: PropTypes.instanceOf(Array),
+  ssidProfiles: PropTypes.instanceOf(Array),
   rfProfiles: PropTypes.instanceOf(Array),
+  captiveProfiles: PropTypes.instanceOf(Array),
+  radiusProfiles: PropTypes.instanceOf(Array),
+  passpointProfiles: PropTypes.instanceOf(Array),
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingSSIDProfiles: PropTypes.bool,
   loadingRFProfiles: PropTypes.bool,
+  loadingCaptiveProfiles: PropTypes.bool,
+  loadingRadiusProfiles: PropTypes.bool,
+  loadingPasspointProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
   fileUpload: PropTypes.func,
   loading: PropTypes.bool,
+  onCreateChildProfile: PropTypes.func,
+  onUpdateChildProfile: PropTypes.func,
+  isModalProfile: PropTypes.bool,
 };
 
 AccessPointForm.defaultProps = {
@@ -1199,13 +1281,22 @@ AccessPointForm.defaultProps = {
   childProfiles: [],
   ssidProfiles: [],
   rfProfiles: [],
+  captiveProfiles: [],
+  radiusProfiles: [],
+  passpointProfiles: [],
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingSSIDProfiles: false,
   loadingRFProfiles: false,
+  loadingCaptiveProfiles: false,
+  loadingRadiusProfiles: false,
+  loadingPasspointProfiles: false,
   handleOnFormChange: () => {},
   fileUpload: () => {},
   loading: false,
+  onCreateChildProfile: () => {},
+  onUpdateChildProfile: () => {},
+  isModalProfile: false,
 };
 
 export default AccessPointForm;

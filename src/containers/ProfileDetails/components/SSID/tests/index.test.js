@@ -421,4 +421,97 @@ describe('<SSIDForm />', () => {
       expect(queryByText(errorMsg)).not.toBeInTheDocument();
     });
   });
+
+  it('Should show RADIUS form on Add RADIUS profile button click', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockSsid} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, container, getByRole, getByLabelText } = render(<SSIDFormComp />);
+
+    const selectMode = container.querySelector('[data-testid=securityMode] > .ant-select-selector');
+    fireEvent.mouseDown(selectMode);
+    fireEvent.keyDown(selectMode, DOWN_ARROW);
+    await waitForElement(() => getByText('WPA3 Enterprise (mixed mode)'));
+    fireEvent.click(getByText('WPA3 Enterprise (mixed mode)'));
+    await waitFor(() => {
+      expect(getByText('RADIUS Profile')).toBeVisible();
+    });
+
+    fireEvent.keyDown(getByLabelText('RADIUS Profile'), DOWN_ARROW);
+    await waitForElement(() => getByText(mockSsid.radiusProfiles[0].name));
+    fireEvent.click(getByText(mockSsid.radiusProfiles[0].name));
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-radius/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('RADIUS Authentication Server')).toBeVisible();
+    });
+  });
+
+  it('Should show Captive Portal form on Add Captive Portal profile button click', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockSsid} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, getByRole } = render(<SSIDFormComp />);
+
+    fireEvent.click(getByText('NAT'));
+
+    await waitFor(() => {
+      expect(getByText('Use')).toBeVisible();
+    });
+    fireEvent.click(getByText('Use'));
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-captive_portal/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('Splash Page')).toBeVisible();
+    });
+  });
+
+  it('Should show Passpoint form on Add Passpoint profile button click', async () => {
+    const SSIDFormComp = () => {
+      const [form] = Form.useForm();
+      return (
+        <Form form={form}>
+          <SSIDForm {...mockSsid} form={form} />
+        </Form>
+      );
+    };
+
+    const { getByText, getByRole, getByLabelText } = render(<SSIDFormComp />);
+
+    fireEvent.keyDown(getByLabelText('Passpoint'), DOWN_ARROW);
+    await waitForElement(() => getByText('Access SSID'));
+    fireEvent.click(getByText('Access SSID'));
+
+    fireEvent.click(
+      getByRole('button', {
+        name: /add profile-passpoint/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByText('Access Network')).toBeVisible();
+    });
+  });
 });

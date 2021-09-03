@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Card, Radio, Checkbox, Empty, Select as AntdSelect } from 'antd';
+import { Form, Card, Radio, Checkbox, Select as AntdSelect } from 'antd';
 import { Input, Password, Select, RadioGroup, CheckboxGroup } from 'components/WithRoles';
 import Tooltip from 'components/Tooltip';
 import ThemeContext from 'contexts/ThemeContext';
@@ -8,6 +8,11 @@ import ThemeContext from 'contexts/ThemeContext';
 import styles from '../index.module.scss';
 import { DEFAULT_SSID_PROFILE } from '../constants';
 import { RADIOS, ROAMING, PROFILES, IP_REGEX } from '../../constants/index';
+import ProfileSelect from '../ProfileSelect';
+
+import RadiusProfileForm from '../Radius';
+import CaptivePortalForm from '../CaptivePortal';
+import PasspointProfileForm from '../PasspointProfile';
 
 const { Item } = Form;
 
@@ -24,15 +29,27 @@ const SSIDForm = ({
   form,
   profileId,
   details,
-  captiveProfiles,
   childProfiles,
+  captiveProfiles,
   radiusProfiles,
+  venueProfiles,
+  operatorProfiles,
+  idProviderProfiles,
   passpointProfiles,
   onSearchProfile,
   onFetchMoreProfiles,
   loadingCaptiveProfiles,
   loadingRadiusProfiles,
   loadingPasspointProfiles,
+  loadingVenueProfiles,
+  loadingOperatorProfiles,
+  loadingIdProviderProfiles,
+  onCreateChildProfile,
+  onUpdateChildProfile,
+  handleOnFormChange,
+  fileUpload,
+  onDownloadFile,
+  isModalProfile,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
@@ -72,6 +89,21 @@ const SSIDForm = ({
     };
   };
 
+  const radiusProfile = useMemo(
+    () => childProfiles.find(profile => profile?.profileType === PROFILES.radius),
+    [childProfiles]
+  );
+
+  const captivePortalProfile = useMemo(
+    () => childProfiles.find(profile => profile?.profileType === PROFILES.captivePortal),
+    [childProfiles]
+  );
+
+  const passpointProfile = useMemo(
+    () => childProfiles.find(profile => profile?.profileType === PROFILES.passpoint),
+    [childProfiles]
+  );
+
   useEffect(() => {
     setIsOsuProfile(false);
 
@@ -84,8 +116,6 @@ const SSIDForm = ({
       });
     });
 
-    const radiusProfile = childProfiles.find(profile => profile?.profileType === PROFILES.radius);
-
     form.setFieldsValue({
       ssid: details?.ssid || '',
       bandwidthLimitDown: details?.bandwidthLimitDown || DEFAULT_SSID_PROFILE.bandwidthLimitDown,
@@ -95,7 +125,10 @@ const SSIDForm = ({
       forwardMode: details?.forwardMode || DEFAULT_SSID_PROFILE.forwardMode,
       noLocalSubnets: details?.noLocalSubnets ? 'true' : 'false',
       captivePortal: details?.captivePortalId ? 'usePortal' : 'notPortal',
-      captivePortalId: details.captivePortalId && details.captivePortalId.toString(),
+      captivePortalId: {
+        value: captivePortalProfile?.id || null,
+        label: captivePortalProfile?.name || null,
+      },
       secureMode: details.secureMode || DEFAULT_SSID_PROFILE.secureMode,
       vlan: details?.vlanId > 0 ? 'customVLAN' : 'defaultVLAN',
       keyStr: details.keyStr || DEFAULT_SSID_PROFILE.keyStr,
@@ -387,27 +420,35 @@ const SSIDForm = ({
           }
         >
           {({ getFieldValue }) => {
-            return getFieldValue('forwardMode') === 'NAT' &&
-              getFieldValue('captivePortal') === 'usePortal' ? (
-              <Item wrapperCol={{ offset: 5, span: 15 }} name="captivePortalId">
-                <Select
-                  placeholder="Select Captive Portal"
-                  onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.captivePortal)}
-                  showSearch={onSearchProfile}
-                  filterOption={false}
-                  onSearch={name => onSearchProfile(PROFILES.captivePortal, name)}
-                  onSelect={() => onSearchProfile && onSearchProfile(PROFILES.captivePortal)}
-                  loading={loadingCaptiveProfiles}
-                  notFoundContent={!loadingCaptiveProfiles && <Empty />}
-                >
-                  {captiveProfiles.map(profile => (
-                    <Option key={profile.id} value={profile.id}>
-                      {profile.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Item>
-            ) : null;
+            return (
+              getFieldValue('forwardMode') === 'NAT' &&
+              getFieldValue('captivePortal') === 'usePortal' && (
+                <ProfileSelect
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name="captivePortalId"
+                  profileType={PROFILES.captivePortal}
+                  profiles={captiveProfiles}
+                  onSearchProfile={onSearchProfile}
+                  onFetchMoreProfiles={onFetchMoreProfiles}
+                  loadingProfiles={loadingCaptiveProfiles}
+                  content={CaptivePortalForm}
+                  currentProfile={captivePortalProfile}
+                  onUpdateChildProfile={onUpdateChildProfile}
+                  onCreateChildProfile={onCreateChildProfile}
+                  isModalProfile={isModalProfile}
+                  contentProps={{
+                    fileUpload,
+                    onDownloadFile,
+                    radiusProfiles,
+                    onSearchProfile,
+                    onFetchMoreProfiles,
+                    loadingRadiusProfiles,
+                  }}
+                  form={form}
+                  handleOnFormChange={handleOnFormChange}
+                />
+              )
+            );
           }}
         </Item>
         <Item
@@ -539,40 +580,46 @@ const SSIDForm = ({
           {({ getFieldValue }) => {
             return (
               getFieldValue('passpointConfig') !== 'disabled' && (
-                <>
-                  <Item
-                    wrapperCol={{ offset: 5, span: 15 }}
-                    name="passpointProfileId"
-                    help={
-                      getFieldValue('passpointConfig') === 'osuSSID' && isOsuProfile ? (
-                        <span className={styles.Disclaimer}>
-                          {`The existing OSU SSID configured on
+                <ProfileSelect
+                  wrapperCol={{ offset: 5, span: 15 }}
+                  name="passpointProfileId"
+                  help={
+                    getFieldValue('passpointConfig') === 'osuSSID' && isOsuProfile ? (
+                      <span className={styles.Disclaimer}>
+                        {`The existing OSU SSID configured on
                           ${getFieldValue('passpointProfileId').label}
                           will be replaced by this profile`}
-                        </span>
-                      ) : null
-                    }
-                  >
-                    <Select
-                      placeholder="Select Passpoint Profile"
-                      onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.passpoint)}
-                      showSearch={onSearchProfile}
-                      filterOption={false}
-                      onSearch={name => onSearchProfile(PROFILES.passpoint, name)}
-                      onSelect={() => onSearchProfile && onSearchProfile(PROFILES.passpoint)}
-                      loading={loadingPasspointProfiles}
-                      labelInValue
-                      notFoundContent={!loadingPasspointProfiles && <Empty />}
-                      onChange={verifyPasspointChange}
-                    >
-                      {passpointProfiles.map(profile => (
-                        <Option key={profile.id} value={profile.id}>
-                          {profile.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Item>
-                </>
+                      </span>
+                    ) : null
+                  }
+                  profileType={PROFILES.passpoint}
+                  profiles={passpointProfiles}
+                  onSearchProfile={onSearchProfile}
+                  onFetchMoreProfiles={onFetchMoreProfiles}
+                  loadingProfiles={loadingPasspointProfiles}
+                  content={PasspointProfileForm}
+                  currentProfile={passpointProfile}
+                  onUpdateChildProfile={onUpdateChildProfile}
+                  onCreateChildProfile={onCreateChildProfile}
+                  isModalProfile={isModalProfile}
+                  contentProps={{
+                    venueProfiles,
+                    operatorProfiles,
+                    idProviderProfiles,
+                    loadingVenueProfiles,
+                    loadingOperatorProfiles,
+                    loadingIdProviderProfiles,
+                    fileUpload,
+                    handleOnFormChange,
+                    onSearchProfile,
+                    onFetchMoreProfiles,
+                  }}
+                  selectProps={{
+                    onChange: verifyPasspointChange,
+                  }}
+                  form={form}
+                  handleOnFormChange={handleOnFormChange}
+                />
               )
             );
           }}
@@ -719,25 +766,22 @@ const SSIDForm = ({
             {({ getFieldValue }) => {
               return (
                 getFieldValue('useRadiusProxy') === 'false' && (
-                  <Item name="radiusServiceId" label="RADIUS Profile">
-                    <Select
-                      placeholder="Select RADIUS Profile"
-                      onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.radius)}
-                      showSearch={onSearchProfile}
-                      filterOption={false}
-                      onSearch={name => onSearchProfile(PROFILES.radius, name)}
-                      onSelect={() => onSearchProfile && onSearchProfile(PROFILES.radius)}
-                      loading={loadingRadiusProfiles}
-                      notFoundContent={!loadingRadiusProfiles && <Empty />}
-                      labelInValue
-                    >
-                      {radiusProfiles.map(profile => (
-                        <Option key={profile.id} value={profile.id}>
-                          {profile.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Item>
+                  <ProfileSelect
+                    name="radiusServiceId"
+                    label="RADIUS Profile"
+                    profileType={PROFILES.radius}
+                    profiles={radiusProfiles}
+                    onSearchProfile={onSearchProfile}
+                    onFetchMoreProfiles={onFetchMoreProfiles}
+                    loadingProfiles={loadingRadiusProfiles}
+                    content={RadiusProfileForm}
+                    currentProfile={radiusProfile}
+                    onUpdateChildProfile={onUpdateChildProfile}
+                    onCreateChildProfile={onCreateChildProfile}
+                    isModalProfile={isModalProfile}
+                    form={form}
+                    handleOnFormChange={handleOnFormChange}
+                  />
                 )
               );
             }}
@@ -922,11 +966,23 @@ SSIDForm.propTypes = {
   captiveProfiles: PropTypes.instanceOf(Array),
   radiusProfiles: PropTypes.instanceOf(Array),
   passpointProfiles: PropTypes.instanceOf(Array),
+  venueProfiles: PropTypes.instanceOf(Array),
+  operatorProfiles: PropTypes.instanceOf(Array),
+  idProviderProfiles: PropTypes.instanceOf(Array),
   onSearchProfile: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loadingCaptiveProfiles: PropTypes.bool,
   loadingRadiusProfiles: PropTypes.bool,
   loadingPasspointProfiles: PropTypes.bool,
+  loadingVenueProfiles: PropTypes.bool,
+  loadingOperatorProfiles: PropTypes.bool,
+  loadingIdProviderProfiles: PropTypes.bool,
+  onCreateChildProfile: PropTypes.func,
+  onUpdateChildProfile: PropTypes.func,
+  handleOnFormChange: PropTypes.func,
+  fileUpload: PropTypes.func,
+  onDownloadFile: PropTypes.func,
+  isModalProfile: PropTypes.bool,
 };
 
 SSIDForm.defaultProps = {
@@ -937,11 +993,23 @@ SSIDForm.defaultProps = {
   captiveProfiles: [],
   radiusProfiles: [],
   passpointProfiles: [],
+  venueProfiles: [],
+  operatorProfiles: [],
+  idProviderProfiles: [],
   onSearchProfile: null,
   onFetchMoreProfiles: () => {},
   loadingCaptiveProfiles: false,
   loadingRadiusProfiles: false,
   loadingPasspointProfiles: false,
+  loadingVenueProfiles: false,
+  loadingOperatorProfiles: false,
+  loadingIdProviderProfiles: false,
+  onCreateChildProfile: () => {},
+  onUpdateChildProfile: () => {},
+  handleOnFormChange: () => {},
+  fileUpload: () => {},
+  onDownloadFile: () => {},
+  isModalProfile: false,
 };
 
 export default SSIDForm;
