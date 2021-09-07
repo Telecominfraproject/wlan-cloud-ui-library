@@ -13,7 +13,7 @@ import { formatTicks } from 'utils/formatFunctions';
 import Card from '../Card';
 import styles from './index.module.scss';
 
-const MyLineChart = ({ title, data, options, refreshAfter, loading, lines }) => {
+const MyLineChart = ({ title, data, options, refreshAfter, loading, lines, chartTextColor }) => {
   const names = useMemo(() => lines.map(l => l.key), []);
 
   const {
@@ -47,7 +47,7 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading, lines }) => 
                 type="number"
                 domain={['dataMin', 'dataMax']}
                 tickFormatter={timestamp => moment(timestamp).format('h:mm a')}
-                stroke="white"
+                stroke={chartTextColor}
                 tick={{ style: { fontSize: 11 } }}
                 scale="time"
                 hide={allLegendItemsHidden}
@@ -56,7 +56,7 @@ const MyLineChart = ({ title, data, options, refreshAfter, loading, lines }) => 
               />
               <YAxis
                 tickFormatter={tick => (options.formatter ? options.formatter(tick, 0) : tick)}
-                stroke="white"
+                stroke={chartTextColor}
                 allowDecimals={false}
                 domain={[0, 'auto']}
                 tick={{ style: { fontSize: 11 } }}
@@ -101,6 +101,7 @@ MyLineChart.propTypes = {
   refreshAfter: PropTypes.number,
   loading: PropTypes.bool,
   lines: PropTypes.instanceOf(Array),
+  chartTextColor: PropTypes.string,
 };
 
 MyLineChart.defaultProps = {
@@ -110,5 +111,6 @@ MyLineChart.defaultProps = {
   refreshAfter: 300,
   loading: false,
   lines: [],
+  chartTextColor: 'white',
 };
 export default MyLineChart;

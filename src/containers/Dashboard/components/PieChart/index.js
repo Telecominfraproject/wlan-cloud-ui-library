@@ -8,7 +8,7 @@ import { useChartHover } from 'hooks';
 import PieGraphTooltip from 'components/GraphTooltips/PieGraphTooltip';
 import Card from '../Card';
 
-const MyPieChart = ({ chartData, title, loading }) => {
+const MyPieChart = ({ chartData, title, loading, chartTextColor }) => {
   const { activeIndex, onMouseOver, onMouseLeave } = useChartHover();
   const pieData = useMemo(() => {
     return Object.keys(chartData).map(key => ({
@@ -35,7 +35,7 @@ const MyPieChart = ({ chartData, title, loading }) => {
     <text
       x={x}
       y={y}
-      fill="#fff"
+      fill={chartTextColor}
       dominantBaseline="central"
       textAnchor={x > cx ? 'start' : 'end'}
       style={{ fontSize: '12px' }}
@@ -84,11 +84,13 @@ MyPieChart.propTypes = {
   chartData: PropTypes.instanceOf(Object),
   title: PropTypes.string,
   loading: PropTypes.bool,
+  chartTextColor: PropTypes.string,
 };
 
 MyPieChart.defaultProps = {
   chartData: {},
   title: '',
   loading: false,
+  chartTextColor: '#fff',
 };
 export default MyPieChart;
