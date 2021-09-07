@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
-import Modal from 'components/Modal';
-import { modalLayout } from 'utils/form';
+import Modal from 'components/FormModal';
 import styles from 'styles/index.scss';
 
 const { Item } = Form;
@@ -20,20 +19,18 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
   }, [visible, selectedLocation]);
 
   const content = (
-    <Form {...modalLayout} form={form}>
-      <Item
-        label="Location Name"
-        name="name"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter location name',
-          },
-        ]}
-      >
-        <Input className={styles.field} />
-      </Item>
-    </Form>
+    <Item
+      label="Location Name"
+      name="name"
+      rules={[
+        {
+          required: true,
+          message: 'Please enter location name',
+        },
+      ]}
+    >
+      <Input className={styles.field} />
+    </Item>
   );
 
   const handleOnSuccess = () => {
@@ -53,6 +50,7 @@ const EditFormModal = ({ onCancel, onSubmit, visible, title, selectedLocation })
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };

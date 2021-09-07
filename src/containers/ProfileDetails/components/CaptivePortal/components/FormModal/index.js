@@ -2,8 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
-import Modal from 'components/Modal';
-import { modalLayout } from 'utils/form';
+import Modal from 'components/FormModal';
 import styles from 'styles/index.scss';
 
 const { Item } = Form;
@@ -33,7 +32,7 @@ const FormModal = ({
   }, [username, usedUserNames]);
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <Item
         label="Username"
         name="username"
@@ -77,7 +76,7 @@ const FormModal = ({
       <Item label="Last Name" name="lastName">
         <Input className={styles.field} />
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -97,6 +96,7 @@ const FormModal = ({
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };

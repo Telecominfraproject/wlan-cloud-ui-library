@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Form } from 'antd';
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import LocaleItem from 'components/LocaleItem';
-import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
@@ -72,11 +71,8 @@ const FormModal = ({ visible, closeModal, onSubmit, fieldName, title }) => {
       onCancel={canceledModal}
       visible={visible}
       title={title}
-      content={
-        <Form {...modalLayout} form={form}>
-          {title === 'Add Icon' ? renderIconForm() : renderNameForm()}
-        </Form>
-      }
+      content={title === 'Add Icon' ? renderIconForm() : renderNameForm()}
+      form={form}
     />
   );
 };

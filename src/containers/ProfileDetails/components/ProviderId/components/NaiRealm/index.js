@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Cascader, Table, Select as AntdSelect } from 'antd';
 import { DeleteOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import { Select, Input, RoleProtectedBtn } from 'components/WithRoles';
 import ContainedSelect from 'components/ContainedSelect';
 import _ from 'lodash';
@@ -177,8 +177,9 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
           onCancel={canceledModal}
           visible={eapModal}
           title="Add EAP Method"
+          layout={naiLayout}
           content={
-            <Form {...naiLayout} form={form}>
+            <>
               <Item
                 name="method"
                 label="Method:"
@@ -215,8 +216,9 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
               >
                 <Cascader options={authOptions} />
               </Item>
-            </Form>
+            </>
           }
+          form={form}
         />
       </Item>
     </Card>

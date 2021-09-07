@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Select, Spin, Alert } from 'antd';
 
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import ContainedSelect from 'components/ContainedSelect';
-import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
@@ -45,7 +44,7 @@ const AssignmentModal = ({
   };
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       {filteredModels.length === 0 && !model && (
         <Alert
           className={styles.alertMessage}
@@ -102,7 +101,7 @@ const AssignmentModal = ({
           </ContainedSelect>
         )}
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -148,6 +147,7 @@ const AssignmentModal = ({
       onSuccess={handleOnSuccess}
       title={title}
       content={returnContent()}
+      form={form}
     />
   );
 };

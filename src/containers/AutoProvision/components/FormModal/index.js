@@ -2,9 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Select, Alert, Spin } from 'antd';
 
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import ContainedSelect from 'components/ContainedSelect';
-import { modalLayout } from 'utils/form';
 import styles from '../../index.module.scss';
 
 const { Item } = Form;
@@ -39,7 +38,7 @@ const FormModal = ({
   }, [visible]);
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <Item
         label="Model"
         name="model"
@@ -82,7 +81,7 @@ const FormModal = ({
           ))}
         </ContainedSelect>
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -118,6 +117,7 @@ const FormModal = ({
       onSuccess={handleOnSuccess}
       title={title}
       content={returnContent()}
+      form={form}
     />
   );
 };

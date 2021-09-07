@@ -4,9 +4,8 @@ import { Button, Form, Input, Select, Typography } from 'antd';
 
 import ContainedSelect from 'components/ContainedSelect';
 
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import styles from 'styles/index.scss';
-import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -39,10 +38,11 @@ const FormModal = ({
   }, [visible]);
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <Item
         label="E-mail"
         name="email"
+        placeholder="Please enter an email"
         rules={[
           {
             required: true,
@@ -128,7 +128,7 @@ const FormModal = ({
           <Button onClick={() => onResetUserPassword(data?.email)}>Reset Password</Button>
         </Item>
       )}
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -148,6 +148,7 @@ const FormModal = ({
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };

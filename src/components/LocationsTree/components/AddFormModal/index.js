@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Breadcrumb } from 'antd';
 
-import Modal from 'components/Modal';
-import { modalLayout } from 'utils/form';
+import Modal from 'components/FormModal';
 import styles from './index.module.scss';
 
 const { Item } = Form;
@@ -21,7 +20,7 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
   ));
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <div className={styles.breadCrumbWrap}>
         {locationPath.length > 0 && (
           <Breadcrumb separator=">">
@@ -42,7 +41,7 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
       >
         <Input className={styles.field} />
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -62,6 +61,7 @@ const AddFormModal = ({ onCancel, onSubmit, visible, title, locationPath }) => {
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };

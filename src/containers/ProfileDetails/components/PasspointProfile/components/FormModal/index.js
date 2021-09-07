@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select, Form } from 'antd';
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import ContainedSelect from 'components/ContainedSelect';
-import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -34,7 +33,7 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
       visible={visible}
       title={title}
       content={
-        <Form {...modalLayout} form={form}>
+        <>
           <Item
             label="Status"
             name="connectionCapabilitiesStatus"
@@ -88,8 +87,9 @@ const FormModal = ({ visible, onCancel, onSubmit, currentPortList, title }) => {
           >
             <Input type="number" min={0} max={65535} placeholder="Enter a port" />
           </Item>
-        </Form>
+        </>
       }
+      form={form}
     />
   );
 };

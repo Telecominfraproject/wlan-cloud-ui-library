@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
-import Modal from 'components/Modal';
-import { modalLayout } from 'utils/form';
+import Modal from 'components/FormModal';
 
 const { Item } = Form;
 
@@ -11,7 +10,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
   const [form] = Form.useForm();
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <Item
         label="MAC Address"
         name="macAddress"
@@ -29,7 +28,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
       >
         <Input placeholder="Enter MAC Address" />
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -54,6 +53,7 @@ const FormModal = ({ onCancel, onSubmit, visible, title }) => {
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };
@@ -63,7 +63,6 @@ FormModal.propTypes = {
   visible: PropTypes.bool,
   onSubmit: PropTypes.func,
   title: PropTypes.string,
-  buttonText: PropTypes.string,
 };
 
 FormModal.defaultProps = {
@@ -71,7 +70,6 @@ FormModal.defaultProps = {
   visible: false,
   onSubmit: () => {},
   title: '',
-  buttonText: '',
 };
 
 export default FormModal;

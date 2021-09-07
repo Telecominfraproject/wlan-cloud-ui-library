@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Form, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import { Input, RoleProtectedBtn } from 'components/WithRoles';
 import { modalLayout } from 'utils/form';
 
@@ -241,7 +241,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
             onCancel={handleClosePlmnModal}
             title="Add Public Land Mobile Network (PLMN)"
             content={
-              <Form {...modalLayout} form={modalForm}>
+              <>
                 <Item
                   name="mcc"
                   label="Mcc:"
@@ -266,8 +266,9 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
                 >
                   <Input placeholder="Enter a value for mnc" type="number" />
                 </Item>
-              </Form>
+              </>
             }
+            form={form}
           />
         </Item>
       </Card>

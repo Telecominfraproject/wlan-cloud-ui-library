@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input } from 'antd';
 
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import { IP_REGEX } from 'containers/ProfileDetails/constants';
-
-import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
@@ -13,7 +11,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
   const [form] = Form.useForm();
 
   const content = (
-    <Form form={form} {...modalLayout}>
+    <>
       <Item
         name="greTunnelName"
         label="Name"
@@ -56,7 +54,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       >
         <Input placeholder="Enter list of VLAN IDs" />
       </Item>
-    </Form>
+    </>
   );
 
   const addGre = () => {
@@ -85,6 +83,7 @@ const FormModal = ({ onSubmit, onClose, title, visible }) => {
       onSuccess={addGre}
       title={title}
       content={content}
+      form={form}
     />
   );
 };
@@ -94,7 +93,6 @@ FormModal.propTypes = {
   visible: PropTypes.bool,
   onSubmit: PropTypes.func,
   title: PropTypes.string,
-  buttonText: PropTypes.string,
 };
 
 FormModal.defaultProps = {
@@ -102,7 +100,6 @@ FormModal.defaultProps = {
   visible: false,
   onSubmit: () => {},
   title: '',
-  buttonText: '',
 };
 
 export default FormModal;

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Form } from 'antd';
-import Modal from 'components/Modal';
+import Modal from 'components/FormModal';
 import LocaleItem from 'components/LocaleItem';
-import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
@@ -33,7 +32,7 @@ const FormModal = ({ visible, closeModal, onSubmit, title }) => {
       visible={visible}
       title={title}
       content={
-        <Form {...modalLayout} form={form}>
+        <>
           <Item
             name="dupleName"
             label="Name"
@@ -55,8 +54,9 @@ const FormModal = ({ visible, closeModal, onSubmit, title }) => {
           >
             <Input placeholder="Enter an URL" />
           </Item>
-        </Form>
+        </>
       }
+      form={form}
     />
   );
 };

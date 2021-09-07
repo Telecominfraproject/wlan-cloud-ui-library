@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Form, Input, DatePicker } from 'antd';
 
-import Modal from 'components/Modal';
-import { modalLayout } from 'utils/form';
+import Modal from 'components/FormModal';
 
 const { Item } = Form;
 
@@ -38,7 +37,7 @@ const VersionModal = ({
   }, [visible]);
 
   const content = (
-    <Form {...modalLayout} form={form}>
+    <>
       <Item
         label="Model ID"
         name="modelId"
@@ -86,7 +85,7 @@ const VersionModal = ({
       <Item label="Description" name="description">
         <Input.TextArea rows={3} />
       </Item>
-    </Form>
+    </>
   );
 
   const handleOnSuccess = () => {
@@ -106,6 +105,7 @@ const VersionModal = ({
       onSuccess={handleOnSuccess}
       title={title}
       content={content}
+      form={form}
     />
   );
 };
