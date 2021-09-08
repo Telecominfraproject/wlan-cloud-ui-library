@@ -53,6 +53,9 @@ const AddProfile = ({
   fileUpload,
   onCreateChildProfile,
   onUpdateChildProfile,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
@@ -166,6 +169,9 @@ const AddProfile = ({
               loadingPasspointProfiles={loadingPasspointProfiles}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
+              handleFetchChildProfile={handleFetchChildProfile}
+              childProfile={childProfile}
+              loadingChildProfile={loadingChildProfile}
             />
           )}
           {profileType === PROFILES.accessPoint && (
@@ -186,6 +192,9 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
+              handleFetchChildProfile={handleFetchChildProfile}
+              childProfile={childProfile}
+              loadingChildProfile={loadingChildProfile}
             />
           )}
           {profileType === PROFILES.bonjour && <BonjourGatewayForm form={form} />}
@@ -199,6 +208,9 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
+              handleFetchChildProfile={handleFetchChildProfile}
+              childProfile={childProfile}
+              loadingChildProfile={loadingChildProfile}
             />
           )}
 
@@ -218,6 +230,9 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
+              handleFetchChildProfile={handleFetchChildProfile}
+              childProfile={childProfile}
+              loadingChildProfile={loadingChildProfile}
             />
           )}
           {profileType === PROFILES.providerID && <ProviderIdForm form={form} />}
@@ -252,6 +267,9 @@ AddProfile.propTypes = {
   loadingRFProfiles: PropTypes.bool,
   loadingPasspointProfiles: PropTypes.bool,
   fileUpload: PropTypes.func,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
 };
 
@@ -275,6 +293,9 @@ AddProfile.defaultProps = {
   loadingRFProfiles: false,
   loadingPasspointProfiles: false,
   fileUpload: () => {},
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
   extraFields: [],
 };
 

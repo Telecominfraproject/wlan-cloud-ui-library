@@ -58,6 +58,9 @@ const PasspointProfileForm = ({
   onCreateChildProfile,
   onUpdateChildProfile,
   isModalProfile,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
 }) => {
   const history = useHistory();
   const { radioTypes, routes } = useContext(ThemeContext);
@@ -288,12 +291,15 @@ const PasspointProfileForm = ({
           onFetchMoreProfiles={onFetchMoreProfiles}
           loadingProfiles={loadingVenueProfiles}
           content={VenueProfileForm}
-          currentProfile={selectedVenue}
+          currentProfileId={selectedVenue?.id}
           onUpdateChildProfile={onUpdateChildProfile}
           onCreateChildProfile={onCreateChildProfile}
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
+          handleFetchChildProfile={handleFetchChildProfile}
+          childProfile={childProfile}
+          loadingChildProfile={loadingChildProfile}
         />
 
         <ProfileSelect
@@ -305,12 +311,15 @@ const PasspointProfileForm = ({
           onFetchMoreProfiles={onFetchMoreProfiles}
           loadingProfiles={loadingOperatorProfiles}
           content={OperatorProfileForm}
-          currentProfile={selectedOperator}
+          currentProfileId={selectedOperator?.id}
           onUpdateChildProfile={onUpdateChildProfile}
           onCreateChildProfile={onCreateChildProfile}
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
+          handleFetchChildProfile={handleFetchChildProfile}
+          childProfile={childProfile}
+          loadingChildProfile={loadingChildProfile}
         />
 
         <Item label="ID Provider">
@@ -647,6 +656,9 @@ PasspointProfileForm.propTypes = {
   onCreateChildProfile: PropTypes.func,
   onUpdateChildProfile: PropTypes.func,
   isModalProfile: PropTypes.bool,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -668,6 +680,9 @@ PasspointProfileForm.defaultProps = {
   onCreateChildProfile: () => {},
   onUpdateChildProfile: () => {},
   isModalProfile: false,
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default PasspointProfileForm;

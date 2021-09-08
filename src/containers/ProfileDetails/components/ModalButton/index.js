@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button, Tooltip, Select, Input, Card, Modal as AntdModal } from 'antd';
+import { Form, Button, Tooltip, Select, Input, Card, Modal as AntdModal, Skeleton } from 'antd';
 import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import Modal from 'components/Modal';
 import Withroles from 'components/WithRoles';
@@ -13,8 +13,6 @@ import styles from './index.module.scss';
 const { Item } = Form;
 
 const ModalButton = ({
-  setActiveProfile,
-  activeProfile,
   profileType,
   onSubmit,
   title,
@@ -25,6 +23,10 @@ const ModalButton = ({
   form,
   name,
   handleOnFormChange,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
+  profileId,
 }) => {
   const [visible, setVisible] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -44,17 +46,9 @@ const ModalButton = ({
         const profile =
           title === 'Add Profile'
             ? await handleOnCreateProfile(profileType, values, onSubmit)
-            : await handleOnProfileUpdate(
-                profileType,
-                activeProfile?.details,
-                values,
-                onSubmit,
-                activeProfile
-              );
+            : await handleOnProfileUpdate(profileType, childProfile?.details, values, onSubmit);
 
-        setActiveProfile(profile);
-
-        if (profile.name !== activeProfile?.name && name) {
+        if (profile.name !== childProfile?.name && name) {
           form.setFieldsValue({
             [name]: {
               label: profile.name,
@@ -62,7 +56,7 @@ const ModalButton = ({
             },
           });
         }
-        if (profile.id !== activeProfile?.id) {
+        if (profile.id !== childProfile?.id) {
           handleOnFormChange();
         }
 
@@ -74,9 +68,18 @@ const ModalButton = ({
 
   useEffect(() => {
     modalForm.setFieldsValue({
-      name: title === 'Add Profile' ? '' : activeProfile?.name,
+      name: title === 'Add Profile' ? '' : childProfile?.name,
     });
-  }, [activeProfile, title]);
+  }, [childProfile, title, visible]);
+
+  const onButtonClick = () => {
+    setVisible(true);
+    setIsFormDirty(false);
+
+    if (title !== 'Add Profile') {
+      handleFetchChildProfile(profileId);
+    }
+  };
 
   const onCancel = () => {
     if (isFormDirty) {
@@ -102,10 +105,22 @@ const ModalButton = ({
       <Modal
         onCancel={onCancel}
         visible={visible}
-        title={title}
+        title={
+          <Skeleton
+            active
+            size="small"
+            loading={loadingChildProfile}
+            paragraph={false}
+            className={styles.Skeleton}
+            title={{ width: 275 }}
+          >
+            {title}
+          </Skeleton>
+        }
         width={1150}
-        bodyStyle={{ overflowY: 'scroll', height: '560px' }}
+        bodyStyle={{ overflowY: 'scroll', height: '550px' }}
         onSuccess={handleOnSubmit}
+        loading={loadingChildProfile}
         content={
           <Form
             {...pageLayout}
@@ -114,7 +129,7 @@ const ModalButton = ({
             className={styles.FormContainer}
             scrollToFirstError={{ block: 'center' }}
           >
-            <>
+            <Skeleton loading={loadingChildProfile} active paragraph={{ rows: 20 }}>
               <Card>
                 <Item label="Type">
                   <Select defaultValue={profileType} disabled>
@@ -125,23 +140,21 @@ const ModalButton = ({
                   name="name"
                   label="Profile Name"
                   rules={[{ required: true, message: 'Please input your profile name' }]}
+                  initialValue={childProfile?.name}
                 >
                   <Input placeholder="Enter profile name" />
                 </Item>
               </Card>
-              <Content form={modalForm} {...activeProfile} {...contentProps} isModalProfile />
-            </>
+              <Content form={modalForm} {...childProfile} {...contentProps} isModalProfile />
+            </Skeleton>
           </Form>
         }
       />
       <Withroles>
         <Tooltip title={tooltipTitle}>
           <Button
-            onClick={() => {
-              setVisible(true);
-              setIsFormDirty(false);
-            }}
-            disabled={!activeProfile}
+            onClick={onButtonClick}
+            disabled={title !== 'Add Profile' && !profileId}
             icon={icon}
             title={`${title}-${profileType}`}
           />
@@ -152,8 +165,6 @@ const ModalButton = ({
 };
 
 ModalButton.propTypes = {
-  setActiveProfile: PropTypes.func,
-  activeProfile: PropTypes.instanceOf(Object),
   profileType: PropTypes.string,
   onSubmit: PropTypes.func,
   title: PropTypes.string,
@@ -164,11 +175,13 @@ ModalButton.propTypes = {
   form: PropTypes.instanceOf(Object),
   name: PropTypes.string,
   handleOnFormChange: PropTypes.func,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
+  profileId: PropTypes.string,
 };
 
 ModalButton.defaultProps = {
-  setActiveProfile: () => {},
-  activeProfile: {},
   profileType: '',
   onSubmit: () => {},
   title: 'Add Profile',
@@ -178,6 +191,10 @@ ModalButton.defaultProps = {
   form: {},
   name: '',
   handleOnFormChange: () => {},
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
+  profileId: null,
 };
 
 export default ModalButton;

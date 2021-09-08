@@ -23,21 +23,23 @@ const ProfileSelect = ({
   profileType,
   content,
   contentProps,
-  currentProfile,
+  currentProfileId,
   selectProps,
   isModalProfile,
   form,
   handleOnFormChange,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
   ...restProps
 }) => {
-  const [activeProfile, setActiveProfile] = useState(currentProfile);
+  const [profileId, setProfileId] = useState(currentProfileId);
 
   const onProfileSelect = profile => {
     if (onSearchProfile) {
       onSearchProfile(profileType);
     }
-    const current = profiles.find(i => i.id === profile.value);
-    setActiveProfile(current);
+    setProfileId(profile.value);
   };
 
   const options = useMemo(
@@ -71,25 +73,27 @@ const ProfileSelect = ({
         {!isModalProfile && (
           <>
             <ModalButton
-              activeProfile={activeProfile}
+              activeProfile={childProfile}
               profileType={profileType}
-              title={`Edit ${activeProfile?.name}`}
+              title={`Edit ${childProfile?.name}`}
               content={content}
               contentProps={contentProps}
               icon={<FormOutlined />}
               tooltipTitle="Edit Profile"
               onSubmit={onUpdateChildProfile}
-              setActiveProfile={setActiveProfile}
               form={form}
               name={name}
               handleOnFormChange={handleOnFormChange}
+              handleFetchChildProfile={handleFetchChildProfile}
+              childProfile={childProfile}
+              loadingChildProfile={loadingChildProfile}
+              profileId={profileId}
             />
             <ModalButton
               profileType={profileType}
               content={content}
               contentProps={contentProps}
               onSubmit={onCreateChildProfile}
-              setActiveProfile={setActiveProfile}
               form={form}
               name={name}
               handleOnFormChange={handleOnFormChange}
@@ -113,11 +117,14 @@ ProfileSelect.propTypes = {
   loadingProfiles: PropTypes.bool,
   content: PropTypes.func.isRequired,
   contentProps: PropTypes.instanceOf(Object),
-  currentProfile: PropTypes.instanceOf(Object),
+  currentProfileId: PropTypes.string,
   selectProps: PropTypes.instanceOf(Object),
   isModalProfile: PropTypes.bool,
   form: PropTypes.instanceOf(Object),
   handleOnFormChange: PropTypes.func,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 ProfileSelect.defaultProps = {
@@ -129,13 +136,16 @@ ProfileSelect.defaultProps = {
   onFetchMoreProfiles: () => {},
   loadingProfiles: false,
   contentProps: {},
-  currentProfile: null,
+  currentProfileId: '',
   selectProps: {},
   isModalProfile: false,
   onUpdateChildProfile: () => {},
   onCreateChildProfile: () => {},
   form: {},
   handleOnFormChange: () => {},
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default ProfileSelect;

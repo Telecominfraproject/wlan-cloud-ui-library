@@ -49,6 +49,9 @@ const CaptivePortalForm = ({
   onCreateChildProfile,
   onUpdateChildProfile,
   isModalProfile,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
 }) => {
   const formatFile = async file => {
     const src = await onDownloadFile(file?.apExportUrl);
@@ -449,12 +452,15 @@ const CaptivePortalForm = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingProfiles={loadingRadiusProfiles}
             content={RadiusProfileForm}
-            currentProfile={childProfiles?.[0]}
+            currentProfileId={childProfiles?.[0]?.id}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
             isModalProfile={isModalProfile}
             form={form}
             handleOnFormChange={handleOnFormChange}
+            handleFetchChildProfile={handleFetchChildProfile}
+            childProfile={childProfile}
+            loadingChildProfile={loadingChildProfile}
           />
         </Card>
       )}
@@ -707,6 +713,9 @@ CaptivePortalForm.propTypes = {
   isModalProfile: PropTypes.bool,
   onCreateChildProfile: PropTypes.func,
   onUpdateChildProfile: PropTypes.func,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -723,6 +732,9 @@ CaptivePortalForm.defaultProps = {
   isModalProfile: false,
   onCreateChildProfile: () => {},
   onUpdateChildProfile: () => {},
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default CaptivePortalForm;

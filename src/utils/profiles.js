@@ -583,15 +583,9 @@ const formatProfile = (profileType, values, details) => {
   return formattedData;
 };
 
-export const handleOnProfileUpdate = (
-  profileType,
-  details,
-  values,
-  onUpdateProfile,
-  fullProfile = {}
-) => {
+export const handleOnProfileUpdate = (profileType, details, values, onUpdateProfile) => {
   const formattedData = formatProfile(profileType, values, details);
-  return onUpdateProfile(values.name, formattedData, formattedData.childProfileIds, fullProfile);
+  return onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
 };
 
 export const handleOnCreateProfile = (profileType, values, onCreateProfile) => {

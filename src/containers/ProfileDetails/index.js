@@ -62,6 +62,9 @@ const ProfileDetails = ({
   loadingIdProviderProfiles,
   loadingRFProfiles,
   loadingPasspointProfiles,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
   extraFields,
 }) => {
   const { routes } = useContext(ThemeContext);
@@ -187,6 +190,9 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
+            handleFetchChildProfile={handleFetchChildProfile}
+            childProfile={childProfile}
+            loadingChildProfile={loadingChildProfile}
           />
         )}
         {profileType === PROFILES.accessPoint && (
@@ -211,6 +217,9 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
+            handleFetchChildProfile={handleFetchChildProfile}
+            childProfile={childProfile}
+            loadingChildProfile={loadingChildProfile}
           />
         )}
         {profileType === PROFILES.captivePortal && (
@@ -227,6 +236,9 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
+            handleFetchChildProfile={handleFetchChildProfile}
+            childProfile={childProfile}
+            loadingChildProfile={loadingChildProfile}
           />
         )}
         {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}
@@ -253,6 +265,9 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
+            handleFetchChildProfile={handleFetchChildProfile}
+            childProfile={childProfile}
+            loadingChildProfile={loadingChildProfile}
           />
         )}
         {profileType === PROFILES.providerID && (
@@ -304,6 +319,9 @@ ProfileDetails.propTypes = {
   loadingPasspointProfiles: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
   loadingProfile: PropTypes.bool,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -336,6 +354,9 @@ ProfileDetails.defaultProps = {
   loadingPasspointProfiles: false,
   extraFields: [],
   loadingProfile: false,
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default ProfileDetails;

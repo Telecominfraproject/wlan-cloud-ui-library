@@ -74,6 +74,9 @@ const AccessPointForm = ({
   loadingPasspointProfiles,
   onCreateChildProfile,
   onUpdateChildProfile,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
@@ -89,7 +92,6 @@ const AccessPointForm = ({
   const [ntpServers, setNtpServers] = useState();
   const [ntpServerSearch, setNtpServerSearch] = useState('');
   const [ntpServerValidation, setNtpServerValidation] = useState({});
-  const [activeSsidProfile, setActiveSsidProfile] = useState({});
 
   const currentRfProfile = useMemo(() => childProfiles.find(i => i.profileType === 'rf'), [
     childProfiles,
@@ -196,14 +198,11 @@ const AccessPointForm = ({
 
   useEffect(() => {
     setSelectedChildProfiles(
-      selectedChildProfiles.map(childProfile =>
-        parseInt(childProfile.id, 10) === parseInt(activeSsidProfile.id, 10)
-          ? activeSsidProfile
-          : childProfile
+      selectedChildProfiles.map(profile =>
+        parseInt(profile.id, 10) === parseInt(childProfile.id, 10) ? childProfile : profile
       )
     );
-  }, [activeSsidProfile]);
-
+  }, [childProfile]);
   const columns = [
     {
       title: 'Profile Name',
@@ -230,7 +229,7 @@ const AccessPointForm = ({
       width: 80,
       render: (_, record) => (
         <ModalButton
-          activeProfile={record}
+          profileId={record.id}
           profileType={PROFILES.ssid}
           title={`Edit ${record?.name}`}
           content={SSIDForm}
@@ -248,8 +247,10 @@ const AccessPointForm = ({
           tooltipTitle="Edit Profile"
           onSubmit={onUpdateChildProfile}
           form={form}
-          setActiveProfile={setActiveSsidProfile}
           handleOnFormChange={handleOnFormChange}
+          handleFetchChildProfile={handleFetchChildProfile}
+          childProfile={childProfile}
+          loadingChildProfile={loadingChildProfile}
         />
       ),
     },
@@ -697,12 +698,15 @@ const AccessPointForm = ({
           onFetchMoreProfiles={onFetchMoreProfiles}
           loadingProfiles={loadingRFProfiles}
           content={RfProfileForm}
-          currentProfile={currentRfProfile}
+          currentProfileId={currentRfProfile.id}
           onUpdateChildProfile={onUpdateChildProfile}
           onCreateChildProfile={onCreateChildProfile}
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
+          handleFetchChildProfile={handleFetchChildProfile}
+          childProfile={childProfile}
+          loadingChildProfile={loadingChildProfile}
         />
       </Card>
       <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
@@ -1273,6 +1277,9 @@ AccessPointForm.propTypes = {
   onCreateChildProfile: PropTypes.func,
   onUpdateChildProfile: PropTypes.func,
   isModalProfile: PropTypes.bool,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -1297,6 +1304,9 @@ AccessPointForm.defaultProps = {
   onCreateChildProfile: () => {},
   onUpdateChildProfile: () => {},
   isModalProfile: false,
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default AccessPointForm;

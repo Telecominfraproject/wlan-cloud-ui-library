@@ -50,6 +50,9 @@ const SSIDForm = ({
   fileUpload,
   onDownloadFile,
   isModalProfile,
+  handleFetchChildProfile,
+  childProfile,
+  loadingChildProfile,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
@@ -432,7 +435,7 @@ const SSIDForm = ({
                   onFetchMoreProfiles={onFetchMoreProfiles}
                   loadingProfiles={loadingCaptiveProfiles}
                   content={CaptivePortalForm}
-                  currentProfile={captivePortalProfile}
+                  currentProfileId={captivePortalProfile?.id}
                   onUpdateChildProfile={onUpdateChildProfile}
                   onCreateChildProfile={onCreateChildProfile}
                   isModalProfile={isModalProfile}
@@ -446,6 +449,9 @@ const SSIDForm = ({
                   }}
                   form={form}
                   handleOnFormChange={handleOnFormChange}
+                  handleFetchChildProfile={handleFetchChildProfile}
+                  childProfile={childProfile}
+                  loadingChildProfile={loadingChildProfile}
                 />
               )
             );
@@ -598,7 +604,7 @@ const SSIDForm = ({
                   onFetchMoreProfiles={onFetchMoreProfiles}
                   loadingProfiles={loadingPasspointProfiles}
                   content={PasspointProfileForm}
-                  currentProfile={passpointProfile}
+                  currentProfileId={passpointProfile?.id}
                   onUpdateChildProfile={onUpdateChildProfile}
                   onCreateChildProfile={onCreateChildProfile}
                   isModalProfile={isModalProfile}
@@ -619,6 +625,9 @@ const SSIDForm = ({
                   }}
                   form={form}
                   handleOnFormChange={handleOnFormChange}
+                  handleFetchChildProfile={handleFetchChildProfile}
+                  childProfile={childProfile}
+                  loadingChildProfile={loadingChildProfile}
                 />
               )
             );
@@ -775,12 +784,15 @@ const SSIDForm = ({
                     onFetchMoreProfiles={onFetchMoreProfiles}
                     loadingProfiles={loadingRadiusProfiles}
                     content={RadiusProfileForm}
-                    currentProfile={radiusProfile}
+                    currentProfileId={radiusProfile?.id}
                     onUpdateChildProfile={onUpdateChildProfile}
                     onCreateChildProfile={onCreateChildProfile}
                     isModalProfile={isModalProfile}
                     form={form}
                     handleOnFormChange={handleOnFormChange}
+                    handleFetchChildProfile={handleFetchChildProfile}
+                    childProfile={childProfile}
+                    loadingChildProfile={loadingChildProfile}
                   />
                 )
               );
@@ -983,6 +995,9 @@ SSIDForm.propTypes = {
   fileUpload: PropTypes.func,
   onDownloadFile: PropTypes.func,
   isModalProfile: PropTypes.bool,
+  childProfile: PropTypes.instanceOf(Object),
+  loadingChildProfile: PropTypes.bool,
+  handleFetchChildProfile: PropTypes.func,
 };
 
 SSIDForm.defaultProps = {
@@ -1010,6 +1025,9 @@ SSIDForm.defaultProps = {
   fileUpload: () => {},
   onDownloadFile: () => {},
   isModalProfile: false,
+  childProfile: {},
+  loadingChildProfile: false,
+  handleFetchChildProfile: () => {},
 };
 
 export default SSIDForm;
