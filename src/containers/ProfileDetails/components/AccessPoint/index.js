@@ -74,7 +74,7 @@ const AccessPointForm = ({
   loadingPasspointProfiles,
   onCreateChildProfile,
   onUpdateChildProfile,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
 }) => {
@@ -248,7 +248,7 @@ const AccessPointForm = ({
           onSubmit={onUpdateChildProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
-          handleFetchChildProfile={handleFetchChildProfile}
+          onFetchChildProfile={onFetchChildProfile}
           childProfile={childProfile}
           loadingChildProfile={loadingChildProfile}
         />
@@ -704,7 +704,7 @@ const AccessPointForm = ({
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
-          handleFetchChildProfile={handleFetchChildProfile}
+          onFetchChildProfile={onFetchChildProfile}
           childProfile={childProfile}
           loadingChildProfile={loadingChildProfile}
         />
@@ -1279,7 +1279,7 @@ AccessPointForm.propTypes = {
   isModalProfile: PropTypes.bool,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -1306,7 +1306,7 @@ AccessPointForm.defaultProps = {
   isModalProfile: false,
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default AccessPointForm;

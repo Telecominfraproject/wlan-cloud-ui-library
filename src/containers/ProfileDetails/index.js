@@ -62,7 +62,7 @@ const ProfileDetails = ({
   loadingIdProviderProfiles,
   loadingRFProfiles,
   loadingPasspointProfiles,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
   extraFields,
@@ -190,7 +190,7 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
-            handleFetchChildProfile={handleFetchChildProfile}
+            onFetchChildProfile={onFetchChildProfile}
             childProfile={childProfile}
             loadingChildProfile={loadingChildProfile}
           />
@@ -217,7 +217,7 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
-            handleFetchChildProfile={handleFetchChildProfile}
+            onFetchChildProfile={onFetchChildProfile}
             childProfile={childProfile}
             loadingChildProfile={loadingChildProfile}
           />
@@ -236,7 +236,7 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
-            handleFetchChildProfile={handleFetchChildProfile}
+            onFetchChildProfile={onFetchChildProfile}
             childProfile={childProfile}
             loadingChildProfile={loadingChildProfile}
           />
@@ -265,7 +265,7 @@ const ProfileDetails = ({
             handleOnFormChange={handleOnFormChange}
             onUpdateChildProfile={onUpdateChildProfile}
             onCreateChildProfile={onCreateChildProfile}
-            handleFetchChildProfile={handleFetchChildProfile}
+            onFetchChildProfile={onFetchChildProfile}
             childProfile={childProfile}
             loadingChildProfile={loadingChildProfile}
           />
@@ -321,7 +321,7 @@ ProfileDetails.propTypes = {
   loadingProfile: PropTypes.bool,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -356,7 +356,7 @@ ProfileDetails.defaultProps = {
   loadingProfile: false,
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default ProfileDetails;

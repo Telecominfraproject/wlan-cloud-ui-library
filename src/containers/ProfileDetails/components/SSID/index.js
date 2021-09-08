@@ -50,7 +50,7 @@ const SSIDForm = ({
   fileUpload,
   onDownloadFile,
   isModalProfile,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
 }) => {
@@ -449,7 +449,7 @@ const SSIDForm = ({
                   }}
                   form={form}
                   handleOnFormChange={handleOnFormChange}
-                  handleFetchChildProfile={handleFetchChildProfile}
+                  onFetchChildProfile={onFetchChildProfile}
                   childProfile={childProfile}
                   loadingChildProfile={loadingChildProfile}
                 />
@@ -625,7 +625,7 @@ const SSIDForm = ({
                   }}
                   form={form}
                   handleOnFormChange={handleOnFormChange}
-                  handleFetchChildProfile={handleFetchChildProfile}
+                  onFetchChildProfile={onFetchChildProfile}
                   childProfile={childProfile}
                   loadingChildProfile={loadingChildProfile}
                 />
@@ -790,7 +790,7 @@ const SSIDForm = ({
                     isModalProfile={isModalProfile}
                     form={form}
                     handleOnFormChange={handleOnFormChange}
-                    handleFetchChildProfile={handleFetchChildProfile}
+                    onFetchChildProfile={onFetchChildProfile}
                     childProfile={childProfile}
                     loadingChildProfile={loadingChildProfile}
                   />
@@ -997,7 +997,7 @@ SSIDForm.propTypes = {
   isModalProfile: PropTypes.bool,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 SSIDForm.defaultProps = {
@@ -1027,7 +1027,7 @@ SSIDForm.defaultProps = {
   isModalProfile: false,
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default SSIDForm;

@@ -28,7 +28,7 @@ const ProfileSelect = ({
   isModalProfile,
   form,
   handleOnFormChange,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
   ...restProps
@@ -84,7 +84,7 @@ const ProfileSelect = ({
               form={form}
               name={name}
               handleOnFormChange={handleOnFormChange}
-              handleFetchChildProfile={handleFetchChildProfile}
+              onFetchChildProfile={onFetchChildProfile}
               childProfile={childProfile}
               loadingChildProfile={loadingChildProfile}
               profileId={profileId}
@@ -124,7 +124,7 @@ ProfileSelect.propTypes = {
   handleOnFormChange: PropTypes.func,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 ProfileSelect.defaultProps = {
@@ -145,7 +145,7 @@ ProfileSelect.defaultProps = {
   handleOnFormChange: () => {},
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default ProfileSelect;

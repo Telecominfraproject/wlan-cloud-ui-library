@@ -49,7 +49,7 @@ const CaptivePortalForm = ({
   onCreateChildProfile,
   onUpdateChildProfile,
   isModalProfile,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
 }) => {
@@ -458,7 +458,7 @@ const CaptivePortalForm = ({
             isModalProfile={isModalProfile}
             form={form}
             handleOnFormChange={handleOnFormChange}
-            handleFetchChildProfile={handleFetchChildProfile}
+            onFetchChildProfile={onFetchChildProfile}
             childProfile={childProfile}
             loadingChildProfile={loadingChildProfile}
           />
@@ -715,7 +715,7 @@ CaptivePortalForm.propTypes = {
   onUpdateChildProfile: PropTypes.func,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -734,7 +734,7 @@ CaptivePortalForm.defaultProps = {
   onUpdateChildProfile: () => {},
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default CaptivePortalForm;

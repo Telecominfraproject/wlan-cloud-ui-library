@@ -53,7 +53,7 @@ const AddProfile = ({
   fileUpload,
   onCreateChildProfile,
   onUpdateChildProfile,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
   extraFields,
@@ -169,7 +169,7 @@ const AddProfile = ({
               loadingPasspointProfiles={loadingPasspointProfiles}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
-              handleFetchChildProfile={handleFetchChildProfile}
+              onFetchChildProfile={onFetchChildProfile}
               childProfile={childProfile}
               loadingChildProfile={loadingChildProfile}
             />
@@ -192,7 +192,7 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
-              handleFetchChildProfile={handleFetchChildProfile}
+              onFetchChildProfile={onFetchChildProfile}
               childProfile={childProfile}
               loadingChildProfile={loadingChildProfile}
             />
@@ -208,7 +208,7 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
-              handleFetchChildProfile={handleFetchChildProfile}
+              onFetchChildProfile={onFetchChildProfile}
               childProfile={childProfile}
               loadingChildProfile={loadingChildProfile}
             />
@@ -230,7 +230,7 @@ const AddProfile = ({
               fileUpload={fileUpload}
               onUpdateChildProfile={onUpdateChildProfile}
               onCreateChildProfile={onCreateChildProfile}
-              handleFetchChildProfile={handleFetchChildProfile}
+              onFetchChildProfile={onFetchChildProfile}
               childProfile={childProfile}
               loadingChildProfile={loadingChildProfile}
             />
@@ -269,7 +269,7 @@ AddProfile.propTypes = {
   fileUpload: PropTypes.func,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
 };
 
@@ -295,7 +295,7 @@ AddProfile.defaultProps = {
   fileUpload: () => {},
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
   extraFields: [],
 };
 

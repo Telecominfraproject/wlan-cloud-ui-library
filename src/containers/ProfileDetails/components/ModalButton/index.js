@@ -23,7 +23,7 @@ const ModalButton = ({
   form,
   name,
   handleOnFormChange,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
   profileId,
@@ -77,7 +77,7 @@ const ModalButton = ({
     setIsFormDirty(false);
 
     if (title !== 'Add Profile') {
-      handleFetchChildProfile(profileId);
+      onFetchChildProfile(profileId);
     }
   };
 
@@ -177,7 +177,7 @@ ModalButton.propTypes = {
   handleOnFormChange: PropTypes.func,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
   profileId: PropTypes.string,
 };
 
@@ -193,7 +193,7 @@ ModalButton.defaultProps = {
   handleOnFormChange: () => {},
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
   profileId: null,
 };
 

@@ -58,7 +58,7 @@ const PasspointProfileForm = ({
   onCreateChildProfile,
   onUpdateChildProfile,
   isModalProfile,
-  handleFetchChildProfile,
+  onFetchChildProfile,
   childProfile,
   loadingChildProfile,
 }) => {
@@ -297,7 +297,7 @@ const PasspointProfileForm = ({
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
-          handleFetchChildProfile={handleFetchChildProfile}
+          onFetchChildProfile={onFetchChildProfile}
           childProfile={childProfile}
           loadingChildProfile={loadingChildProfile}
         />
@@ -317,7 +317,7 @@ const PasspointProfileForm = ({
           isModalProfile={isModalProfile}
           form={form}
           handleOnFormChange={handleOnFormChange}
-          handleFetchChildProfile={handleFetchChildProfile}
+          onFetchChildProfile={onFetchChildProfile}
           childProfile={childProfile}
           loadingChildProfile={loadingChildProfile}
         />
@@ -658,7 +658,7 @@ PasspointProfileForm.propTypes = {
   isModalProfile: PropTypes.bool,
   childProfile: PropTypes.instanceOf(Object),
   loadingChildProfile: PropTypes.bool,
-  handleFetchChildProfile: PropTypes.func,
+  onFetchChildProfile: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -682,7 +682,7 @@ PasspointProfileForm.defaultProps = {
   isModalProfile: false,
   childProfile: {},
   loadingChildProfile: false,
-  handleFetchChildProfile: () => {},
+  onFetchChildProfile: () => {},
 };
 
 export default PasspointProfileForm;
