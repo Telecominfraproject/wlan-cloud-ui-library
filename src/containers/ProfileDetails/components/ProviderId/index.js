@@ -13,7 +13,7 @@ import styles from '../index.module.scss';
 
 const { Item } = Form;
 
-const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
+const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
   const [modalForm] = Form.useForm();
   const [plmnModal, setPlmnModal] = useState(false);
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
@@ -167,8 +167,8 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title="Network Identifier">
-        <Item label="Roaming OI">
+      <Card title={text('Network Identifier')}>
+        <Item label={text('Roaming OI')}>
           <Form.List name="roamingOi">
             {(fields, { add: addRoamingOI, remove: removeRoamingOI }) => {
               return (
@@ -216,7 +216,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
                     </div>
                   ))}
                   <RoleProtectedBtn type="dashed" onClick={() => addRoamingOI()}>
-                    <PlusOutlined /> Add Roaming OI
+                    <PlusOutlined /> {text('Add Roaming OI')}
                   </RoleProtectedBtn>
                 </>
               );
@@ -226,10 +226,10 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
       </Card>
 
       <Card
-        title="Public Land Mobile Networks (PLMN)"
+        title={text('Public Land Mobile Networks (PLMN)')}
         extra={
           <RoleProtectedBtn type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
-            Add
+            {text('Add')}
           </RoleProtectedBtn>
         }
       >
@@ -239,7 +239,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
             visible={plmnModal}
             onSuccess={handleAddPlmnItem}
             onCancel={handleClosePlmnModal}
-            title="Add Public Land Mobile Network (PLMN)"
+            title={text('Add Public Land Mobile Network (PLMN)')}
             content={
               <Form {...modalLayout} form={modalForm}>
                 <Item
@@ -278,6 +278,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
         addRealm={handleAddNaiRealm}
+        text={text}
       />
 
       <OsuForm
@@ -296,12 +297,14 @@ ProviderIdForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
   handleOnFormChange: PropTypes.func,
+  text: PropTypes.func,
 };
 
 ProviderIdForm.defaultProps = {
   form: null,
   details: {},
   handleOnFormChange: () => {},
+  text: str => str,
 };
 
 export default ProviderIdForm;

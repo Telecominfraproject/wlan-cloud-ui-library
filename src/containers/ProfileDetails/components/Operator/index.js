@@ -12,7 +12,7 @@ import styles from '../index.module.scss';
 const { Item } = Form;
 const { Option } = AntdSelect;
 
-const OperatorForm = ({ details, form, handleOnFormChange }) => {
+const OperatorForm = ({ details, form, handleOnFormChange, text }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [operatorFriendlyName, setOperatorFriendlyName] = useState(
@@ -50,7 +50,7 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title="Security">
+      <Card title={text('Security')}>
         <Item
           label="OSEN:"
           name="serverOnlyAuthenticatedL2EncryptionNetwork"
@@ -62,7 +62,7 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
           </Select>
         </Item>
 
-        <Item label="Domain Name List">
+        <Item label={text('Domain Name List')}>
           <Form.List name="domainNameList">
             {(fields, { add, remove }) => {
               return (
@@ -111,7 +111,7 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
                     </div>
                   ))}
                   <RoleProtectedBtn type="dashed" onClick={() => add()}>
-                    <PlusOutlined /> Add Domain Name
+                    <PlusOutlined /> {text('Add Domain Name')}
                   </RoleProtectedBtn>
                 </>
               );
@@ -121,10 +121,10 @@ const OperatorForm = ({ details, form, handleOnFormChange }) => {
       </Card>
 
       <Card
-        title="Operator Name"
+        title={text('Operator Name')}
         extra={
           <RoleProtectedBtn type="solid" onClick={() => setModalVisible(true)}>
-            Add Name
+            {text('Add Name')}
           </RoleProtectedBtn>
         }
       >
@@ -152,12 +152,14 @@ OperatorForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
   handleOnFormChange: PropTypes.func,
+  text: PropTypes.func,
 };
 
 OperatorForm.defaultProps = {
   form: null,
   details: {},
   handleOnFormChange: () => {},
+  text: str => str,
 };
 
 export default OperatorForm;

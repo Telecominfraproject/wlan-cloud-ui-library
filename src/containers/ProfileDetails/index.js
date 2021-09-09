@@ -71,6 +71,7 @@ const ProfileDetails = ({
   loadingRFProfiles,
   loadingPasspointProfiles,
   extraFields,
+  text,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -284,7 +285,7 @@ const ProfileDetails = ({
               Back
             </Button>
             <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
-              <h1>{`Edit ${name}`}</h1>
+              <h1>{`${text('Edit')} ${name}`}</h1>
             </Skeleton>
           </div>
           <WithRoles>
@@ -292,21 +293,21 @@ const ProfileDetails = ({
               <div className={styles.HeaderButton}>{extraButtons}</div>
               <Item noStyle>
                 <Button type="primary" htmlType="submit" disabled={!isFormDirty}>
-                  Save
+                  {text('Save')}
                 </Button>
               </Item>
             </div>
           </WithRoles>
         </Header>
         <Card loading={loadingProfile}>
-          <Item label="Type">
+          <Item label={text('Type')}>
             <Select defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
             </Select>
           </Item>
           <Item
             name="name"
-            label="Profile Name"
+            label={text('Profile Name')}
             rules={[{ required: true, message: 'Please input your new profile name' }]}
           >
             <Input placeholder="Enter profile name" />
@@ -326,6 +327,7 @@ const ProfileDetails = ({
             loadingCaptiveProfiles={loadingCaptiveProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
             loadingPasspointProfiles={loadingPasspointProfiles}
+            text={text}
           />
         )}
         {profileType === PROFILES.accessPoint && (
@@ -342,6 +344,7 @@ const ProfileDetails = ({
             loadingRFProfiles={loadingRFProfiles}
             fileUpload={fileUpload}
             handleOnFormChange={handleOnFormChange}
+            text={text}
           />
         )}
         {profileType === PROFILES.captivePortal && (
@@ -356,12 +359,15 @@ const ProfileDetails = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
             handleOnFormChange={handleOnFormChange}
+            text={text}
           />
         )}
-        {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}
+        {profileType === PROFILES.radius && (
+          <RadiusForm details={details} form={form} text={text} />
+        )}
         {profileType === PROFILES.bonjour && <BonjourGatewayForm details={details} form={form} />}
         {profileType === PROFILES.rf && (
-          <RFForm details={details} form={form} extraFields={extraFields} />
+          <RFForm details={details} form={form} extraFields={extraFields} text={text} />
         )}
         {profileType === PROFILES.passpoint && (
           <PasspointProfileForm
@@ -380,16 +386,32 @@ const ProfileDetails = ({
             loadingOperatorProfiles={loadingOperatorProfiles}
             loadingIdProviderProfiles={loadingIdProviderProfiles}
             handleOnFormChange={handleOnFormChange}
+            text={text}
           />
         )}
         {profileType === PROFILES.providerID && (
-          <ProviderIdForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+          <ProviderIdForm
+            form={form}
+            details={details}
+            handleOnFormChange={handleOnFormChange}
+            text={text}
+          />
         )}
         {profileType === PROFILES.operator && (
-          <OperatorForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+          <OperatorForm
+            form={form}
+            details={details}
+            handleOnFormChange={handleOnFormChange}
+            text={text}
+          />
         )}
         {profileType === PROFILES.venue && (
-          <VenueForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
+          <VenueForm
+            form={form}
+            details={details}
+            handleOnFormChange={handleOnFormChange}
+            text={text}
+          />
         )}
       </Form>
     </Container>
@@ -429,6 +451,7 @@ ProfileDetails.propTypes = {
   loadingPasspointProfiles: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
   loadingProfile: PropTypes.bool,
+  text: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -461,6 +484,7 @@ ProfileDetails.defaultProps = {
   loadingPasspointProfiles: false,
   extraFields: [],
   loadingProfile: false,
+  text: str => str,
 };
 
 export default ProfileDetails;

@@ -12,7 +12,7 @@ import WithRoles, { RoleProtectedBtn } from 'components/WithRoles';
 import FormModal from './components/FormModal';
 import styles from './index.module.scss';
 
-const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
+const BlockedList = ({ data, onUpdateClient, onAddClient, loading, text }) => {
   const { routes } = useContext(ThemeContext);
   const [addModal, setAddModal] = useState(false);
   const [activeMac, setActiveMac] = useState({});
@@ -37,7 +37,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
 
   const columns = [
     {
-      title: 'MAC ADDRESS',
+      title: text('MAC ADDRESS'),
       dataIndex: 'macAddress',
       width: 900,
       render: value => (
@@ -77,14 +77,15 @@ const BlockedList = ({ data, onUpdateClient, onAddClient, loading }) => {
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addClient}
-        title="Add Client"
+        title={text('Add Client')}
+        text={text}
       />
       <div className={styles.BlockedList}>
         <Header>
-          <h1>Client Blocked List</h1>
+          <h1>{text('Client Blocked List')}</h1>
 
           <RoleProtectedBtn type="primary" onClick={() => setAddModal(true)}>
-            Add Client
+            {text('Add Client')}
           </RoleProtectedBtn>
         </Header>
 
@@ -106,6 +107,7 @@ BlockedList.propTypes = {
   onUpdateClient: Proptypes.func,
   onAddClient: Proptypes.func,
   loading: Proptypes.bool,
+  text: Proptypes.func,
 };
 
 BlockedList.defaultProps = {
@@ -113,6 +115,7 @@ BlockedList.defaultProps = {
   onUpdateClient: () => {},
   onAddClient: () => {},
   loading: false,
+  text: str => str,
 };
 
 export default BlockedList;

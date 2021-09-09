@@ -26,6 +26,7 @@ const Accounts = ({
   allUserRoles,
   FormModal,
   loading,
+  text,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -51,13 +52,13 @@ const Accounts = ({
 
   const columns = [
     {
-      title: 'E-MAIL',
+      title: text('E-MAIL'),
       dataIndex: 'email',
       key: 'email',
       width: width > 992 && 620,
     },
     {
-      title: 'ROLES',
+      title: text('ROLES'),
       dataIndex: 'roles',
       key: 'roles',
       width: 120,
@@ -112,9 +113,9 @@ const Accounts = ({
   return (
     <div className={styles.Container}>
       <Header>
-        <h1>Users</h1>
+        <h1>{text('Users')}</h1>
         <RoleProtectedBtn title="addaccount" type="primary" onClick={() => setAddModal(true)}>
-          Add User
+          {text('Add User')}
         </RoleProtectedBtn>
       </Header>
 
@@ -122,7 +123,7 @@ const Accounts = ({
         onCancel={() => setEditModal(false)}
         visible={editModal}
         onSubmit={editUser}
-        title="Edit User"
+        title={text('Edit User')}
         data={activeUser}
         isAuth0Enabled={isAuth0Enabled}
         onResetUserPassword={onResetUserPassword}
@@ -132,7 +133,7 @@ const Accounts = ({
         onCancel={() => setAddModal(false)}
         visible={addModal}
         onSubmit={addUser}
-        title="Add User"
+        title={text('Add User')}
         isAuth0Enabled={isAuth0Enabled}
         allUserRoles={allUserRoles}
       />
@@ -146,7 +147,7 @@ const Accounts = ({
       />
       {!isLastPage && (
         <div className={styles.LoadMore}>
-          <Button onClick={onLoadMore}>Load More</Button>
+          <Button onClick={onLoadMore}>{text('Load More')}</Button>
         </div>
       )}
     </div>
@@ -166,6 +167,7 @@ Accounts.propTypes = {
   allUserRoles: PropTypes.instanceOf(Array),
   FormModal: PropTypes.func,
   loading: PropTypes.bool,
+  text: PropTypes.func,
 };
 
 Accounts.defaultProps = {
@@ -178,6 +180,7 @@ Accounts.defaultProps = {
   allUserRoles: ['SuperUser', 'CustomerIT'],
   FormModal: DefaultModal,
   loading: false,
+  text: str => str,
 };
 
 export default Accounts;

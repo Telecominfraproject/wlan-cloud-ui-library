@@ -13,7 +13,7 @@ const MAX_RADIUS = 1;
 
 const { Item, List } = Form;
 
-const RadiusForm = ({ form, details }) => {
+const RadiusForm = ({ form, details, text }) => {
   const formatInitialAuthenticationValues = () => {
     const values = [details?.primaryRadiusAuthServer];
     if (details?.secondaryRadiusAuthServer) {
@@ -46,7 +46,7 @@ const RadiusForm = ({ form, details }) => {
         {(fields, { add, remove }) => {
           return (
             <Card
-              title="RADIUS Authentication Server"
+              title={text('RADIUS Authentication Server')}
               extra={
                 <>
                   {fields.length >= MAX_RADIUS && (
@@ -62,14 +62,16 @@ const RadiusForm = ({ form, details }) => {
                     }}
                     disabled={fields.length >= MAX_RADIUS}
                   >
-                    <PlusOutlined /> Add Authentication Server
+                    <PlusOutlined /> {text('Add Authentication Server')}
                   </Button>
                 </>
               }
             >
               {fields.map((field, index) => (
                 <div key={field.name}>
-                  <span>{index === 0 ? 'Primary' : 'Secondary'} Authentication Server</span>
+                  <span>
+                    {index === 0 ? 'Primary' : 'Secondary'} {text('Authentication Server')}
+                  </span>
                   <Item
                     name={[field.name, 'ipAddress']}
                     label="IP"
@@ -89,7 +91,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'secret']}
-                    label="Shared Secret"
+                    label={text('Shared Secret')}
                     rules={[
                       {
                         required: true,
@@ -105,7 +107,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'port']}
-                    label="Port"
+                    label={text('Port')}
                     initialValue={1812}
                     rules={[
                       {
@@ -135,7 +137,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'timeout']}
-                    label="Session Timeout"
+                    label={text('Session Timeout')}
                     initialValue={5}
                     rules={[
                       {
@@ -189,7 +191,7 @@ const RadiusForm = ({ form, details }) => {
         {(fields, { add, remove }) => {
           return (
             <Card
-              title="RADIUS Accounting Server"
+              title={text('RADIUS Accounting Server')}
               bodyStyle={{ padding: fields.length <= 0 && '0' }}
               extra={
                 <>
@@ -206,14 +208,16 @@ const RadiusForm = ({ form, details }) => {
                     }}
                     disabled={fields.length >= MAX_RADIUS}
                   >
-                    <PlusOutlined /> Add Accounting Server
+                    <PlusOutlined /> {text('Add Accounting Server')}
                   </Button>
                 </>
               }
             >
               {fields.map((field, index) => (
                 <div key={field.name}>
-                  <span>{index === 0 ? 'Primary' : 'Secondary'} Accounting Server</span>
+                  <span>
+                    {index === 0 ? 'Primary' : 'Secondary'} {text('Accounting Server')}
+                  </span>
                   <Item
                     name={[field.name, 'ipAddress']}
                     label="IP"
@@ -233,7 +237,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'secret']}
-                    label="Shared Secret"
+                    label={text('Shared Secret')}
                     rules={[
                       {
                         required: true,
@@ -249,7 +253,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'port']}
-                    label="Port"
+                    label={text('Port')}
                     initialValue={1813}
                     rules={[
                       {
@@ -279,7 +283,7 @@ const RadiusForm = ({ form, details }) => {
 
                   <Item
                     name={[field.name, 'timeout']}
-                    label="Session Timeout"
+                    label={text('Session Timeout')}
                     initialValue={5}
                     rules={[
                       {
@@ -318,7 +322,7 @@ const RadiusForm = ({ form, details }) => {
                     }}
                     data-testid={`accountingDelete${field.name}`}
                   >
-                    Remove
+                    {text('Remove')}
                   </RoleProtectedBtn>
                 </div>
               ))}
@@ -333,11 +337,13 @@ const RadiusForm = ({ form, details }) => {
 RadiusForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
+  text: PropTypes.func,
 };
 
 RadiusForm.defaultProps = {
   form: null,
   details: {},
+  text: str => str,
 };
 
 export default RadiusForm;

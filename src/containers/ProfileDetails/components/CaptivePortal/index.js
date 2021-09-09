@@ -44,6 +44,7 @@ const CaptivePortalForm = ({
   onFetchMoreProfiles,
   loadingRadiusProfiles,
   handleOnFormChange,
+  text,
 }) => {
   const formatFile = async file => {
     const src = await onDownloadFile(file?.apExportUrl);
@@ -332,9 +333,9 @@ const CaptivePortalForm = ({
         <img className={styles.Image} alt="Loading..." src={previewImage.thumbUrl} />
       </Modal>
 
-      <Card title="General Settings ">
+      <Card title={text('General Settings')}>
         <Item
-          label="Authentication"
+          label={text('Authentication')}
           name="authenticationType"
           rules={[
             {
@@ -353,7 +354,7 @@ const CaptivePortalForm = ({
 
         <Item
           name="sessionTimeoutInMinutes"
-          label="Session Timeout "
+          label={text('Session Timeout')}
           rules={[
             {
               required: true,
@@ -381,7 +382,7 @@ const CaptivePortalForm = ({
         </Item>
         <Item
           name="redirectURL"
-          label="Redirect URL"
+          label={text('Redirect URL')}
           rules={[
             {
               type: 'url',
@@ -391,13 +392,13 @@ const CaptivePortalForm = ({
         >
           <Input placeholder="http://... or https://..." />
         </Item>
-        <Item label="Splash Page" name="externalSplashPage">
+        <Item label={text('Splash Page')} name="externalSplashPage">
           <Group>
             <Radio value="false" onChange={disableExternalSplashChange}>
-              Access Point Hosted
+              {text('Access Point Hosted')}
             </Radio>
             <Radio value="true" disabled onChange={() => setExternalSplash(true)}>
-              Externally Hosted
+              {text('Externally Hosted')}
             </Radio>
           </Group>
         </Item>
@@ -417,10 +418,10 @@ const CaptivePortalForm = ({
         </>
       )}
       {authentication === 'radius' && (
-        <Card title="RADIUS">
+        <Card title={text('RADIUS')}>
           <Item
             name="radiusAuthMethod"
-            label="Authentication"
+            label={text('Authentication')}
             rules={[
               {
                 required: true,
@@ -436,7 +437,7 @@ const CaptivePortalForm = ({
           </Item>
           <Item
             name="radiusServiceId"
-            label="Service"
+            label={text('Service')}
             rules={[
               {
                 required: true,
@@ -532,7 +533,7 @@ const CaptivePortalForm = ({
         <Panel header="Splash Page Content" key="splashcontent" forceRender>
           <Item
             name="browserTitle"
-            label="Browser Title"
+            label={text('Browser Title')}
             rules={[
               {
                 required: true,
@@ -544,7 +545,7 @@ const CaptivePortalForm = ({
           </Item>
           <Item
             name="headerContent"
-            label="Page Title"
+            label={text('Page Title')}
             rules={[
               {
                 message: 'Please enter the page title',
@@ -553,21 +554,21 @@ const CaptivePortalForm = ({
           >
             <Input placeholder="Page title" />
           </Item>
-          <Item label="Body Content">
+          <Item label={text('Body Content')}>
             <div className={styles.InlineDiv}>
               <Button
                 onClick={() => setContentText(false)}
                 type={!isLoginText ? 'primary ' : 'ghost'}
                 className={styles.Header}
               >
-                User Acceptance Policy Text
+                {text('User Acceptance Policy Text')}
               </Button>
               <Button
                 onClick={() => setContentText(true)}
                 type={isLoginText ? 'primary ' : 'ghost'}
                 className={styles.Header}
               >
-                Login Success Text
+                {text('Login Success Text')}
               </Button>
             </div>
             <Item name="userAcceptancePolicy" hidden={isLoginText}>
@@ -581,14 +582,14 @@ const CaptivePortalForm = ({
         </Panel>
       </Collapse>
       <Collapse expandIconPosition="right">
-        <Panel header="Splash Page Images" forceRender>
-          <Item label="Configure">
+        <Panel header={text('Splash Page Images')} forceRender>
+          <Item label={text('Configure')}>
             <div className={styles.InlineDiv}>
               <Tooltip
                 title="Max dimensions recommended are: 1000px by 250px with a max file size of 180KB"
-                text="Logo"
+                text={text('Logo')}
               />
-              <Tooltip title="Max file size of 400KB" text="Background" />
+              <Tooltip title="Max file size of 400KB" text={text('Background')} />
             </div>
           </Item>
 
@@ -623,7 +624,7 @@ const CaptivePortalForm = ({
             </div>
           </Item>
           {bgFileList.length > 0 && (
-            <Item label="Background Styles">
+            <Item label={text('Background Styles')}>
               <div className={styles.InlineDiv}>
                 <Item name="backgroundRepeat">
                   <Select placeholder="Select Background Repeat">
@@ -651,9 +652,9 @@ const CaptivePortalForm = ({
         </Panel>
       </Collapse>
       <Collapse expandIconPosition="right">
-        <Panel header="Allow List" forceRender>
+        <Panel header={text('Allow List')} forceRender>
           <Item
-            label="Configure"
+            label={text('Configure')}
             rules={[{ validator: validateWhitelist }]}
             validateStatus={whitelistValidation.status}
             help={whitelistValidation.help}
@@ -710,6 +711,7 @@ CaptivePortalForm.propTypes = {
   onFetchMoreProfiles: PropTypes.func,
   loadingRadiusProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
+  text: PropTypes.func,
 };
 
 CaptivePortalForm.defaultProps = {
@@ -723,6 +725,7 @@ CaptivePortalForm.defaultProps = {
   onFetchMoreProfiles: () => {},
   loadingRadiusProfiles: false,
   handleOnFormChange: () => {},
+  text: str => str,
 };
 
 export default CaptivePortalForm;

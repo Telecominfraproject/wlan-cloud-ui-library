@@ -49,6 +49,7 @@ const PasspointProfileForm = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   handleOnFormChange,
+  text,
 }) => {
   const history = useHistory();
   const { radioTypes, routes } = useContext(ThemeContext);
@@ -204,17 +205,17 @@ const PasspointProfileForm = ({
 
   const columns = [
     {
-      title: 'Status',
+      title: text('Status'),
       dataIndex: 'connectionCapabilitiesStatus',
       width: 300,
     },
     {
-      title: 'Protocol',
+      title: text('Protocol'),
       dataIndex: 'connectionCapabilitiesIpProtocol',
       width: 300,
     },
     {
-      title: 'Port',
+      title: text('Port'),
       dataIndex: 'connectionCapabilitiesPortNumber',
       width: 300,
     },
@@ -234,24 +235,24 @@ const PasspointProfileForm = ({
 
   const columnsSsid = [
     {
-      title: 'Profile Name',
+      title: text('Profile Name'),
       dataIndex: 'name',
     },
     {
-      title: 'Type',
+      title: text('Type'),
       dataIndex: 'id',
       render: id => (parseInt(id, 10) === details?.osuSsidProfileId ? 'OSU' : 'Access'),
     },
     {
-      title: 'SSID',
+      title: text('SSID'),
       dataIndex: ['details', 'ssid'],
     },
     {
-      title: 'Security Mode',
+      title: text('Security Mode'),
       dataIndex: ['details', 'secureMode'],
     },
     {
-      title: 'Radio',
+      title: text('Radio'),
       dataIndex: ['details', 'appliedRadios'],
       render: appliedRadios =>
         sortRadioTypes([...appliedRadios])
@@ -262,8 +263,8 @@ const PasspointProfileForm = ({
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title="General">
-        <Item label="Venue" name="passpointVenueProfileId">
+      <Card title={text('General')}>
+        <Item label={text('Venue')} name="passpointVenueProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.venue)}
             data-testid="venueProfile"
@@ -283,7 +284,7 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Item label="Operator" name="passpointOperatorProfileId">
+        <Item label={text('Operator')} name="passpointOperatorProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.operator)}
             data-testid="operatorProfile"
@@ -303,7 +304,7 @@ const PasspointProfileForm = ({
             ))}
           </Select>
         </Item>
-        <Item label="ID Provider" name="passpointOsuProviderProfileIds">
+        <Item label={text('ID Provider')} name="passpointOsuProviderProfileIds">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
             data-testid="idProviderProfiles"
@@ -328,7 +329,7 @@ const PasspointProfileForm = ({
         </Item>
 
         <Item
-          label="Deauthentication Request Timeout"
+          label={text('Deauthentication Request Timeout')}
           name="deauthRequestTimeout"
           rules={[
             {
@@ -349,7 +350,7 @@ const PasspointProfileForm = ({
         >
           <Input min={0} max={255} type="number" placeholder="0-255" addonAfter="Seconds" />
         </Item>
-        <Item label="Interworking Hot 2.0" name="enableInterworkingAndHs20">
+        <Item label={text('Interworking Hot 2.0')} name="enableInterworkingAndHs20">
           {defaultRadios}
         </Item>
         <Item
@@ -382,16 +383,16 @@ const PasspointProfileForm = ({
         <Item
           label="ASRA"
           name="additionalStepsRequiredForAccess"
-          tooltip="Additional Steps Required For Access"
+          tooltip={text('Additional Steps Required For Access')}
         >
           {defaultRadios}
         </Item>
 
-        <Item label="Quality of Service Configuration" name="qosMapSetConfiguration">
+        <Item label={text('Quality of Service Configuration')} name="qosMapSetConfiguration">
           {defaultRadios}
         </Item>
 
-        <Item label="Operating Class" name="useOperatingClass">
+        <Item label={text('Operating Class')} name="useOperatingClass">
           {defaultRadios}
         </Item>
         <Item
@@ -433,7 +434,7 @@ const PasspointProfileForm = ({
       <Card
         title={
           <>
-            Wireless Networks (SSIDs) Enabled on This Profile
+            {text('Wireless Networks (SSIDs) Enabled on This Profile')}
             <Tooltip title="Please configure the OSU and Access SSIDs for this Passpoint profile in the SSID profile">
               <InfoCircleOutlined className={styles.ToolTip} />
             </Tooltip>
@@ -453,8 +454,8 @@ const PasspointProfileForm = ({
           })}
         />
       </Card>
-      <Card title="Access Network">
-        <Item label="Access Network Type" name="accessNetworkType">
+      <Card title={text('Access Network')}>
+        <Item label={text('Access Network Type')} name="accessNetworkType">
           <Select>
             <Option value="private_network">Private Network</Option>
             <Option value="private_network_guest_access">Private Network Guest Access</Option>
@@ -466,7 +467,7 @@ const PasspointProfileForm = ({
             <Option value="wildcard">Wildcard</Option>
           </Select>
         </Item>
-        <Item label="Authentication Type" name="networkAuthenticationType">
+        <Item label={text('Authentication Type')} name="networkAuthenticationType">
           <Select onChange={value => setAuthType(value)}>
             <Option value="acceptance_of_terms_and_conditions">
               Acceptance of Terms & Conditions
@@ -478,7 +479,7 @@ const PasspointProfileForm = ({
         </Item>
 
         {authType === 'acceptance_of_terms_and_conditions' && (
-          <Item label="Terms & Conditions" name="termsAndConditionsFile">
+          <Item label={text('Terms & Conditions')} name="termsAndConditionsFile">
             <Upload
               accept="image/*, text/plain"
               data-testid="termsAndConditionsUpload"
@@ -491,21 +492,21 @@ const PasspointProfileForm = ({
           </Item>
         )}
 
-        <Item label="Emergency Services Reachable" name="emergencyServicesReachable">
+        <Item label={text('Emergency Services Reachable')} name="emergencyServicesReachable">
           {defaultRadios}
         </Item>
         <Item
-          label="Unauthenticated Emergency Service Accessible"
+          label={text('Unauthenticated Emergency Service Accessible')}
           name="unauthenticatedEmergencyServiceAccessible"
         >
           {defaultRadios}
         </Item>
       </Card>
-      <Card title="IP Connectivity">
-        <Item label="Internet Connectivity" name="internetConnectivity">
+      <Card title={text('IP Connectivity')}>
+        <Item label={text('Internet Connectivity')} name="internetConnectivity">
           {defaultRadios}
         </Item>
-        <Item label="IP Address Type" name="ipAddressTypeAvailability">
+        <Item label={text('IP Address Type')} name="ipAddressTypeAvailability">
           <Select>
             <Option value="address_type_not_available">Address Type Not Available</Option>
             <Option value="address_type_available">Address Type Available</Option>
@@ -530,7 +531,7 @@ const PasspointProfileForm = ({
             </Option>
           </Select>
         </Item>
-        <Item label="Connection Capability">
+        <Item label={text('Connection Capability')}>
           <Button type="solid" onClick={() => setModalVisible(true)}>
             Add
           </Button>
@@ -543,7 +544,7 @@ const PasspointProfileForm = ({
           rowKey="connectionCapabilitiesPortNumber"
         />
       </Card>
-      <Card title="Advanced">
+      <Card title={text('Advanced')}>
         <Item
           label="ANQP Domain ID"
           name="anqpDomainId"
@@ -615,6 +616,7 @@ PasspointProfileForm.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
+  text: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -633,6 +635,7 @@ PasspointProfileForm.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   handleOnFormChange: () => {},
+  text: str => str,
 };
 
 export default PasspointProfileForm;

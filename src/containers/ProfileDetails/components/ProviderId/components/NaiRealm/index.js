@@ -19,7 +19,7 @@ const naiLayout = {
   wrapperCol: { span: 20 },
 };
 
-const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
+const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm, text }) => {
   const [eapModal, setEapModal] = useState(false);
 
   const columnsNai = [
@@ -176,12 +176,12 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
           onSuccess={addEapMethod}
           onCancel={canceledModal}
           visible={eapModal}
-          title="Add EAP Method"
+          title={text('Add EAP Method')}
           content={
             <Form {...naiLayout} form={form}>
               <Item
                 name="method"
-                label="Method:"
+                label={text('Method')}
                 rules={[
                   {
                     required: true,
@@ -205,7 +205,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
               </Item>
               <Item
                 name="auth"
-                label="Authentication"
+                label={text('Authentication')}
                 rules={[
                   {
                     required: true,
@@ -229,8 +229,9 @@ NaiRealm.propTypes = {
   addEap: PropTypes.func.isRequired,
   removeEap: PropTypes.func.isRequired,
   addRealm: PropTypes.func.isRequired,
+  text: PropTypes.func,
 };
 
-NaiRealm.defaultProps = { eapMap: {}, form: null };
+NaiRealm.defaultProps = { eapMap: {}, form: null, text: str => str };
 
 export default NaiRealm;
