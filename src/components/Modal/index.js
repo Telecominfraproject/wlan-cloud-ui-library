@@ -14,6 +14,7 @@ const Modal = ({
   buttonType,
   content,
   isSubmitable,
+  loading,
   ...restProps
 }) => {
   const { isReadOnly } = useRoles();
@@ -24,24 +25,27 @@ const Modal = ({
       title={title}
       onCancel={onCancel}
       footer={
-        <>
-          <div className={styles.Buttons}>
-            {!isReadOnly || isSubmitable ? (
-              <>
-                <Button className={styles.Button} onClick={onCancel}>
-                  Cancel
-                </Button>
-                <Button className={styles.Button} type={buttonType} onClick={onSuccess}>
-                  {buttonText}
-                </Button>
-              </>
-            ) : (
-              <Button className={styles.Button} type="primary" onClick={onCancel}>
-                Close
+        <div className={styles.Buttons}>
+          {!isReadOnly || isSubmitable ? (
+            <>
+              <Button className={styles.Button} onClick={onCancel}>
+                Cancel
               </Button>
-            )}
-          </div>
-        </>
+              <Button
+                className={styles.Button}
+                type={buttonType}
+                onClick={onSuccess}
+                loading={loading}
+              >
+                {buttonText}
+              </Button>
+            </>
+          ) : (
+            <Button className={styles.Button} type="primary" onClick={onCancel}>
+              Close
+            </Button>
+          )}
+        </div>
       }
       destroyOnClose
       {...restProps}
@@ -55,11 +59,12 @@ Modal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  title: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   buttonText: PropTypes.string,
   buttonType: PropTypes.string,
   isSubmitable: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 Modal.defaultProps = {
@@ -68,6 +73,7 @@ Modal.defaultProps = {
   buttonType: 'primary',
   buttonText: 'Save',
   isSubmitable: false,
+  loading: false,
 };
 
 export default Modal;
