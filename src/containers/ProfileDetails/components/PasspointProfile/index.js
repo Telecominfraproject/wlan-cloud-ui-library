@@ -23,12 +23,6 @@ import { sortRadioTypes } from 'utils/sortRadioTypes';
 import styles from '../index.module.scss';
 import FormModal from './components/FormModal';
 
-import VenueProfileForm from '../Venue';
-import ProviderIdForm from '../ProviderId';
-import OperatorProfileForm from '../Operator';
-import ModalButton from '../ModalButton';
-import ProfileSelect from '../ProfileSelect';
-
 const { Item } = Form;
 const { Option } = AntdSelect;
 
@@ -55,12 +49,6 @@ const PasspointProfileForm = ({
   loadingOperatorProfiles,
   loadingIdProviderProfiles,
   handleOnFormChange,
-  onCreateChildProfile,
-  onUpdateChildProfile,
-  isModalProfile,
-  onFetchChildProfile,
-  childProfile,
-  loadingChildProfile,
 }) => {
   const history = useHistory();
   const { radioTypes, routes } = useContext(ThemeContext);
@@ -76,25 +64,18 @@ const PasspointProfileForm = ({
     details?.networkAuthenticationType || 'acceptance_of_terms_and_conditions'
   );
 
-  const selectedVenue = useMemo(
-    () => childProfiles?.find(o => o.id === details?.passpointVenueProfileId?.toString()),
-    [childProfiles]
-  );
-
-  const selectedOperator = useMemo(
-    () => childProfiles?.find(o => o.id === details?.passpointOperatorProfileId?.toString()),
-    [childProfiles]
-  );
-
-  const selectedProviders = useMemo(
-    () =>
-      details?.passpointOsuProviderProfileIds?.map(i =>
-        childProfiles?.find(o => o.id === i?.toString())
-      ),
-    [childProfiles]
-  );
-
   useEffect(() => {
+    const selectedVenue = childProfiles?.find(
+      o => o.id === details?.passpointVenueProfileId?.toString()
+    );
+    const selectedOperator = childProfiles?.find(
+      o => o.id === details?.passpointOperatorProfileId?.toString()
+    );
+
+    const selectedProviders = details?.passpointOsuProviderProfileIds?.map(i =>
+      childProfiles?.find(o => o.id === i?.toString())
+    );
+
     form.setFieldsValue({
       passpointVenueProfileId:
         {
@@ -282,83 +263,68 @@ const PasspointProfileForm = ({
   return (
     <div className={styles.ProfilePage}>
       <Card title="General">
-        <ProfileSelect
-          name="passpointVenueProfileId"
-          label="Venue"
-          profileType={PROFILES.venue}
-          profiles={venueProfiles}
-          onSearchProfile={onSearchProfile}
-          onFetchMoreProfiles={onFetchMoreProfiles}
-          loadingProfiles={loadingVenueProfiles}
-          content={VenueProfileForm}
-          currentProfileId={selectedVenue?.id}
-          onUpdateChildProfile={onUpdateChildProfile}
-          onCreateChildProfile={onCreateChildProfile}
-          isModalProfile={isModalProfile}
-          form={form}
-          handleOnFormChange={handleOnFormChange}
-          onFetchChildProfile={onFetchChildProfile}
-          childProfile={childProfile}
-          loadingChildProfile={loadingChildProfile}
-        />
-
-        <ProfileSelect
-          name="passpointOperatorProfileId"
-          label="Operator"
-          profileType={PROFILES.operator}
-          profiles={operatorProfiles}
-          onSearchProfile={onSearchProfile}
-          onFetchMoreProfiles={onFetchMoreProfiles}
-          loadingProfiles={loadingOperatorProfiles}
-          content={OperatorProfileForm}
-          currentProfileId={selectedOperator?.id}
-          onUpdateChildProfile={onUpdateChildProfile}
-          onCreateChildProfile={onCreateChildProfile}
-          isModalProfile={isModalProfile}
-          form={form}
-          handleOnFormChange={handleOnFormChange}
-          onFetchChildProfile={onFetchChildProfile}
-          childProfile={childProfile}
-          loadingChildProfile={loadingChildProfile}
-        />
-
-        <Item label="ID Provider">
-          <div className={styles.SelectContainer}>
-            <Item name="passpointOsuProviderProfileIds" noStyle>
-              <Select
-                onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
-                data-testid="idProviderProfiles"
-                showSearch={onSearchProfile}
-                mode="multiple"
-                allowClear
-                placeholder="Select ID Providers (check to select)"
-                className={styles.MultipleSelection}
-                filterOption={false}
-                onSearch={name => onSearchProfile(PROFILES.providerID, name)}
-                onSelect={() => onSearchProfile && onSearchProfile(PROFILES.providerID)}
-                loading={loadingIdProviderProfiles}
-                notFoundContent={!loadingIdProviderProfiles && <Empty />}
-                labelInValue
-              >
-                {idProviderProfiles.map(i => (
-                  <Option key={i.id} value={i.id}>
-                    {i.name}
-                  </Option>
-                ))}
-              </Select>
-            </Item>
-            <ModalButton
-              profileType={PROFILES.providerID}
-              content={ProviderIdForm}
-              contentProps={{
-                onSearchProfile,
-                onFetchMoreProfiles,
-              }}
-              onSubmit={onCreateChildProfile}
-              form={form}
-              handleOnFormChange={handleOnFormChange}
-            />
-          </div>
+        <Item label="Venue" name="passpointVenueProfileId">
+          <Select
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.venue)}
+            data-testid="venueProfile"
+            showSearch={onSearchProfile}
+            placeholder="Select a Venue Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(PROFILES.venue, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.venue)}
+            loading={loadingVenueProfiles}
+            notFoundContent={!loadingVenueProfiles && <Empty />}
+            labelInValue
+          >
+            {venueProfiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Item label="Operator" name="passpointOperatorProfileId">
+          <Select
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.operator)}
+            data-testid="operatorProfile"
+            showSearch={onSearchProfile}
+            placeholder="Select an Operator Profile"
+            filterOption={false}
+            onSearch={name => onSearchProfile(PROFILES.operator, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.operator)}
+            loading={loadingOperatorProfiles}
+            notFoundContent={!loadingOperatorProfiles && <Empty />}
+            labelInValue
+          >
+            {operatorProfiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
+        </Item>
+        <Item label="ID Provider" name="passpointOsuProviderProfileIds">
+          <Select
+            onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.providerID)}
+            data-testid="idProviderProfiles"
+            showSearch={onSearchProfile}
+            mode="multiple"
+            allowClear
+            placeholder="Select ID Providers (check to select)"
+            className={styles.MultipleSelection}
+            filterOption={false}
+            onSearch={name => onSearchProfile(PROFILES.providerID, name)}
+            onSelect={() => onSearchProfile && onSearchProfile(PROFILES.providerID)}
+            loading={loadingIdProviderProfiles}
+            notFoundContent={!loadingIdProviderProfiles && <Empty />}
+            labelInValue
+          >
+            {idProviderProfiles.map(i => (
+              <Option key={i.id} value={i.id}>
+                {i.name}
+              </Option>
+            ))}
+          </Select>
         </Item>
 
         <Item
@@ -565,11 +531,7 @@ const PasspointProfileForm = ({
           </Select>
         </Item>
         <Item label="Connection Capability">
-          <Button
-            type="solid"
-            onClick={() => setModalVisible(true)}
-            title="Add Connection Capability"
-          >
+          <Button type="solid" onClick={() => setModalVisible(true)}>
             Add
           </Button>
         </Item>
@@ -653,12 +615,6 @@ PasspointProfileForm.propTypes = {
   loadingOperatorProfiles: PropTypes.bool,
   loadingIdProviderProfiles: PropTypes.bool,
   handleOnFormChange: PropTypes.func,
-  onCreateChildProfile: PropTypes.func,
-  onUpdateChildProfile: PropTypes.func,
-  isModalProfile: PropTypes.bool,
-  childProfile: PropTypes.instanceOf(Object),
-  loadingChildProfile: PropTypes.bool,
-  onFetchChildProfile: PropTypes.func,
 };
 
 PasspointProfileForm.defaultProps = {
@@ -677,12 +633,6 @@ PasspointProfileForm.defaultProps = {
   loadingOperatorProfiles: false,
   loadingIdProviderProfiles: false,
   handleOnFormChange: () => {},
-  onCreateChildProfile: () => {},
-  onUpdateChildProfile: () => {},
-  isModalProfile: false,
-  childProfile: {},
-  loadingChildProfile: false,
-  onFetchChildProfile: () => {},
 };
 
 export default PasspointProfileForm;

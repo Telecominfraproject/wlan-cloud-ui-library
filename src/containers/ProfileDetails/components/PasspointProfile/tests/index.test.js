@@ -43,7 +43,7 @@ describe('<PasspointProfileForm />', () => {
     const { getByText } = render(<PasspointProfileFormComp />);
 
     await waitFor(() => {
-      expect(getByText('Select a Passpoint Venue profile')).toBeInTheDocument();
+      expect(getByText('Select a Venue Profile')).toBeInTheDocument();
     });
   });
 
@@ -66,7 +66,7 @@ describe('<PasspointProfileForm />', () => {
     const { getByText } = render(<PasspointProfileFormComp />);
 
     await waitFor(() => {
-      expect(getByText('Select a Passpoint Operator profile')).toBeInTheDocument();
+      expect(getByText('Select an Operator Profile')).toBeInTheDocument();
     });
   });
 
@@ -93,7 +93,7 @@ describe('<PasspointProfileForm />', () => {
     });
   });
 
-  it('HESSID Mac Address Pattern error message should appear when field input is incorrect', async () => {
+  it('HESSID Mac Address Pattern error message should appear when field input is incorret', async () => {
     const PasspointProfileFormComp = () => {
       const [form] = Form.useForm();
       return (
@@ -233,7 +233,7 @@ describe('<PasspointProfileForm />', () => {
     };
     const { getByRole, getByText } = render(<PasspointProfileFormComp />);
 
-    fireEvent.click(getByRole('button', { name: /Add Connection Capability/i }));
+    fireEvent.click(getByRole('button', { name: /add/i }));
 
     await waitFor(() => {
       expect(getByText('Add Connection Capability')).toBeVisible();
@@ -251,7 +251,7 @@ describe('<PasspointProfileForm />', () => {
     };
     const { getByRole, getByText, queryByText } = render(<PasspointProfileFormComp />);
 
-    fireEvent.click(getByRole('button', { name: /Add Connection Capability/i }));
+    fireEvent.click(getByRole('button', { name: /add/i }));
     expect(getByText('Add Connection Capability')).toBeVisible();
     fireEvent.click(getByRole('button', { name: /cancel/i }));
 
@@ -292,7 +292,7 @@ describe('<PasspointProfileForm />', () => {
       <PasspointProfileFormComp />
     );
 
-    fireEvent.click(getByRole('button', { name: /Add Connection Capability/i }));
+    fireEvent.click(getByRole('button', { name: /add/i }));
     expect(getByText('Add Connection Capability')).toBeVisible();
 
     const selectedStatus = getByLabelText('Status');
@@ -347,75 +347,6 @@ describe('<PasspointProfileForm />', () => {
 
     await waitFor(() => {
       expect(queryByText('Enter an ANQP Domain ID between 0 and 65535')).not.toBeInTheDocument();
-    });
-  });
-
-  it('Should show Venue form on Add Venue profile button click', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByRole } = render(<PasspointProfileFormComp />);
-
-    fireEvent.click(
-      getByRole('button', {
-        name: /add profile-passpoint_venue/i,
-      })
-    );
-
-    await waitFor(() => {
-      expect(getByText('Venue Type')).toBeVisible();
-    });
-  });
-
-  it('Should show Operator form on Add Operator profile button click', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByRole } = render(<PasspointProfileFormComp />);
-
-    fireEvent.click(
-      getByRole('button', {
-        name: /add profile-passpoint_operator/i,
-      })
-    );
-
-    await waitFor(() => {
-      expect(getByText('Operator Name')).toBeVisible();
-    });
-  });
-
-  it('Should show Operator form on Add Operator profile button click', async () => {
-    const PasspointProfileFormComp = () => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form}>
-          <PasspointProfileForm {...mockPasspoint} form={form} />
-        </Form>
-      );
-    };
-
-    const { getByText, getByRole } = render(<PasspointProfileFormComp />);
-
-    fireEvent.click(
-      getByRole('button', {
-        name: /add profile-passpoint_osu_id_provider/i,
-      })
-    );
-
-    await waitFor(() => {
-      expect(getByText('Network Identifier')).toBeVisible();
     });
   });
 });

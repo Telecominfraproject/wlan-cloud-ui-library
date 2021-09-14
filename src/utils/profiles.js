@@ -1,13 +1,10 @@
-import React from 'react';
-import { notification } from 'antd';
 import {
   RADIOS,
   ROAMING,
   DEFAULT_NTP_SERVER,
   DEFAULT_HESS_ID,
   QOS_CONFIGURATION,
-  PROFILES,
-} from '../containers/ProfileDetails/constants';
+} from '../containers/ProfileDetails/constants/index';
 
 export const formatFile = file => {
   return {
@@ -84,8 +81,7 @@ export const formatSsidProfileForm = values => {
   });
 
   if (values.forwardMode === 'NAT' && values.captivePortal === 'usePortal') {
-    formattedData.childProfileIds.push(parseInt(values.captivePortalId.value, 10));
-    formattedData.captivePortalId = values.captivePortalId.value;
+    formattedData.childProfileIds.push(parseInt(values.captivePortalId, 10));
   } else {
     formattedData.captivePortalId = null;
   }
@@ -390,205 +386,15 @@ export const formatProviderProfileForm = values => {
   return formattedData;
 };
 
-export const PROFILE_TYPES = {
+export const profileTypes = {
   ssid: 'SSID',
   equipment_ap: 'Access Point',
   bonjour: 'Bonjour Gateway',
   captive_portal: 'Captive Portal',
-  radius: 'RADIUS',
+  radius: 'Radius',
   rf: 'RF',
   passpoint: 'Passpoint',
   passpoint_osu_id_provider: 'Passpoint ID Provider',
   passpoint_operator: 'Passpoint Operator',
   passpoint_venue: 'Passpoint Venue',
-};
-
-const formatProfile = (profileType, values, details) => {
-  let formattedData = {};
-  if (details) {
-    formattedData = { ...details };
-    Object.keys(values).forEach(i => {
-      formattedData[i] = values[i];
-    });
-  } else {
-    formattedData = { ...values };
-  }
-
-  if (profileType === PROFILES.ssid) {
-    if (
-      (values.secureMode === 'wpaRadius' ||
-        values.secureMode === 'wpa2Radius' ||
-        values.secureMode === 'wpa2OnlyRadius' ||
-        values.secureMode === 'wpa3OnlyEAP' ||
-        values.secureMode === 'wpa3MixedEAP' ||
-        values.secureMode === 'wpa3OnlyEAP192') &&
-      (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label) &&
-      values?.useRadiusProxy === 'false'
-    ) {
-      notification.error({
-        message: 'Error',
-        description: 'A RADIUS Profile is required.',
-      });
-
-      return null;
-    }
-
-    if (
-      values.forwardMode === 'NAT' &&
-      values.captivePortal === 'usePortal' &&
-      (!values?.captivePortalId?.value || !values?.captivePortalId?.label)
-    ) {
-      notification.error({
-        message: 'Error',
-        description: 'A Captive Portal Profile is required.',
-      });
-
-      return null;
-    }
-
-    if (values.passpointConfig !== 'disabled' && !values.passpointProfileId?.value) {
-      notification.error({
-        message: 'Error',
-        description: 'A Passpoint profile is required.',
-      });
-      return null;
-    }
-
-    formattedData.model_type = 'SsidConfiguration';
-    formattedData = Object.assign(formattedData, formatSsidProfileForm(values));
-  }
-
-  if (profileType === PROFILES.accessPoint) {
-    if (!values.rfProfileId?.value) {
-      notification.error({
-        message: 'Error',
-        description: 'An RF Profile is required.',
-      });
-      return null;
-    }
-
-    if (!values.selectedSsidProfiles?.length) {
-      notification.error({
-        message: 'Error',
-        description: 'A SSID Profile is required.',
-      });
-      return null;
-    }
-
-    if (!values.ntpServer.auto && !values.ntpServer.value) {
-      notification.error({
-        message: 'Error',
-        description: 'At least 1 NTP Server is required.',
-      });
-      return null;
-    }
-
-    const proxyEnabledProfiles = values.selectedSsidProfiles?.filter(
-      profile => profile?.details?.useRadiusProxy
-    );
-
-    if (proxyEnabledProfiles.length && !values.radiusProxyConfigurations?.length) {
-      notification.error({
-        message: 'Error',
-        description: (
-          <div>
-            The following wireless networks have RADIUS Proxy enabled:
-            <ul>
-              {proxyEnabledProfiles.map(profile => (
-                <li key={profile?.id}>{profile?.name}</li>
-              ))}
-            </ul>
-            Please remove these wireless networks from this profile or configure a RADIUS Proxy.
-          </div>
-        ),
-      });
-      return null;
-    }
-
-    formattedData.childProfileIds.push(values.rfProfileId?.value);
-    formattedData.model_type = 'ApNetworkConfiguration';
-    formattedData = Object.assign(formattedData, formatApProfileForm(values));
-  }
-
-  if (profileType === PROFILES.bonjour) {
-    formattedData.model_type = 'BonjourGatewayProfile';
-    formattedData = Object.assign(formattedData, formatBonjourGatewayForm(values));
-  }
-
-  if (profileType === PROFILES.captivePortal) {
-    if (
-      values.authenticationType === 'radius' &&
-      (!values?.radiusServiceId?.value || !values?.radiusServiceId?.label)
-    ) {
-      notification.error({
-        message: 'Error',
-        description: 'RADIUS Profile is required for authentication.',
-      });
-      return null;
-    }
-    formattedData.model_type = 'CaptivePortalConfiguration';
-    formattedData = Object.assign(formattedData, formatCaptiveForm(values));
-  }
-
-  if (profileType === PROFILES.radius) {
-    formattedData.model_type = 'RadiusProfile';
-    formattedData = Object.assign(formattedData, formatRadiusForm(values));
-  }
-
-  if (profileType === PROFILES.rf) {
-    formattedData.model_type = 'RfConfiguration';
-    formattedData = Object.assign(formattedData, formatRfProfileForm(values));
-  }
-
-  if (profileType === PROFILES.passpoint) {
-    if (!values.passpointVenueProfileId?.value) {
-      notification.error({
-        message: 'Error',
-        description: 'A Venue Profile is required.',
-      });
-      return null;
-    }
-    if (!values.passpointOperatorProfileId?.value) {
-      notification.error({
-        message: 'Error',
-        description: 'A Operator Profile is required.',
-      });
-      return null;
-    }
-    if (values.passpointOsuProviderProfileIds.length === 0) {
-      notification.error({
-        message: 'Error',
-        description: 'At least 1 ID Provider Profile is required.',
-      });
-      return null;
-    }
-
-    formattedData.model_type = 'PasspointProfile';
-    formattedData = Object.assign(formattedData, formatPasspointForm(values));
-  }
-
-  if (profileType === PROFILES.operator) {
-    formattedData.model_type = 'PasspointOperatorProfile';
-  }
-
-  if (profileType === PROFILES.providerID) {
-    formattedData.model_type = 'PasspointOsuProviderProfile';
-    formattedData = Object.assign(formattedData, formatProviderProfileForm(values));
-  }
-
-  if (profileType === PROFILES.venue) {
-    formattedData.model_type = 'PasspointVenueProfile';
-  }
-
-  return formattedData;
-};
-
-export const handleOnProfileUpdate = (profileType, details, values, onUpdateProfile) => {
-  const formattedData = formatProfile(profileType, values, details);
-  return onUpdateProfile(values.name, formattedData, formattedData.childProfileIds);
-};
-
-export const handleOnCreateProfile = (profileType, values, onCreateProfile) => {
-  const formattedData = formatProfile(profileType, values);
-  return onCreateProfile(profileType, values.name, formattedData, formattedData.childProfileIds);
 };

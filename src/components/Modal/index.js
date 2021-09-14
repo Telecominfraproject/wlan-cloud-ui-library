@@ -59,7 +59,7 @@ Modal.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  title: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   buttonText: PropTypes.string,
   buttonType: PropTypes.string,
