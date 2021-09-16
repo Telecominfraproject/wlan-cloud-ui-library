@@ -13,7 +13,7 @@ import styles from '../index.module.scss';
 
 const { Item } = Form;
 
-const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
+const ProviderIdForm = ({ form, details, handleOnFormChange }) => {
   const [modalForm] = Form.useForm();
   const [plmnModal, setPlmnModal] = useState(false);
   const [mccMncList, setMccMncList] = useState(details?.mccMncList || []);
@@ -167,8 +167,8 @@ const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title={text('Network Identifier')}>
-        <Item label={text('Roaming OI')}>
+      <Card title="Network Identifier">
+        <Item label="Roaming OI">
           <Form.List name="roamingOi">
             {(fields, { add: addRoamingOI, remove: removeRoamingOI }) => {
               return (
@@ -216,7 +216,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
                     </div>
                   ))}
                   <RoleProtectedBtn type="dashed" onClick={() => addRoamingOI()}>
-                    <PlusOutlined /> {text('Add Roaming OI')}
+                    <PlusOutlined /> Add Roaming OI
                   </RoleProtectedBtn>
                 </>
               );
@@ -226,10 +226,10 @@ const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
       </Card>
 
       <Card
-        title={text('Public Land Mobile Networks (PLMN)')}
+        title="Public Land Mobile Networks (PLMN)"
         extra={
           <RoleProtectedBtn type="solid" onClick={() => setPlmnModal(true)} data-testid="addPlmn">
-            {text('Add')}
+            Add
           </RoleProtectedBtn>
         }
       >
@@ -239,7 +239,7 @@ const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
             visible={plmnModal}
             onSuccess={handleAddPlmnItem}
             onCancel={handleClosePlmnModal}
-            title={text('Add Public Land Mobile Network (PLMN)')}
+            title="Add Public Land Mobile Network (PLMN)"
             content={
               <Form {...modalLayout} form={modalForm}>
                 <Item
@@ -278,7 +278,6 @@ const ProviderIdForm = ({ form, details, handleOnFormChange, text }) => {
         addEap={handleAddEapMethod}
         removeEap={handleRemoveEapMethod}
         addRealm={handleAddNaiRealm}
-        text={text}
       />
 
       <OsuForm

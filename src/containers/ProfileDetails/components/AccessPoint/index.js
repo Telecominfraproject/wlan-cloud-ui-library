@@ -55,7 +55,6 @@ const AccessPointForm = ({
   fileUpload,
   handleOnFormChange,
   loading,
-  text,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
 
@@ -211,15 +210,15 @@ const AccessPointForm = ({
 
   const columnsGre = [
     {
-      title: text('text'),
+      title: 'text',
       dataIndex: 'greTunnelName',
     },
     {
-      title: text('Remote IP Address'),
+      title: 'Remote IP Address',
       dataIndex: 'greRemoteInetAddr',
     },
     {
-      title: text('VLAN IDs'),
+      title: 'VLAN IDs',
       dataIndex: 'vlanIdsInGreTunnel',
       render: items => (!items?.length ? 'N/A' : items?.join(', ')),
     },
@@ -241,8 +240,8 @@ const AccessPointForm = ({
   const enabledRadioOptions = options => {
     return (
       <Group {...options}>
-        <Radio value="false">{text('Disabled')}</Radio>
-        <Radio value="true">{text('Enabled')}</Radio>
+        <Radio value="false">Disabled</Radio>
+        <Radio value="true">Enabled</Radio>
       </Group>
     );
   };
@@ -383,7 +382,7 @@ const AccessPointForm = ({
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title={text('LAN and Services')} loading={loading}>
+      <Card title="LAN and Services" loading={loading}>
         <Item label="NTP" name={['ntpServer', 'auto']} valuePropName="checked">
           <Checkbox data-testid="ntpCheckbox">Use Default Servers</Checkbox>
         </Item>
@@ -408,7 +407,7 @@ const AccessPointForm = ({
                     help={ntpServerValidation.help}
                   >
                     <Search
-                      placeholder={text('Enter NTP server...')}
+                      placeholder="Enter NTP server..."
                       enterButton="Add"
                       onSearch={handleOnAddServer}
                       value={ntpServerSearch}
@@ -442,11 +441,11 @@ const AccessPointForm = ({
             );
           }}
         </Item>
-        <Item label={text('LED Status')} name="ledControlEnabled" valuePropName="checked">
+        <Item label="LED Status" name="ledControlEnabled" valuePropName="checked">
           <Checkbox disabled>Show LED indicators on APs</Checkbox>
         </Item>
         <Item
-          label={text('RTLS')}
+          label="RTLS"
           name={['rtlsSettings', 'enabled']}
           rules={[
             {
@@ -631,12 +630,12 @@ const AccessPointForm = ({
           {enabledRadioOptions()}
         </Item>
       </Card>
-      <Card title={text('RF Enabled on This Profile')} loading={loading}>
+      <Card title="RF Enabled on This Profile" loading={loading}>
         <Item name="rfProfileId">
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.rf)}
             showSearch={onSearchProfile}
-            placeholder={text('Select a RF Profile')}
+            placeholder="Select a RF Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.rf, name)}
             onSelect={() => onSearchProfile && onSearchProfile(PROFILES.rf)}
@@ -652,13 +651,13 @@ const AccessPointForm = ({
           </Select>
         </Item>
       </Card>
-      <Card title={text('Wireless Networks (SSIDs) Enabled on This Profile')} loading={loading}>
+      <Card title="Wireless Networks (SSIDs) Enabled on This Profile" loading={loading}>
         <Item>
           <Select
             onPopupScroll={e => onFetchMoreProfiles(e, PROFILES.ssid)}
             data-testid="ssidProfile"
             showSearch={onSearchProfile}
-            placeholder={text('Select a SSID Profile')}
+            placeholder="Select a SSID Profile"
             filterOption={false}
             onSearch={name => onSearchProfile(PROFILES.ssid, name)}
             onSelect={() => onSearchProfile && onSearchProfile(PROFILES.ssid)}
@@ -701,7 +700,7 @@ const AccessPointForm = ({
       </Card>
 
       <Card
-        title={text('GRE Tunnel Configuration')}
+        title="GRE Tunnel Configuration"
         loading={loading}
         extra={
           <WithRoles>
@@ -742,7 +741,7 @@ const AccessPointForm = ({
       <Form.List name="radiusProxyConfigurations">
         {(fields, { add, remove }) => (
           <Card
-            title={text('RADIUS Proxy Configuration')}
+            title="RADIUS Proxy Configuration"
             loading={loading}
             bodyStyle={{ padding: fields.length <= 0 && '0' }}
             extra={
@@ -768,9 +767,7 @@ const AccessPointForm = ({
           >
             {fields.map(field => (
               <div key={field.name}>
-                <Divider orientation="left">
-                  {text('Proxy Configuration')} {field.name + 1}
-                </Divider>
+                <Divider orientation="left">Proxy Configuration {field.name + 1}</Divider>
                 <Item
                   name={[field.name, 'useRadSec']}
                   label="RADSEC"
@@ -787,7 +784,7 @@ const AccessPointForm = ({
 
                 <Item
                   name={[field.name, 'server']}
-                  label={text('Authentication Server')}
+                  label="Authentication Server"
                   rules={[
                     {
                       required: true,
@@ -801,7 +798,7 @@ const AccessPointForm = ({
                 </Item>
                 <Item
                   name={[field.name, 'port']}
-                  label={text('Authentication Port')}
+                  label="Authentication Port"
                   rules={[
                     {
                       required: true,
@@ -822,7 +819,7 @@ const AccessPointForm = ({
                   initialValue="2083"
                 >
                   <Input
-                    placeholder={text('Enter Authentication Port')}
+                    placeholder="Enter Authentication Port"
                     type="number"
                     min={1}
                     max={65535}
@@ -849,7 +846,7 @@ const AccessPointForm = ({
                             },
                           ]}
                         >
-                          <Password placeholder={text('Enter Authentication Shared Secret')} />
+                          <Password placeholder="Enter Authentication Shared Secret" />
                         </Item>
                       )
                     );
@@ -857,12 +854,12 @@ const AccessPointForm = ({
                 </Item>
 
                 <Item
-                  label={text('RADIUS Accounting')}
+                  label="RADIUS Accounting"
                   name={[field.name, 'useAccounting']}
                   valuePropName="checked"
                   initialValue
                 >
-                  <Checkbox>{text('Use RADIUS Accounting Server')}</Checkbox>
+                  <Checkbox>Use RADIUS Accounting Server</Checkbox>
                 </Item>
 
                 <Item
@@ -964,7 +961,7 @@ const AccessPointForm = ({
                   }}
                 </Item>
 
-                <Item label={text('Realm')}>
+                <Item label="Realm">
                   <Form.List name={[field.name, 'realm']} initialValue={['']}>
                     {(realmFields, { add: addRealm, remove: removeRealm }) => {
                       return (
@@ -1027,7 +1024,7 @@ const AccessPointForm = ({
                             </div>
                           ))}
                           <Button type="dashed" onClick={() => addRealm()}>
-                            <PlusOutlined /> {text('Add Realm')}
+                            <PlusOutlined /> Add Realm
                           </Button>
                         </>
                       );
@@ -1052,7 +1049,7 @@ const AccessPointForm = ({
                       wildCardUsed && (
                         <Item
                           name={[field.name, 'dynamicDiscovery']}
-                          label={text('Auto Discovery')}
+                          label="Auto Discovery"
                           rules={[
                             {
                               required: true,
@@ -1085,7 +1082,7 @@ const AccessPointForm = ({
                         <>
                           <Item
                             name={[field.name, 'caCert']}
-                            label={text('CA Certification')}
+                            label="CA Certification"
                             rules={[
                               {
                                 required: true,
@@ -1106,13 +1103,13 @@ const AccessPointForm = ({
                                 showRemoveIcon: false,
                               }}
                             >
-                              <Button icon={<UploadOutlined />}>{text('Click to Upload')}</Button>
+                              <Button icon={<UploadOutlined />}>Click to Upload</Button>
                             </Upload>
                           </Item>
 
                           <Item
                             name={[field.name, 'clientCert']}
-                            label={text('Client Certification')}
+                            label="Client Certification"
                             tooltip="PEM File"
                           >
                             <Upload
@@ -1133,7 +1130,7 @@ const AccessPointForm = ({
 
                           <Item
                             name={[field.name, 'clientKey']}
-                            label={text('Client Key')}
+                            label="Client Key"
                             tooltip="KEY File"
                           >
                             <Upload
@@ -1151,10 +1148,7 @@ const AccessPointForm = ({
                               <Button icon={<UploadOutlined />}>Click to Upload</Button>
                             </Upload>
                           </Item>
-                          <Item
-                            name={[field.name, 'passphrase']}
-                            label={text('Certificate Passphrase')}
-                          >
+                          <Item name={[field.name, 'passphrase']} label="Certificate Passphrase">
                             <Password placeholder="Enter Passphrase" />
                           </Item>
                         </>
@@ -1197,7 +1191,6 @@ AccessPointForm.propTypes = {
   handleOnFormChange: PropTypes.func,
   fileUpload: PropTypes.func,
   loading: PropTypes.bool,
-  text: PropTypes.func,
 };
 
 AccessPointForm.defaultProps = {
@@ -1213,7 +1206,6 @@ AccessPointForm.defaultProps = {
   handleOnFormChange: () => {},
   fileUpload: () => {},
   loading: false,
-  text: str => str,
 };
 
 export default AccessPointForm;

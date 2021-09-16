@@ -21,7 +21,7 @@ const defaultOptions = (
   </Select>
 );
 
-const RFForm = ({ form, details, extraFields, text }) => {
+const RFForm = ({ form, details, extraFields }) => {
   const { radioTypes } = useContext(ThemeContext);
   const currentRadios = Object.keys(details.rfConfigMap).sort();
 
@@ -290,7 +290,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
     };
 
     return (
-      <Item label={text('Channel Bandwidth')} key="Channel Bandwidth">
+      <Item label="Channel Bandwidth" key="Channel Bandwidth">
         <div className={styles.InlineDiv}>{currentRadios.map(i => optionItem(i))}</div>
       </Item>
     );
@@ -326,12 +326,12 @@ const RFForm = ({ form, details, extraFields, text }) => {
             ))}
           </div>
         </Item>
-        {renderItem(text('Maximum Devices'), ['maxNumClients'], renderInputItem, {
+        {renderItem('Maximum Devices', ['maxNumClients'], renderInputItem, {
           min: 0,
           max: 100,
           error: '0 - 100',
         })}
-        {renderItem(text('Radio Mode'), ['radioMode'], renderOptionItem, {
+        {renderItem('Radio Mode', ['radioMode'], renderOptionItem, {
           dropdown: key => {
             return (
               <Select onChange={value => onRadioModeChange(value, key)}>
@@ -353,20 +353,20 @@ const RFForm = ({ form, details, extraFields, text }) => {
             );
           },
         })}
-        {channelBandwidthSelect(text)}
-        {renderItem(text('Beacon Interval'), ['beaconInterval'], renderInputItem, {
+        {channelBandwidthSelect()}
+        {renderItem('Beacon Interval', ['beaconInterval'], renderInputItem, {
           min: 50,
           max: 65535,
           error: '50 - 65535',
           addOnText: 'ms',
         })}
-        {renderItem(text('RTS/CTS threshold'), ['rtsCtsThreshold'], renderInputItem, {
+        {renderItem('RTS/CTS threshold', ['rtsCtsThreshold'], renderInputItem, {
           min: 0,
           max: 65535,
           error: '0 - 65535 (Bytes)',
           addOnText: 'bytes',
         })}
-        {renderItem(text('MIMO Mode'), ['mimoMode'], renderOptionItem, {
+        {renderItem('MIMO Mode', ['mimoMode'], renderOptionItem, {
           dropdown: (
             <Select>
               <Option value="none">Auto</Option>
@@ -386,7 +386,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
             field.options
           )
         )}
-        {renderItem(text('Management Rate (Mbps)'), ['managementRate'], renderOptionItem, {
+        {renderItem('Management Rate (Mbps)', ['managementRate'], renderOptionItem, {
           dropdown: key => (
             <Select>
               <Option value="auto">Auto</Option>
@@ -407,7 +407,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
           ),
           dependencies: { autoCellSizeSelection: 'true' },
         })}
-        {renderItem(text('Multicast Rate (Mbps)'), ['multicastRate'], renderOptionItem, {
+        {renderItem('Multicast Rate (Mbps)', ['multicastRate'], renderOptionItem, {
           dropdown: (
             <Select>
               <Option value="auto">Auto</Option>
@@ -423,20 +423,15 @@ const RFForm = ({ form, details, extraFields, text }) => {
           ),
           dependencies: { autoCellSizeSelection: 'true' },
         })}
+        {renderItem('Probe Response Threshold', ['probeResponseThresholdDb'], renderInputItem, {
+          min: -100,
+          max: -40,
+          error: '-100 - -40 dBm',
+          addOnText: 'dBm',
+          dependencies: { autoCellSizeSelection: 'true' },
+        })}
         {renderItem(
-          text('Probe Response Threshold'),
-          ['probeResponseThresholdDb'],
-          renderInputItem,
-          {
-            min: -100,
-            max: -40,
-            error: '-100 - -40 dBm',
-            addOnText: 'dBm',
-            dependencies: { autoCellSizeSelection: 'true' },
-          }
-        )}
-        {renderItem(
-          text('Client Disconnect Threshold'),
+          'Client Disconnect Threshold',
           ['clientDisconnectThresholdDb'],
           renderInputItem,
           {
@@ -447,11 +442,11 @@ const RFForm = ({ form, details, extraFields, text }) => {
             dependencies: { autoCellSizeSelection: 'true' },
           }
         )}
-        {renderItem(text('Max EIRP Tx Power'), ['useMaxTxPower'], renderOptionItem, {
+        {renderItem('Max EIRP Tx Power', ['useMaxTxPower'], renderOptionItem, {
           dropdown: defaultOptions,
           dependencies: { autoCellSizeSelection: 'true' },
         })}
-        {renderItem(text('EIRP Tx Power'), ['eirpTxPower'], renderInputItem, {
+        {renderItem('EIRP Tx Power', ['eirpTxPower'], renderInputItem, {
           min: 1,
           max: 32,
           error: '1 - 32 dBm',
@@ -459,23 +454,23 @@ const RFForm = ({ form, details, extraFields, text }) => {
           dependencies: { autoCellSizeSelection: 'true', useMaxTxPower: 'true' },
         })}
 
-        {renderItem(text('Min Load'), ['bestApSettings', 'minLoadFactor'], renderInputItem, {
+        {renderItem('Min Load', ['bestApSettings', 'minLoadFactor'], renderInputItem, {
           min: 0,
           max: 100,
           error: '0 - 100%',
           addOnText: '%',
           hidden: true,
         })}
-        {renderItem(text('SNR'), ['bestApSettings', 'dropInSnrPercentage'], renderInputItem, {
+        {renderItem('SNR', ['bestApSettings', 'dropInSnrPercentage'], renderInputItem, {
           min: 0,
           max: 100,
           error: '0 - 100%',
           addOnText: '% Drop',
           hidden: true,
         })}
-        <p>{text('Channel Hop Configuration')}:</p>
+        <p>Channel Hop Configuration:</p>
         {renderItem(
-          text('Noise Floor'),
+          'Noise Floor',
           ['channelHopSettings', 'noiseFloorThresholdInDB'],
           renderInputItem,
           {
@@ -486,7 +481,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
           }
         )}
         {renderItem(
-          text('Noise Floor Time'),
+          'Noise Floor Time',
           ['channelHopSettings', 'noiseFloorThresholdTimeInSeconds'],
           renderInputItem,
           {
@@ -497,7 +492,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
           }
         )}
         {renderItem(
-          text('Non WIFI'),
+          'Non WIFI',
           ['channelHopSettings', 'nonWifiThresholdInPercentage'],
           renderInputItem,
           {
@@ -508,7 +503,7 @@ const RFForm = ({ form, details, extraFields, text }) => {
           }
         )}
         {renderItem(
-          text('Non WIFI Time'),
+          'Non WIFI Time',
           ['channelHopSettings', 'nonWifiThresholdTimeInSeconds'],
           renderInputItem,
           {
@@ -518,19 +513,14 @@ const RFForm = ({ form, details, extraFields, text }) => {
             addOnText: 'sec',
           }
         )}
-        {renderItem(
-          text('OBSS Hop Mode'),
-          ['channelHopSettings', 'obssHopMode'],
-          renderOptionItem,
-          {
-            dropdown: (
-              <Select>
-                <Option value="NON_WIFI">Non-IBSS</Option>
-                <Option value="NON_WIFI_AND_OBSS">Non-IBSS Time</Option>
-              </Select>
-            ),
-          }
-        )}
+        {renderItem('OBSS Hop Mode', ['channelHopSettings', 'obssHopMode'], renderOptionItem, {
+          dropdown: (
+            <Select>
+              <Option value="NON_WIFI">Non-IBSS</Option>
+              <Option value="NON_WIFI_AND_OBSS">Non-IBSS Time</Option>
+            </Select>
+          ),
+        })}
       </Card>
     </div>
   );
@@ -540,7 +530,6 @@ RFForm.propTypes = {
   form: PropTypes.instanceOf(Object),
   details: PropTypes.instanceOf(Object),
   extraFields: PropTypes.instanceOf(Array),
-  text: PropTypes.func,
 };
 
 RFForm.defaultProps = {
@@ -550,7 +539,6 @@ RFForm.defaultProps = {
     rfConfigMap: RADIOS.reduce((acc, i) => ((acc[i] = {}), acc), {}),
   },
   extraFields: [],
-  text: str => str,
 };
 
 export default RFForm;

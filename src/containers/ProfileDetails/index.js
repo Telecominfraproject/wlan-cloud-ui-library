@@ -71,7 +71,6 @@ const ProfileDetails = ({
   loadingRFProfiles,
   loadingPasspointProfiles,
   extraFields,
-  text,
 }) => {
   const { routes } = useContext(ThemeContext);
   const history = useHistory();
@@ -285,7 +284,7 @@ const ProfileDetails = ({
               Back
             </Button>
             <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
-              <h1>{`${text('Edit')} ${name}`}</h1>
+              <h1>Edit {name}</h1>
             </Skeleton>
           </div>
           <WithRoles>
@@ -293,21 +292,21 @@ const ProfileDetails = ({
               <div className={styles.HeaderButton}>{extraButtons}</div>
               <Item noStyle>
                 <Button type="primary" htmlType="submit" disabled={!isFormDirty}>
-                  {text('Save')}
+                  Save
                 </Button>
               </Item>
             </div>
           </WithRoles>
         </Header>
         <Card loading={loadingProfile}>
-          <Item label={text('Type')}>
+          <Item label="Type">
             <Select defaultValue={profileType} disabled>
               <Select.Option value={profileType}>{profileTypes[profileType]}</Select.Option>
             </Select>
           </Item>
           <Item
             name="name"
-            label={text('Profile Name')}
+            label="Profile Name"
             rules={[{ required: true, message: 'Please input your new profile name' }]}
           >
             <Input placeholder="Enter profile name" />
@@ -327,7 +326,6 @@ const ProfileDetails = ({
             loadingCaptiveProfiles={loadingCaptiveProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
             loadingPasspointProfiles={loadingPasspointProfiles}
-            text={text}
           />
         )}
         {profileType === PROFILES.accessPoint && (
@@ -344,7 +342,6 @@ const ProfileDetails = ({
             loadingRFProfiles={loadingRFProfiles}
             fileUpload={fileUpload}
             handleOnFormChange={handleOnFormChange}
-            text={text}
           />
         )}
         {profileType === PROFILES.captivePortal && (
@@ -359,15 +356,12 @@ const ProfileDetails = ({
             onFetchMoreProfiles={onFetchMoreProfiles}
             loadingRadiusProfiles={loadingRadiusProfiles}
             handleOnFormChange={handleOnFormChange}
-            text={text}
           />
         )}
-        {profileType === PROFILES.radius && (
-          <RadiusForm details={details} form={form} text={text} />
-        )}
+        {profileType === PROFILES.radius && <RadiusForm details={details} form={form} />}
         {profileType === PROFILES.bonjour && <BonjourGatewayForm details={details} form={form} />}
         {profileType === PROFILES.rf && (
-          <RFForm details={details} form={form} extraFields={extraFields} text={text} />
+          <RFForm details={details} form={form} extraFields={extraFields} />
         )}
         {profileType === PROFILES.passpoint && (
           <PasspointProfileForm
@@ -386,32 +380,16 @@ const ProfileDetails = ({
             loadingOperatorProfiles={loadingOperatorProfiles}
             loadingIdProviderProfiles={loadingIdProviderProfiles}
             handleOnFormChange={handleOnFormChange}
-            text={text}
           />
         )}
         {profileType === PROFILES.providerID && (
-          <ProviderIdForm
-            form={form}
-            details={details}
-            handleOnFormChange={handleOnFormChange}
-            text={text}
-          />
+          <ProviderIdForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
         )}
         {profileType === PROFILES.operator && (
-          <OperatorForm
-            form={form}
-            details={details}
-            handleOnFormChange={handleOnFormChange}
-            text={text}
-          />
+          <OperatorForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
         )}
         {profileType === PROFILES.venue && (
-          <VenueForm
-            form={form}
-            details={details}
-            handleOnFormChange={handleOnFormChange}
-            text={text}
-          />
+          <VenueForm form={form} details={details} handleOnFormChange={handleOnFormChange} />
         )}
       </Form>
     </Container>

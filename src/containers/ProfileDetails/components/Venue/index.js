@@ -9,7 +9,7 @@ import FormModal from './components/FormModal';
 const { Item } = Form;
 const { Option } = AntdSelect;
 
-const VenueForm = ({ form, details, handleOnFormChange, text }) => {
+const VenueForm = ({ form, details, handleOnFormChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentVenueGroupId, setCurrentVenueGroupId] = useState(
     details?.venueTypeAssignment?.venueGroupId || 0
@@ -48,15 +48,15 @@ const VenueForm = ({ form, details, handleOnFormChange, text }) => {
 
   const columns = [
     {
-      title: text('Name'),
+      title: 'Name',
       dataIndex: 'dupleName',
     },
     {
-      title: text('Locale'),
+      title: 'Locale',
       dataIndex: 'locale',
     },
     {
-      title: text('URL'),
+      title: 'URL',
       dataIndex: 'venueUrl',
     },
     {
@@ -75,8 +75,8 @@ const VenueForm = ({ form, details, handleOnFormChange, text }) => {
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title={text('Venue Type')}>
-        <Item label={text('Group')} name={['venueTypeAssignment', 'venueGroupId']}>
+      <Card title="Venue Type">
+        <Item label="Group" name={['venueTypeAssignment', 'venueGroupId']}>
           <Select
             data-testid="venueGroup"
             placeholder="Select Venue Group"
@@ -99,7 +99,7 @@ const VenueForm = ({ form, details, handleOnFormChange, text }) => {
             <Option value={11}>Outdoor</Option>
           </Select>
         </Item>
-        <Item label={text('Type')} name={['venueTypeAssignment', 'venueTypeId']}>
+        <Item label="Type" name={['venueTypeAssignment', 'venueTypeId']}>
           {(currentVenueGroupId === 0 && (
             <Select placeholder="Select Venue Type">
               <Option value={0}>Unspecified</Option>
@@ -219,10 +219,10 @@ const VenueForm = ({ form, details, handleOnFormChange, text }) => {
       </Card>
 
       <Card
-        title={text('Venue Name')}
+        title="Venue Name"
         extra={
           <RoleProtectedBtn type="solid" onClick={() => setModalVisible(true)}>
-            {text('Add Name')}
+            Add Name
           </RoleProtectedBtn>
         }
       >
@@ -240,7 +240,7 @@ const VenueForm = ({ form, details, handleOnFormChange, text }) => {
         visible={modalVisible}
         closeModal={handleCloseModal}
         onSubmit={handleNameSave}
-        title={text('Add name')}
+        title="Add name"
       />
     </div>
   );
@@ -250,14 +250,12 @@ VenueForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
   handleOnFormChange: PropTypes.func,
-  text: PropTypes.func,
 };
 
 VenueForm.defaultProps = {
   form: null,
   details: {},
   handleOnFormChange: () => {},
-  text: str => str,
 };
 
 export default VenueForm;

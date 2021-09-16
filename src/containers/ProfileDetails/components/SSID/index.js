@@ -33,7 +33,6 @@ const SSIDForm = ({
   loadingCaptiveProfiles,
   loadingRadiusProfiles,
   loadingPasspointProfiles,
-  text,
 }) => {
   const { radioTypes } = useContext(ThemeContext);
   const [mode, setMode] = useState(details.secureMode || DEFAULT_SSID_PROFILE.secureMode);
@@ -173,9 +172,9 @@ const SSIDForm = ({
 
   return (
     <div className={styles.ProfilePage}>
-      <Card title={text('SSID')}>
+      <Card title="SSID">
         <Item
-          label={text('SSID Name')}
+          label="SSID Name"
           name="ssid"
           rules={[
             {
@@ -202,7 +201,7 @@ const SSIDForm = ({
         </Item>
 
         <Item
-          label={text('Broadcast SSID')}
+          label="Broadcast SSID"
           name="broadcastSsid"
           rules={[
             {
@@ -212,12 +211,12 @@ const SSIDForm = ({
           ]}
         >
           <RadioGroup>
-            <Radio value="enabled">{text('Show SSID')}</Radio>
-            <Radio value="disabled">{text('Hide SSID')}</Radio>
+            <Radio value="enabled">Show SSID</Radio>
+            <Radio value="disabled">Hide SSID</Radio>
           </RadioGroup>
         </Item>
 
-        <Item label={text('Client Rate Limit')}>
+        <Item label="Client Rate Limit">
           <div className={styles.InlineDiv}>
             <Item
               name="bandwidthLimitDown"
@@ -284,7 +283,7 @@ const SSIDForm = ({
           </div>
         </Item>
 
-        <Item name="appliedRadios" label={text('Use On')}>
+        <Item name="appliedRadios" label="Use On">
           <CheckboxGroup>
             {Object.keys(radioTypes || {})?.map(i => (
               <Checkbox key={i} value={i}>
@@ -294,7 +293,7 @@ const SSIDForm = ({
           </CheckboxGroup>
         </Item>
       </Card>
-      <Card title={text('Network Connectivity')}>
+      <Card title="Network Connectivity">
         <Item
           name="forwardMode"
           label={
@@ -322,7 +321,7 @@ const SSIDForm = ({
         >
           <RadioGroup>
             <Radio value="BRIDGE" defaultSelected>
-              {text('Bridge')}
+              Bridge
             </Radio>
             <Radio
               value="NAT"
@@ -357,22 +356,22 @@ const SSIDForm = ({
                 >
                   {getFieldValue('forwardMode') === 'BRIDGE' ? (
                     <RadioGroup>
-                      <Radio value="false">{text('Allow Local Access')}</Radio>
-                      <Radio value="true">{text('No Local Access')}</Radio>
+                      <Radio value="false">Allow Local Access</Radio>
+                      <Radio value="true">No Local Access</Radio>
                     </RadioGroup>
                   ) : (
                     <span className={styles.Disclaimer}>Not Applicable</span>
                   )}
                 </Item>
 
-                <Item label={text('Captive Portal')} name="captivePortal">
+                <Item label="Captive Portal" name="captivePortal">
                   {getFieldValue('forwardMode') === 'NAT' ? (
                     <RadioGroup>
-                      <Radio value="notPortal">{text('Do Not Use')}</Radio>
-                      <Radio value="usePortal">{text('Use')}</Radio>
+                      <Radio value="notPortal">Do Not Use</Radio>
+                      <Radio value="usePortal">Use</Radio>
                     </RadioGroup>
                   ) : (
-                    <span className={styles.Disclaimer}>{text('Requires NAT Mode')}</span>
+                    <span className={styles.Disclaimer}>Requires NAT Mode</span>
                   )}
                 </Item>
               </>
@@ -482,7 +481,7 @@ const SSIDForm = ({
         >
           {({ getFieldValue }) => {
             return (
-              <Item name="dynamicVlan" label={text('Dynamic VLAN')}>
+              <Item name="dynamicVlan" label="Dynamic VLAN">
                 {getFieldValue('forwardMode') === 'BRIDGE' &&
                 getFieldValue('vlan') === 'defaultVLAN' &&
                 (mode === 'wpa3OnlyEAP' ||
@@ -512,7 +511,7 @@ const SSIDForm = ({
           {radioOptions}
         </Item>
 
-        <Item name="passpointConfig" label={text('Passpoint')}>
+        <Item name="passpointConfig" label="Passpoint">
           <Select
             placeholder="Select Passpoint Configuration"
             onChange={() => {
@@ -580,8 +579,8 @@ const SSIDForm = ({
         </Item>
       </Card>
 
-      <Card title={text('Security and Encryption')}>
-        <Item label={text('Mode')} name="secureMode">
+      <Card title="Security and Encryption">
+        <Item label="Mode" name="secureMode">
           <Select
             data-testid="securityMode"
             onChange={value => {
@@ -621,7 +620,7 @@ const SSIDForm = ({
           mode === 'wpa3OnlySAE' ||
           mode === 'wpa3MixedSAE') && (
           <Item
-            label={text('Security Key')}
+            label="Security Key"
             name="keyStr"
             rules={[
               {
@@ -640,7 +639,7 @@ const SSIDForm = ({
         {mode === 'wep' && (
           <>
             <Item
-              label={text('WEP Key')}
+              label="WEP Key"
               name="wepKey"
               rules={[
                 {
@@ -670,7 +669,7 @@ const SSIDForm = ({
               />
             </Item>
             <Item
-              label={text('Default Key ID')}
+              label="Default Key ID"
               name="wepDefaultKeyId"
               rules={[
                 {
@@ -697,7 +696,7 @@ const SSIDForm = ({
         mode === 'wpa3OnlyEAP192') && (
         <Card title="RADIUS">
           <Item
-            label={text('RADIUS Proxy')}
+            label="RADIUS Proxy"
             name="useRadiusProxy"
             rules={[
               {
@@ -707,8 +706,8 @@ const SSIDForm = ({
             ]}
           >
             <RadioGroup>
-              <Radio value="true">{text('Enabled')}</Radio>
-              <Radio value="false">{text('Disabled')}</Radio>
+              <Radio value="true">Enabled</Radio>
+              <Radio value="false">Disabled</Radio>
             </RadioGroup>
           </Item>
           <Item
@@ -745,7 +744,7 @@ const SSIDForm = ({
           </Item>
           <Item
             name="radiusAcountingServiceInterval"
-            label={text('RADIUS Accounting Interval')}
+            label="RADIUS Accounting Interval"
             rules={[
               {
                 required: true,
@@ -853,8 +852,8 @@ const SSIDForm = ({
         </Card>
       )}
 
-      <Card title={text('Roaming')}>
-        <Item label={text('Advanced Settings')} colon={false}>
+      <Card title="Roaming">
+        <Item label="Advanced Settings" colon={false}>
           <div className={styles.InlineDiv}>
             {Object.keys(radioTypes || {})?.map(i => (
               <span key={i}>{radioTypes?.[i]}</span>
@@ -928,7 +927,6 @@ SSIDForm.propTypes = {
   loadingCaptiveProfiles: PropTypes.bool,
   loadingRadiusProfiles: PropTypes.bool,
   loadingPasspointProfiles: PropTypes.bool,
-  text: PropTypes.func,
 };
 
 SSIDForm.defaultProps = {
@@ -944,7 +942,6 @@ SSIDForm.defaultProps = {
   loadingCaptiveProfiles: false,
   loadingRadiusProfiles: false,
   loadingPasspointProfiles: false,
-  text: str => str,
 };
 
 export default SSIDForm;
