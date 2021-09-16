@@ -296,14 +296,12 @@ ProviderIdForm.propTypes = {
   details: PropTypes.instanceOf(Object),
   form: PropTypes.instanceOf(Object),
   handleOnFormChange: PropTypes.func,
-  text: PropTypes.func,
 };
 
 ProviderIdForm.defaultProps = {
   form: null,
   details: {},
   handleOnFormChange: () => {},
-  text: str => str,
 };
 
 export default ProviderIdForm;

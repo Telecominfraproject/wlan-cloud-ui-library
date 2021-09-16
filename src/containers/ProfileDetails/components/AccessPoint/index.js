@@ -210,7 +210,7 @@ const AccessPointForm = ({
 
   const columnsGre = [
     {
-      title: 'text',
+      title: 'Name',
       dataIndex: 'greTunnelName',
     },
     {

@@ -63,7 +63,6 @@ const AddProfile = ({
   loadingPasspointProfiles,
   fileUpload,
   extraFields,
-  text,
 }) => {
   const { routes } = useContext(ThemeContext);
   const [form] = Form.useForm();
@@ -273,8 +272,8 @@ const AddProfile = ({
           onCancel={() => setConfirmModal(false)}
           onSuccess={() => history.push(routes.profiles)}
           visible={confirmModal}
-          buttonText={text('Leave Page')}
-          title={`${text('Leave Page')}?`}
+          buttonText="Leave Page"
+          title="Leave Page?"
           content={
             <p>
               You have unsaved changes. Please confirm leaving without saving this wireless profile
@@ -294,19 +293,19 @@ const AddProfile = ({
               <Button className={styles.backButton} icon={<LeftOutlined />} onClick={handleOnBack}>
                 Back
               </Button>
-              <h1>{text('Add Profile')}</h1>
+              <h1>Add Profile</h1>
             </div>
             <div>
               <Item noStyle>
                 <Button icon={<PlusOutlined />} type="primary" htmlType="submit">
-                  {text('Add')}
+                  Add
                 </Button>
               </Item>
             </div>
           </Header>
           <Card>
             <Item
-              label={text('Type')}
+              label="Type"
               name="profileType"
               rules={[
                 {
@@ -326,7 +325,7 @@ const AddProfile = ({
             <Item
               id="name"
               name="name"
-              label={text('Name')}
+              label="Name"
               rules={[{ required: true, message: 'Please input your profile name' }]}
             >
               <Input id="profileName" placeholder="Enter profile name" />
@@ -344,7 +343,6 @@ const AddProfile = ({
               loadingCaptiveProfiles={loadingCaptiveProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
               loadingPasspointProfiles={loadingPasspointProfiles}
-              text={text}
             />
           )}
           {profileType === PROFILES.accessPoint && (
@@ -359,7 +357,6 @@ const AddProfile = ({
               loadingSSIDProfiles={loadingSSIDProfiles}
               loadingRFProfiles={loadingRFProfiles}
               fileUpload={fileUpload}
-              text={text}
             />
           )}
           {profileType === PROFILES.bonjour && (
@@ -374,20 +371,14 @@ const AddProfile = ({
               onFetchMoreProfiles={onFetchMoreProfiles}
               loadingRadiusProfiles={loadingRadiusProfiles}
               fileUpload={fileUpload}
-              text={text}
             />
           )}
 
           {profileType === PROFILES.radius && (
-            <RadiusForm form={form} details={initialValues?.details} text={text} />
+            <RadiusForm form={form} details={initialValues?.details} />
           )}
           {profileType === PROFILES.rf && (
-            <RFForm
-              form={form}
-              details={initialValues?.details}
-              extraFields={extraFields}
-              text={text}
-            />
+            <RFForm form={form} details={initialValues?.details} extraFields={extraFields} />
           )}
           {profileType === PROFILES.passpoint && (
             <PasspointProfileForm
@@ -403,17 +394,16 @@ const AddProfile = ({
               loadingOperatorProfiles={loadingOperatorProfiles}
               loadingIdProviderProfiles={loadingIdProviderProfiles}
               fileUpload={fileUpload}
-              text={text}
             />
           )}
           {profileType === PROFILES.providerID && (
-            <ProviderIdForm form={form} details={initialValues?.details} text={text} />
+            <ProviderIdForm form={form} details={initialValues?.details} />
           )}
           {profileType === PROFILES.operator && (
-            <OperatorForm form={form} details={initialValues?.details} text={text} />
+            <OperatorForm form={form} details={initialValues?.details} />
           )}
           {profileType === PROFILES.venue && (
-            <VenueForm form={form} details={initialValues?.details} text={text} />
+            <VenueForm form={form} details={initialValues?.details} />
           )}
         </Form>
       </div>

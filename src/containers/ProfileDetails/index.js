@@ -429,7 +429,6 @@ ProfileDetails.propTypes = {
   loadingPasspointProfiles: PropTypes.bool,
   extraFields: PropTypes.instanceOf(Array),
   loadingProfile: PropTypes.bool,
-  text: PropTypes.func,
 };
 
 ProfileDetails.defaultProps = {
@@ -462,7 +461,6 @@ ProfileDetails.defaultProps = {
   loadingPasspointProfiles: false,
   extraFields: [],
   loadingProfile: false,
-  text: str => str,
 };
 
 export default ProfileDetails;
