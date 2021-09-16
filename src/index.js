@@ -19,6 +19,7 @@ export { default as BlockedList } from 'containers/BlockedList';
 
 export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
 export { default as NetworkTableContainer } from 'containers/NetworkTableContainer';
+export { default as APFirmware } from 'containers/AccessPointDetails/components/Firmware';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 export { default as RolesProvider } from 'contexts/RolesProvider';
@@ -42,6 +43,7 @@ export { default as ScrollToTop } from 'components/ScrollToTop';
 export { default as LineGraphTooltip } from 'components/GraphTooltips/LineGraphTooltip';
 export { default as PieGraphTooltip } from 'components/GraphTooltips/PieGraphTooltip';
 export { default as Skeleton } from 'components/Skeleton';
+export { default as Timer } from 'components/Timer';
 export {
   Table as SkeletonTable,
   List as SkeletonList,
