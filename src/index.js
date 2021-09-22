@@ -20,6 +20,7 @@ export { default as BlockedList } from 'containers/BlockedList';
 export { default as ClientDeviceDetails } from 'containers/ClientDeviceDetails';
 export { default as NetworkTableContainer } from 'containers/NetworkTableContainer';
 export { default as APFirmware } from 'containers/AccessPointDetails/components/Firmware';
+export { default as APAdvanced } from 'containers/AccessPointDetails/components/General/components/Advanced';
 
 export { default as ThemeProvider } from 'contexts/ThemeProvider';
 export { default as RolesProvider } from 'contexts/RolesProvider';
