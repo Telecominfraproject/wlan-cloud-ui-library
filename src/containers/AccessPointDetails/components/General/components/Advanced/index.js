@@ -74,8 +74,6 @@ const Advanced = ({ extraFields, childProfiles, data, radioTypes, form, Item }) 
         };
       });
 
-      console.log(formData);
-
       form.setFieldsValue({ ...formData });
     }
   }, [data]);
@@ -98,8 +96,6 @@ const Advanced = ({ extraFields, childProfiles, data, radioTypes, form, Item }) 
             : radioMap[radio]?.manualBackupChannelNumber,
         };
       });
-
-      console.log(formData);
 
       form.setFieldsValue({ ...formData });
     }
