@@ -39,11 +39,7 @@ const Navbar = ({
   return (
     <Header className={`${styles.Navbar}`}>
       <RouterLink className={styles.LogoContainer} to={routes.root}>
-        <img
-          src={`${isMobile ? logoMobile : logo}`}
-          alt={company}
-          width={`${isMobile ? '32' : '200'}`}
-        />
+        {isMobile ? <img src={logoMobile} alt={company} width="32" /> : <>{logo}</>}
       </RouterLink>
       {isMobile ? (
         <Drawer
