@@ -669,7 +669,7 @@ const SSIDForm = ({
               />
             </Item>
             <Item
-              label="Default Key ID "
+              label="Default Key ID"
               name="wepDefaultKeyId"
               rules={[
                 {

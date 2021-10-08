@@ -76,7 +76,7 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
   return (
     <div className={styles.ProfilePage}>
       <Card title="Venue Type">
-        <Item label="Group:" name={['venueTypeAssignment', 'venueGroupId']}>
+        <Item label="Group" name={['venueTypeAssignment', 'venueGroupId']}>
           <Select
             data-testid="venueGroup"
             placeholder="Select Venue Group"
@@ -99,7 +99,7 @@ const VenueForm = ({ form, details, handleOnFormChange }) => {
             <Option value={11}>Outdoor</Option>
           </Select>
         </Item>
-        <Item label="Type:" name={['venueTypeAssignment', 'venueTypeId']}>
+        <Item label="Type" name={['venueTypeAssignment', 'venueTypeId']}>
           {(currentVenueGroupId === 0 && (
             <Select placeholder="Select Venue Type">
               <Option value={0}>Unspecified</Option>

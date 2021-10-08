@@ -7,13 +7,13 @@ import { modalLayout } from 'utils/form';
 
 const { Item } = Form;
 
-const FormModal = ({ onCancel, onSubmit, visible, title }) => {
+const FormModal = ({ onCancel, onSubmit, visible, title, text }) => {
   const [form] = Form.useForm();
 
   const content = (
     <Form {...modalLayout} form={form}>
       <Item
-        label="MAC Address"
+        label={text('MAC Address')}
         name="macAddress"
         rules={[
           {
@@ -64,6 +64,7 @@ FormModal.propTypes = {
   onSubmit: PropTypes.func,
   title: PropTypes.string,
   buttonText: PropTypes.string,
+  text: PropTypes.func,
 };
 
 FormModal.defaultProps = {
@@ -72,6 +73,7 @@ FormModal.defaultProps = {
   onSubmit: () => {},
   title: '',
   buttonText: '',
+  text: str => str,
 };
 
 export default FormModal;
