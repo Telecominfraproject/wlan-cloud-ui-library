@@ -179,7 +179,7 @@ describe('<ProviderIdForm />', () => {
     fireEvent.click(getByTestId('addEapMethod'));
     expect(getByText('Add EAP Method')).toBeVisible();
 
-    fireEvent.mouseDown(getByRole('combobox', { name: 'Method:' }));
+    fireEvent.mouseDown(getByRole('combobox', { name: 'Method' }));
     fireEvent.click(getByText('EAP-MSCHAP-V2 with username/password'));
 
     await act(async () => {

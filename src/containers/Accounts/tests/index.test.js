@@ -31,7 +31,7 @@ const mockProps = {
       roles: ['SuperUser'],
     },
   ],
-  currentUserId: 1,
+  currentUserId: '1',
 };
 
 const MISSING_EMAIL = 'Please input your e-mail';
@@ -102,7 +102,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: `edit-${mockProps.data[0].email}` }));
     expect(getByText('Edit User')).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'Password0' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'Password0' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -190,7 +190,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'email' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'Password0' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'Password0' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -209,7 +209,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'Password0' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
@@ -228,7 +228,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'email@test.com' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -246,7 +246,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'email@test.com' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'email@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'Password0' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'password1' } });
     fireEvent.click(getByRole('button', { name: 'Save' }));
@@ -265,7 +265,7 @@ describe('<Accounts />', () => {
     fireEvent.click(getByRole('button', { name: /addaccount/i }));
     expect(getByText('Add User', { selector: 'div' })).toBeVisible();
 
-    fireEvent.change(getByLabelText('E-mail'), { target: { value: 'test@test.com' } });
+    fireEvent.change(getByLabelText('E-Mail'), { target: { value: 'test@test.com' } });
     fireEvent.change(getByLabelText('Password'), { target: { value: 'Password0' } });
     fireEvent.change(getByLabelText('Confirm Password'), { target: { value: 'Password0' } });
 
