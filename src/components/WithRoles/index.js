@@ -1,13 +1,14 @@
 import React from 'react';
 import {
   Input as AntdInput,
-  Select as AntdSelect,
   Switch as AntdSwitch,
   Radio,
   Checkbox as AntdCheckbox,
   Upload as AntdUpload,
   Button as AntdButton,
 } from 'antd';
+
+import ContainedSelect from 'components/ContainedSelect';
 import { useRoles } from 'contexts/RolesContext';
 
 const { Search: AntdSearch, TextArea: AntdTextArea, Password: AntdPassword } = AntdInput;
@@ -63,7 +64,7 @@ const withRoles = Component => ({ access, ...restProps }) => {
 export const RoleProtectedBtn = withRoles(AntdButton);
 
 export const Input = withDisabledRoles(AntdInput);
-export const Select = withDisabledRoles(AntdSelect);
+export const Select = withDisabledRoles(ContainedSelect);
 export const Switch = withDisabledRoles(AntdSwitch);
 export const Search = withDisabledRoles(AntdSearch);
 export const Upload = withDisabledRoles(AntdUpload);
