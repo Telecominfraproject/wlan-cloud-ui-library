@@ -65,7 +65,15 @@ export const Table = ({ loading, columns, dataSource, onRow, ...props }) => {
     <AntdTable
       {...props}
       loading={false}
-      dataSource={loading ? [...Array(15).map((_, index) => ({ key: `key${index}` }))] : dataSource}
+      dataSource={
+        loading
+          ? [
+              ...Array(15)
+                .fill()
+                .map((_, index) => ({ key: `key${index}`, id: `key${index}` })),
+            ]
+          : dataSource
+      }
       columns={
         loading
           ? columns.map(column => {
