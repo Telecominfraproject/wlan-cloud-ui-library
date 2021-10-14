@@ -181,7 +181,7 @@ const NaiRealm = ({ eapMap, form, addEap, removeEap, addRealm }) => {
             <Form {...naiLayout} form={form}>
               <Item
                 name="method"
-                label="Method:"
+                label="Method"
                 rules={[
                   {
                     required: true,

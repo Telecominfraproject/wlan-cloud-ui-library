@@ -25,6 +25,7 @@ const FormModal = ({
   isAuth0Enabled,
   onResetUserPassword,
   allUserRoles,
+  text,
 }) => {
   const [form] = Form.useForm();
 
@@ -41,7 +42,7 @@ const FormModal = ({
   const content = (
     <Form {...modalLayout} form={form}>
       <Item
-        label="E-mail"
+        label={text('E-Mail')}
         name="email"
         rules={[
           {
@@ -61,7 +62,11 @@ const FormModal = ({
         )}
       </Item>
 
-      <Item label="Role" name="roles" rules={[{ required: true, message: 'Please select a role' }]}>
+      <Item
+        label={text('Role')}
+        name="roles"
+        rules={[{ required: true, message: 'Please select a role' }]}
+      >
         <ContainedSelect
           placeholder="Select role"
           getPopupContainer={triggerNode => triggerNode.parentElement}
@@ -75,7 +80,7 @@ const FormModal = ({
       {!isAuth0Enabled && (
         <>
           <Item
-            label="Password"
+            label={text('Password')}
             name="password"
             rules={[
               {
@@ -161,6 +166,7 @@ FormModal.propTypes = {
   isAuth0Enabled: PropTypes.bool,
   onResetUserPassword: PropTypes.func,
   allUserRoles: PropTypes.instanceOf(Array),
+  text: PropTypes.func,
 };
 
 FormModal.defaultProps = {
@@ -169,6 +175,7 @@ FormModal.defaultProps = {
   isAuth0Enabled: false,
   onResetUserPassword: () => {},
   allUserRoles: ['SuperUser', 'CustomerIT'],
+  text: str => str,
 };
 
 export default FormModal;

@@ -284,7 +284,7 @@ const ProfileDetails = ({
               Back
             </Button>
             <Skeleton loading={loadingProfile || !name} title paragraph={false} active width={220}>
-              <h1>{`Edit ${name}`}</h1>
+              <h1>Edit {name}</h1>
             </Skeleton>
           </div>
           <WithRoles>

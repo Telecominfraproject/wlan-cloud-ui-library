@@ -332,7 +332,7 @@ const CaptivePortalForm = ({
         <img className={styles.Image} alt="Loading..." src={previewImage.thumbUrl} />
       </Modal>
 
-      <Card title="General Settings ">
+      <Card title="General Settings">
         <Item
           label="Authentication"
           name="authenticationType"
@@ -353,7 +353,7 @@ const CaptivePortalForm = ({
 
         <Item
           name="sessionTimeoutInMinutes"
-          label="Session Timeout "
+          label="Session Timeout"
           rules={[
             {
               required: true,

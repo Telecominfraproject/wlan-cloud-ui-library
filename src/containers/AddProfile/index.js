@@ -435,6 +435,7 @@ AddProfile.propTypes = {
 
   fileUpload: PropTypes.func,
   extraFields: PropTypes.instanceOf(Array),
+  text: PropTypes.func,
 };
 
 AddProfile.defaultProps = {
@@ -459,6 +460,7 @@ AddProfile.defaultProps = {
   loadingPasspointProfiles: false,
   fileUpload: () => {},
   extraFields: [],
+  text: str => str,
 };
 
 export default AddProfile;

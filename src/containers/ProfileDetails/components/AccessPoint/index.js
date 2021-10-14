@@ -767,7 +767,7 @@ const AccessPointForm = ({
           >
             {fields.map(field => (
               <div key={field.name}>
-                <Divider orientation="left"> Proxy Configuration {field.name + 1}</Divider>
+                <Divider orientation="left">Proxy Configuration {field.name + 1}</Divider>
                 <Item
                   name={[field.name, 'useRadSec']}
                   label="RADSEC"
