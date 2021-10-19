@@ -51,7 +51,6 @@ export {
   Card as SkeletonCard,
 } from 'components/Skeleton';
 export { default as DisabledText } from 'components/DisabledText';
-export { default as Timer } from 'components/Timer';
 
 export { default as WithRoles } from 'components/WithRoles';
 export { Input, Select, Switch, RoleProtectedBtn } from 'components/WithRoles';
