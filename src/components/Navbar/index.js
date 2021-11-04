@@ -58,6 +58,7 @@ const Navbar = ({
             mode="inline"
             menuItems={mobileMenuItems || menuItems}
             onMenuItemClick={onMenuItemClick}
+            className={styles.InlineMenu}
           />
         </Drawer>
       ) : (
