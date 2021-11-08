@@ -21,6 +21,8 @@
     }
   }
 
+  :global(:not(.ant-menu-dark).ant-menu-horizontal > .ant-menu-item),
+  :global(:not(.ant-menu-dark).ant-menu-horizontal > .ant-menu-submenu),
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item),
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-submenu) {
     height: 100%;
@@ -75,13 +77,4 @@
 .BellIcon {
   font-size: 20px;
   color: #707070;
-}
-
-.InlineMenu {
-  :global(.ant-menu-item-only-child.ant-menu-item-selected) {
-    background-color: #35a649;
-    span {
-      color: white
-    }
-  }
 }

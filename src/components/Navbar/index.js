@@ -59,12 +59,11 @@ const Navbar = ({
             mode="inline"
             menuItems={mobileMenuItems || menuItems}
             onMenuItemClick={onMenuItemClick}
-            className={styles.InlineMenu}
             theme={theme}
           />
         </Drawer>
       ) : (
-        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} Link={Link} />
+        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} Link={Link} theme={theme} />
       )}
       <div className={styles.RightMenu}>
         {totalAlarms !== null && <Alarm routes={routes} totalAlarms={totalAlarms} />}

@@ -19,9 +19,9 @@ const AppLayout = ({
   rightMenuItem,
   currentUserId,
   Link,
-  extraStyles,
+  theme,
 }) => {
-  const theme = useContext(ThemeContext);
+  const { company } = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [screenSize, setScreenSize] = useState('lg');
@@ -88,11 +88,11 @@ const AppLayout = ({
         rightMenuItem={rightMenuItem}
         currentUserId={currentUserId}
         Link={Link}
-        theme={extraStyles}
+        theme={theme}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
-        Copyright © {currentYear} {theme.company} Inc. All Rights Reserved.
+        Copyright © {currentYear} {company} Inc. All Rights Reserved.
       </Footer>
     </Layout>
   );
@@ -107,7 +107,7 @@ AppLayout.propTypes = {
   rightMenuItem: PropTypes.node,
   currentUserId: PropTypes.number,
   Link: PropTypes.func,
-  extraStyles: PropTypes.string,
+  theme: PropTypes.string,
 };
 
 AppLayout.defaultProps = {
@@ -117,7 +117,7 @@ AppLayout.defaultProps = {
   rightMenuItem: null,
   currentUserId: 0,
   Link: RouterLink,
-  extraStyles: 'dark',
+  theme: 'dark',
 };
 
 export default AppLayout;
