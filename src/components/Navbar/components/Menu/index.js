@@ -7,7 +7,7 @@ import styles from './index.module.scss';
 const { Item, SubMenu } = AntdMenu;
 const { Text } = Typography;
 
-const Menu = ({ mode, menuItems, onMenuItemClick, Link, ...restProps }) => {
+const Menu = ({ mode, menuItems, onMenuItemClick, Link, theme, ...restProps }) => {
   const location = useLocation();
 
   const selectedKeys = location.pathname.split('/');
@@ -37,7 +37,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, ...restProps }) => {
   return (
     <AntdMenu
       mode={mode}
-      theme="dark"
+      theme={theme}
       selectedKeys={selectedKeys}
       className={styles.Menu}
       onClick={onMenuItemClick}
@@ -53,12 +53,14 @@ Menu.propTypes = {
   mode: PropTypes.string,
   onMenuItemClick: PropTypes.func,
   Link: PropTypes.func,
+  theme: PropTypes.string,
 };
 
 Menu.defaultProps = {
   mode: 'horizontal',
   onMenuItemClick: () => {},
   Link: RouterLink,
+  theme: 'dark',
 };
 
 export default Menu;

@@ -19,6 +19,7 @@ const AppLayout = ({
   rightMenuItem,
   currentUserId,
   Link,
+  extraStyles,
 }) => {
   const theme = useContext(ThemeContext);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -87,6 +88,7 @@ const AppLayout = ({
         rightMenuItem={rightMenuItem}
         currentUserId={currentUserId}
         Link={Link}
+        theme={extraStyles}
       />
       <Content className={styles.Content}>{children}</Content>
       <Footer className={styles.Footer}>
@@ -105,6 +107,7 @@ AppLayout.propTypes = {
   rightMenuItem: PropTypes.node,
   currentUserId: PropTypes.number,
   Link: PropTypes.func,
+  extraStyles: PropTypes.string,
 };
 
 AppLayout.defaultProps = {
@@ -114,6 +117,7 @@ AppLayout.defaultProps = {
   rightMenuItem: null,
   currentUserId: 0,
   Link: RouterLink,
+  extraStyles: 'dark',
 };
 
 export default AppLayout;

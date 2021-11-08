@@ -78,11 +78,8 @@
 }
 
 .InlineMenu {
-  ul {
-    background: inherit !important
-  }
-
-  :global(.ant-menu-item-selected) {
+  :global(.ant-menu-item-only-child.ant-menu-item-selected) {
+    background-color: #35a649;
     span {
       color: white
     }
