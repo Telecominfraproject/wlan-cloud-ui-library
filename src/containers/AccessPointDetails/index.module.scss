@@ -34,88 +34,88 @@
   :global(.ant-form-item) {
     flex: 1;
   }
-}
 
-.InlineBlockDiv {
-  display: inline-block;
-  vertical-align: middle;
-  :global(.ant-avatar) {
+  .InlineBlockDiv {
+    display: inline-block;
+    vertical-align: middle;
+    :global(.ant-avatar) {
+      margin-right: 20px;
+    }
+  }
+
+  .WifiIcon {
+    background-color: transparent;
+    color: #35a649;
+    border: none;
+    font-size: 40px;
+    vertical-align: middle;
     margin-right: 20px;
   }
-}
 
-.WifiIcon {
-  background-color: transparent;
-  color: #35a649;
-  border: none;
-  font-size: 40px;
-  vertical-align: middle;
-  margin-right: 20px;
-}
-
-.backButton {
-  margin-top: 5px;
-}
-
-.InlineDiv {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.InlineDiv > * {
-  flex: 1;
-  margin: 0 10px 0 0;
-}
-
-.InlineBetweenDiv {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.saveButton {
-  margin-top: 10px;
-  min-width: 139px;
-  max-width: 100%;
-}
-
-.InlineEndDiv {
-  display: flex;
-  justify-content: flex-end;
-}
-
-p {
-  font-weight: bold !important;
-  font-size: 16px;
-}
-.spanStyle {
-  flex: 1;
-  margin-left: 10px;
-}
-
-.UpgradeState {
-  margin-left: 20px;
-}
-
-.HeaderDiv {
-  display: flex;
-}
-
-.troubleshootBtnsDiv {
-  & > * {
-    margin-right: 10px;
+  .backButton {
+    margin-top: 5px;
   }
-}
 
-.tabContentContainer {
-  margin-top: 10px;
-}
+  .InlineDiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 
-.Row {
-  cursor: pointer;
-}
+  .InlineDiv > * {
+    flex: 1;
+    margin: 0 10px 0 0;
+  }
 
-a {
-  color: white;
+  .InlineBetweenDiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .saveButton {
+    margin-top: 10px;
+    min-width: 139px;
+    max-width: 100%;
+  }
+
+  .InlineEndDiv {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  p {
+    font-weight: bold !important;
+    font-size: 16px;
+  }
+  .spanStyle {
+    flex: 1;
+    margin-left: 10px;
+  }
+
+  .UpgradeState {
+    margin-left: 20px;
+  }
+
+  .HeaderDiv {
+    display: flex;
+  }
+
+  .troubleshootBtnsDiv {
+    & > * {
+      margin-right: 10px;
+    }
+  }
+
+  .tabContentContainer {
+    margin-top: 10px;
+  }
+
+  .Row {
+    cursor: pointer;
+  }
+
+  a {
+    color: white;
+  }
 }

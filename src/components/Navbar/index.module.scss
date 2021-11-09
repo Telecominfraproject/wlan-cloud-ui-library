@@ -21,8 +21,8 @@
     }
   }
 
-  :global(:not(.ant-menu-dark).ant-menu-horizontal > .ant-menu-item),
-  :global(:not(.ant-menu-dark).ant-menu-horizontal > .ant-menu-submenu),
+  :global(.ant-menu-horizontal > .ant-menu-item),
+  :global(.ant-menu-horizontal > .ant-menu-submenu),
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item),
   :global(.ant-menu-dark.ant-menu-horizontal > .ant-menu-submenu) {
     height: 100%;
