@@ -26,6 +26,7 @@ const Navbar = ({
   rightMenuItem,
   currentUserId,
   Link,
+  theme,
 }) => {
   const { company, logo, logoMobile, routes } = useContext(ThemeContext);
 
@@ -58,10 +59,11 @@ const Navbar = ({
             mode="inline"
             menuItems={mobileMenuItems || menuItems}
             onMenuItemClick={onMenuItemClick}
+            theme={theme}
           />
         </Drawer>
       ) : (
-        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} Link={Link} />
+        <Menu menuItems={menuItems} onMenuItemClick={onMenuItemClick} Link={Link} theme={theme} />
       )}
       <div className={styles.RightMenu}>
         {totalAlarms !== null && <Alarm routes={routes} totalAlarms={totalAlarms} />}
@@ -83,6 +85,7 @@ Navbar.propTypes = {
   rightMenuItem: PropTypes.node,
   currentUserId: PropTypes.number,
   Link: PropTypes.func,
+  theme: PropTypes.string,
 };
 
 Navbar.defaultProps = {
@@ -94,6 +97,7 @@ Navbar.defaultProps = {
   rightMenuItem: null,
   currentUserId: 0,
   Link: RouterLink,
+  theme: 'dark',
 };
 
 export default Navbar;
