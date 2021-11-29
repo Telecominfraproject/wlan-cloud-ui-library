@@ -1,4 +1,8 @@
 .Menu {
   width: 100%;
   border-bottom: 0;
+
+  :global(.ant-menu-submenu-title .anticon) {
+    margin-right: 10px
+  }
 }
