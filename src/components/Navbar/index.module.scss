@@ -34,18 +34,9 @@
 
     a {
       height: 100%;
-      display: flex;
       align-items: center;
     }
   }
-
-  :global(.ant-menu-submenu-title > span > .anticon) {
-    margin-right: 10px
-  }
-}
-
-:global(.ant-menu-item.ant-menu-item-only-child .anticon) {
-  margin-right: 20px;
 }
 
 .LogoContainer {
