@@ -14,14 +14,14 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, theme, ...restProps }) =
   const getMenuItem = item => (
     <Item key={item.key} icon={item.icon || null}>
       <Link to={{ pathname: item.path, search: item.preserveQueryParams ? location.search : null }}>
-        <span>{item.text}</span>
+        {item.text}
       </Link>
     </Item>
   );
   const items = menuItems.map(item => {
     if (item.children) {
       return (
-        <SubMenu key={item.key} title={<span>{item.text}</span>} icon={item.icon}>
+        <SubMenu key={item.key} title={item.text} icon={item.icon}>
           {item.children.map(subItem => getMenuItem(subItem))}
         </SubMenu>
       );
