@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import styles from '../index.module.scss';
 
-const LineGraphTooltip = ({ active, payload, label, decimals }) => {
+const LineGraphTooltip = ({ active, payload, label, decimals, extraTooltipData }) => {
+  const extraTooltipDataKeys = Object.keys(extraTooltipData);
   if (active && payload && payload.length) {
     return (
       <div className={styles.customTooltip} style={{ border: `1px solid ${payload[0].stroke}` }}>
@@ -18,6 +19,14 @@ const LineGraphTooltip = ({ active, payload, label, decimals }) => {
             </p>
           );
         })}
+        {extraTooltipDataKeys.length > 0 && (
+          <>
+            <br />
+            {extraTooltipDataKeys.sort().map(key => {
+              return <p className={styles.point}>{`${key}: ${extraTooltipData[key]}`}</p>;
+            })}
+          </>
+        )}
       </div>
     );
   }
@@ -30,6 +39,7 @@ LineGraphTooltip.propTypes = {
   payload: PropTypes.instanceOf(Object),
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   decimals: PropTypes.number,
+  extraTooltipData: PropTypes.instanceOf(Object),
 };
 
 LineGraphTooltip.defaultProps = {
@@ -37,6 +47,7 @@ LineGraphTooltip.defaultProps = {
   payload: [],
   label: 0,
   decimals: 0,
+  extraTooltipData: {},
 };
 
 export default LineGraphTooltip;
