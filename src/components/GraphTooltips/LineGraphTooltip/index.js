@@ -4,6 +4,9 @@ import moment from 'moment';
 import styles from '../index.module.scss';
 
 const LineGraphTooltip = ({ active, payload, label, decimals }) => {
+  const extraTooltipData = payload?.[0]?.payload?.extraData ?? {};
+  const extraTooltipDataKeys = Object.keys(extraTooltipData);
+
   if (active && payload && payload.length) {
     return (
       <div className={styles.customTooltip} style={{ border: `1px solid ${payload[0].stroke}` }}>
@@ -18,6 +21,18 @@ const LineGraphTooltip = ({ active, payload, label, decimals }) => {
             </p>
           );
         })}
+        {extraTooltipDataKeys.length > 0 && (
+          <>
+            <br />
+            {extraTooltipDataKeys.sort().map(key => {
+              return (
+                extraTooltipData[key] && (
+                  <p className={styles.point}>{`${key}: ${extraTooltipData[key]}`}</p>
+                )
+              );
+            })}
+          </>
+        )}
       </div>
     );
   }
