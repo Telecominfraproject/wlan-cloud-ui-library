@@ -60,13 +60,14 @@ Card.defaultProps = {
   loading: false,
 };
 
-export const Table = ({ loading, columns, dataSource, onRow, ...props }) => {
+export const Table = ({ loading, columns, dataSource, onRow, hideSkeleton, ...props }) => {
   return (
     <AntdTable
       {...props}
-      loading={false}
+      loading={hideSkeleton ? loading : false}
+      className={styles.SkeletonTable}
       dataSource={
-        loading
+        loading && !hideSkeleton
           ? [
               ...Array(15)
                 .fill()
@@ -75,7 +76,7 @@ export const Table = ({ loading, columns, dataSource, onRow, ...props }) => {
           : dataSource
       }
       columns={
-        loading
+        loading && !hideSkeleton
           ? columns.map(column => {
               return {
                 ...column,
@@ -99,6 +100,7 @@ Table.propTypes = {
   columns: PropTypes.instanceOf(Array),
   dataSource: PropTypes.instanceOf(Array),
   onRow: PropTypes.func,
+  hideSkeleton: PropTypes.bool,
 };
 
 Table.defaultProps = {
@@ -106,6 +108,7 @@ Table.defaultProps = {
   columns: [],
   dataSource: [],
   onRow: () => {},
+  hideSkeleton: false,
 };
 
 export const List = ({ loading, dataSource, renderItem, ...props }) => {

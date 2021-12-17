@@ -21,3 +21,9 @@
     background-size: 400% 100%;
   }
 }
+
+.SkeletonTable {
+  :global(.ant-spin-nested-loading > div > .ant-spin) {
+    display: none;
+  }
+}
