@@ -26,6 +26,7 @@ const AutoProvision = ({
   onUpdateCustomer,
   onFetchMoreProfiles,
   loading,
+  isLightIcon,
 }) => {
   const [form] = Form.useForm();
   const [enabled, setEnabled] = useState(data?.details?.autoProvisioning?.enabled || false);
@@ -132,7 +133,7 @@ const AutoProvision = ({
       render: (_, record) => (
         <RoleProtectedBtn
           title={`edit-model-${record.model}`}
-          className={styles.InfoButton}
+          className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
           type="primary"
           icon={<FormOutlined />}
           onClick={() => {
@@ -150,7 +151,7 @@ const AutoProvision = ({
         return record.model !== 'default' ? (
           <WithRoles>
             <DeleteButton
-              className={styles.InfoButton}
+              className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
               title={`delete-model-${record.model}`}
               extraOnClick={() => {
                 setActiveModel({ ...record });
@@ -296,6 +297,7 @@ AutoProvision.propTypes = {
   onUpdateCustomer: PropTypes.func,
   onFetchMoreProfiles: PropTypes.func,
   loading: PropTypes.bool,
+  isLightIcon: PropTypes.bool,
 };
 
 AutoProvision.defaultProps = {
@@ -309,6 +311,7 @@ AutoProvision.defaultProps = {
   onUpdateCustomer: () => {},
   onFetchMoreProfiles: () => {},
   loading: false,
+  isLightIcon: true,
 };
 
 export default AutoProvision;
