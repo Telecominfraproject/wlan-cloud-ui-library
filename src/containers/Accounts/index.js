@@ -27,7 +27,6 @@ const Accounts = ({
   FormModal,
   loading,
   text,
-  isLightIcon,
 }) => {
   const [editModal, setEditModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
@@ -72,8 +71,7 @@ const Accounts = ({
       render: (_, record) => (
         <RoleProtectedBtn
           title={`edit-${record.email}`}
-          className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
-          type="primary"
+          className={styles.InfoButton}
           icon={<FormOutlined />}
           onClick={() => {
             setEditModal(true);
@@ -92,7 +90,8 @@ const Accounts = ({
         currentUserId?.toString() !== record.id && (
           <WithRoles>
             <DeleteButton
-              className={`${styles.InfoButton} ${isLightIcon ? styles.light : styles.dark}`}
+              className={styles.InfoButton}
+              type="default"
               title={`delete-${record.email}`}
               extraOnClick={() => {
                 setActiveUser({
@@ -169,7 +168,6 @@ Accounts.propTypes = {
   FormModal: PropTypes.func,
   loading: PropTypes.bool,
   text: PropTypes.func,
-  isLightIcon: PropTypes.bool,
 };
 
 Accounts.defaultProps = {
@@ -183,7 +181,6 @@ Accounts.defaultProps = {
   FormModal: DefaultModal,
   loading: false,
   text: str => str,
-  isLightIcon: true,
 };
 
 export default Accounts;
