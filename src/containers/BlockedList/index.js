@@ -53,6 +53,7 @@ const BlockedList = ({ data, onUpdateClient, onAddClient, loading, text }) => {
         <WithRoles>
           <DeleteButton
             className={styles.InfoButton}
+            type="default"
             title={`delete-mac-${record.macAddress}`}
             extraOnClick={() => {
               setActiveMac({ ...record });

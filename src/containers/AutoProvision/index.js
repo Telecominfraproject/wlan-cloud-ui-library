@@ -133,7 +133,6 @@ const AutoProvision = ({
         <RoleProtectedBtn
           title={`edit-model-${record.model}`}
           className={styles.InfoButton}
-          type="primary"
           icon={<FormOutlined />}
           onClick={() => {
             setActiveModel({ ...record });
@@ -151,6 +150,7 @@ const AutoProvision = ({
           <WithRoles>
             <DeleteButton
               className={styles.InfoButton}
+              type="default"
               title={`delete-model-${record.model}`}
               extraOnClick={() => {
                 setActiveModel({ ...record });
