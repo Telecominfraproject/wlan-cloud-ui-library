@@ -31,18 +31,24 @@ const MyPieChart = ({ chartData, title, loading, chartTextColor }) => {
     />
   );
 
-  const renderLabel = ({ name, x, y, cx }) => (
-    <text
-      x={x}
-      y={y}
-      fill={chartTextColor}
-      dominantBaseline="central"
-      textAnchor={x > cx ? 'start' : 'end'}
-      style={{ fontSize: '12px' }}
-    >
-      {name}
-    </text>
-  );
+  const renderLabel = ({ name, x, y, cx, index, percent }) => {
+    const label = (
+      <text
+        x={x}
+        y={y}
+        fill={chartTextColor}
+        dominantBaseline="central"
+        textAnchor={x > cx ? 'start' : 'end'}
+        style={{ fontSize: '14px' }}
+      >
+        {name}
+      </text>
+    );
+    if (activeIndex) {
+      return activeIndex === index ? label : null;
+    }
+    return percent > 0.05 ? label : null;
+  };
 
   return (
     <Card title={title}>
@@ -54,6 +60,7 @@ const MyPieChart = ({ chartData, title, loading, chartTextColor }) => {
                 dataKey="value"
                 data={pieData}
                 label={renderLabel}
+                labelLine={false}
                 activeIndex={activeIndex}
                 onMouseOver={onMouseOver}
                 onMouseLeave={onMouseLeave}
