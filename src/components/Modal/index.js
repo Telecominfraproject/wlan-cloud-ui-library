@@ -28,7 +28,7 @@ const Modal = ({
         <div className={styles.Buttons}>
           {!isReadOnly || isSubmitable ? (
             <>
-              <Button className={styles.Button} onClick={onCancel} data-testid="modal_cancel">
+              <Button className={styles.Button} onClick={onCancel} data-testid="modal-cancel">
                 Cancel
               </Button>
               <Button
@@ -36,7 +36,7 @@ const Modal = ({
                 type={buttonType}
                 onClick={onSuccess}
                 loading={loading}
-                data-testid={`modal_${buttonText}`}
+                data-testid={`modal-${buttonText}`}
               >
                 {buttonText}
               </Button>
@@ -46,7 +46,7 @@ const Modal = ({
               className={styles.Button}
               type="primary"
               onClick={onCancel}
-              data-testid="modal_close"
+              data-testid="modal-close"
             >
               Close
             </Button>

@@ -14,7 +14,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, theme, ...restProps }) =
   const getMenuItem = item => (
     <Item key={item.key} icon={item.icon || null}>
       <Link to={{ pathname: item.path, search: item.preserveQueryParams ? location.search : null }}>
-        {item.text}
+        <span data-testid={`nav-${item.text}`}>{item.text}</span>
       </Link>
     </Item>
   );
