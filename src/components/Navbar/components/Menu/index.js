@@ -21,7 +21,7 @@ const Menu = ({ mode, menuItems, onMenuItemClick, Link, theme, ...restProps }) =
   const items = menuItems.map(item => {
     if (item.children) {
       return (
-        <SubMenu key={item.key} title={item.text} icon={item.icon}>
+        <SubMenu key={item.key} title={item.text} icon={item.icon} data-testid={`nav-${item.text}`}>
           {item.children.map(subItem => getMenuItem(subItem))}
         </SubMenu>
       );
